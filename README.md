@@ -166,7 +166,7 @@ mvn dependency:resolve
 `CREATE DATABASE {database_name}`
 - update the `application.properties` file with your database credentials
 ```html
-spring.datasource.url=jdbc:postgresql://localhost:5432/your_database_name
+spring.datasource.url=jdbc:{connection_string}
 spring.datasource.username=your_username
 spring.datasource.password=your_password
 ```
