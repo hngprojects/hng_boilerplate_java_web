@@ -160,11 +160,67 @@ You can also install dependencies by running the following `mavin` command in yo
 ```sh
 mvn dependency:resolve
 ```
+### 3. set up database
+- Ensure PostgreSQL is installed and running
+- Create a new database in the database
+`CREATE DATABASE {database_name}`
+- update the `application.properties` file with your database credentials
+```html
+spring.datasource.url=jdbc:postgresql://localhost:5432/your_database_name
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+```
 
-### 3. Run the Development Server
+### 4. Run the Development Server
 
 Press `F5` on your keyboard to run the application in debug mode for your Vscode or use whatever your IDE requires (You may need to open a .java file to trigger this).
 
-### 4. Verify the Setup
+### 5. Verify the Setup
 
 Depending on the IDE/code editor, you should be greeted with a Hello world text when you navigate to `localhost:8080`.
+
+#### test endpoint using curl or postman
+- using curl (user_one_id: id of the user created in the database) 
+  `curl -X GET http://localhost:8080/api/v1/users/user_one_id`
+- Using Postman
+  - Open Postman
+  - Create a new GET request to curl -X GET http://localhost:8080/api/v1/users/user_one_id
+  - send the request and verify the response
+- Expected Response
+```json
+  {
+  "name": "John Doe",
+  "id": "some-user-id",
+  "email": "johndoe@example.com",
+  "profile": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "phone": "1234567890",
+    "avatar_url": "http://example.com/avatar.jpg"
+   },
+  "organisations": [
+    {
+    "org_id": "some-org-id-1",
+    "name": "Some Org",
+    "description": "Some Org Description"
+    },
+    {
+    "org_id": "some-other-org-id-2",
+    "name": "Some Other Org",
+    "description": "Some Other Org Description"
+    }
+  ],
+  "products": [
+    {
+    "product_id": "some-product-id",
+    "name": "Some Product",
+    "description": "Some Product Description"
+    },
+    {
+    "product_id": "some-other-product-id",
+    "name": "Some Other Product",
+    "description": "Some Other Product Description"
+    }
+  ]
+ }
+```
