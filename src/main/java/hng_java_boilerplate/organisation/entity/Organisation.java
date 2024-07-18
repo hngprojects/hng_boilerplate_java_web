@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "organisations")
+@Table(name = "organization")
 public class Organisation {
     @Id
     private String id;
@@ -20,7 +20,7 @@ public class Organisation {
     private String name;
     private String description;
 
-    @ManyToMany(mappedBy = "organisations")
+    @ManyToMany(mappedBy = "organization")
     @JsonIgnore
     private List<User> users;
 

@@ -2,7 +2,6 @@ package hng_java_boilerplate.profile.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.util.UUIDGenarator;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "profiles")
+@Table(name = "profile")
 public class Profile {
     @Id
     private String id;

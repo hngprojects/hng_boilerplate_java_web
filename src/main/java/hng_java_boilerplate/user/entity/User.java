@@ -28,11 +28,11 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-            name = "user_organisation",
+            name = "user_organization",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "organisation_id")
+            inverseJoinColumns = @JoinColumn(name = "organization_id")
     )
-    private List<Organisation> organisations;
+    private List<Organisation> organization;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Product> products;
@@ -78,10 +78,10 @@ public class User {
     }
 
     public List<Organisation> getOrganisations() {
-        return organisations;
+        return organization;
     }
 
     public void setOrganisations(List<Organisation> organisations) {
-        this.organisations = organisations;
+        this.organization = organisations;
     }
 }
