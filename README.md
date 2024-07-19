@@ -154,17 +154,131 @@ cd [app-name]
 
 ### 2. Install Dependencies
 
-Opening the project in your dev environemnt should automatically restore all your dependencies.
+Opening the project in your dev environment should automatically restore all your dependencies.
 You can also install dependencies by running the following `mavin` command in your root folder.
 
 ```sh
 mvn dependency:resolve
 ```
+### 3. set up database
+- Ensure PostgreSQL is installed and running
+- Create a new database in the database
+`CREATE DATABASE {database_name}`
+- Flyway Migrations
+  - migration files should be placed in the `src/main/resources/db/migration` directory
+  - Each migration file should follow the naming convention `V<version>__<description>.sql.` e.g
+    -  `V1__create_users_table.sql`
+    -  `V1__init_database.sql`
+  - sample migration file
+```sql
+-- V1__create_users_table.sql
+CREATE TABLE users (
+id VARCHAR(255) PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+email VARCHAR(255) NOT NULL UNIQUE
+);
 
-### 3. Run the Development Server
+-- V2__create_profiles_table.sql
+CREATE TABLE profiles (
+id VARCHAR(255) PRIMARY KEY,
+first_name VARCHAR(255),
+last_name VARCHAR(255),
+phone VARCHAR(255),
+avatar_url VARCHAR(255)
+);
+
+-- V3__create_products_table.sql
+CREATE TABLE products (
+id VARCHAR(255) PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+description TEXT,
+user_id VARCHAR(255) NOT NULL,
+FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- V4__create_organisations_table.sql
+CREATE TABLE organisations (
+id VARCHAR(255) PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+description TEXT
+);
+
+-- Many-to-Many Relationship Table
+CREATE TABLE user_organisation (
+user_id VARCHAR(255) NOT NULL,
+organisation_id VARCHAR(255) NOT NULL,
+PRIMARY KEY (user_id, organisation_id),
+FOREIGN KEY (user_id) REFERENCES users(id),
+FOREIGN KEY (organisation_id) REFERENCES organisations(id)
+);
+```
+
+  - update the `application.properties` file with your database credentials and configure flyway
+```html
+<!-- database configuration-->
+spring.datasource.url=jdbc:{connection_string}
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+
+<!-- flyway configuration-->
+spring.flyway.enabled=true
+spring.flyway.locations=classpath:db/migration
+spring.flyway.user={database_username}
+spring.flyway.password={database_password}
+```
+  - Apply migrations
+  `./mvnw flyway:migrate`
+
+### 4. Run the Development Server
 
 Press `F5` on your keyboard to run the application in debug mode for your Vscode or use whatever your IDE requires (You may need to open a .java file to trigger this).
 
-### 4. Verify the Setup
+### 5. Verify the Setup
 
 Depending on the IDE/code editor, you should be greeted with a Hello world text when you navigate to `localhost:8080`.
+
+#### test endpoint using curl or postman
+- using curl (user_one_id: id of the user created in the database) 
+  `curl -X GET http://localhost:8080/api/v1/users/user_one_id`
+- Using Postman
+  - Open Postman
+  - Create a new GET request to curl -X GET http://localhost:8080/api/v1/users/user_one_id
+  - send the request and verify the response
+- Expected Response
+```json
+  {
+  "name": "John Doe",
+  "id": "some-user-id",
+  "email": "johndoe@example.com",
+  "profile": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "phone": "1234567890",
+    "avatar_url": "http://example.com/avatar.jpg"
+   },
+  "organisations": [
+    {
+    "org_id": "some-org-id-1",
+    "name": "Some Org",
+    "description": "Some Org Description"
+    },
+    {
+    "org_id": "some-other-org-id-2",
+    "name": "Some Other Org",
+    "description": "Some Other Org Description"
+    }
+  ],
+  "products": [
+    {
+    "product_id": "some-product-id",
+    "name": "Some Product",
+    "description": "Some Product Description"
+    },
+    {
+    "product_id": "some-other-product-id",
+    "name": "Some Other Product",
+    "description": "Some Other Product Description"
+    }
+  ]
+ }
+```
