@@ -1,6 +1,7 @@
 package hng_java_boilerplate.waitlist.controller;
 
 import hng_java_boilerplate.waitlist.entity.Waitlist;
+import hng_java_boilerplate.waitlist.service.EmailService;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,18 @@ import java.util.Map;
 public class WaitlistController {
     @Autowired
     private WaitlistService waitlistService;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping
     public ResponseEntity<?> createWaitlist(@Valid @RequestBody Waitlist waitlist){
         waitlistService.saveWaitlist(waitlist);
+
+        String to = waitlist.getEmail();
+        String subject = "Confirmation Email";
+        String text = "You are all signed up!";
+        emailService.sendConfirmationEmail(to, subject, text);
+
         Map<String, String> response = new HashMap<>();
         response.put("message", "You are all signed up!");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
