@@ -21,9 +21,6 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
-
-
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -37,10 +34,8 @@ public class ProductController {
         if (name != null) {
             name = name.replaceAll("^\"|\"$", "").trim();
         }
-        logger.info(name);
 
         List<Product> products = productService.productsSearch(name, category, minPrice, maxPrice);
-        logger.info("product{}", products);
         ProductSearchDTO productSearchDTO = new ProductSearchDTO();
 
         if(products.isEmpty()){
