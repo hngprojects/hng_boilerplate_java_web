@@ -154,7 +154,7 @@ cd [app-name]
 
 ### 2. Install Dependencies
 
-Opening the project in your dev environemnt should automatically restore all your dependencies.
+Opening the project in your dev environment should automatically restore all your dependencies.
 You can also install dependencies by running the following `mavin` command in your root folder.
 
 ```sh
@@ -164,12 +164,70 @@ mvn dependency:resolve
 - Ensure PostgreSQL is installed and running
 - Create a new database in the database
 `CREATE DATABASE {database_name}`
-- update the `application.properties` file with your database credentials
+- Flyway Migrations
+  - migration files should be placed in the `src/main/resources/db/migration` directory
+  - Each migration file should follow the naming convention `V<version>__<description>.sql.` e.g
+    -  `V1__create_users_table.sql`
+    -  `V1__init_database.sql`
+  - sample migration file
+```sql
+-- V1__create_users_table.sql
+CREATE TABLE users (
+id VARCHAR(255) PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+email VARCHAR(255) NOT NULL UNIQUE
+);
+
+-- V2__create_profiles_table.sql
+CREATE TABLE profiles (
+id VARCHAR(255) PRIMARY KEY,
+first_name VARCHAR(255),
+last_name VARCHAR(255),
+phone VARCHAR(255),
+avatar_url VARCHAR(255)
+);
+
+-- V3__create_products_table.sql
+CREATE TABLE products (
+id VARCHAR(255) PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+description TEXT,
+user_id VARCHAR(255) NOT NULL,
+FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- V4__create_organisations_table.sql
+CREATE TABLE organisations (
+id VARCHAR(255) PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+description TEXT
+);
+
+-- Many-to-Many Relationship Table
+CREATE TABLE user_organisation (
+user_id VARCHAR(255) NOT NULL,
+organisation_id VARCHAR(255) NOT NULL,
+PRIMARY KEY (user_id, organisation_id),
+FOREIGN KEY (user_id) REFERENCES users(id),
+FOREIGN KEY (organisation_id) REFERENCES organisations(id)
+);
+```
+
+  - update the `application.properties` file with your database credentials and configure flyway
 ```html
+<!-- database configuration-->
 spring.datasource.url=jdbc:{connection_string}
 spring.datasource.username=your_username
 spring.datasource.password=your_password
+
+<!-- flyway configuration-->
+spring.flyway.enabled=true
+spring.flyway.locations=classpath:db/migration
+spring.flyway.user={database_username}
+spring.flyway.password={database_password}
 ```
+  - Apply migrations
+  `./mvnw flyway:migrate`
 
 ### 4. Run the Development Server
 

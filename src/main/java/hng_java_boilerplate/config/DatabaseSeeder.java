@@ -25,18 +25,31 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        // seed users;
-        User user1 = new User();
-        UUID uuid = UUID.randomUUID();
-        String uniqueId = uuid.toString();
-        user1.setId(uniqueId);
-        user1.setName("John Doe");
-        user1.setEmail("johndoe@exampl.com");
+        if (isDatabaseEmpty()) {
+            seedDatabase();
+        } else {
+            System.out.println("Database is not empty, skipping seeding.");
+        }
+    }
 
+    @Transactional(readOnly = true)
+    public boolean isDatabaseEmpty() {
+        return userRepository.count() == 0 &&
+                organisationRepository.count() == 0 &&
+                productRepository.count() == 0;
+    }
+
+    @Transactional
+    public void seedDatabase() {
+        // Seed users
+        User user1 = new User();
+        user1.setId(UUID.randomUUID().toString());
+        user1.setName("John Doe");
+        user1.setEmail("johndoe@example.com");
 
         Profile profile1 = new Profile();
         profile1.setId(UUID.randomUUID().toString());
-        profile1.setLastName("John");
+        profile1.setFirstName("John");
         profile1.setLastName("Doe");
         profile1.setPhone("1234567890");
         profile1.setAvatarUrl("http://example.com/avatar.jpg");
@@ -50,7 +63,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         Profile profile2 = new Profile();
         profile2.setId(UUID.randomUUID().toString());
-        profile2.setFirstName("Jame");
+        profile2.setFirstName("Jane");
         profile2.setLastName("Smith");
         profile2.setAvatarUrl("http://example.com/avatar2.jpg");
         user2.setProfile(profile2);
@@ -58,10 +71,10 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         userRepository.saveAll(Arrays.asList(user1, user2));
 
-        // seed organisations
+        // Seed organisations
         Organisation org1 = new Organisation();
         org1.setId(UUID.randomUUID().toString());
-        org1.setName("Some org");
+        org1.setName("Some Org");
         org1.setDescription("Some Org Description");
 
         Organisation org2 = new Organisation();
@@ -76,12 +89,12 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         organisationRepository.saveAll(Arrays.asList(org1, org2, org3));
 
-        // Assign organisation to users;
+        // Assign organisations to users
         user1.setOrganisations(Arrays.asList(org1, org2));
         user2.setOrganisations(Arrays.asList(org1, org2, org3));
         userRepository.saveAll(Arrays.asList(user1, user2));
 
-        // seed Products
+        // Seed products
         Product product1 = new Product();
         product1.setId(UUID.randomUUID().toString());
         product1.setName("Product One");
