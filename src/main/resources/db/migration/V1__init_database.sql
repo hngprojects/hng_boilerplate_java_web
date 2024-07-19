@@ -1,3 +1,12 @@
+-- V1__Create_profiles_table.sql
+CREATE TABLE profiles (
+    id VARCHAR(36) PRIMARY KEY,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    phone VARCHAR(255),
+    avatar_url TEXT
+);
+
 -- V1__Create_users_table.sql
 CREATE TABLE users (
     id VARCHAR(36) PRIMARY KEY,
@@ -7,14 +16,6 @@ CREATE TABLE users (
     FOREIGN KEY (profile_id) REFERENCES profiles(id)
 );
 
--- V1__Create_profiles_table.sql
-CREATE TABLE profiles (
-    id VARCHAR(36) PRIMARY KEY,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    phone VARCHAR(255),
-    avatar_url TEXT
-);
 
 -- V1__Create_organisations_table.sql
 CREATE TABLE organisations (
@@ -39,4 +40,11 @@ CREATE TABLE user_organisation (
     PRIMARY KEY (user_id, organisation_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (organisation_id) REFERENCES organisations(id)
+);
+
+-- V1__Create_waitlist_table.sql
+CREATE TABLE waitlist (
+    id UUID PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL
 );
