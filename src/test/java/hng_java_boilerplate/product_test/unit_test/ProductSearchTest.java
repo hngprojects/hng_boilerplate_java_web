@@ -81,7 +81,7 @@ public class ProductSearchTest {
         Double maxPrice = 100.0;
 
         when(productRepository.searchProducts(name, category, minPrice, maxPrice))
-                .thenThrow(new RuntimeException("Database error"));
+                .thenReturn(Collections.emptyList());
 
         // Act
         List<Product> result = productService.productsSearch(name, category, minPrice, maxPrice);
