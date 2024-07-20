@@ -12,5 +12,4 @@ import org.springframework.stereotype.Component;
 public class ErrorDTO {
     private String parameter;
     private String message;
-
 }
