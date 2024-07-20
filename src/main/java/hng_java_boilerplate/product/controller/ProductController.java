@@ -7,6 +7,8 @@ import hng_java_boilerplate.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,24 +32,32 @@ public class ProductController {
             @RequestParam(value = "name") String name,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "minPrice", required = false) Double minPrice,
-            @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "10") int limit) {
 
         if (name != null) {
             name = name.replaceAll("^\"|\"$", "").trim();
         }
 
-        List<Product> products = productService.productsSearch(name, category, minPrice, maxPrice);
+        Page<Product> products = productService.productsSearch(name, category, minPrice, maxPrice, PageRequest.of(page, limit));
         ProductSearchDTO productSearchDTO = new ProductSearchDTO();
 
         if(products.isEmpty()){
             productSearchDTO.setStatus_code(HttpStatus.NO_CONTENT.value());
-            productSearchDTO.setProducts(ProductMapper.INSTANCE.toDTOList(products));
+            productSearchDTO.setProducts(ProductMapper.INSTANCE.toDTOList(products).getContent());
             productSearchDTO.setSuccess(true);
+            productSearchDTO.setTotal(products.getTotalPages());
+            productSearchDTO.setLimit(products.getSize());
+            productSearchDTO.setPage(products.getNumber());
             return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
         }
 
         productSearchDTO.setStatus_code(HttpStatus.OK.value());
-        productSearchDTO.setProducts(ProductMapper.INSTANCE.toDTOList(products));
+        productSearchDTO.setProducts(ProductMapper.INSTANCE.toDTOList(products).getContent());
+        productSearchDTO.setTotal(products.getTotalPages());
+        productSearchDTO.setLimit(products.getSize());
+        productSearchDTO.setPage(products.getNumber());
         productSearchDTO.setSuccess(true);
         return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
     }
