@@ -7,7 +7,7 @@ on:
     branches: [dev, staging, main]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     services:
         postgres:  
@@ -32,29 +32,15 @@ jobs:
           java-version: 17
           distribution: temurin
           cache: maven
-      - name: Install Dependencies
-        run: mvn clean install
+      - name: Download Dependencies
+        run: mvn dependency:resolve
       - name: Build the application
-        run: mvn -B package --file pom.xml
-
-#   unit-test:
-#     needs: build
-#     name: Unit Test
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: Set up JDK
-#         uses: actions/setup-java@v3
-#         with:
-#           java-version: 17
-#           distribution: temurin
-#       - name: Install Dependencies
-#         run: mvn dependency:resolve
-#       - name: Unit Testing
-#         run: mvn -B test
-#       - name: Archive Test Result
-#         uses: actions/upload-artifact@v3
-#         if: always()
-#         with: 
-#           name: test-results
-#           path: target/test-results
+        run: mvn clean install
+      - name: Unit Testing
+        run: mvn -B test
+      - name: Archive Test Result
+        uses: actions/upload-artifact@v3
+        if: always()
+        with: 
+          name: test-results
+          path: target/test-results
