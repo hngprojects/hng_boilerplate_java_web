@@ -213,7 +213,7 @@ FOREIGN KEY (organisation_id) REFERENCES organisations(id)
 );
 ```
 
-  - update the `application.properties` file with your database credentials and configure flyway
+  - update the `application.properties` file with your database credentials, configure flyway, and SHA512 secret key (for JWT setup) 
 ```html
 <!-- database configuration-->
 spring.datasource.url=jdbc:{connection_string}
@@ -225,9 +225,27 @@ spring.flyway.enabled=true
 spring.flyway.locations=classpath:db/migration
 spring.flyway.user={database_username}
 spring.flyway.password={database_password}
+
+sha512.string={SHA_SECRET}
+```
+ - Update pom.xml: substitute the placeholders in the plugin for your actual database `url`, `username` and `password`. 
+
+
+```
+    <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>10.10.0</version>
+        <configuration>
+            <url>{database_URL}</url>
+            <user>{database_username}</user>
+            <password>{database_password}</password>
+        </configuration>
+    </plugin>
 ```
   - Apply migrations
   `./mvnw flyway:migrate`
+
 
 ### 4. Run the Development Server
 
@@ -281,4 +299,69 @@ Depending on the IDE/code editor, you should be greeted with a Hello world text 
     }
   ]
  }
+
 ```
+### 6. Sign Up to the application
+
+#### * Using cURL
+
+To test the 'User Sign Up' endpoint using cURL, run the following command in your terminal:
+
+```bash
+curl -X POST http://localhost:8080/api/v1/auth/register \
+-H "Content-Type: application/json" \
+-d '{
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "johndoe@example.com",
+      "password": "Johndo3!"
+    }'
+```
+#### * Using Postman
+i. Open Postman.
+
+ii. Create a new POST request.
+
+iii. Enter the endpoint URL: http://localhost:8088/api/v1/auth/register.
+
+iv. Set the request body type to raw and select JSON from the dropdown.
+
+v. Paste the following JSON into the body:
+```
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe@example.com",
+  "password": "Johndo3!"
+}
+```
+vi. Click on the `Send` button.
+
+#### * Expected Response
+The expected response from the server should be:
+```
+{
+  "status_code": 201,
+  "message": "Registration Successful!",
+  "data": {
+    "token": "some-token",
+    "user": {
+      "id": "some-user-id",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "johndoe@example.com",
+      "created_at": "2024-07-19T20:28:34.399829"
+    }
+  }
+}
+```
+#### * Additional Information
+
+* Ensure your server is running on localhost:8080 before making the request.
+
+* The firstName, lastName, email, and password fields are required.
+
+* The password must meet your application's password strength requirements.
+
+* Check your database to verify the user has been created successfully after a successful registration.
+

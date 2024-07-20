@@ -9,6 +9,7 @@ import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final UserRepository userRepository;
     private final OrganisationRepository organisationRepository;
     private final ProductRepository productRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -43,9 +45,10 @@ public class DatabaseSeeder implements CommandLineRunner {
     public void seedDatabase() {
         // Seed users
         User user1 = new User();
-        user1.setId(UUID.randomUUID().toString());
+        user1.setUserId(UUID.randomUUID().toString());
         user1.setName("John Doe");
         user1.setEmail("johndoe@example.com");
+        user1.setPassword(passwordEncoder.encode("Johndo3!"));
 
         Profile profile1 = new Profile();
         profile1.setId(UUID.randomUUID().toString());
@@ -57,9 +60,10 @@ public class DatabaseSeeder implements CommandLineRunner {
         profile1.setUser(user1);
 
         User user2 = new User();
-        user2.setId(UUID.randomUUID().toString());
+        user2.setUserId(UUID.randomUUID().toString());
         user2.setName("Jane Smith");
         user2.setEmail("janesmith@example.com");
+        user2.setPassword(passwordEncoder.encode("Jan3sm!th"));
 
         Profile profile2 = new Profile();
         profile2.setId(UUID.randomUUID().toString());
