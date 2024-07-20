@@ -27,7 +27,6 @@ public class ProductServiceImpl implements ProductService{
             errorDTO.setParameter("name");
             throw new ValidationError(errorDTO);
         }
-
             return productRepository.searchProducts(name, category, minPrice, maxPrice);
     }
 }
