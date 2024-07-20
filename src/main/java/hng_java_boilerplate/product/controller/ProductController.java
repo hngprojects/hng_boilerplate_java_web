@@ -24,6 +24,7 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
+
     @GetMapping("/search")
     public ResponseEntity<ProductSearchDTO> searchProducts(
             @RequestParam(value = "name") String name,
@@ -49,6 +50,5 @@ public class ProductController {
         productSearchDTO.setProducts(ProductMapper.INSTANCE.toDTOList(products));
         productSearchDTO.setSuccess(true);
         return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
-
     }
 }
