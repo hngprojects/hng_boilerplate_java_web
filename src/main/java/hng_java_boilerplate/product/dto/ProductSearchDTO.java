@@ -17,5 +17,4 @@ public class ProductSearchDTO {
     private int total;
     private int page;
     private int limit;
-
 }
