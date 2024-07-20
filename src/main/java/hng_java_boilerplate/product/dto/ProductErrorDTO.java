@@ -13,5 +13,4 @@ public class ProductErrorDTO {
     private boolean success;
     private String message;
     private int status_code;
-
 }
