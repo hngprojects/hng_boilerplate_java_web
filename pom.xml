@@ -58,7 +58,7 @@
 			<artifactId>flyway-database-postgresql</artifactId>
 		</dependency>
 
-
+    
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -163,4 +163,10 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+	</repositories>	
 </project>
