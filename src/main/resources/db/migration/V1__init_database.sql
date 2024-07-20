@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9362f2df287bb5775a5a4176b19cdf0fc94772ff
 -- V1__Create_profiles_table.sql
 CREATE TABLE profiles (
     id VARCHAR(36) PRIMARY KEY,

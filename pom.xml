@@ -64,7 +64,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+	</dependencies>	
 
 	<build>
 		<plugins>
@@ -75,4 +75,14 @@
 		</plugins>
 	</build>
 
+<<<<<<< HEAD
 </project>
+=======
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+	</repositories>	
+</project>
+>>>>>>> 9362f2df287bb5775a5a4176b19cdf0fc94772ff
