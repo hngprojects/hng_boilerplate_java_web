@@ -14,5 +14,8 @@ public class ProductSearchDTO {
     private boolean success;
     private int status_code;
     private List<ProductDTO> products;
+    private int total;
+    private int page;
+    private int limit;
 
 }
