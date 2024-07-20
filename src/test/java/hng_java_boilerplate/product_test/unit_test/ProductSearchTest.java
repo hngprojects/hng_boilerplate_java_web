@@ -3,7 +3,6 @@ package hng_java_boilerplate.product_test.unit_test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-
 import hng_java_boilerplate.product.dto.ErrorDTO;
 import hng_java_boilerplate.product.exceptions.ValidationError;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +13,10 @@ import org.mockito.MockitoAnnotations;
 import hng_java_boilerplate.product.service.ProductServiceImpl;
 import hng_java_boilerplate.product.repository.ProductRepository;
 import hng_java_boilerplate.product.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +34,6 @@ public class ProductSearchTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
     @Test
     public void testProductsSearch_ValidParameters() {
         // Arrange
@@ -39,14 +41,16 @@ public class ProductSearchTest {
         String category = "testCategory";
         Double minPrice = 10.0;
         Double maxPrice = 100.0;
+        Pageable pageable = PageRequest.of(0, 10);
         Product product = new Product();
-        List<Product> expectedProducts = Arrays.asList(product);
+        List<Product> productList = Arrays.asList(product);
+        Page<Product> expectedProducts = new PageImpl<>(productList, pageable, productList.size());
 
-        when(productRepository.searchProducts(name, category, minPrice, maxPrice))
+        when(productRepository.searchProducts(name, category, minPrice, maxPrice, pageable))
                 .thenReturn(expectedProducts);
 
         // Act
-        List<Product> result = productService.productsSearch(name, category, minPrice, maxPrice);
+        Page<Product> result = productService.productsSearch(name, category, minPrice, maxPrice, pageable);
 
         // Assert
         assertEquals(expectedProducts, result);
@@ -59,10 +63,11 @@ public class ProductSearchTest {
         String category = "testCategory";
         Double minPrice = 10.0;
         Double maxPrice = 100.0;
+        Pageable pageable = PageRequest.of(0, 10);
 
         // Act & Assert
         ValidationError thrown = assertThrows(ValidationError.class, () -> {
-            productService.productsSearch(name, category, minPrice, maxPrice);
+            productService.productsSearch(name, category, minPrice, maxPrice, pageable);
         });
 
         // Verify the error details
@@ -71,23 +76,24 @@ public class ProductSearchTest {
         assertEquals("name", errorDTO.getParameter());
     }
 
-
     @Test
-    public void testProductsSearch_Exception_ReturnsEmptyList() {
+    public void testProductsSearch_Exception_ReturnsEmptyPage() {
         // Arrange
         String name = "testProduct";
         String category = "testCategory";
         Double minPrice = 10.0;
         Double maxPrice = 100.0;
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Product> emptyPage = Page.empty(pageable);
 
-        when(productRepository.searchProducts(name, category, minPrice, maxPrice))
-                .thenReturn(Collections.emptyList());
+        when(productRepository.searchProducts(name, category, minPrice, maxPrice, pageable))
+                .thenReturn(emptyPage);
 
         // Act
-        List<Product> result = productService.productsSearch(name, category, minPrice, maxPrice);
+        Page<Product> result = productService.productsSearch(name, category, minPrice, maxPrice, pageable);
 
         // Assert
-        assertEquals(Collections.emptyList(), result);
+        assertEquals(emptyPage, result);
     }
 }
 
