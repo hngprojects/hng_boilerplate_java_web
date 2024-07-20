@@ -7,12 +7,9 @@ import java.util.List;
 
 @Data
 public class ValidationError extends RuntimeException {
-
     private ErrorDTO error;
 
     public ValidationError(ErrorDTO error) {
         this.error = error;
     }
-
-
 }
