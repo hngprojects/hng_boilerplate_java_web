@@ -1,5 +1,6 @@
 package hng_java_boilerplate.controller;
 
+import hng_java_boilerplate.dtos.requests.DeleteRecoveryOptionsRequest;
 import hng_java_boilerplate.dtos.requests.RecoveryEmailRequest;
 import hng_java_boilerplate.dtos.requests.RecoveryPhoneNumberRequest;
 import hng_java_boilerplate.dtos.requests.UpdateRecoveryOptionsRequest;
@@ -75,9 +76,14 @@ public class AccountRecovery {
     }
 
     @DeleteMapping("/delete-recovery-options")
-    public ResponseEntity<ApiResponse<?>> deleteRecoveryOptions() {
+    public ResponseEntity<ApiResponse<?>> deleteRecoveryOptions(DeleteRecoveryOptionsRequest request) {
+    var response = accountRecovery.deleteRecoveryOptions(request);
+        if (response.getMessage().equals("Recovery options successfully deleted")) {
+            return ResponseEntity.ok().body(ApiResponse.builder().message(response.getMessage()).statusCode("200").build());
+        }
 
-        return null;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.builder().message("Error deleting recovery options").statusCode("400").build());
+
     }
 
 
