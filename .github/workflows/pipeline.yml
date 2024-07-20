@@ -24,12 +24,12 @@ jobs:
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
-    env:
-      spring.flyway.enabled: "false"
-      spring.flyway.baseline-on-migrate: "false"
-      spring.datasource.url: "postgresql://postgres:5432/postgres"
-      spring.datasource.username: "postgres"
-      spring.datasource.password: "password"
+    # env:
+    #   spring.flyway.enabled: "false"
+    #   spring.flyway.baseline-on-migrate: "false"
+    #   spring.datasource.url: "postgresql://postgres:5432/postgres"
+    #   spring.datasource.username: "postgres"
+    #   spring.datasource.password: "password"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -39,8 +39,10 @@ jobs:
           java-version: 17
           distribution: temurin
           cache: maven
-      - name: Build the application
-        run: mvn -B package --file pom.xml
+      - name: Install Dependencies
+        run: mvn clean install
+    #   - name: Build the application
+    #     run: mvn -B package --file pom.xml
 
 
 #   unit-test:
