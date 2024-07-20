@@ -1,5 +1,5 @@
 # Use the official OpenJDK 17 image as the base image
-FROM openjdk:17-jdk
+FROM openjdk:17-jdk-alpine
 
 # Create a non-root user and group
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
@@ -24,7 +24,10 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 # Build the project
-RUN ./mvnw clean install
+#RUN ./mvnw clean install
+
+# Run Flyway migrations
+#RUN ./mvnw flyway:migrate
 
 # Expose the application port
 EXPOSE 8080

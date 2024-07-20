@@ -6,41 +6,51 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - spring.datasource.url=jdbc:postgresql://postgresdb:5432/${DATABASE_NAME}
-      - spring.datasource.username=${DATABASE_USERNAME}
-      - spring.datasource.password=${DATABASE_PASSWORD}
-      - spring.jpa.properties.hibernate.jdbc.time_zone=UTC
-      - spring.jpa.hibernate.ddl-auto=update
-      - spring.jpa.open-in-view=false
-      - spring.data.jpa.repositories.bootstrap_mode=default
+      - spring.datasource.url=jdbc:postgresql://postgresdb:5432/app
+      - spring.datasource.username=postgres
+      - spring.datasource.password=postgres
+      - spring.datasource.driver-class-name=org.postgresql.Driver
+      #- spring.flyway.enabled=false
       - spring.flyway.enabled=true
       - spring.flyway.locations=classpath:db/migration
-      - spring.flyway.user=${DATABASE_USERNAME}
-      - spring.flyway.password=${DATABASE_PASSWORD}
+      - spring.flyway.user=postgres
+      - spring.flyway.password=postgres
     networks:
       - backend-net
     depends_on:
-      db:
+      postgresdb:
         condition: service_healthy
     restart: unless-stopped
 
   postgresdb:
-    image: postgres:13
-    container_name: db
+    image: postgres
+    container_name: postgresdb
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=${DATABASE_NAME}
-      - POSTGRES_USER=${DATABASE_USERNAME}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=app
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - postgresdataa:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U app"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - backend-net
+
+  flyway:
+    image: flyway/flyway:latest
+    command: -url=jdbc:postgresql://postgresdb:5432/app -user=postgres -password=postgres migrate
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      postgresdb:
+        condition: service_healthy
     networks:
       - backend-net
 
@@ -61,4 +71,4 @@ networks:
     driver: bridge
     
 volumes:
-  postgres_data:
+    postgresdataa:
