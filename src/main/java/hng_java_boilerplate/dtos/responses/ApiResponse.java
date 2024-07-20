@@ -13,6 +13,6 @@ public class ApiResponse<T>{
 
     private String message;
     private String statusCode;
-    private String T;
+    private T data;
 
 }

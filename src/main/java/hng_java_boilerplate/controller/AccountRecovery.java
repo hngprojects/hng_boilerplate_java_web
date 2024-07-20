@@ -1,6 +1,10 @@
 package hng_java_boilerplate.controller;
 
+import hng_java_boilerplate.dtos.requests.RecoveryEmailRequest;
+import hng_java_boilerplate.dtos.requests.RecoveryPhoneNumberRequest;
+import hng_java_boilerplate.dtos.requests.UpdateRecoveryOptionsRequest;
 import hng_java_boilerplate.dtos.responses.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,16 +15,31 @@ public class AccountRecovery {
     private hng_java_boilerplate.service.AccountRecovery accountRecovery;
 
     @PostMapping("/add-recovery-email")
-    public ResponseEntity<ApiResponse<?>> addRecoveryEmail() {
+    public ResponseEntity<ApiResponse<?>> addRecoveryEmail(@RequestBody RecoveryEmailRequest request) {
+        var response = accountRecovery.addRecoveryEmail(request);
 
-        return null;
+        if (response.getMessage().equals("Invalid recovery email")) {
+            return ResponseEntity.badRequest().body(ApiResponse.builder().message(response.getMessage()).statusCode("400").build());
+        }
+
+        if (response.getMessage().equals("Recovery email successfully added")) {
+            return ResponseEntity.ok().body(ApiResponse.builder().message(response.getMessage()).statusCode("200").build());
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.builder().message("Could not add recovery email").statusCode("500").build());
     }
+
 
     @GetMapping("/security-questions")
     public ResponseEntity<ApiResponse<?>>displaySecurityQuestions() {
+        var response = accountRecovery.displaySecurityQuestions();
 
+        if (response.getMessage().equals("Security Questions")) {
+            return ResponseEntity.ok().body(ApiResponse.builder().message(response.getMessage()).statusCode("200").data(response.getQuestions()).build());
+        }
 
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.builder().message("Could not find security questions").statusCode("404").build());
+
     }
 
     @PostMapping("/submit-security-answers")
@@ -30,60 +49,36 @@ public class AccountRecovery {
     }
 
     @PostMapping("/recovery-number")
-    public ResponseEntity<ApiResponse<?>> addRecoveryNumber() {
+    public ResponseEntity<ApiResponse<?>> addRecoveryNumber(RecoveryPhoneNumberRequest request) {
+        var response = accountRecovery.addRecoveryPhoneNumber(request);
 
+        if (response.getMessage().equals("Invalid phone number")) {
+            return ResponseEntity.badRequest().body(ApiResponse.builder().message(response.getMessage()).statusCode("400").build());
+        }
 
-        return null;
+        if (response.getMessage().equals("Recovery phone number successfully added")) {
+            return ResponseEntity.ok().body(ApiResponse.builder().message(response.getMessage()).statusCode("200").build());
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.builder().message("Could not add recovery phone number").statusCode("500").build());
     }
 
     @PutMapping("/update-recovery-options")
-    public ResponseEntity<ApiResponse<?>> updateRecoveryOptions() {
-        // Logic to update recovery options (to be implemented)
+    public ResponseEntity<ApiResponse<?>> updateRecoveryOptions(UpdateRecoveryOptionsRequest request) {
+        var response = accountRecovery.updateRecoveryOptions(request);
 
-        return null;
+        if (response.getMessage().equals("Recovery options updated")) {
+            return ResponseEntity.ok().body(ApiResponse.builder().message(response.getMessage()).statusCode("200").build());
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.builder().message(response.getMessage()).statusCode("500").build());
     }
 
     @DeleteMapping("/delete-recovery-options")
     public ResponseEntity<ApiResponse<?>> deleteRecoveryOptions() {
-        // Logic to delete recovery options (to be implemented)
 
         return null;
     }
 
-    private boolean isValidEmail(String email) {
-        // Validate email format (logic to be implemented)
-        return email.contains("@");
-    }
 
-    private boolean isValidPhoneNumber(String phoneNumber) {
-        // Validate phone number format (logic to be implemented)
-        return phoneNumber.matches("\\d+");
-    }
-
-//    private ResponseEntity<Map<String, Object>> generateErrorResponse(String message, int statusCode) {
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("message", message);
-//        response.put("status_code", statusCode);
-//        response.put("data", new HashMap<>());
-//
-//        return new ResponseEntity<>(response, HttpStatus.valueOf(statusCode));
-//    }
-//
-//    private ResponseEntity<Map<String, Object>> generateSuccessResponse(String message, int statusCode) {
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("message", message);
-//        response.put("status_code", statusCode);
-//        response.put("data", new HashMap<>());
-//
-//        return new ResponseEntity<>(response, HttpStatus.valueOf(statusCode));
-//    }
-
-//    private ResponseEntity<Map<String, Object>> generateSuccessResponse(String message, int statusCode, Map<String, Object> data) {
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("message", message);
-//        response.put("status_code", statusCode);
-//        response.put("data", data);
-//
-//        return new ResponseEntity<>(response, HttpStatus.valueOf(statusCode));
-//    }
 }

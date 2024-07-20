@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class AccountRecoveryImpl implements AccountRecovery{
+public class AccountRecoveryImpl implements AccountRecovery {
 
     @Autowired
     private final UserRepository userRepository;
@@ -33,7 +33,6 @@ public class AccountRecoveryImpl implements AccountRecovery{
             userRepository.save(existingUser);
             return RecoveryEmailResponse.builder().message("Recovery email successfully added").build();
         }
-
         return RecoveryEmailResponse.builder().message("Could not add recovery email").build();
     }
 
