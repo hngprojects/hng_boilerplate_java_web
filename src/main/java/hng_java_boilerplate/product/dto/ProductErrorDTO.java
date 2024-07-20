@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Data
 public class ProductErrorDTO {
-
     private boolean success;
     private String message;
     private int status_code;
