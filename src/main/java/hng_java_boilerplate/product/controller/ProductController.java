@@ -45,6 +45,7 @@ public class ProductController {
             return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
         }
 
+        productSearchDTO.setStatus_code(HttpStatus.OK.value());
         productSearchDTO.setProducts(ProductMapper.INSTANCE.toDTOList(products));
         productSearchDTO.setSuccess(true);
         return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
