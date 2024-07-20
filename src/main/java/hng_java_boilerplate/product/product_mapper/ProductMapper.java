@@ -5,6 +5,7 @@ import hng_java_boilerplate.product.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -19,5 +20,7 @@ public interface ProductMapper {
     @Mapping(source = "imageUrl", target = "imageUrl")
     ProductDTO toDTO(Product product);
 
-    List<ProductDTO> toDTOList(List<Product> products);
+    default Page<ProductDTO> toDTOList(Page<Product> products) {
+        return products.map(this::toDTO);
+    }
 }
