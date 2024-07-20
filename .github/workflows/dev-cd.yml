@@ -8,7 +8,7 @@ on:
     branches: [dev]
 
 jobs:
-  deploy:
+  on-success:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion=='success' }}
     steps:
@@ -31,3 +31,9 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USERNAME: ${{ secrets.DEV_SSH_USERNAME }}
           SSH_PASSWORD: ${{ secrets.DEV_SSH_PASSWORD }}
+  
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion=='failure' }}
+    steps:
+      - run: echo "Triggering the Workflow Failed"
