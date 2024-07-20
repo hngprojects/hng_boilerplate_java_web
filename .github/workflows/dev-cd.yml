@@ -5,12 +5,12 @@ on:
     workflows: ["CI"]
     types:
       - completed
-    branches: [dev]
+    # branches: [dev]
 
 jobs:
   on-success:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion=='success' }}
+    if: ${{ github.event.workflow_run.conclusion=='success' && github.ref == 'refs/heads/dev' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
