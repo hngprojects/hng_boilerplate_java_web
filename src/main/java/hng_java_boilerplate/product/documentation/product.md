@@ -65,7 +65,10 @@ The `searchProducts` endpoint allows clients to search for products based on var
       }
       
     ],
-    "success": true
+    "success": true,
+     "total": 10,
+     "page": 0,
+     "limit": 10
   }
   ```
 
@@ -144,7 +147,10 @@ GET /api/v1/products/search?name=example-product&category=electronics&minPrice=5
       "price": 99.99
     }
   ],
-  "success": true
+  "success": true,
+  "total": 10,
+  "page": 0,
+  "limit": 10
 }
 ```
 
