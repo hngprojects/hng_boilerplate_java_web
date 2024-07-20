@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class ProductSearchDTO {
-
     private boolean success;
     private int status_code;
     private List<ProductDTO> products;
