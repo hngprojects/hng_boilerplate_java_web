@@ -1,5 +1,6 @@
 package hng_java_boilerplate.user.entity;
 
+import hng_java_boilerplate.dtos.requests.SecurityQuestionAnswer;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.profile.entity.Profile;
@@ -20,6 +21,10 @@ public class User {
 
     private String name;
     private String email;
+
+    private String recoveryEmail;
+    private String recoveryPhoneNumber;
+    private List<SecurityQuestionAnswer> answers;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
@@ -61,6 +66,22 @@ public class User {
         this.email = email;
     }
 
+    public String getRecoveryEmail() {
+        return recoveryEmail;
+    }
+
+    public void setRecoveryEmail(String recoveryEmail) {
+        this.recoveryEmail = recoveryEmail;
+    }
+
+    public String getRecoveryPhoneNumber() {
+        return recoveryPhoneNumber;
+    }
+
+    public void setRecoveryPhoneNumber(String recoveryPhoneNumber) {
+        this.recoveryPhoneNumber = recoveryPhoneNumber;
+    }
+
     public Profile getProfile() {
         return profile;
     }
@@ -84,4 +105,14 @@ public class User {
     public void setOrganisations(List<Organisation> organisations) {
         this.organisations = organisations;
     }
+
+    public void setSecurityAnswers(List<SecurityQuestionAnswer> answers) {
+        this.answers = answers;
+    }
+
+    public List<SecurityQuestionAnswer> getSecurityAnswers(List<SecurityQuestionAnswer> answers) {
+        return answers;
+    }
+
+
 }
