@@ -1,6 +1,5 @@
 package hng_java_boilerplate.product.errorhandler;
 
-import hng_java_boilerplate.product.dto.ProductErrorDTO;
 import hng_java_boilerplate.product.dto.ProductValidatorDTO;
 import hng_java_boilerplate.product.exceptions.ValidationError;
 import org.springframework.http.HttpStatus;
@@ -19,10 +18,6 @@ public class ProductErrorHandler {
         dto.setErrors(List.of(v.getError()));
         dto.setStatus_code(HttpStatus.UNPROCESSABLE_ENTITY.value());
         dto.setSuccess(false);
-
         return new ResponseEntity<>(dto, HttpStatus.UNPROCESSABLE_ENTITY);
-
     }
-
-
 }
