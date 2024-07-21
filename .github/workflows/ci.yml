@@ -32,6 +32,10 @@ jobs:
           java-version: 17
           distribution: temurin
           cache: maven
+        env:
+            connection_string: postgresql://localhost:5432/postgres
+            database_username: postgres
+            database_password: password
       - name: Download Dependencies
         run: mvn dependency:resolve
       - name: Build the application
