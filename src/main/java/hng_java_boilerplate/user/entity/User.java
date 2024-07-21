@@ -116,7 +116,7 @@ public class User {
         this.answers = answers;
     }
 
-    public List<SecurityQuestionAnswer> getSecurityAnswers(List<SecurityQuestionAnswer> answers) {
+    public List<SecurityQuestionAnswer> getSecurityAnswers() {
         return answers;
     }
 
