@@ -1,9 +1,15 @@
 package hng_java_boilerplate.user.service;
 
 import hng_java_boilerplate.user.dto.GetUserDto;
+import hng_java_boilerplate.user.dto.LogInDto;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private MyUserDetailsService myUserDetailsService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public GetUserDto getUserWithDetails(String userId) throws BadPaddingException {
@@ -22,7 +34,7 @@ public class UserService {
 
         GetUserDto userDto = GetUserDto
                 .builder()
-                .id(user.getId())
+                .id(user.getId().toString())
                 .name(user.getName())
                 .email(user.getEmail())
                 .build();
@@ -47,7 +59,7 @@ public class UserService {
         List<GetUserDto.ProductDto> products = user.getProducts()
                 .stream().map((product) -> GetUserDto.ProductDto
                         .builder()
-                        .product_id(product.getId())
+                        .product_id(product.getId().toString())
                         .name(product.getName())
                         .description(product.getDescription())
                         .build()).toList();
@@ -58,4 +70,17 @@ public class UserService {
 
         return userDto;
     };
+
+    public User LogIn(LogInDto logInDto){
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        logInDto.getEmail(),
+                        logInDto.getPassword()
+                )
+        );
+
+        User user = (User) myUserDetailsService.loadUserByUsername(logInDto.getEmail());
+
+        return user;
+    }
 }
