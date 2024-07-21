@@ -8,7 +8,10 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-public class ProductSearchE2e {
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+public class ProductSearchTest {
 
     @BeforeAll
     public static void setup() {

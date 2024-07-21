@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import hng_java_boilerplate.product.service.ProductServiceImpl;
 import hng_java_boilerplate.product.repository.ProductRepository;
 import hng_java_boilerplate.product.entity.Product;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@SpringBootTest
 public class ProductSearchTest {
 
     @Mock
