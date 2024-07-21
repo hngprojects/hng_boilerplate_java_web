@@ -1,6 +1,7 @@
 package hng_java_boilerplate.squeeze.service;
 
 import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
+import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.repository.SqueezeRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,10 @@ public class SqueezeRequestService {
     @Autowired
     private EmailService emailService;
 
-    public SqueezeRequest saveSqueezeRequest(SqueezeRequest squeezeRequest) {
+    public SqueezeRequest saveSqueezeRequest(SqueezeRequest squeezeRequest) throws DuplicateEmailException {
+        if (repository.existsByEmail(squeezeRequest.getEmail())) {
+            throw new DuplicateEmailException("Email address already exists");
+        }
         SqueezeRequest savedRequest = repository.save(squeezeRequest);
 //        emailService.sendTemplateEmail(squeezeRequest.getEmail());
         return savedRequest;

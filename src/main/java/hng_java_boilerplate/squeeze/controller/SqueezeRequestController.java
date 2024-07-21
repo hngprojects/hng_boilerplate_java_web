@@ -1,6 +1,7 @@
 package hng_java_boilerplate.squeeze.controller;
 
 import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
+import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
 import hng_java_boilerplate.squeeze.util.ResponseMessage;
 import jakarta.validation.Valid;
@@ -23,8 +24,8 @@ public class SqueezeRequestController {
         try {
             service.saveSqueezeRequest(request);
             return ResponseEntity.ok(new ResponseMessage("Your request has been received. You will get a template shortly."));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Failed to submit your request"));
+        } catch (DuplicateEmailException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessage(e.getMessage()));
         }
     }
 
