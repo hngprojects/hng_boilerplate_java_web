@@ -151,7 +151,7 @@ public class OrganisationService {
             error.add("Expired Invitation Link");
         }
         errorResponse.setError(error);
-        errorResponse.setStatus(HttpStatus.BAD_GATEWAY.value());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
 
         if (!error.isEmpty()){
             errorResponse.setMessage("Invalid or expired invitation Link");
