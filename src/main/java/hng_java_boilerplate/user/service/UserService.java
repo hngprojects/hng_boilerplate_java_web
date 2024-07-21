@@ -20,12 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private MyUserDetailsService myUserDetailsService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+    private final AuthenticationManager authenticationManager;
+
+    private final MyUserDetailsService myUserDetailsService;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public GetUserDto getUserWithDetails(String userId) throws BadPaddingException {

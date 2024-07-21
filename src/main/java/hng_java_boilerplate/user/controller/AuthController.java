@@ -8,6 +8,7 @@ import hng_java_boilerplate.user.response.LogInResponse;
 import hng_java_boilerplate.user.response.UnsuccesfulResponse;
 import hng_java_boilerplate.user.service.MyUserDetailsService;
 import hng_java_boilerplate.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +20,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class AuthController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private MyUserDetailsService myUserDetailsService;
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserService userService;
+
+    private final MyUserDetailsService myUserDetailsService;
+
+    private final JwtService jwtService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserRepository userRepository;
 
 
 
