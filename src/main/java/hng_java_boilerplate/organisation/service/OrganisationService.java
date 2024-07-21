@@ -45,7 +45,7 @@ public class OrganisationService {
         return foundOrganisation;
     }
 
-    public ResponseEntity<?> validateAndAcceptUserToOrganisation(String invitationLink) throws InvitationValidationException, URISyntaxException {
+    public ResponseEntity<?> validateAndAcceptUserToOrganisation(String invitationLink) throws InvitationValidationException {
         //        This is a secured method and while i await Auth guy to come through so i can fetch the id of logged-in user
 // TODO: 7/20/2024 fetch user that wants to be added to organisation from the logged in user
         //        A demo user
@@ -98,8 +98,9 @@ public class OrganisationService {
 
     }
 
-    public Organisation validateInviteLink(String invitationLink){
-
+    public Organisation validateInviteLink(String invitationLink) throws InvitationValidationException{
+        ErrorResponse errorResponse = new ErrorResponse();
+        List<String> error = new ArrayList<>();
         String invitationLink1 = invitationLink;
         Pattern pattern = Pattern.compile("orgId=([\\w-]+)&expires=([\\d]{4}-[\\d]{2}-[\\d]{2}T[\\d]{2}:[\\d]{2}:[\\d]{2}Z)");
         Matcher matcher = pattern.matcher(invitationLink1);
@@ -109,7 +110,15 @@ public class OrganisationService {
              orgId = matcher.group(1);
              expires = matcher.group(2);
         } else {
-            System.out.println("Invitation link format not recognized.");
+            error.add("Invalid link format not recognized");
+            errorResponse.setMessage("Invalid or expired invitation Link");
+            errorResponse.setError(error);
+            errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            throw new InvitationValidationException(
+                    errorResponse.getMessage(),
+                    errorResponse.getError(),
+                    errorResponse.getStatus()
+            );
         }
         System.out.println("orgId: " + orgId);
         System.out.println("expireTime: " + expires);
@@ -125,8 +134,6 @@ public class OrganisationService {
 
 //        ZonedDateTime expirationTime = ZonedDateTime.parse(expires);
         Organisation organisationDetails = getOrganisationDetails(orgId);
-        ErrorResponse errorResponse = new ErrorResponse();
-        List<String> error = new ArrayList<>();
         if (orgId == null || expires == null){
             error.add("Invalid link format");
         }
@@ -150,7 +157,7 @@ public class OrganisationService {
         return organisationDetails;
     }
 
-//    Getting the parameters
+
 
 
 
