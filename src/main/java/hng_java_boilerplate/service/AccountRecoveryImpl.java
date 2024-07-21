@@ -21,12 +21,12 @@ public class AccountRecoveryImpl implements AccountRecovery {
 
     @Override
     public RecoveryEmailResponse addRecoveryEmail(RecoveryEmailRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         String recoveryEmail = request.getEmail();;
         if (!validateEmail(recoveryEmail)) {
             return RecoveryEmailResponse.builder().message("Invalid recovery email").build();
         }
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             User existingUser = user.get();
             existingUser.setRecoveryEmail(recoveryEmail);
@@ -52,11 +52,11 @@ public class AccountRecoveryImpl implements AccountRecovery {
 
     @Override
     public SecurityAnswersResponse submitSecurityQuestions(SubmitSecurityQuestionsRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         List<SecurityQuestionAnswer> answers = request.getAnswers();
 
         if (validateAnswers(answers)) {
-            Optional<User> userOptional = userRepository.findByUsername(username);
+            Optional<User> userOptional = userRepository.findByEmail(email);
 
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
@@ -80,14 +80,14 @@ public class AccountRecoveryImpl implements AccountRecovery {
 
     @Override
     public RecoveryPhoneNumberResponse addRecoveryPhoneNumber(RecoveryPhoneNumberRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         String recoveryPhoneNumber = request.getPhoneNumber();
 
         if (!validatePhoneNumber(recoveryPhoneNumber)) {
             return RecoveryPhoneNumberResponse.builder().message("Invalid phone number").build();
         }
 
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             User existingUser = user.get();
             existingUser.setRecoveryPhoneNumber(recoveryPhoneNumber);
@@ -104,13 +104,13 @@ public class AccountRecoveryImpl implements AccountRecovery {
 
     @Override
     public UpdateRecoveryOptionsResponse updateRecoveryOptions(UpdateRecoveryOptionsRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         boolean emailIsValid = validateEmail(request.getEmail());
         boolean phoneNumberIsValid = validatePhoneNumber(request.getPhoneNumber());
         boolean securityQuestionAnswersIsValid = validateSecurityQuestions(request.getSecurityQuestions());
 
         if (emailIsValid || phoneNumberIsValid || securityQuestionAnswersIsValid) {
-            Optional<User> user = userRepository.findByUsername(username);
+            Optional<User> user = userRepository.findByEmail(email);
             if (user.isPresent()) {
                 User existingUser = user.get();
                 if (emailIsValid) {
@@ -134,8 +134,8 @@ public class AccountRecoveryImpl implements AccountRecovery {
 
     @Override
     public DeleteRecoveryOptionsResponse deleteRecoveryOptions(DeleteRecoveryOptionsRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Optional<User> user = userRepository.findByUsername(username);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userRepository.findByEmail(email);
         List<String> options = request.getOptions();
         boolean isAValidRecoveryOption = validateRecoveryOptions(options);
 
