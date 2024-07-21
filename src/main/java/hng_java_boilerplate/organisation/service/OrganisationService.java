@@ -1,6 +1,7 @@
 package hng_java_boilerplate.organisation.service;
 
 import hng_java_boilerplate.organisation.dto.InvitationRequest;
+import hng_java_boilerplate.organisation.dto.ValidLinkResponse;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.exception.InvitationValidationException;
 import hng_java_boilerplate.organisation.exception.OrganisationException;
@@ -50,11 +51,11 @@ public class OrganisationService {
 // TODO: 7/20/2024 fetch user that wants to be added to organisation from the logged in user
         //        A demo user
 
-        Organisation organisationDetails= validateInviteLink(invitationLink);
-        String userId = "558ca51d-8ecf-4766-94a4-3427c1960d8c";
+       ValidLinkResponse validInviteLink= validateInviteLink(invitationLink);
+        String userId = validInviteLink.getUserId();
         User foundUser = userRepository.findById(userId)
                 .orElseThrow(() -> new OrganisationException("Invalid user id"));
-//        Organisation organisationDetails = getOrganisationDetails(orgId);
+        Organisation organisationDetails = getOrganisationDetails(validInviteLink.getOrgId());
         List<Organisation> organisations = foundUser.getOrganisations();
         if (foundUser.getOrganisations().contains(organisationDetails)){
             throw new OrganisationException("User already belong to organisation");
@@ -98,17 +99,19 @@ public class OrganisationService {
 
     }
 
-    public Organisation validateInviteLink(String invitationLink) throws InvitationValidationException{
+    public ValidLinkResponse validateInviteLink(String invitationLink) throws InvitationValidationException{
         ErrorResponse errorResponse = new ErrorResponse();
         List<String> error = new ArrayList<>();
         String invitationLink1 = invitationLink;
-        Pattern pattern = Pattern.compile("orgId=([\\w-]+)&expires=([\\d]{4}-[\\d]{2}-[\\d]{2}T[\\d]{2}:[\\d]{2}:[\\d]{2}Z)");
+        Pattern pattern = Pattern.compile("orgId=([\\w-]+)&userId=([\\w-]+)&expires=([\\d]{4}-[\\d]{2}-[\\d]{2}T[\\d]{2}:[\\d]{2}:[\\d]{2}Z)");
         Matcher matcher = pattern.matcher(invitationLink1);
         String orgId=null;
+        String userId = null;
         String expires= null;
         if (matcher.find()) {
              orgId = matcher.group(1);
-             expires = matcher.group(2);
+             userId = matcher.group(2);
+             expires = matcher.group(3);
         } else {
             error.add("Invalid link format not recognized");
             errorResponse.setMessage("Invalid or expired invitation Link");
@@ -122,6 +125,10 @@ public class OrganisationService {
         }
         System.out.println("orgId: " + orgId);
         System.out.println("expireTime: " + expires);
+        ValidLinkResponse validLinkResponse = new ValidLinkResponse(
+                orgId,
+                userId
+        );
         ZonedDateTime expirationTime= null;
         try{
             if (expires == null || expires.isEmpty()) {
@@ -154,9 +161,8 @@ public class OrganisationService {
                     errorResponse.getStatus()
             );
         }
-        return organisationDetails;
+        return validLinkResponse;
     }
-
 
 
 
