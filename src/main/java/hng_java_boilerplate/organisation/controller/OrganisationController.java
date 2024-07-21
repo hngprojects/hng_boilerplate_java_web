@@ -22,7 +22,7 @@ public class OrganisationController {
 
     @PostMapping("/invite")
     public ResponseEntity<?> acceptInvitation(@RequestBody String invitationLink) throws InvitationValidationException, URISyntaxException {
-        return new ResponseEntity<>(organisationService.validateAndAcceptUserToOrganisation(invitationLink), HttpStatus.OK);
+        return new ResponseEntity<>(organisationService.validateAndAcceptUserToOrganisation(invitationLink).getBody(), HttpStatus.OK);
     }
 
 }
