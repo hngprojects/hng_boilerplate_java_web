@@ -24,8 +24,8 @@ jobs:
       - name: SSH into Server and Execute Command
         run: |
           sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
-          cd ~/hng_boilerplate_java_web && git fetch origin main && git stash && git checkout main && chmod +x deploy.sh && sudo systemctl stop java_prod_app.service && ./deploy.sh && sudo systemctl start java_prod_app.service && \
-          egit fetch origin main && git stash && git checkout mainxit"
+          cd ~/hng_boilerplate_java_web && git fetch origin main && git stash && git checkout main && git pull && chmod +x deploy.sh && ./deploy.sh && sudo systemctl start java_prod_app.service && \
+          exit"
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USERNAME: ${{ secrets.PROD_SSH_USERNAME }}
