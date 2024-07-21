@@ -58,7 +58,7 @@ class OrganisationServiceTest {
 
     @Test
     void validateAndAcceptUserToOrganisation() throws InvitationValidationException {
-        String invitationLink = "http://api/hello?orgId=2e94215f-4c31-429b-be66-dbacda4afe79&expires=2025-07-23T00:00:00Z";
+        String invitationLink = "http://api/hello?orgId=2e94215f-4c31-429b-be66-dbacda4afe79&userId=558ca51d-8ecf-4766-94a4-3427c1960d8c&expires=2025-07-23T00:00:00Z";
 
         Mockito.when(userRepository.findById(demoUser.getId())).thenReturn(Optional.of(demoUser));
         Mockito.when(organisationRepository.findById(demoOrganisation.getId())).thenReturn(Optional.of(demoOrganisation));
@@ -76,7 +76,7 @@ class OrganisationServiceTest {
     @Test
     void shouldThrowInvitationValidationException() throws InvitationValidationException{
         String invitationLink = "http://api/hello?orgId=2e94215f-4c31-429b-be66-dbacda4afe79&expires=2020-07-23T00:00:00Z";
-        Mockito.when(organisationRepository.findById("2e94215f-4c31-429b-be66-dbacda4afe79")).thenReturn(Optional.of(demoOrganisation));
+//        Mockito.when(organisationRepository.findById("2e94215f-4c31-429b-be66-dbacda4afe79")).thenReturn(Optional.of(demoOrganisation));
         InvitationValidationException invitationValidationException = assertThrows(InvitationValidationException.class, () -> {
             organisationService.validateAndAcceptUserToOrganisation(invitationLink);
         });
