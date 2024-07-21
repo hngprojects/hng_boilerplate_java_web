@@ -2,6 +2,7 @@ package hng_java_boilerplate.squeeze.controller;
 
 import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
 import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
+import hng_java_boilerplate.squeeze.util.ResponseMessage;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,19 +28,4 @@ public class SqueezeRequestController {
         }
     }
 
-    public static class ResponseMessage {
-        private String message;
-
-        public ResponseMessage(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-    }
 }
