@@ -55,7 +55,6 @@ public class SqueezeRequestServiceTest {
         assertNotNull(savedRequest);
         assertEquals(validRequest.getEmail(), savedRequest.getEmail());
         assertEquals(validRequest.getFirst_name(), savedRequest.getFirst_name());
-        // Add other assertions as needed
     }
 
     @Test
