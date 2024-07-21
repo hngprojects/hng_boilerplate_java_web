@@ -16,6 +16,14 @@ CREATE TABLE users (
     FOREIGN KEY (profile_id) REFERENCES profiles(id)
 );
 
+-- V1__Create_users_table.sql
+CREATE TABLE users (
+    id VARCHAR(36) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(36) UNIQUE,
+    FOREIGN KEY (profile_id) REFERENCES profiles(id)
+);
 
 -- V1__Create_organisations_table.sql
 CREATE TABLE organisations (
