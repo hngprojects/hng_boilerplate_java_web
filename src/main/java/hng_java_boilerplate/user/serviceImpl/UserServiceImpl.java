@@ -17,6 +17,8 @@ import hng_java_boilerplate.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -56,10 +58,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public ResponseEntity<ApiResponse> registerUser(SignupDto signupDto) {
         validateEmail(signupDto.getEmail());
 
-        if (!isValidPassword(signupDto.getPassword())) {
-            throw new InvalidRequestException("Password must be at least 8 characters long and contain alphanumeric characters.");
-        }
-
         User user = new User();
         user.setUserId(UUID.randomUUID().toString());
         user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
@@ -81,10 +79,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED.value(), "Registration Successful!", data), HttpStatus.CREATED);
     }
 
-    private boolean isValidPassword(String password) {
-        return password.length() >= 8 && password.matches(".*\\d.*") && password.matches(".*[a-zA-Z].*");
-    }
-
     private UserResponse getUserResponse(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
@@ -103,6 +97,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if (userRepository.existsByEmail(email)) {
             throw new EmailAlreadyExistsException("Email already exist");
         }
+    }
+
+    public User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @Transactional

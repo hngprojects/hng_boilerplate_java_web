@@ -1,4 +1,4 @@
-package hng_java_boilerplate.user.serviceImpl;
+package hng_java_boilerplate.user.signup_unit_test;
 
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
@@ -9,6 +9,7 @@ import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
 import hng_java_boilerplate.user.exception.InvalidRequestException;
 import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
+import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ class UserServiceImplTest {
         user.setName(signupDto.getFirstName() + " " + signupDto.getLastName());
         user.setEmail(signupDto.getEmail());
         user.setPassword("encodedPassword");
-        user.setCreatedAt(LocalDateTime.now()); // Ensure createdAt is set
+        user.setCreatedAt(LocalDateTime.now());
 
 
         when(passwordEncoder.encode(signupDto.getPassword())).thenReturn("encodedPassword");
@@ -70,7 +71,6 @@ class UserServiceImplTest {
 
         ResponseEntity<ApiResponse> responseEntity = userService.registerUser(signupDto);
 
-        // Assertions
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
@@ -92,27 +92,22 @@ class UserServiceImplTest {
 
     @Test
     void testRegisterUser_EmailAlreadyExists() {
-        // Arrange
         SignupDto signupDto = new SignupDto("John", "Doe", "john.doe@example.com", "password123");
 
         when(userRepository.existsByEmail(signupDto.getEmail())).thenReturn(true);
 
-        // Act & Assert
         assertThrows(EmailAlreadyExistsException.class, () -> userService.registerUser(signupDto));
     }
 
     @Test
     void testRegisterUser_InvalidPassword() {
-        // Arrange
         SignupDto signupDto = new SignupDto("John", "Doe", "john.doe@example.com", "short");
 
-        // Act & Assert
         assertThrows(InvalidRequestException.class, () -> userService.registerUser(signupDto));
     }
 
     @Test
     void testRegisterUser_UserNotFoundAfterSave() {
-        // Arrange
         SignupDto signupDto = new SignupDto("John", "Doe", "john.doe@example.com", "password123");
 
         User user = new User();
@@ -127,7 +122,6 @@ class UserServiceImplTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(UserNotFoundException.class, () -> userService.registerUser(signupDto));
     }
 
@@ -140,22 +134,18 @@ class UserServiceImplTest {
         user.setName(signupDto.getFirstName() + " " + signupDto.getLastName());
         user.setEmail(signupDto.getEmail());
         user.setPassword("encodedPassword");
-        user.setCreatedAt(LocalDateTime.now()); // Ensure createdAt is set
+        user.setCreatedAt(LocalDateTime.now());
 
-        // Mock interactions
         when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.empty()); // Simulate email not taken
         when(passwordEncoder.encode(signupDto.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user); // Simulate saving user
         when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.of(user)); // Simulate user retrieval after saving
 
-        // Mock JWT token creation with a fixed expiration time
         String token = "someToken";
         when(jwtUtils.createJwt.apply(any(UserDetails.class))).thenReturn(token);
 
-        // Test the method
         ResponseEntity<ApiResponse> responseEntity = userService.registerUser(signupDto);
 
-        // Assertions
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 

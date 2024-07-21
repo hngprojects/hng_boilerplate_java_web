@@ -44,7 +44,6 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @JsonIgnore
     private Role userRole;
 
     @OneToOne(cascade = CascadeType.ALL)

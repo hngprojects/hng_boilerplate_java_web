@@ -16,6 +16,8 @@ CREATE TABLE users (
     FOREIGN KEY (profile_id) REFERENCES profiles(id)
 );
 
+
+
 -- V1__Create_organisations_table.sql
 CREATE TABLE organisations (
     id VARCHAR(36) PRIMARY KEY,
