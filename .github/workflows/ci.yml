@@ -23,6 +23,10 @@ jobs:
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
+    env:
+      connection_string: postgresql://localhost:5432/postgres
+      database_username: postgres
+      database_password: password
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -32,10 +36,6 @@ jobs:
           java-version: 17
           distribution: temurin
           cache: maven
-        env:
-            connection_string: postgresql://localhost:5432/postgres
-            database_username: postgres
-            database_password: password
       - name: Download Dependencies
         run: mvn dependency:resolve
       - name: Build the application
