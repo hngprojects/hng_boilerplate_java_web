@@ -3,6 +3,7 @@ package hng_java_boilerplate.service;
 import hng_java_boilerplate.dtos.requests.*;
 import hng_java_boilerplate.dtos.responses.*;
 import hng_java_boilerplate.user.entity.User;
+
 import hng_java_boilerplate.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class AccountRecoveryImpl implements AccountRecovery {
         }
         Optional<User> user = userRepository.findById("");
         if (user.isPresent()) {
+            System.out.println("here 1");
             User existingUser = user.get();
             existingUser.setRecoveryEmail(recoveryEmail);
             userRepository.save(existingUser);
@@ -49,26 +51,27 @@ public class AccountRecoveryImpl implements AccountRecovery {
         return DisplaySecurityQuestionsResponse.builder().questions(securityQuestions).message("Security Questions").build();
     }
 
-    @Override
-    public SecurityAnswersResponse submitSecurityQuestions(SubmitSecurityQuestionsRequest request) {
-        List<SecurityQuestionAnswer> answers = request.getAnswers();
-
-        if (validateAnswers(answers)) {
-            Optional<User> user = userRepository.findById("");
-            if (user.isPresent()) {
-                User existingUser = user.get();
-                existingUser.setSecurityAnswers(answers);
-                userRepository.save(existingUser);
-                return SecurityAnswersResponse.builder().message("Security answers submitted successfully").build();
-            }
-        }
-
-        return SecurityAnswersResponse.builder().message("Could not submit security answers").build();
-    }
-
-    private boolean validateAnswers(List<SecurityQuestionAnswer> answers) {
-        return answers != null && !answers.isEmpty();
-    }
+//    @Override
+//    public SecurityAnswersResponse submitSecurityQuestions(SubmitSecurityQuestionsRequest request) {
+//        List<SecurityQuestionAnswer> answers = request.getAnswers();
+//        System.out.println("answers == " + answers);
+//
+//        if (validateAnswers(answers)) {
+//            Optional<User> user = userRepository.findById("");
+//            if (user.isPresent()) {
+//                User existingUser = user.get();
+//                existingUser.setSecurityAnswers(answers);
+//                userRepository.save(existingUser);
+//                return SecurityAnswersResponse.builder().message("Security answers submitted successfully").build();
+//            }
+//        }
+//
+//        return SecurityAnswersResponse.builder().message("Could not submit security answers").build();
+//    }
+//
+//    private boolean validateAnswers(List<SecurityQuestionAnswer> answers) {
+//        return answers != null && !answers.isEmpty();
+//    }
 
     @Override
     public RecoveryPhoneNumberResponse addRecoveryPhoneNumber(RecoveryPhoneNumberRequest request) {
@@ -96,7 +99,8 @@ public class AccountRecoveryImpl implements AccountRecovery {
     public UpdateRecoveryOptionsResponse updateRecoveryOptions(UpdateRecoveryOptionsRequest request) {
         boolean emailIsValid = validateEmail(request.getEmail());
         boolean phoneNumberIsValid = validatePhoneNumber(request.getPhoneNumber());
-        boolean securityQuestionAnswersIsValid = validateSecurityQuestions(request.getSecurityQuestions());
+//        boolean securityQuestionAnswersIsValid = validateSecurityQuestions(request.getSecurityQuestions());
+        boolean securityQuestionAnswersIsValid = true;
 
         if (emailIsValid && phoneNumberIsValid && securityQuestionAnswersIsValid) {
             Optional<User> user = userRepository.findById("");
@@ -104,7 +108,7 @@ public class AccountRecoveryImpl implements AccountRecovery {
                 User existingUser = user.get();
                 existingUser.setRecoveryPhoneNumber(request.getPhoneNumber());
                 existingUser.setRecoveryEmail(request.getEmail());
-                existingUser.setSecurityAnswers(request.getSecurityQuestions());
+//                existingUser.setSecurityAnswers(request.getSecurityQuestions());
                 userRepository.save(existingUser);
                 return UpdateRecoveryOptionsResponse.builder().message("Recovery options updated").build();
             }
@@ -126,11 +130,11 @@ public class AccountRecoveryImpl implements AccountRecovery {
                         case "email":
                             foundUser.setRecoveryEmail(null);
                             break;
-                        case "phoneNumber":
+                        case "phone_number":
                             foundUser.setRecoveryPhoneNumber(null);
                             break;
-                        case "securityQuestions":
-                            foundUser.setSecurityAnswers(null);
+                        case "security_questions":
+//                            foundUser.setSecurityAnswers(null);
                             break;
                         default:
                             return DeleteRecoveryOptionsResponse.builder().message("Invalid recovery option: " + option).build();
@@ -150,8 +154,8 @@ public class AccountRecoveryImpl implements AccountRecovery {
         return options != null && !options.isEmpty() && options.size() <= 3;
     }
 
-    private boolean validateSecurityQuestions(List<SecurityQuestionAnswer> securityQuestionAnswers) {
-        return securityQuestionAnswers != null && !securityQuestionAnswers.isEmpty();
-    }
+//    private boolean validateSecurityQuestions(List<SecurityQuestionAnswer> securityQuestionAnswers) {
+//        return securityQuestionAnswers != null && !securityQuestionAnswers.isEmpty();
+//    }
 
 }

@@ -9,7 +9,7 @@ public interface AccountRecovery {
 
     DisplaySecurityQuestionsResponse displaySecurityQuestions();
 
-    SecurityAnswersResponse submitSecurityQuestions(SubmitSecurityQuestionsRequest request);
+//    SecurityAnswersResponse submitSecurityQuestions(SubmitSecurityQuestionsRequest request);
 
     RecoveryPhoneNumberResponse addRecoveryPhoneNumber(RecoveryPhoneNumberRequest request);
 

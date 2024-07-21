@@ -1,10 +1,12 @@
 package hng_java_boilerplate.controller;
 
+
 import hng_java_boilerplate.dtos.requests.DeleteRecoveryOptionsRequest;
 import hng_java_boilerplate.dtos.requests.RecoveryEmailRequest;
 import hng_java_boilerplate.dtos.requests.RecoveryPhoneNumberRequest;
 import hng_java_boilerplate.dtos.requests.UpdateRecoveryOptionsRequest;
 import hng_java_boilerplate.dtos.responses.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/account")
 public class AccountRecovery {
 
+    @Autowired
     private hng_java_boilerplate.service.AccountRecovery accountRecovery;
 
     @PostMapping("/add-recovery-email")

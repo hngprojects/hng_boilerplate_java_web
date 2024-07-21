@@ -14,6 +14,6 @@ public class UpdateRecoveryOptionsRequest {
 
     private String email;
     private String phoneNumber;
-    private List<SecurityQuestionAnswer> securityQuestions;
+//    private List<SecurityQuestionAnswer> securityQuestions;
 
 }
