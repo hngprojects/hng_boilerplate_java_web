@@ -11,15 +11,12 @@ public class SqueezeRequestService {
     @Autowired
     private SqueezeRequestRepository repository;
 
-    @Autowired
-    private EmailService emailService;
-
     public SqueezeRequest saveSqueezeRequest(SqueezeRequest squeezeRequest) throws DuplicateEmailException {
         if (repository.existsByEmail(squeezeRequest.getEmail())) {
             throw new DuplicateEmailException("Email address already exists");
         }
         SqueezeRequest savedRequest = repository.save(squeezeRequest);
-//        emailService.sendTemplateEmail(squeezeRequest.getEmail());
+        // TODO: Call email service when it is implemented and send mail template
         return savedRequest;
     }
 }

@@ -23,9 +23,9 @@ public class SqueezeRequestController {
     public ResponseEntity<?> handleSqueezeRequest(@Valid @RequestBody SqueezeRequest request) {
         try {
             service.saveSqueezeRequest(request);
-            return ResponseEntity.ok().body(new ResponseMessage("Your request has been received. You will get a template shortly."));
+            return ResponseEntity.ok().body(new ResponseMessage("Your request has been received. You will get a template shortly.", HttpStatus.OK.value()));
         } catch (DuplicateEmailException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessage(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessage(e.getMessage(), HttpStatus.CONFLICT.value()));
         }
     }
 
