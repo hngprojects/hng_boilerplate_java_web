@@ -1,25 +1,50 @@
 package hng_java_boilerplate.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.profile.entity.Profile;
-import hng_java_boilerplate.util.UUIDGenarator;
+import hng_java_boilerplate.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(name = "user_id", nullable = false, unique = true)
+    private String userId;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role userRole;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
@@ -37,51 +62,50 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Product> products;
 
-    public String getId() {
-        return id;
+    @JsonIgnore
+    private Boolean isEnabled = false;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>(Collections.singleton(new SimpleGrantedAuthority(this.userRole.name())));
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return this.email;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public List<Organisation> getOrganisations() {
-        return organisations;
-    }
-
-    public void setOrganisations(List<Organisation> organisations) {
-        this.organisations = organisations;
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return this.isEnabled;
     }
 }
