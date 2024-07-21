@@ -1,4 +1,4 @@
-package hng_java_boilerplate.util;
+package hng_java_boilerplate.squeeze.util;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
