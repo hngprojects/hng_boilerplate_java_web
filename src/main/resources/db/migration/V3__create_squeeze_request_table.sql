@@ -8,7 +8,7 @@ CREATE TABLE squeeze_request (
     location VARCHAR(255) NOT NULL,
     job_title VARCHAR(255) NOT NULL,
     company VARCHAR(255) NOT NULL,
-    interests TEXT[] NOT NULL,
+    interests VARCHAR(255) NOT NULL,
     referral_source VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
