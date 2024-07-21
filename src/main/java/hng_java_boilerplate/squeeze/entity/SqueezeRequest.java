@@ -1,6 +1,6 @@
 package hng_java_boilerplate.squeeze.entity;
 
-import hng_java_boilerplate.util.StringListConverter;
+import hng_java_boilerplate.squeeze.util.StringListConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
