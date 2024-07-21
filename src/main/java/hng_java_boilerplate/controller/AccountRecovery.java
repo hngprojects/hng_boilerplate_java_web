@@ -1,10 +1,7 @@
 package hng_java_boilerplate.controller;
 
 
-import hng_java_boilerplate.dtos.requests.DeleteRecoveryOptionsRequest;
-import hng_java_boilerplate.dtos.requests.RecoveryEmailRequest;
-import hng_java_boilerplate.dtos.requests.RecoveryPhoneNumberRequest;
-import hng_java_boilerplate.dtos.requests.UpdateRecoveryOptionsRequest;
+import hng_java_boilerplate.dtos.requests.*;
 import hng_java_boilerplate.dtos.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,13 +44,24 @@ public class AccountRecovery {
     }
 
     @PostMapping("/submit-security-answers")
-    public ResponseEntity<ApiResponse<?>> submitSecurityAnswers() {
+    public ResponseEntity<ApiResponse<?>> submitSecurityAnswers(@RequestBody SubmitSecurityQuestionsRequest request) {
+        System.out.println("controller == " + request);
+        var response = accountRecovery.submitSecurityQuestions(request);
+
+        if (response.getMessage().equals("Security answers submitted successfully")) {
+            return ResponseEntity.ok().body(ApiResponse.builder().message(response.getMessage()).statusCode("200").build());
+        }
+
+        if (response.getMessage().equals("Could not submit security answers")) {
+            return ResponseEntity.badRequest().body(ApiResponse.builder().message(response.getMessage()).statusCode("400").build());
+        }
+
 
         return null;
     }
 
     @PostMapping("/recovery-number")
-    public ResponseEntity<ApiResponse<?>> addRecoveryNumber(RecoveryPhoneNumberRequest request) {
+    public ResponseEntity<ApiResponse<?>> addRecoveryNumber(@RequestBody RecoveryPhoneNumberRequest request) {
         var response = accountRecovery.addRecoveryPhoneNumber(request);
 
         if (response.getMessage().equals("Invalid phone number")) {
@@ -68,7 +76,7 @@ public class AccountRecovery {
     }
 
     @PutMapping("/update-recovery-options")
-    public ResponseEntity<ApiResponse<?>> updateRecoveryOptions(UpdateRecoveryOptionsRequest request) {
+    public ResponseEntity<ApiResponse<?>> updateRecoveryOptions(@RequestBody UpdateRecoveryOptionsRequest request) {
         var response = accountRecovery.updateRecoveryOptions(request);
 
         if (response.getMessage().equals("Recovery options updated")) {
@@ -79,7 +87,7 @@ public class AccountRecovery {
     }
 
     @DeleteMapping("/delete-recovery-options")
-    public ResponseEntity<ApiResponse<?>> deleteRecoveryOptions(DeleteRecoveryOptionsRequest request) {
+    public ResponseEntity<ApiResponse<?>> deleteRecoveryOptions(@RequestBody DeleteRecoveryOptionsRequest request) {
     var response = accountRecovery.deleteRecoveryOptions(request);
         if (response.getMessage().equals("Recovery options successfully deleted")) {
             return ResponseEntity.ok().body(ApiResponse.builder().message(response.getMessage()).statusCode("200").build());

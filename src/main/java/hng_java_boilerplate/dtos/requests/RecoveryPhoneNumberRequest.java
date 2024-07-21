@@ -10,6 +10,6 @@ import lombok.*;
 @Setter
 public class RecoveryPhoneNumberRequest {
 
-    private String recoveryPhoneNumber;
+    private String phoneNumber;
 
 }

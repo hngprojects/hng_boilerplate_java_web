@@ -1,7 +1,7 @@
 package hng_java_boilerplate.user.entity;
 
-//import hng_java_boilerplate.converter.SecurityQuestionAnswerConverter;
-//import hng_java_boilerplate.dtos.requests.SecurityQuestionAnswer;
+import hng_java_boilerplate.converter.SecurityQuestionAnswerConverter;
+import hng_java_boilerplate.dtos.requests.SecurityQuestionAnswer;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.profile.entity.Profile;
@@ -9,10 +9,12 @@ import hng_java_boilerplate.util.UUIDGenarator;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
 @Entity
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
@@ -27,8 +29,8 @@ public class User {
     private String recoveryPhoneNumber;
 
 
-//    @Convert(converter = SecurityQuestionAnswerConverter.class)
-//    private List<SecurityQuestionAnswer> answers;
+    @Convert(converter = SecurityQuestionAnswerConverter.class)
+    private List<SecurityQuestionAnswer> answers;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
@@ -110,13 +112,13 @@ public class User {
         this.organisations = organisations;
     }
 
-//    public void setSecurityAnswers(List<SecurityQuestionAnswer> answers) {
-//        this.answers = answers;
-//    }
+    public void setSecurityAnswers(List<SecurityQuestionAnswer> answers) {
+        this.answers = answers;
+    }
 
-//    public List<SecurityQuestionAnswer> getSecurityAnswers(List<SecurityQuestionAnswer> answers) {
-//        return answers;
-//    }
+    public List<SecurityQuestionAnswer> getSecurityAnswers(List<SecurityQuestionAnswer> answers) {
+        return answers;
+    }
 
 
 }
