@@ -1,29 +1,28 @@
 package hng_java_boilerplate.plans;
 
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
+import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PlanServiceImpl implements PlanService {
     private final PlanRepository planRepository;
 
+
+
     @Transactional
     @Override
     public ResponseEntity<Object> create(CreatePlanDto createPlanDto) {
-        Optional<Plan> plan = planRepository.findByName(createPlanDto.name());
+        boolean planExists = planRepository.existsByName(createPlanDto.name());
 
-        if (plan.isPresent()) {
-            return ResponseEntity.status(400).body(new HashMap<>(){{
-                put("status_code", 400);
-                put("error", "Subscription plan already exists");
-            }});
+        if (planExists) {
+            throw new DuplicatePlanException("Plan already exists.");
         }
         Plan newPlan = Plan.builder()
                 .price(createPlanDto.price())

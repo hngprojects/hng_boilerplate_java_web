@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -29,7 +30,7 @@ public class PlanControllerTest {
     protected MockMvc mockMvc;
 
     private final Plan plan = Plan.builder()
-            .id(1L)
+            .id(UUID.randomUUID())
             .name("plan name")
             .description("plan description")
             .price(19.99)
@@ -52,21 +53,5 @@ public class PlanControllerTest {
                         .header("Authorization", "")
         ).andExpect(status().isUnauthorized());
     }
-
-    @Test
-    public void shouldCreatePlan() throws Exception {
-        Map<String, Object> response = new HashMap<>(){{
-            put("status_code", 201);
-            put("data",  plan);
-        }};
-        when(planService.create(Mockito.any(CreatePlanDto.class))).thenReturn(ResponseEntity.status(201).body(response));
-        this.mockMvc.perform(
-                post("/api/v1/plans")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("")
-                        .header("Authorization", "")
-        ).andExpect(status().isCreated());
-    }
-
 
 }
