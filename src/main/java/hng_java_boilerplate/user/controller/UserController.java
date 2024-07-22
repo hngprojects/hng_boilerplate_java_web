@@ -1,5 +1,6 @@
 package hng_java_boilerplate.user.controller;
 
+import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import javax.crypto.BadPaddingException;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserDetails(@PathVariable String userId) {

@@ -27,11 +27,8 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
-
     private UserServiceImpl userService;
     private JwtAuthenticationFilter authentication;
-
 
     @Autowired
     public WebSecurityConfig(@Lazy UserServiceImpl userService, JwtAuthenticationFilter authentication) {
@@ -50,21 +47,16 @@ public class WebSecurityConfig {
         return source;
     }
 
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-
-    @Bean//bcryptPasswordEncoder is enabled for spring security hashing/salting of user's password information
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-
-    //AuthenticationProvider(DAOAuthenticationProvider) is enabled to function as the "bouncer" in our application. Checking
-    //password and User information credibility.
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -73,9 +65,7 @@ public class WebSecurityConfig {
         return daoAuthenticationProvider;
     }
 
-
-    @Bean//Creating our authorisation security for providing the right authorisation process
-    // from before "logging in" till after "logging out"
+    @Bean
     public SecurityFilterChain httpSecurity(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)

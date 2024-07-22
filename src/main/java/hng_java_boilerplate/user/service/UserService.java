@@ -10,4 +10,5 @@ import javax.crypto.BadPaddingException;
 public interface UserService {
     GetUserDto getUserWithDetails(String userId) throws BadPaddingException;
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
+
 }

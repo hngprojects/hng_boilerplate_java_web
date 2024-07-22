@@ -20,11 +20,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-
 @Component
 public class JwtUtils {
-
-
     @Value("${sha512.string}")
     private String secretKey;
 
@@ -34,7 +31,6 @@ public class JwtUtils {
         return new SecretKeySpec(key.getEncoded(), key.getAlgorithm());
     };
 
-
     private final Supplier<Date> expirationTime = ()-> Date
             .from(LocalDateTime.now()
                     .plusMinutes(60).atZone(ZoneId.systemDefault()).toInstant());
@@ -42,25 +38,20 @@ public class JwtUtils {
         final Claims claims = Jwts.parser()
                 .verifyWith(getKey.get())
                 .build().parseSignedClaims(token).getPayload();
-
         return claimResolver.apply(claims);
     }
 
     public Function<String, String> extractUsername = token->
             extractClaims(token, Claims::getSubject);
 
-
     private final Function<String, Date> extractExpirationDate = token->
             extractClaims(token, Claims::getExpiration);
-
 
     public Function<String, Boolean> isTokenExpired = token->extractExpirationDate.apply(token)
             .after(new Date(System.currentTimeMillis()));
 
-
     public BiFunction<String, String, Boolean> isTokenValid = (token, username) ->
             isTokenExpired.apply(token)&&Objects.equals(extractUsername.apply(token), username);
-
 
     public Function<UserDetails, String> createJwt = userDetails -> {
         Map<String, Object> claims = new HashMap<>();
@@ -72,6 +63,4 @@ public class JwtUtils {
                 .expiration(expirationTime.get())
                 .compact();
     };
-
-
 }

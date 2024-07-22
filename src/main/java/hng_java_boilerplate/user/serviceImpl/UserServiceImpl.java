@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Transactional
+    @Override
     public GetUserDto getUserWithDetails(String userId) throws BadPaddingException {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(BadPaddingException::new);
