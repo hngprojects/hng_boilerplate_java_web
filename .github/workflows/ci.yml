@@ -64,3 +64,12 @@ jobs:
         with: 
           name: test-results
           path: target/*.jar
+
+      # Debug step
+      - name: Print Environment Variables
+        run: |
+          echo "POSTGRES_USER: ${{ secrets.POSTGRES_USER }}"
+          echo "POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}"
+          echo "POSTGRES_DB: ${{ secrets.POSTGRES_DB }}"
+        shell: bash
+
