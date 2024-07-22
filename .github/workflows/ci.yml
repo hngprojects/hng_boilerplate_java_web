@@ -13,9 +13,9 @@ jobs:
         postgres:  
           image: postgres:latest
           env:
-            POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-            POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: postgres
           ports:
             - 5432:5432
           options: >-
@@ -25,9 +25,9 @@ jobs:
             --health-retries 5
             
     env:
-      connection_string: postgresql://localhost:${{ secrets.POSTGRES_PORT }}/${{ secrets.POSTGRES_DB }}
-      database_username: ${{ secrets.POSTGRES_USER }}
-      database_password: ${{ secrets.POSTGRES_PASSWORD }}
+      connection_string: postgresql://localhost:5432/postgres
+      database_username: postgres
+      database_password: password
 
     steps:
       - name: Checkout repository
