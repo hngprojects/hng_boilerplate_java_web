@@ -9,20 +9,14 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
-    env:
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      connection_string: postgresql://localhost:${{ secrets.POSTGRES_PORT }}/${{ secrets.POSTGRES_DB }}
-      database_username: ${{ secrets.POSTGRES_USER }}
-      database_password: ${{ secrets.POSTGRES_PASSWORD }}
-      
+          
     services:
         postgres:  
           image: postgres:latest
           env:
-            POSTGRES_USER: ${{ env.database_username }}
-            POSTGRES_PASSWORD: ${{ env.database_password }}
-            POSTGRES_DB: ${{ env.POSTGRES_DB }}
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: postgres
           ports:
             - 5432:5432
           options: >-
@@ -30,7 +24,12 @@ jobs:
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
-          
+
+    env:
+      connection_string: postgresql://localhost:5432/postgres
+      database_username: postgres
+      database_password: password
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
