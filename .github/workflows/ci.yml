@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+          
     services:
         postgres:  
           image: postgres:latest
@@ -23,7 +24,7 @@ jobs:
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
-            
+
     env:
       connection_string: postgresql://localhost:5432/postgres
       database_username: postgres
