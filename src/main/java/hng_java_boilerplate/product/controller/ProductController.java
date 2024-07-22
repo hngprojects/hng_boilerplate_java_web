@@ -1,9 +1,12 @@
 package hng_java_boilerplate.product.controller;
 
+import hng_java_boilerplate.product.dto.ProductDTO;
 import hng_java_boilerplate.product.dto.ProductSearchDTO;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
+import hng_java_boilerplate.user.entity.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,6 +25,12 @@ public class ProductController {
     private final ProductService productService;
     public ProductController(ProductService productService) {
         this.productService = productService;
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO productDTO) {
+        Product product = productService.addProduct(productDTO));
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
     @GetMapping("/search")
