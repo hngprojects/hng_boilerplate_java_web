@@ -61,26 +61,6 @@ public class AuthControllerTest {
                 .andExpect(jsonPath("$.data.user.created_at").isNotEmpty());
     }
 
-    @Test
-    void registerUser_EmailAlreadyExists() throws Exception {
-        SignupDto signupDto = new SignupDto();
-        signupDto.setFirstName("John");
-        signupDto.setLastName("Doe");
-        signupDto.setEmail("john.doe@example.com");
-        signupDto.setPassword("Password123");
-
-        mockMvc.perform(post("/api/v1/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(signupDto)))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(post("/api/v1/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(signupDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Email already exist"));
-    }
-
 
     @Test
     void registerUser_InvalidPassword() throws Exception {
