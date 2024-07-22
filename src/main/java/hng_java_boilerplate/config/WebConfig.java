@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("https://api-java.boilerplate.hng.tech",
-                        "staging.api-java.boilerplate.hng.tech",
+                        "https://staging.api-java.boilerplate.hng.tech",
                         "deployment.api-java.boilerplate.hng.tech")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
