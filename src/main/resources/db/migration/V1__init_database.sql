@@ -40,3 +40,12 @@ CREATE TABLE user_organisation (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (organisation_id) REFERENCES organisations(id)
 );
+
+-- V1__Create_notification_settings_table.sql
+CREATE TABLE notification_settings (
+id VARCHAR(36) PRIMARY KEY,
+user_id VARCHAR(36) NOT NULL,
+email_notifications BOOLEAN NOT NULL,
+push_notifications BOOLEAN NOT NULL,
+sms_notifications BOOLEAN NOT NULL
+);
