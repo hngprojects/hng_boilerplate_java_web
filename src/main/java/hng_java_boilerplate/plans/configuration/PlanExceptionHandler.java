@@ -15,7 +15,7 @@ public class PlanExceptionHandler {
     @ExceptionHandler(DuplicatePlanException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> duplicatePlan() {
-        var response = new HashMap<>(){{
+        var response = new HashMap<>() {{
             put("status_code", 400);
             put("error", "Subscription plan already exists");
         }};

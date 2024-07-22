@@ -14,8 +14,6 @@ import java.util.HashMap;
 public class PlanServiceImpl implements PlanService {
     private final PlanRepository planRepository;
 
-
-
     @Transactional
     @Override
     public ResponseEntity<Object> create(CreatePlanDto createPlanDto) {
@@ -33,7 +31,7 @@ public class PlanServiceImpl implements PlanService {
                 .build();
 
         Plan saved = planRepository.save(newPlan);
-        return ResponseEntity.status(201).body(new HashMap<>(){{
+        return ResponseEntity.status(201).body(new HashMap<>() {{
             put("data", saved);
             put("status_code", 201);
         }});
