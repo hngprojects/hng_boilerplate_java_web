@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("https://api-java.boilerplate.hng.tech",
                         "https://staging.api-java.boilerplate.hng.tech",
-                        "deployment.api-java.boilerplate.hng.tech")
+                        "https://deployment.api-java.boilerplate.hng.tech")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
