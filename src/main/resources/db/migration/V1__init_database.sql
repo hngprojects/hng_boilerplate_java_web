@@ -7,7 +7,7 @@ CREATE TABLE profiles (
     avatar_url TEXT
 );
 
--- V2__Create_users_table.sql
+-- V1__Create_users_table.sql
 CREATE TABLE users (
     id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -16,14 +16,14 @@ CREATE TABLE users (
     FOREIGN KEY (profile_id) REFERENCES profiles(id)
 );
 
--- V3__Create_organisations_table.sql
+-- V1__Create_organisations_table.sql
 CREATE TABLE organisations (
     id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT
 );
 
--- V4__Create_products_table.sql
+-- V1__Create_products_table.sql
 CREATE TABLE products (
     id VARCHAR(36) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE products (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- V5__Create_user_organisation_table.sql
+-- V1__Create_user_organisation_table.sql
 CREATE TABLE user_organisation (
     user_id VARCHAR(36),
     organisation_id VARCHAR(36),
