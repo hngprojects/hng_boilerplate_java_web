@@ -22,7 +22,7 @@ public class MyExceptionHandler {
                 invitationValidationException.getError(),
                 invitationValidationException.getStatus()
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OrganisationException.class)
