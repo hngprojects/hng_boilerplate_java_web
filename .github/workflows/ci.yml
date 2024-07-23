@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+          
     services:
         postgres:  
           image: postgres:latest
@@ -23,24 +24,44 @@ jobs:
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
+
+    env:
+      connection_string: postgresql://localhost:5432/postgres
+      database_username: postgres
+      database_password: password
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: temurin
           cache: maven
+
       - name: Download Dependencies
         run: mvn dependency:resolve
+
       - name: Build the application
         run: mvn clean install
-      - name: Unit Testing
+
+      - name: List target directory contents
+        run: ls -l target
+
+      - name: Start Application
+        run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &
+
+      - name: Wait for Application to be Ready
+        run: sleep 30
+
+      - name: Unit and Integration Testing
         run: mvn -B test
+
       - name: Archive Test Result
         uses: actions/upload-artifact@v3
         if: always()
         with: 
           name: test-results
-          path: ./target/test-results
+          path: target/*.jar
