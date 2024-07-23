@@ -55,7 +55,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         validateEmail(signupDto.getEmail());
 
         User user = new User();
-        user.setUserId(UUID.randomUUID().toString());
         user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
@@ -81,7 +80,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         String lastName = nameParts.length > 1 ? nameParts[1] : "";
 
         UserResponse userResponse = new UserResponse();
-        userResponse.setId(user.getUserId());
+        userResponse.setId(user.getId());
         userResponse.setFirst_name(firstName);
         userResponse.setLast_name(lastName);
         userResponse.setEmail(user.getEmail());
@@ -104,12 +103,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     @Override
     public GetUserDto getUserWithDetails(String userId) throws BadPaddingException {
-        User user = userRepository.findByUserId(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(BadPaddingException::new);
 
         GetUserDto userDto = GetUserDto
                 .builder()
-                .id(user.getUserId())
+                .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .build();

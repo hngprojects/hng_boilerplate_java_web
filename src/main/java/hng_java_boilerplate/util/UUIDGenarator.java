@@ -13,8 +13,8 @@ public class UUIDGenarator {
     @PrePersist
     public void generateUUID(Object entity) {
         if (entity instanceof User user) {
-            if (user.getUserId() == null) {
-                user.setUserId(UUID.randomUUID().toString());
+            if (user.getId() == null) {
+                user.setId(UUID.randomUUID().toString());
             }
         } else if (entity instanceof Profile profile) {
             if (profile.getId() == null) {

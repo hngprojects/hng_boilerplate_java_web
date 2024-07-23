@@ -55,7 +55,7 @@ class UserServiceImplTest {
     void testRegisterUser_Success() {
         SignupDto signupDto = new SignupDto("John", "Doe", "john.doe@example.com", "password123");
         User user = new User();
-        user.setUserId("someUserId");
+        user.setId("someUserId");
         user.setName(signupDto.getFirstName() + " " + signupDto.getLastName());
         user.setEmail(signupDto.getEmail());
         user.setPassword("encodedPassword");
@@ -103,7 +103,7 @@ class UserServiceImplTest {
         SignupDto signupDto = new SignupDto("John", "Doe", "john.doe@example.com", "password123");
 
         User user = new User();
-        user.setUserId(UUID.randomUUID().toString());
+        user.setId(UUID.randomUUID().toString());
         user.setName("John Doe");
         user.setEmail(signupDto.getEmail());
         user.setPassword("encodedPassword");
@@ -122,7 +122,7 @@ class UserServiceImplTest {
         SignupDto signupDto = new SignupDto("John", "Doe", "john.doe@example.com", "password123");
 
         User user = new User();
-        user.setUserId("someUserId");
+        user.setId("someUserId");
         user.setName(signupDto.getFirstName() + " " + signupDto.getLastName());
         user.setEmail(signupDto.getEmail());
         user.setPassword("encodedPassword");

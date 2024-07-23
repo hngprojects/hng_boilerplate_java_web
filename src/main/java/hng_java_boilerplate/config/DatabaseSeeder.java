@@ -67,7 +67,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         // Seed users
         User user1 = new User();
-        user1.setUserId(UUID.randomUUID().toString());
+        user1.setId(UUID.randomUUID().toString());
         user1.setName("John Doe");
         user1.setEmail("johndoe@example.com");
         user1.setPassword(passwordEncoder.encode("password1"));
@@ -77,7 +77,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         user1.setProfile(profile1);
 
         User user2 = new User();
-        user2.setUserId(UUID.randomUUID().toString());
+        user2.setId(UUID.randomUUID().toString());
         user2.setName("Jane Smith");
         user2.setEmail("janesmith@example.com");
         user2.setPassword(passwordEncoder.encode("password2"));
