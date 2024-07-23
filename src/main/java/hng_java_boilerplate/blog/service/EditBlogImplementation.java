@@ -18,8 +18,8 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class EditBlogImplementation implements EditBlogService {
     private final BlogRepository blogRepository;
-    private final Pattern TAG_PATTERN = Pattern.compile("^[a-zA-Z0-9-_ ]+$");
-    private final int MAXIMUM_TAG_LENGTH = 30;
+    private static final Pattern TAG_PATTERN = Pattern.compile("^[a-zA-Z0-9-_ ]+$");
+    private static final int MAXIMUM_TAG_LENGTH = 30;
 
     /**
      * Allows super admin to edit a blog post

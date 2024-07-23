@@ -6,6 +6,7 @@ import hng_java_boilerplate.blog.service.EditBlogService;
 import hng_java_boilerplate.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,7 +18,7 @@ public class BlogController {
 
     @PutMapping("/edit/{blog_id}")
     public ResponseEntity<ApiResponse<EditResponse>> edit_blog(@PathVariable String blog_id,
-                                                               @RequestBody EditRequest request){
+                                                               @RequestBody @Validated EditRequest request){
         return editBlogService.editBlog(blog_id, request);
     }
 }
