@@ -2,7 +2,6 @@ package hng_java_boilerplate.waitlist.controller;
 
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
-import hng_java_boilerplate.waitlist.service.EmailService;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +18,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/v1/waitlist")
 public class WaitlistController {
+
+    private final WaitlistService waitlistService;
+    private final EmailProducerService emailProducerService;
+
     @Autowired
-    private WaitlistService waitlistService;
-    @Autowired
-    private EmailProducerService emailProducerService;
+    public WaitlistController(WaitlistService waitlistService, EmailProducerService emailProducerService) {
+        this.waitlistService = waitlistService;
+        this.emailProducerService = emailProducerService;
+    }
 
     @PostMapping
     public ResponseEntity<?> createWaitlist(@Valid @RequestBody Waitlist waitlist){

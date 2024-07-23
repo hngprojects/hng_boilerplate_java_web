@@ -23,7 +23,7 @@ public class Waitlist {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @NotBlank(message = "Email is required")
+    @NotBlank(message = "fullName is required")
     private String fullName;
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
