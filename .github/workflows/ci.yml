@@ -11,20 +11,6 @@ jobs:
     runs-on: ubuntu-latest
           
     services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
         postgres:  
           image: postgres:latest
           env:
@@ -76,6 +62,6 @@ jobs:
       - name: Archive Test Result
         uses: actions/upload-artifact@v3
         if: always()
-        with:
+        with: 
           name: test-results
           path: target/*.jar
