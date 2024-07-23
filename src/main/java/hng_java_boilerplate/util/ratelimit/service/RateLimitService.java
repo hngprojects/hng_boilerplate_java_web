@@ -1,4 +1,4 @@
-package hng_java_boilerplate.waitlist.service;
+package hng_java_boilerplate.util.ratelimit.service;
 
 import org.springframework.stereotype.Service;
 

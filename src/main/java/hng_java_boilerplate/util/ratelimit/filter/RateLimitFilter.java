@@ -1,6 +1,6 @@
-package hng_java_boilerplate.waitlist.filter;
+package hng_java_boilerplate.util.ratelimit.filter;
 
-import hng_java_boilerplate.waitlist.service.RateLimitService;
+import hng_java_boilerplate.util.ratelimit.service.RateLimitService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
+
 public class RateLimitFilter implements Filter {
     private final RateLimitService rateLimitService;
 
