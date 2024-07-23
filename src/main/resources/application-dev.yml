@@ -1,0 +1,17 @@
+#spring:
+#  application:
+#    name: hng-java-boilerplate
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/Hng_db
+#    username: postgres
+#    password: idealnaz
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true
+#    location: classpath:db/migration
+#    user: postgres
+#    password: password
+#    baseline-version: 1
