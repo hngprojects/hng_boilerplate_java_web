@@ -4,6 +4,7 @@ import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.dto.DataDto;
 import hng_java_boilerplate.organisation.entity.Organisation;
+import hng_java_boilerplate.organisation.exception.OrganisationNameAlreadyExistsException;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
@@ -24,6 +25,12 @@ public class OrganisationService {
             CreateOrganisationRequestDto orgRequest,
             Authentication activeUser
     ) {
+
+        if (organisationRepository.findByName(orgRequest.name()).isPresent()) {
+            throw new OrganisationNameAlreadyExistsException(
+                    "Sorry, an Organisation with NAME::" + orgRequest.name() + " already exists"
+            );
+        }
 
         User user  = (User) activeUser.getPrincipal();
 

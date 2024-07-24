@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -38,6 +39,13 @@ public class Organisation {
     @ManyToMany(mappedBy = "organisations")
     @JsonIgnore
     private List<User> users;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID().toString();
+        }
+    }
 
     public String getId() {
         return id;
