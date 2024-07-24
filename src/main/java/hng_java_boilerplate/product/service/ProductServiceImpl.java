@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
+
 
     @Override
     public Page<Product> productsSearch(String name, String category, Double minPrice, Double maxPrice, Pageable pageable) {
