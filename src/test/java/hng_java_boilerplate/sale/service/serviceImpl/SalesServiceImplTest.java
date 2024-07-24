@@ -5,6 +5,7 @@ import hng_java_boilerplate.sale.dto.ResponseDTO;
 import hng_java_boilerplate.sale.entity.Sale;
 import hng_java_boilerplate.sale.repository.SaleRepository;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,14 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -83,4 +83,79 @@ public class SalesServiceImplTest {
         assertEquals("ResourceNotFound", errorResponse.getError());
         assertEquals("The Summary data could not be found", errorResponse.getMessage());
     }
+
+    @Test
+    public void testGetPieChartData_Success() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken("user@example.com", "password");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        User user = new User();
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+        Sale sale1 = new Sale();
+        sale1.setTotalSale(100L);
+        sale1.setCreatedAt(LocalDateTime.of(2024, Month.JANUARY, 15, 0, 0));
+        Sale sale2 = new Sale();
+        sale2.setTotalSale(200L);
+        sale2.setCreatedAt(LocalDateTime.of(2024, Month.FEBRUARY, 15, 0, 0));
+        List<Sale> saleList = new ArrayList<>();
+        saleList.add(sale1);
+        saleList.add(sale2);
+        when(salesRepository.findAll()).thenReturn(saleList);
+        Object response = salesService.getPieChartData();
+        assertTrue(response instanceof ResponseDTO);
+        ResponseDTO responseDTO = (ResponseDTO) response;
+        assertEquals("true", responseDTO.getStatus());
+        assertEquals(200, responseDTO.getStatus_code());
+        assertEquals(Arrays.asList("January", "February"), responseDTO.getMonth());
+        double totalSales = 300.0;
+        List<Double> expectedTotalSalesList = Arrays.asList(100.0, 200.0);
+        List<Integer> expectedDegreesList = Arrays.asList(
+                (int) ((100.0 / totalSales) * 360),
+                (int) ((200.0 / totalSales) * 360)
+        );
+        assertEquals(expectedTotalSalesList, responseDTO.getTotalSales());
+        assertEquals(expectedDegreesList, responseDTO.getTotalSalesInDegree());
+    }
+
+    @Test
+    public void testGetPieChartData_NoSalesData() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken("user@example.com", "password");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        User user = new User();
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+        when(salesRepository.findAll()).thenReturn(Collections.emptyList());
+        Object response = salesService.getPieChartData();
+        assertTrue(response instanceof ErrorResponse);
+        ErrorResponse errorResponse = (ErrorResponse) response;
+        assertEquals("false", errorResponse.getStatus());
+        assertEquals(404, errorResponse.getStatus_code());
+        assertEquals("DataFetchError", errorResponse.getError());
+        assertEquals("There was an error fetching the pie chart data", errorResponse.getMessage());
+    }
+
+    @Test
+    public void testGetPieChartData_Unauthenticated() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        Object response = salesService.getPieChartData();
+        assertTrue(response instanceof UserNotFoundException);
+        UserNotFoundException exception = (UserNotFoundException) response;
+        assertEquals("User not authorized or token invalid.", exception.getMessage());
+    }
+
+    @Test
+    public void testGetPieChartData_ExceptionHandling() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken("user@example.com", "password");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        User user = new User();
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+        when(salesRepository.findAll()).thenThrow(new RuntimeException("Database error"));
+        Object response = salesService.getPieChartData();
+        assertTrue(response instanceof ErrorResponse);
+        ErrorResponse errorResponse = (ErrorResponse) response;
+        assertEquals("false", errorResponse.getStatus());
+        assertEquals(404, errorResponse.getStatus_code());
+        assertEquals("DataFetchError", errorResponse.getError());
+        assertEquals("There was an error fetching the pie chart data", errorResponse.getMessage());
+    }
+
+
 }
