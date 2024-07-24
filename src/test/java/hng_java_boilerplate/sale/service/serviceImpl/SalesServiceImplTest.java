@@ -157,5 +157,29 @@ public class SalesServiceImplTest {
         assertEquals("There was an error fetching the pie chart data", errorResponse.getMessage());
     }
 
-
+    @Test
+    public void testGetBarChartData_Success() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken("user@example.com", "password");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        User user = new User();
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+        Sale sale1 = new Sale();
+        sale1.setTotalSale(100L);
+        sale1.setCreatedAt(LocalDateTime.of(2024, Month.JANUARY, 15, 0, 0));
+        Sale sale2 = new Sale();
+        sale2.setTotalSale(200L);
+        sale2.setCreatedAt(LocalDateTime.of(2024, Month.FEBRUARY, 15, 0, 0));
+        List<Sale> saleList = new ArrayList<>();
+        saleList.add(sale1);
+        saleList.add(sale2);
+        when(salesRepository.findAll()).thenReturn(saleList);
+        Object response = salesService.getBarChartData();
+        assertTrue(response instanceof ResponseDTO);
+        ResponseDTO responseDTO = (ResponseDTO) response;
+        assertEquals("true", responseDTO.getStatus());
+        assertEquals(200, responseDTO.getStatus_code());
+        assertEquals(Arrays.asList("January", "February"), responseDTO.getMonth());
+        List<Double> expectedTotalSalesList = Arrays.asList(100.0, 200.0);
+        assertEquals(expectedTotalSalesList, responseDTO.getTotalSales());
+    }
 }
