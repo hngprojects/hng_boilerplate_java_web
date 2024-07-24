@@ -4,6 +4,7 @@ import hng_java_boilerplate.mappers.Mapper;
 import hng_java_boilerplate.region.dto.*;
 import hng_java_boilerplate.region.entity.UserRegionEntity;
 import hng_java_boilerplate.region.service.RegionService;
+import hng_java_boilerplate.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.security.core.Authentication;
+import org.springframework.security.core.Authentication;
 
 
 import java.util.List;
@@ -91,7 +92,8 @@ public class RegionController {
     })
     @PostMapping()
     public ResponseEntity<?> assignRegion(
-            @RequestBody UserRegionDto userRegionDTO
+            @RequestBody UserRegionDto userRegionDTO,
+            Authentication authentication
     ){
 
         try {
@@ -108,17 +110,17 @@ public class RegionController {
 
 
         //========== Ensure that assignee is owner of account. =================
-//        UserEntity user = (UserEntity) authentication.getPrincipal();
-//        String user_id = user.getUserId();
-//        if(!user_id.equals(userId)){
-//            return new ResponseEntity<>(
-//                    Optional.of(RegionErrorResponseDto.builder()
-//                            .statusCode("401")
-//                            .message("Unauthorized request")
-//                            .build()),
-//                    HttpStatus.UNAUTHORIZED
-//            );
-//        }
+        User user = (User) authentication.getPrincipal();
+        String user_id = user.getId();
+        if(!user_id.equals(userRegionDTO.getUserId())){
+            return new ResponseEntity<>(
+                    Optional.of(RegionErrorResponseDto.builder()
+                            .statusCode("401")
+                            .message("Unauthorized request")
+                            .build()),
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
 
 
 
@@ -204,24 +206,24 @@ public class RegionController {
     @PutMapping("/{user_id}")
     public ResponseEntity<?> updateUserRegion(
             @PathVariable("user_id") String userID,
-            @RequestBody RegionUpdateDto regionUpdateDto
+            @RequestBody RegionUpdateDto regionUpdateDto,
+            Authentication authentication
     ) {
 
 
 
 //========== Ensure that only the current authenticated users can update their region preferences. ===============================================
-//        UserEntity user = (UserEntity) authentication.getPrincipal();
-//
-//        String user_id = user.getUserId();
-//        if(!user_id.equals(userId)){
-//            return new ResponseEntity<>(
-//                    Optional.of(RegionErrorResponseDto.builder()
-//                            .statusCode("401")
-//                            .message("Unauthorized request")
-//                            .build()),
-//                    HttpStatus.UNAUTHORIZED
-//            );
-//        }
+        User user = (User) authentication.getPrincipal();
+        String user_id = user.getId();
+        if(!user_id.equals(userID)){
+            return new ResponseEntity<>(
+                    Optional.of(RegionErrorResponseDto.builder()
+                            .statusCode("401")
+                            .message("Unauthorized request")
+                            .build()),
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
 
         try {
 
