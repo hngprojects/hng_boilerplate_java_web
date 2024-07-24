@@ -29,8 +29,8 @@ public class TwoFactorAuthUtils {
     }
 
 
-    public byte[] generateQRCode(String secret) throws WriterException, IOException {
-        String otpAuthURL = "otpauth://totp/YourApp:user@example.com?secret=" + secret + "&issuer=YourApp";
+    public byte[] generateQRCode(String secret, String email) throws WriterException, IOException {
+        String otpAuthURL = "otpauth://totp/HNG:" + email + "?secret=" + secret + "&issuer=HNG";
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(otpAuthURL, BarcodeFormat.QR_CODE, 200, 200);
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
@@ -42,6 +42,29 @@ public class TwoFactorAuthUtils {
         GoogleAuthenticator gAuth = new GoogleAuthenticator();
         return gAuth.authorize(secret, code);
     }
+
+//    public String storeQRCodeImage(byte[] qrCodeBytes, String username) throws IOException {
+//        // Define the directory to store the QR code images
+//        String qrCodeDirectory = "C:/path/to/your/qr-codes/";
+//
+//        // Create the directory if it doesn't exist
+//        File directory = new File(qrCodeDirectory);
+//        if (!directory.exists()) {
+//            directory.mkdirs();
+//        }
+//
+//        // Define the file path
+//        String filePath = qrCodeDirectory + username + "_qr_code.png";
+//
+//        // Write the QR code bytes to the file
+//        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+//            fos.write(qrCodeBytes);
+//        }
+//
+//        // Return the URL to access the QR code image
+//        // Adjust the URL according to your server setup
+//        return "http://yourserver.com/qr-codes/" + username + "_qr_code.png";
+//    }
 
     public String[] generateBackupCodes() {
         // Implement logic to generate and store backup codes

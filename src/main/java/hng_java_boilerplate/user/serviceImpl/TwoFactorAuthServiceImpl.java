@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,24 +37,30 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
     @Override
     public EnableTwoFactorAuthResponse enableTwoFA(EnableTwoFactorAuthRequest request) throws IOException, WriterException {
         EnableTwoFactorAuthResponse response = new EnableTwoFactorAuthResponse();
         Map<String, Object> data = new HashMap<>();
         String password = request.getPassword();
         User loggedInUser = userService.getLoggedInUser();
+        System.out.println("logged in person == " + loggedInUser);
+
         if (loggedInUser != null) {
-            if (loggedInUser.getPassword().equals(password)) {
+            if (passwordEncoder.matches(password, loggedInUser.getPassword())) {
                 if (!loggedInUser.isIs2FAEnabled()) {
                     loggedInUser.setIs2FAEnabled(true);
                     String secretKey = twoFactorAuthUtils.generateSecretKey();
                     loggedInUser.setTwoFASecretKey(secretKey);
                     userService.saveUser(loggedInUser);
-                    byte[] qrCode = twoFactorAuthUtils.generateQRCode(secretKey);
+
+                    byte[] qrCodeBytes = twoFactorAuthUtils.generateQRCode(secretKey, loggedInUser.getEmail());
+                    String qrCodeUrl = "data:image/png;base64," + Base64.getEncoder().encodeToString(qrCodeBytes);
+
                     response.setStatus_code("200");
                     response.setMessage("2FA setup initiated");
                     data.put("secret_key", secretKey);
-                    data.put("qr_code_url", qrCode);
+                    data.put("qr_code_url", qrCodeUrl);
                     response.setData(data);
                     return response;
                 }
@@ -63,10 +70,12 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
         } else {
             throw new UnauthorizedException("Authentication required");
         }
+
         response.setStatus_code("401");
         response.setMessage("Authentication required");
         return response;
     }
+
 
     @Override
     public VerifyTwoFactorAuthResponse verifyTotpCode(Verify2FARequest request) {
@@ -168,7 +177,6 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
         User loggedInUser = userService.getLoggedInUser();
         if (loggedInUser != null) {
             if (loggedInUser.getTwoFABackupCodes() != null && List.of(loggedInUser.getTwoFABackupCodes()).contains(request.getBackup_codes())) {
-                // Logic to verify and recover 2FA
                 response.setStatus_code("200");
                 response.setMessage("2FA verified");
                 return response;

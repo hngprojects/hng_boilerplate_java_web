@@ -36,15 +36,16 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "2FA_status")
+    @Column(name = "two_FA_status")
     private boolean is2FAEnabled;
 
-    @Column(name = "2FA_secret_key")
+    @Column(name = "two_FA_secret_key")
     private String twoFASecretKey;
 
-    @Column(name = "2FA_backup_codes")
-    @OneToOne(cascade = CascadeType.ALL)
-    private List<String> twoFABackupCodes;
+    @ElementCollection
+    @CollectionTable(name = "two_fa_backup_codes", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "backup_code")
+    private List<String> twoFABackupCodes = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role userRole;
