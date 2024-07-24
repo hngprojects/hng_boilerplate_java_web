@@ -41,7 +41,7 @@ public class PlanServiceTest {
                 .name("plan name")
                 .description("plan description")
                 .price(19.99)
-                .duration_unit("day")
+                .durationUnit("day")
                 .duration(1)
                 .build();
         when(this.planRepository.save(any(Plan.class))).thenReturn(plan);
@@ -54,7 +54,7 @@ public class PlanServiceTest {
 
         PlanResponse body = response.getBody();
         assertNotNull(body);
-        assertEquals(HttpStatus.CREATED.value(), body.status_code());
+        assertEquals(HttpStatus.CREATED.value(), body.statusCode());
         assertEquals("Plan created successfully", body.message());
 
         var data = body.data();
@@ -64,7 +64,7 @@ public class PlanServiceTest {
         assertEquals(plan.getName(), "plan name");
         assertEquals(plan.getPrice(), 19.99);
         assertEquals(plan.getDuration(), 1);
-        assertEquals(plan.getDuration_unit(), "day");
+        assertEquals(plan.getDurationUnit(), "day");
 
     }
 

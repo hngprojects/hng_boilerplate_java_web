@@ -29,5 +29,5 @@ public class Plan {
     private int duration;
 
     @Column(nullable = false)
-    private String duration_unit;
+    private String durationUnit;
 }
