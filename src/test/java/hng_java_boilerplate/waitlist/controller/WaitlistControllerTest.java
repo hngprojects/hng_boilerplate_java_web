@@ -1,6 +1,7 @@
 package hng_java_boilerplate.waitlist.controller;
 
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
+import hng_java_boilerplate.waitlist.controller.WaitlistController;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,22 +26,24 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(WaitlistController.class)
 public class WaitlistControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private WaitlistService waitlistService;
+
+    @MockBean
+    private EmailProducerService emailProducerService;
+
     @InjectMocks
     private WaitlistController waitlistController;
 
-    @Mock
-    private WaitlistService waitlistService;
-
-    @Mock
-    private EmailProducerService emailProducerService;
-
-    private MockMvc mockMvc;
-
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(waitlistController).build();
+        // No need for MockitoAnnotations.openMocks(this) as @MockBean handles mocking
     }
 
     @Test
