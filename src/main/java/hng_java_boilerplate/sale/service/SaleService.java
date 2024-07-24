@@ -4,4 +4,5 @@ public interface SaleService {
     Object getSummary();
     Object getPieChartData();
     Object getBarChartData();
+    Object getLineChartData();
 }
