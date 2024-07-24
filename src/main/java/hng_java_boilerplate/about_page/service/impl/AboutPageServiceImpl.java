@@ -63,5 +63,18 @@ public class AboutPageServiceImpl implements AboutPageService {
         aboutPage = aboutPageRepository.save(aboutPage);
         return aboutPageMapper.mapAboutPageToAboutPageDto(aboutPage);
     }
+
+    @Override
+    public AboutPageDto createAboutPage(AboutPageDto aboutPageDto) {
+        AboutPage aboutPage = AboutPageMapperClass.mapAboutPageDtoToAboutPage(aboutPageDto);
+        AboutPage savedAboutPage = aboutPageRepository.save(aboutPage);
+        return AboutPageMapperClass.mapAboutPageToAboutPageDto(savedAboutPage);
+    }
+
+    @Override
+    public AboutPageDto getAboutPage(Long id) {
+        AboutPage aboutPage = aboutPageRepository.findById(id).orElseThrow(() -> new RuntimeException("About page not found!"));
+        return AboutPageMapperClass.mapAboutPageToAboutPageDto(aboutPage);
+    }
 }
 

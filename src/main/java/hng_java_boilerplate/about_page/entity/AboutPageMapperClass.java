@@ -10,7 +10,7 @@ public class AboutPageMapperClass {
 
 
 
-        public AboutPageDto mapAboutPageToAboutPageDto(AboutPage entity) {
+        public static AboutPageDto mapAboutPageToAboutPageDto(AboutPage entity) {
             if (entity == null) {
                 return null;
             }
@@ -29,7 +29,7 @@ public class AboutPageMapperClass {
             return dto;
         }
 
-        public AboutPage mapAboutPageDtoToAboutPage(AboutPageDto dto) {
+        public static AboutPage mapAboutPageDtoToAboutPage(AboutPageDto dto) {
             if (dto == null) {
                 return null;
             }
@@ -48,7 +48,7 @@ public class AboutPageMapperClass {
             return entity;
         }
 
-        private AboutPageDto.Stats toStatsDto(AboutPage.Stats entity) {
+        private static AboutPageDto.Stats toStatsDto(AboutPage.Stats entity) {
             if (entity == null) {
                 return null;
             }
@@ -61,7 +61,7 @@ public class AboutPageMapperClass {
             );
         }
 
-        private AboutPage.Stats toStatsEntity(AboutPageDto.Stats dto) {
+        private static AboutPage.Stats toStatsEntity(AboutPageDto.Stats dto) {
             if (dto == null) {
                 return null;
             }
@@ -75,7 +75,7 @@ public class AboutPageMapperClass {
             return entity;
         }
 
-        private AboutPageDto.Services toServicesDto(AboutPage.Services entity) {
+        private static AboutPageDto.Services toServicesDto(AboutPage.Services entity) {
             if (entity == null) {
                 return null;
             }
@@ -86,7 +86,7 @@ public class AboutPageMapperClass {
             );
         }
 
-        private AboutPage.Services toServicesEntity(AboutPageDto.Services dto) {
+        private static AboutPage.Services toServicesEntity(AboutPageDto.Services dto) {
             if (dto == null) {
                 return null;
             }

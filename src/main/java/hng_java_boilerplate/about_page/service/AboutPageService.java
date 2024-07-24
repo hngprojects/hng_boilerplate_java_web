@@ -9,4 +9,8 @@ public interface AboutPageService {
 
     AboutPageDto updateAboutPage(Long id, AboutPageDto aboutPageDto);
 
+    AboutPageDto createAboutPage(AboutPageDto aboutPageDto);
+
+    AboutPageDto getAboutPage(Long id);
+
 }

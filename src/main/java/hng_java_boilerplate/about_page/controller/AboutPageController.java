@@ -6,12 +6,9 @@ import hng_java_boilerplate.about_page.controller.response.SuccessUpdateResponse
 import hng_java_boilerplate.about_page.entity.AboutPageDto;
 import hng_java_boilerplate.about_page.service.AboutPageService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.security.access.prepost.PreAuthorize;
 
 
 
@@ -21,7 +18,6 @@ public class AboutPageController {
     private final AboutPageService aboutPageService;
 
     @PutMapping("/api/v1/content/about/{id}")
-    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateAboutPage(@PathVariable Long id, @RequestBody AboutPageDto aboutPageDto) {
         try {
             aboutPageService.updateAboutPage(id, aboutPageDto);
@@ -36,4 +32,17 @@ public class AboutPageController {
             }
         }
     }
+
+
+    @PostMapping("/api/v1/content/about")
+    public ResponseEntity<AboutPageDto> createAboutPage(@RequestBody AboutPageDto aboutPageDto) {
+        return new ResponseEntity<>(aboutPageService.createAboutPage(aboutPageDto), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/api/v1/content/about/{id}")
+    public ResponseEntity<AboutPageDto> getAboutPage(@PathVariable Long id) {
+        return ResponseEntity.ok(aboutPageService.getAboutPage(id));
+    }
+
 }
