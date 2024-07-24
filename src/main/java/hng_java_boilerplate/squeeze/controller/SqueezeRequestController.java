@@ -5,6 +5,7 @@ import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
 import hng_java_boilerplate.squeeze.util.ResponseMessage;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/squeeze")
 @Validated
+@RequiredArgsConstructor
 public class SqueezeRequestController {
 
-    @Autowired
-    private SqueezeRequestService service;
+    private final SqueezeRequestService service;
 
     @PostMapping
     public ResponseEntity<?> handleSqueezeRequest(@Valid @RequestBody SqueezeRequest request) {
