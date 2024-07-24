@@ -8,7 +8,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import java.util.List;
 
@@ -16,7 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "organisations")
-@SoftDelete(columnName = "deleted")
+@FilterDef(name = "deletedFilter", parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
+@Filter(name = "deletedFilter", condition = "deleted = :isDeleted")
 public class Organisation {
     @Id
     private String id;
@@ -24,7 +27,6 @@ public class Organisation {
     private String name;
     private String description;
     private boolean deleted;
-
 
     @ManyToMany(mappedBy = "organisations")
     @JsonIgnore
@@ -61,7 +63,6 @@ public class Organisation {
     public void setUsers(List<User> users) {
         this.users = users;
     }
-
 
     public boolean isDeleted() {
         return deleted;
