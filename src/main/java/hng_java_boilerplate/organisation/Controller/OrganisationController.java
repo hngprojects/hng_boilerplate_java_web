@@ -47,7 +47,7 @@ public class OrganisationController {
 
     private static class ErrorResponse {
         private String message;
-       gi private int statusCode;
+       private int statusCode;
 
         public ErrorResponse(String message, int statusCode) {
             this.message = message;
