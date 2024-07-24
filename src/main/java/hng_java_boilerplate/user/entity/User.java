@@ -79,6 +79,7 @@ public class User implements UserDetails {
         return new ArrayList<>(Collections.singleton(new SimpleGrantedAuthority(this.userRole.name())));
     }
 
+
     @Override
     @JsonIgnore
     public String getUsername() {

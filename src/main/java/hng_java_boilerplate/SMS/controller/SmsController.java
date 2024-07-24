@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/api/v1/sms")
 public class SmsController {
-    @Autowired
+
     private RabbitMQService rabbitMQService;
+
+    public SmsController(RabbitMQService rabbitMQService){
+        this.rabbitMQService=rabbitMQService;
+    }
 
     @PostMapping("/send")
     public ResponseEntity<?> sendSMS(@Valid @RequestBody SmsRequestDto smsRequestDto){

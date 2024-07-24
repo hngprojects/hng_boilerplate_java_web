@@ -6,6 +6,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RabbitMQConsumer {
+
+    private RabbitMQConfig rabbitMQConfig;
+
+    public RabbitMQConsumer(RabbitMQConfig rabbitMQConfig){
+        this.rabbitMQConfig=rabbitMQConfig;
+    }
+
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void consume(String message){
 

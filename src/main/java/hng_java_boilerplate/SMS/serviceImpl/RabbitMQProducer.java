@@ -1,6 +1,5 @@
-package hng_java_boilerplate.SMS.messageQueueService;
+package hng_java_boilerplate.SMS.serviceImpl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
@@ -12,9 +11,10 @@ import hng_java_boilerplate.SMS.dto.SmsResponseDto;
 import hng_java_boilerplate.SMS.entity.SMS;
 import hng_java_boilerplate.SMS.repository.SMSRepository;
 import hng_java_boilerplate.SMS.service.RabbitMQService;
+import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.ConstantMessages;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.ServletException;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -39,12 +38,18 @@ public class RabbitMQProducer implements RabbitMQService {
     String AUTH_TOKEN;
     @Value("${twilio.outgoing.sms.number}")
     String OUTGOING_SMS_NUMBER;
-    @Autowired
+
     private RabbitTemplate rabbitTemplate;
-    @Autowired
     private SMSRepository smsRepository;
-    @Autowired
     private ObjectMapper objectMapper;
+    private UserServiceImpl userService;
+
+    public RabbitMQProducer(RabbitTemplate rabbitTemplate, SMSRepository smsRepository,ObjectMapper objectMapper,UserServiceImpl userService){
+        this.rabbitTemplate=rabbitTemplate;
+        this.smsRepository=smsRepository;
+        this.objectMapper=objectMapper;
+        this.userService=userService;
+    }
     String status;
     int status_code;
     String response_message;
@@ -58,6 +63,7 @@ public class RabbitMQProducer implements RabbitMQService {
     public ResponseEntity<?> sendSMS(SmsRequestDto smsRequestDto){
         String phone_number = smsRequestDto.getPhone_number();
         String message_content = smsRequestDto.getMessage();
+        User user = userService.getLoggedInUser();
 
         if(!phone_number.matches("^\\+\\d{10,15}$") || message_content.isEmpty()){
             throw new PhoneNumberOrMessageNotValidException(ConstantMessages.INVALID_PHONE_NUMBER_OR_CONTENT.getMessage());
@@ -70,7 +76,7 @@ public class RabbitMQProducer implements RabbitMQService {
             SMS sms = new SMS();
             sms.setDestination_phone_number(smsRequestDto.getPhone_number());
             sms.setMessage(smsRequestDto.getMessage());
-            sms.setSender_id("75c164be-d14c-4c12-93bd-a2cd54a0c61c");
+            sms.setSender_id(user.getId());
             sms.setCreated_at(Instant.now());
             smsRepository.save(sms);
 
@@ -78,7 +84,13 @@ public class RabbitMQProducer implements RabbitMQService {
             status_code = 200;
             response_message = ConstantMessages.SMS_SENT_SUCCESSFULLY.getMessage();
             return new ResponseEntity<>(new SmsResponseDto(status, status_code, response_message), HttpStatus.OK);
-        } catch (Exception exception) {
+        } catch (AmqpException exception) {
+            throw new BadTwilioCredentialsException(ConstantMessages.FAILED.getMessage());
+        }
+        catch (NullPointerException exception) {
+            throw new BadTwilioCredentialsException(ConstantMessages.FAILED.getMessage());
+        }
+        catch (Exception exception) {
             throw new BadTwilioCredentialsException(ConstantMessages.FAILED.getMessage());
         }
     }

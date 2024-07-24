@@ -10,7 +10,7 @@ import hng_java_boilerplate.SMS.SmsException.PhoneNumberOrMessageNotValidExcepti
 import hng_java_boilerplate.SMS.dto.SmsRequestDto;
 import hng_java_boilerplate.SMS.dto.SmsResponseDto;
 import hng_java_boilerplate.SMS.entity.SMS;
-import hng_java_boilerplate.SMS.messageQueueService.RabbitMQProducer;
+import hng_java_boilerplate.SMS.serviceImpl.RabbitMQProducer;
 import hng_java_boilerplate.SMS.repository.SMSRepository;
 import hng_java_boilerplate.util.ConstantMessages;
 import org.junit.jupiter.api.BeforeEach;

@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableRabbit
 public class RabbitMQConfig {
+
     public static final String QUEUE_NAME = "sms_queue";
     @Value("${rabbitmq.exchange.key}")
     private String rabbitmq_exchange_key;
