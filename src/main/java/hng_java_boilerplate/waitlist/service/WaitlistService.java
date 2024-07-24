@@ -7,8 +7,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WaitlistService {
+
+    private final WaitlistRepository waitlistRepository;
+
     @Autowired
-    private WaitlistRepository waitlistRepository;
+    public WaitlistService(WaitlistRepository waitlistRepository) {
+        this.waitlistRepository = waitlistRepository;
+    }
+
     public Waitlist saveWaitlist(Waitlist waitlist) {
         return waitlistRepository.save(waitlist);
     }
