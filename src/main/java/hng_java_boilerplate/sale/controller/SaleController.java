@@ -42,7 +42,6 @@ public class SaleController {
         Object response = salesService.getSummary();
 
         if (response instanceof ResponseDTO) {
-
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } else if (response instanceof ErrorResponse) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -67,7 +66,31 @@ public class SaleController {
         Object response = salesService.getPieChartData();
 
         if (response instanceof ResponseDTO) {
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else if (response instanceof ErrorResponse) {
 
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } else if (response instanceof UserNotFoundException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @GetMapping("/bar-chart-data")
+    @Operation(
+            summary = "Get Bar Chart Data",
+            description = "Retrieve data for bar chart visualization, including sales by month."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved bar chart data", content = @Content(schema = @Schema(implementation = ResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Error fetching bar chart data", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "User not Authorized", content = @Content(schema = @Schema(implementation = UserNotFoundException.class))),
+
+    })
+    public ResponseEntity<?> getBarChartData() {
+        Object response = salesService.getBarChartData();
+
+        if (response instanceof ResponseDTO) {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } else if (response instanceof ErrorResponse) {
 
