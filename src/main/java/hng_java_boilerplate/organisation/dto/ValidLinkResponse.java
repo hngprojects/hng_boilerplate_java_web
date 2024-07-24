@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValidLinkResponse {
-    private String orgId;
+    private String organisationId;
     private String userId;
 }
