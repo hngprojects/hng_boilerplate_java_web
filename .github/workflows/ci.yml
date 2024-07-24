@@ -39,7 +39,7 @@ jobs:
       # Create configuration files
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://${{ secrets.SSH_HOST }}:${{secrets.POSTGRES_PORT}}/${{secrets.POSTGRES_DB}}" >> .env
+          echo "DB_CONNECTION_STRING=postgresql://localhost:${{secrets.POSTGRES_PORT}}/${{secrets.POSTGRES_DB}}" >> .env
           echo "DB_USERNAME=${{secrets.POSTGRES_USER}}" >> .env
           echo "DB_PASSWORD=${{secrets.POSTGRES_PASSWORD}}" >> .env
           echo "RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}" >> .env
