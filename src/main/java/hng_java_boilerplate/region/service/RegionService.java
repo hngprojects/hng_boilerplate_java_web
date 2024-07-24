@@ -121,5 +121,5 @@ public class RegionService {
     }
 }
 
-// this comment is to check if ci cd test can be triggered
+// this comment is to check if ci cd test can be triggered.
 
