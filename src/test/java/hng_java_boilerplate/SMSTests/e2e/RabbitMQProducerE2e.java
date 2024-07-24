@@ -1,4 +1,4 @@
-package hng_java_boilerplate.SMSTests;
+package hng_java_boilerplate.SMSTests.e2e;
 
 import hng_java_boilerplate.SMS.entity.SMS;
 import hng_java_boilerplate.SMS.repository.SMSRepository;
@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class RabbitMQServiceImplTest {
+public class RabbitMQProducerE2e {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,16 +49,14 @@ public class RabbitMQServiceImplTest {
                 .andExpect(jsonPath("$.status_code").value(200))
                 .andExpect(jsonPath("$.message").value("SMS sent successfully."));
 
-        Mockito.verify(rabbitTemplate).convertAndSend(any(String.class), any(String.class));
+        Mockito.verify(rabbitTemplate).convertAndSend(any(String.class), any(String.class), any(Object.class));
         Mockito.verify(smsRepository).save(any(SMS.class));
     }
 
     @Test
     public void shouldReturnBadRequestForInvalidInput() throws Exception {
-        // Arrange
         String smsRequest = "{ \"phone_number\": \"\", \"message\": \"\" }";
 
-        // Act & Assert
         mockMvc.perform(post("/api/v1/sms/send")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(smsRequest))
@@ -73,11 +71,10 @@ public class RabbitMQServiceImplTest {
 
     @Test
     public void shouldReturnInternalServerErrorOnException() throws Exception {
-        // Arrange
         String smsRequest = "{ \"phone_number\": \"+2349047338735\", \"message\": \"Tested Approved and Trusted.\" }";
+
         doThrow(new RuntimeException("Database error")).when(smsRepository).save(any(SMS.class));
 
-        // Act & Assert
         mockMvc.perform(post("/api/v1/sms/send")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(smsRequest))
@@ -86,7 +83,7 @@ public class RabbitMQServiceImplTest {
                 .andExpect(jsonPath("$.status_code").value(500))
                 .andExpect(jsonPath("$.message").value("Failed to send SMS. Please try again later."));
 
-        Mockito.verify(rabbitTemplate).convertAndSend(any(String.class), any(String.class));
+        Mockito.verify(rabbitTemplate).convertAndSend(any(String.class), any(String.class), any(Object.class));
         Mockito.verify(smsRepository).save(any(SMS.class));
     }
 }

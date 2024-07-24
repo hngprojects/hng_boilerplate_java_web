@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 @Service
-public class RabbitMQServiceImpl implements RabbitMQService {
+public class RabbitMQServiceImpl{
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
@@ -26,7 +26,7 @@ public class RabbitMQServiceImpl implements RabbitMQService {
     String message;
 
 
-    @Override
+
     public ResponseEntity<?> sendSMS(SmsRequestDto smsRequestDto) {
         if (smsRequestDto.getPhone_number() == null || smsRequestDto.getPhone_number().isEmpty() ||
                 smsRequestDto.getMessage() == null || smsRequestDto.getMessage().isEmpty()) {
