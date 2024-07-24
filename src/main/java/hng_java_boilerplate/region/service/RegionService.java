@@ -1,22 +1,17 @@
 package hng_java_boilerplate.region.service;
-
 import hng_java_boilerplate.region.dto.RegionDto;
 import hng_java_boilerplate.region.dto.RegionErrorResponseDto;
 import hng_java_boilerplate.region.dto.RegionUpdateDto;
-import hng_java_boilerplate.region.dto.UserRegionDto;
 import hng_java_boilerplate.region.entity.RegionEntity;
 import hng_java_boilerplate.region.entity.UserRegionEntity;
 import hng_java_boilerplate.region.repository.RegionRepository;
 import hng_java_boilerplate.region.repository.UserRegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 
 @Service
 public class RegionService {
@@ -32,7 +27,6 @@ public class RegionService {
     }
 
     public Optional<Object> getAllAvailableRegions() {
-
         try {
             List<RegionEntity> allRegions = regionRepository.findAll();
             List<RegionDto> regionDTOs = allRegions.stream()
@@ -67,17 +61,12 @@ public class RegionService {
     public Optional<UserRegionEntity> updateUserRegion(
             UUID userId, RegionUpdateDto regionUpdateDto
     ) {
-
         Optional<UserRegionEntity> userRegion = userRegionRepository.findByUserId(userId);
-
         if (userRegion.isPresent()) {
             UserRegionEntity existingUserRegion = userRegion.get();
             existingUserRegion.setRegionName(regionUpdateDto.getRegionName());
             existingUserRegion.setRegionCode(regionUpdateDto.getCountryCode());
-
-
             userRegionRepository.save(existingUserRegion);
-
             return Optional.of(existingUserRegion);
         } else {
             return Optional.empty();
@@ -109,7 +98,6 @@ public class RegionService {
                 }
             }
             return false;
-
         } catch (Exception e) {
             return false;
         }
@@ -120,6 +108,3 @@ public class RegionService {
         return userRegion.isPresent();
     }
 }
-
-// this comment is to check if ci cd test can be triggered.
-

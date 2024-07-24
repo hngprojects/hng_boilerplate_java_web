@@ -1,6 +1,4 @@
 package hng_java_boilerplate.region.entity;
-
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,4 +33,3 @@ public class UserRegionEntity {
     @Schema(description = "Code of the region", example = "NR")
     private String regionCode;
 }
-

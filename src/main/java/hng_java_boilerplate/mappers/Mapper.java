@@ -1,10 +1,9 @@
 package hng_java_boilerplate.mappers;
 
+public interface Mapper <Entity, Dto>{
 
-public interface Mapper <A,B>{
+    Dto mapTo(Entity dtoClass);
 
-    B mapTo(A a);
-
-    A mapFrom(B b);
+    Entity mapFrom(Dto entityClass);
 }
 
