@@ -1,42 +1,35 @@
-package hng_java_boilerplate.organisation.Controller;
+package hng_java_boilerplate.organisation.controller;
 
 import hng_java_boilerplate.organisation.entity.Organisation;
-import hng_java_boilerplate.organisation.exception.UnauthorizedException;
 import hng_java_boilerplate.organisation.service.OrganisationService;
 import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/organizations")
 public class OrganisationController {
 
     private final OrganisationService organisationService;
+    private final UserService userService;
 
-    private final UserRepository userRepository;
-
-    public OrganisationController(OrganisationService organisationService, UserRepository userRepository) {
+    @Autowired
+    public OrganisationController(OrganisationService organisationService, UserService userService) {
         this.organisationService = organisationService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @DeleteMapping("/{org_id}")
     public ResponseEntity<?> deleteOrganisation(@PathVariable("org_id") String orgId,
-                                                @AuthenticationPrincipal UserDetails userDetails) {
+                                                @AuthenticationPrincipal UserServiceImpl userDetails) {
         try {
-            User user = userRepository.findByName(userDetails.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            User user = userDetails.getLoggedInUser();
 
             Organisation organisation = organisationService.findOrganisationById(orgId)
                     .orElseThrow(() -> new RuntimeException("Organisation not found"));
@@ -61,6 +54,6 @@ public class OrganisationController {
             this.statusCode = statusCode;
         }
 
-
+        // Getters and Setters
     }
 }

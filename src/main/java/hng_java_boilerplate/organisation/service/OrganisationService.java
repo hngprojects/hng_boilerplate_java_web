@@ -21,9 +21,7 @@ public class OrganisationService {
     }
 
 
-    public Organisation createOrganisation(Organisation organisation) {
-        return organisationRepository.save(organisation);
-    }
+
 
 
     public Organisation updateOrganisation(String id, Organisation updatedOrganisation) {
@@ -35,25 +33,6 @@ public class OrganisationService {
         return organisationRepository.save(organisation);
     }
 
-
-    public List<Organisation> getAllOrganisations() {
-        return organisationRepository.findAll();
-    }
-
-
-    public Optional<Organisation> findOrganisationById(String id) {
-        return organisationRepository.findActiveById(id);
-    }
-
-
-    public List<Organisation> findOrganisationsByName(String name) {
-        return organisationRepository.findByName(name);
-    }
-
-
-    public List<Organisation> getAllActiveOrganisations() {
-        return organisationRepository.findAllActive();
-    }
 
 
     public void softDeleteOrganisation(String id) {
