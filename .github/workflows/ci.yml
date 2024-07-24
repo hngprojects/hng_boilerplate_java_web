@@ -25,11 +25,6 @@ jobs:
             --health-timeout 5s
             --health-retries 5
 
-    env:
-      connection_string: postgresql://localhost:5432/postgres
-      database_username: postgres
-      database_password: password
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -40,6 +35,20 @@ jobs:
           java-version: 17
           distribution: temurin
           cache: maven
+
+      # Create configuration files
+      - name: Create .env file
+        run: |
+          echo "DB_CONNECTION_STRING=postgresql://localhost:${{secrets.POSTGRES_PORT}}/${{secrets.POSTGRES_DB}}" >> .env
+          echo "DB_USERNAME=${{secrets.POSTGRES_USER}}" >> .env
+          echo "DB_PASSWORD=${{secrets.POSTGRES_PASSWORD}}" >> .env
+          echo "RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}" >> .env
+          echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
+          echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
+          echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+      - name: Create application.properties
+        uses: ./.github/workflows/create-application-properties
 
       - name: Download Dependencies
         run: mvn dependency:resolve
