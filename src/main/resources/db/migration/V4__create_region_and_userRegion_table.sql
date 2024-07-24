@@ -1,5 +1,5 @@
 
--- V1__Create_region_table.sql
+-- V4__Create_region_table.sql
 CREATE TABLE regions (
     region_code VARCHAR(255) PRIMARY KEY,
     region_name VARCHAR(255) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE regions (
     modified_by VARCHAR(255) NOT NULL
 );
 
--- V2__Create_userRegion_table.sql
+-- V4__Create_userRegion_table.sql
 CREATE TABLE user_region (
     region_id SERIAL PRIMARY KEY,
     user_id UUID NOT NULL,
