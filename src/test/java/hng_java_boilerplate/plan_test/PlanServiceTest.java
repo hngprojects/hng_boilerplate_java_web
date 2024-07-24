@@ -37,7 +37,7 @@ public class PlanServiceTest {
     public void createPlan() {
         CreatePlanDto planDto = new CreatePlanDto("plan name", "plan description", 19.99, 1, "day");
         Plan plan = Plan.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.randomUUID().toString())
                 .name("plan name")
                 .description("plan description")
                 .price(19.99)

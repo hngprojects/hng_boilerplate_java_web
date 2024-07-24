@@ -3,7 +3,6 @@ package hng_java_boilerplate.plans.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -15,8 +14,7 @@ import java.util.UUID;
 public class Plan {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
     @Column(unique = true, nullable = false)
     private String name;

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class PlanServiceImpl implements PlanService {
@@ -25,6 +27,7 @@ public class PlanServiceImpl implements PlanService {
             throw new DuplicatePlanException("Plan already exists.");
         }
         Plan newPlan = Plan.builder()
+                .id(UUID.randomUUID().toString())
                 .price(createPlanDto.price())
                 .name(createPlanDto.name())
                 .description(createPlanDto.description())
