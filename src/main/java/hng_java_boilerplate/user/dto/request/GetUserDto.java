@@ -1,4 +1,4 @@
-package hng_java_boilerplate.user.dto;
+package hng_java_boilerplate.user.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

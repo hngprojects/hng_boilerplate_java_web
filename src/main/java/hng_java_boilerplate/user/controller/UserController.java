@@ -1,9 +1,8 @@
 package hng_java_boilerplate.user.controller;
 
-import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.BadPaddingException;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
