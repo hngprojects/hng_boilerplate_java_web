@@ -1,10 +1,11 @@
-package hng_java_boilerplate.organisation.service;
+package hng_java_boilerplate.organisation.service.unit_test;
 
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.exception.InvitationValidationException;
 import hng_java_boilerplate.organisation.exception.OrganisationException;
 import hng_java_boilerplate.organisation.exception.response.SuccessResponse;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
+import hng_java_boilerplate.organisation.service.OrganisationService;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import org.junit.Assert;
@@ -58,7 +59,7 @@ class OrganisationServiceTest {
 
     @Test
     void validateAndAcceptUserToOrganisation() throws InvitationValidationException {
-        String invitationLink = "http://api/hello?orgId=2e94215f-4c31-429b-be66-dbacda4afe79&userId=558ca51d-8ecf-4766-94a4-3427c1960d8c&expires=2025-07-23T00:00:00Z";
+        String invitationLink = "http://api/hello?organisationId=2e94215f-4c31-429b-be66-dbacda4afe79&userId=558ca51d-8ecf-4766-94a4-3427c1960d8c&expires=2025-07-23T00:00:00Z";
 
         Mockito.when(userRepository.findById(demoUser.getId())).thenReturn(Optional.of(demoUser));
         Mockito.when(organisationRepository.findById(demoOrganisation.getId())).thenReturn(Optional.of(demoOrganisation));
@@ -75,7 +76,7 @@ class OrganisationServiceTest {
 
     @Test
     void shouldThrowInvitationValidationException() throws InvitationValidationException{
-        String invitationLink = "http://api/hello?orgId=2e94215f-4c31-429b-be66-dbacda4afe79&expires=2020-07-23T00:00:00Z";
+        String invitationLink = "http://api/hello?organisationId=2e94215f-4c31-429b-be66-dbacda4afe79&expires=2020-07-23T00:00:00Z";
 //        Mockito.when(organisationRepository.findById("2e94215f-4c31-429b-be66-dbacda4afe79")).thenReturn(Optional.of(demoOrganisation));
         InvitationValidationException invitationValidationException = assertThrows(InvitationValidationException.class, () -> {
             organisationService.validateAndAcceptUserToOrganisation(invitationLink);
@@ -86,7 +87,7 @@ class OrganisationServiceTest {
 
     @Test
     void shouldThrowInvitationValidationExceptionForInvalidLinkFormat() {
-        String invalidInvitationLink = "http://example.com/invite?orgId=org123";
+        String invalidInvitationLink = "http://example.com/invite?organisationId=org123";
         InvitationValidationException exception = assertThrows(InvitationValidationException.class, () -> {
             organisationService.validateAndAcceptUserToOrganisation(invalidInvitationLink);
         });

@@ -14,14 +14,14 @@ public class InvitationRequest {
     @Autowired
     private OrganisationService organisationService;
 
-    private String ordId;
+    private String organisationId;
     private String expires;
 
-    public String getOrdId() {
-        return ordId;
+    public String getOrganisationId() {
+        return organisationId;
     }
-    public void setOrdId(String ordId) {
-        this.ordId = ordId;
+    public void setOrganisationId(String organisationId) {
+        this.organisationId = organisationId;
     }
 
     public String getExpires() {

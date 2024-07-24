@@ -12,6 +12,7 @@ import hng_java_boilerplate.user.dto.GetUserDto;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,17 +32,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@AllArgsConstructor
 public class OrganisationService {
-    @Autowired
-    private OrganisationRepository organisationRepository;
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
+    private final OrganisationRepository organisationRepository;
 
-    public Organisation getOrganisationDetails(String orgId) throws OrganisationException{
-        Organisation foundOrganisation = organisationRepository.findById(orgId)
+    private final UserRepository userRepository;
+
+
+    private final UserService userService;
+
+    public Organisation getOrganisationDetails(String organisationId) throws OrganisationException{
+        Organisation foundOrganisation = organisationRepository.findById(organisationId)
                 .orElseThrow(()-> new OrganisationException("Invalid Organisation Id"));
         return foundOrganisation;
     }
@@ -55,7 +57,7 @@ public class OrganisationService {
         String userId = validInviteLink.getUserId();
         User foundUser = userRepository.findById(userId)
                 .orElseThrow(() -> new OrganisationException("Invalid user id"));
-        Organisation organisationDetails = getOrganisationDetails(validInviteLink.getOrgId());
+        Organisation organisationDetails = getOrganisationDetails(validInviteLink.getOrganisationId());
         List<Organisation> organisations = foundUser.getOrganisations();
         if (foundUser.getOrganisations().contains(organisationDetails)){
             throw new OrganisationException("User already belong to organisation");
@@ -75,9 +77,9 @@ public class OrganisationService {
     private void validateField(InvitationRequest invitationRequest ){
         ErrorResponse errorResponse = new ErrorResponse();
         List<String> error = new ArrayList<>();
-        Organisation organisationDetails = getOrganisationDetails(invitationRequest.getOrdId());
+        Organisation organisationDetails = getOrganisationDetails(invitationRequest.getOrganisationId());
         ZonedDateTime expirationTime = ZonedDateTime.parse(invitationRequest.getExpires());
-        if (invitationRequest.getOrdId()== null|| invitationRequest.getExpires() == null){
+        if (invitationRequest.getOrganisationId()== null|| invitationRequest.getExpires() == null){
             error.add("Invalid link format");
         }
         if (organisationDetails == null){
@@ -103,13 +105,13 @@ public class OrganisationService {
         ErrorResponse errorResponse = new ErrorResponse();
         List<String> error = new ArrayList<>();
         String invitationLink1 = invitationLink;
-        Pattern pattern = Pattern.compile("orgId=([\\w-]+)&userId=([\\w-]+)&expires=([\\d]{4}-[\\d]{2}-[\\d]{2}T[\\d]{2}:[\\d]{2}:[\\d]{2}Z)");
+        Pattern pattern = Pattern.compile("organisationId=([\\w-]+)&userId=([\\w-]+)&expires=([\\d]{4}-[\\d]{2}-[\\d]{2}T[\\d]{2}:[\\d]{2}:[\\d]{2}Z)");
         Matcher matcher = pattern.matcher(invitationLink1);
-        String orgId=null;
+        String organisationId=null;
         String userId = null;
         String expires= null;
         if (matcher.find()) {
-             orgId = matcher.group(1);
+             organisationId = matcher.group(1);
              userId = matcher.group(2);
              expires = matcher.group(3);
         } else {
@@ -123,10 +125,10 @@ public class OrganisationService {
                     errorResponse.getStatus()
             );
         }
-        System.out.println("orgId: " + orgId);
+        System.out.println("organisationId: " + organisationId);
         System.out.println("expireTime: " + expires);
         ValidLinkResponse validLinkResponse = new ValidLinkResponse(
-                orgId,
+                organisationId,
                 userId
         );
         ZonedDateTime expirationTime= null;
@@ -139,9 +141,8 @@ public class OrganisationService {
             throw new OrganisationException("Invalid time format");
         }
 
-//        ZonedDateTime expirationTime = ZonedDateTime.parse(expires);
-        Organisation organisationDetails = getOrganisationDetails(orgId);
-        if (orgId == null || expires == null){
+        Organisation organisationDetails = getOrganisationDetails(organisationId);
+        if (organisationId == null || expires == null){
             error.add("Invalid link format");
         }
         if (organisationDetails == null){
