@@ -162,15 +162,13 @@
 >              "chart_type": "pie"
 >          }
 >      }
->      
->
->
+>      ```
 >
 > ### Available Endpoints
-> To get started with basic chart types (line, bar, pie), you would need at least:
 >
 > 1. `GET /api/v1/analytics/summary`
 > 2. `GET /api/v1/analytics/line-chart-data`
 > 3. `GET /api/v1/analytics/bar-chart-data`
 > 4. `GET /api/v1/analytics/pie-chart-data`
->
+> 
+
