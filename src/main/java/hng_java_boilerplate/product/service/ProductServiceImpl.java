@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 public class ProductServiceImpl implements ProductService{
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
     private UserRepository userRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -39,12 +39,17 @@ public class ProductServiceImpl implements ProductService{
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         Product product = new Product();
-        product.setName(productDTO.getName());
-        product.setDescription(productDTO.getDescription());
-        product.setCategory(productDTO.getCategory());
-        product.setPrice(productDTO.getPrice());
-        product.setImageUrl(productDTO.getImageUrl());
-        product.setUser(user);
+        try {
+            product.setName(productDTO.getName());
+            product.setDescription(productDTO.getDescription());
+            product.setCategory(productDTO.getCategory());
+            product.setPrice(productDTO.getPrice());
+            product.setImageUrl(productDTO.getImageUrl());
+            product.setUser(user);
+        } catch (Exception e) {
+            System.out.println("An error occurred while setting product details: " + e.getMessage());
+            throw new RuntimeException("Failed to add product", e);
+        }
 
         return productRepository.save(product);
     }
