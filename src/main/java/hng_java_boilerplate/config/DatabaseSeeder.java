@@ -5,13 +5,17 @@ import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.repository.ProductRepository;
 import hng_java_boilerplate.profile.entity.Profile;
+import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -21,6 +25,8 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final UserRepository userRepository;
     private final OrganisationRepository organisationRepository;
     private final ProductRepository productRepository;
+    private final ProfileRepository profileRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -36,38 +42,49 @@ public class DatabaseSeeder implements CommandLineRunner {
     public boolean isDatabaseEmpty() {
         return userRepository.count() == 0 &&
                 organisationRepository.count() == 0 &&
-                productRepository.count() == 0;
+                productRepository.count() == 0 &&
+                profileRepository.count() == 0;
     }
 
     @Transactional
     public void seedDatabase() {
-        // Seed users
-        User user1 = new User();
-        user1.setId(UUID.randomUUID().toString());
-        user1.setName("John Doe");
-        user1.setEmail("johndoe@example.com");
-
+        // Seed profiles first
         Profile profile1 = new Profile();
         profile1.setId(UUID.randomUUID().toString());
         profile1.setFirstName("John");
         profile1.setLastName("Doe");
         profile1.setPhone("1234567890");
         profile1.setAvatarUrl("http://example.com/avatar.jpg");
-        user1.setProfile(profile1);
-        profile1.setUser(user1);
-
-        User user2 = new User();
-        user2.setId(UUID.randomUUID().toString());
-        user2.setName("Jane Smith");
-        user2.setEmail("janesmith@example.com");
 
         Profile profile2 = new Profile();
         profile2.setId(UUID.randomUUID().toString());
         profile2.setFirstName("Jane");
         profile2.setLastName("Smith");
+        profile2.setPhone("0987654321");
         profile2.setAvatarUrl("http://example.com/avatar2.jpg");
+
+        profileRepository.saveAll(Arrays.asList(profile1, profile2));
+
+        // Seed users
+        User user1 = new User();
+        user1.setId(UUID.randomUUID().toString());
+        user1.setName("John Doe");
+        user1.setEmail("johndoe@example.com");
+        user1.setPassword(passwordEncoder.encode("password1"));
+        user1.setUserRole(Role.ROLE_USER);
+        user1.setCreatedAt(LocalDateTime.now());
+        user1.setUpdatedAt(LocalDateTime.now());
+        user1.setProfile(profile1);
+
+        User user2 = new User();
+        user2.setId(UUID.randomUUID().toString());
+        user2.setName("Jane Smith");
+        user2.setEmail("janesmith@example.com");
+        user2.setPassword(passwordEncoder.encode("password2"));
+        user2.setUserRole(Role.ROLE_USER);
+        user2.setCreatedAt(LocalDateTime.now());
+        user2.setUpdatedAt(LocalDateTime.now());
         user2.setProfile(profile2);
-        profile2.setUser(user2);
 
         userRepository.saveAll(Arrays.asList(user1, user2));
 
