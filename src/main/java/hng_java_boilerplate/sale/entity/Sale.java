@@ -39,6 +39,5 @@ public class Sale {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM");
         return this.createdAt.format(formatter);
     }
-
 }
 
