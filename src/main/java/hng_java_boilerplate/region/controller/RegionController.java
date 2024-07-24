@@ -4,6 +4,12 @@ import hng_java_boilerplate.mappers.Mapper;
 import hng_java_boilerplate.region.dto.*;
 import hng_java_boilerplate.region.entity.UserRegionEntity;
 import hng_java_boilerplate.region.service.RegionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +23,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/regions")
+@Tag(name = "Regions", description = "Operations related to regions")
 public class RegionController {
 
     private final RegionService regionService;
@@ -30,6 +37,11 @@ public class RegionController {
     }
 
 
+    @Operation(summary = "Get all regions", description = "Retrieve all available regions")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation, returns a list of regions"),
+            @ApiResponse(responseCode = "404", description = "Not found, no regions available")
+    })
     @GetMapping()
     public ResponseEntity<?> getAllRegion(){
 
@@ -69,6 +81,14 @@ public class RegionController {
 
     }
 
+
+    @Operation(summary = "Assign a region to a user", description = "Assign a region to a user based on the provided information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation, region assigned to the user", content = @Content(schema = @Schema(implementation = UserRegionResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Not found, assigned region is not available", content = @Content(schema = @Schema(implementation = RegionErrorResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized request", content = @Content(schema = @Schema(implementation = RegionErrorResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "Conflict, region already assigned to the user", content = @Content(schema = @Schema(implementation = RegionErrorResponseDto.class)))
+    })
     @PostMapping()
     public ResponseEntity<?> assignRegion(
             @RequestBody UserRegionDto userRegionDTO
@@ -79,8 +99,8 @@ public class RegionController {
         if(!regionService.isRegionAvailable(userRegionDTO.getRegionName())){
             return new ResponseEntity<>(
                     Optional.of(RegionErrorResponseDto.builder()
-                            .statusCode("400")
-                            .message("Bad request")
+                            .statusCode("404")
+                            .message("Not found")
                             .build()),
                     HttpStatus.BAD_REQUEST
             );
@@ -137,6 +157,13 @@ public class RegionController {
         }
     }
 
+
+    @Operation(summary = "Get user's region", description = "Retrieve the region assigned to a specific user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "302", description = "Successful operation, returns the user's region", content = @Content(schema = @Schema(implementation = UserRegionDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request, invalid parameters", content = @Content(schema = @Schema(implementation = RegionErrorResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Not found, no region assigned to the user", content = @Content(schema = @Schema(implementation = RegionErrorResponseDto.class)))
+    })
     @GetMapping("/{user_id}")
     public ResponseEntity<?> getUserRegion(@PathVariable("user_id") String userID){
         try {
@@ -166,6 +193,14 @@ public class RegionController {
 
     }
 
+
+    @Operation(summary = "Update user's region", description = "Update the region assigned to a specific user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation, returns the updated region", content = @Content(schema = @Schema(implementation = UpdateUserRegionDto.class))),
+            @ApiResponse(responseCode = "400", description = "Bad request, region chosen is not an assigned region", content = @Content(schema = @Schema(implementation = RegionErrorResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized request", content = @Content(schema = @Schema(implementation = RegionErrorResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Not found, no region assigned to the user", content = @Content(schema = @Schema(implementation = RegionErrorResponseDto.class)))
+    })
     @PutMapping("/{user_id}")
     public ResponseEntity<?> updateUserRegion(
             @PathVariable("user_id") String userID,
@@ -174,7 +209,7 @@ public class RegionController {
 
 
 
-//========== Ensure that only authenticated users can update their region preferences. ===============================================
+//========== Ensure that only the current authenticated users can update their region preferences. ===============================================
 //        UserEntity user = (UserEntity) authentication.getPrincipal();
 //
 //        String user_id = user.getUserId();
@@ -213,8 +248,8 @@ public class RegionController {
             }
             return new ResponseEntity<>(
                     Optional.of(RegionErrorResponseDto.builder()
-                            .statusCode("400")
-                            .message("Bad request")
+                            .statusCode("404")
+                            .message("Not found")
                             .build()),
                     HttpStatus.BAD_REQUEST
             );
