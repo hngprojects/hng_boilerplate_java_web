@@ -19,15 +19,17 @@ import org.typesense.api.exceptions.ObjectNotFound;
 import hng_java_boilerplate.blog.dtos.BlogSearchResponse;
 import hng_java_boilerplate.blog.models.ErrorResponse;
 import hng_java_boilerplate.blog.service.BlogService;
+import lombok.RequiredArgsConstructor;
 
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/blogs")
 public class BlogController {
 
-    @Autowired
-    private BlogService blogService;
+    
+    private final BlogService blogService;
 
     @GetMapping("/search")
    public ResponseEntity<?> searchBlogs(

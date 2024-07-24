@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.typesense.api.Client;
 import org.typesense.model.SearchParameters;
@@ -19,18 +19,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.blog.dtos.BlogSearchResponse;
 import hng_java_boilerplate.blog.models.Blog;
 import hng_java_boilerplate.blog.repository.BlogRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class BlogService {
 
-    @Autowired
-    private BlogRepository blogRepository;
+    private final BlogRepository blogRepository;
 
-    @Autowired
-    private Client typesenseClient;
+    
+    private final Client typesenseClient;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public BlogSearchResponse searchBlogs(String author, String title, String content, List<String> tags, LocalDate createdDate, int page, int pageSize) throws Exception {
         try {
