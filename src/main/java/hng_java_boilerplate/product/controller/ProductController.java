@@ -1,6 +1,7 @@
 package hng_java_boilerplate.product.controller;
 
 import hng_java_boilerplate.product.dto.ProductSearchDTO;
+import hng_java_boilerplate.product.dto.ProductStockDTO;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
@@ -11,10 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,5 +58,17 @@ public class ProductController {
         productSearchDTO.setPage(products.getNumber());
         productSearchDTO.setSuccess(true);
         return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{productId}/stock")
+    public ResponseEntity<ProductStockDTO> getProductStock(@PathVariable String productId) {
+        Product product = productService.getProductStock(productId);
+        ProductStockDTO productStockDTO = new ProductStockDTO(
+                product.getId(),
+                product.getCurrentStock(),
+                product.getLastUpdated()
+        );
+        return new ResponseEntity<>(productStockDTO, HttpStatus.OK);
     }
 }

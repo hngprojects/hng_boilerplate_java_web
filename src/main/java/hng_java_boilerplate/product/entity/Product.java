@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -24,6 +27,12 @@ public class Product {
     private double price;
     @Column(name = "image_url")
     private String imageUrl;
+    @Column(name = "current_stock")
+    private double currentStock;
+
+    @UpdateTimestamp
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 
     @ManyToOne
     @JsonIgnore

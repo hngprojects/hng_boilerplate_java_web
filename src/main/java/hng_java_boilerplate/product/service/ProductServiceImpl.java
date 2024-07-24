@@ -2,6 +2,7 @@ package hng_java_boilerplate.product.service;
 
 import hng_java_boilerplate.product.dto.ErrorDTO;
 import hng_java_boilerplate.product.entity.Product;
+import hng_java_boilerplate.product.exceptions.ProductNotFoundException;
 import hng_java_boilerplate.product.exceptions.ValidationError;
 import hng_java_boilerplate.product.repository.ProductRepository;
 import org.springframework.data.domain.Page;
@@ -28,5 +29,12 @@ public class ProductServiceImpl implements ProductService{
             throw new ValidationError(errorDTO);
         }
         return productRepository.searchProducts(name, category, minPrice, maxPrice, pageable);
+    }
+
+
+    @Override
+    public Product getProductStock(String productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + productId));
     }
 }

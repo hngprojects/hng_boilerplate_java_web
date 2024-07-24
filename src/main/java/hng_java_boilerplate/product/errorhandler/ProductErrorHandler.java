@@ -3,6 +3,7 @@ package hng_java_boilerplate.product.errorhandler;
 import hng_java_boilerplate.product.dto.ErrorDTO;
 import hng_java_boilerplate.product.dto.ProductErrorDTO;
 import hng_java_boilerplate.product.dto.ProductValidatorDTO;
+import hng_java_boilerplate.product.exceptions.ProductNotFoundException;
 import hng_java_boilerplate.product.exceptions.ValidationError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,14 @@ public class ProductErrorHandler {
     @ExceptionHandler
     public ResponseEntity<?> handleException(NoHandlerFoundException ex){
         productErrorDTO.setMessage("Resource not found");
+        productErrorDTO.setStatus_code(HttpStatus.NOT_FOUND.value());
+        productErrorDTO.setSuccess(false);
+        return new ResponseEntity<>(productErrorDTO, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleException(ProductNotFoundException ex){
+        productErrorDTO.setMessage(ex.getMessage());
         productErrorDTO.setStatus_code(HttpStatus.NOT_FOUND.value());
         productErrorDTO.setSuccess(false);
         return new ResponseEntity<>(productErrorDTO, HttpStatus.NOT_FOUND);
