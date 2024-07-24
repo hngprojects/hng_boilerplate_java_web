@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO {
-    private String status;
+    private Boolean status;
     private int status_code;
     private List<String> month;
     private List<Double> totalSales;

@@ -55,7 +55,7 @@ public class SalesServiceImpl implements SaleService {
             List<User> userList = userRepository.findAll();
             if (userList.isEmpty()) {
                 return new ErrorResponse(
-                        "false",
+                        false,
                         404,
                         "ResourceNotFound",
                         "The Summary data could not be found",
@@ -65,7 +65,7 @@ public class SalesServiceImpl implements SaleService {
             List<Sale> saleList = salesRepository.findAll();
             if (saleList.isEmpty()) {
                 return new ErrorResponse(
-                        "false",
+                        false,
                         404,
                         "ResourceNotFound",
                         "The Summary data could not be found",
@@ -87,7 +87,7 @@ public class SalesServiceImpl implements SaleService {
                             u.getCreatedAt().isBefore(now))
                     .count();
             ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setStatus("true");
+            responseDTO.setStatus(true);
             responseDTO.setStatus_code(200);
             responseDTO.setTotal_users(totalUsers);
             responseDTO.setActive_users(activeUsers);
@@ -98,7 +98,7 @@ public class SalesServiceImpl implements SaleService {
             ErrorDetails errorDetails = new ErrorDetails();
             errorDetails.setResource("Summary");
             return new ErrorResponse(
-                    "false",
+                    false,
                     404,
                     "ResourceNotFound",
                     "There was an error fetching the summary data",
@@ -124,7 +124,7 @@ public class SalesServiceImpl implements SaleService {
                 ErrorDetails errorDetails = new ErrorDetails();
                 errorDetails.setChartType("pie");
                 return new ErrorResponse(
-                        "false",
+                        false,
                         404,
                         "DataFetchError",
                         "There was an error fetching the pie chart data",
@@ -147,7 +147,7 @@ public class SalesServiceImpl implements SaleService {
                     .map(MonthlySalesDTO::getMonth)
                     .collect(Collectors.toList());
             ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setStatus("true");
+            responseDTO.setStatus(true);
             responseDTO.setStatus_code(200);
             responseDTO.setMonth(monthList);
             responseDTO.setTotalSales(totalSalesList);
@@ -157,7 +157,7 @@ public class SalesServiceImpl implements SaleService {
             ErrorDetails errorDetails = new ErrorDetails();
             errorDetails.setChartType("pie");
             return new ErrorResponse(
-                    "false",
+                    false,
                     404,
                     "DataFetchError",
                     "There was an error fetching the pie chart data",
@@ -183,7 +183,7 @@ public class SalesServiceImpl implements SaleService {
                 ErrorDetails errorDetails = new ErrorDetails();
                 errorDetails.setChartType("bar");
                 return new ErrorResponse(
-                        "false",
+                        false,
                         404,
                         "DataFetchError",
                         "There was an error fetching the bar chart data",
@@ -200,7 +200,7 @@ public class SalesServiceImpl implements SaleService {
                     .map(MonthlySalesDTO::getMonth)
                     .collect(Collectors.toList());
             ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setStatus("true");
+            responseDTO.setStatus(true);
             responseDTO.setStatus_code(200);
             responseDTO.setMonth(monthList);
             responseDTO.setTotalSales(totalSalesList);
@@ -209,7 +209,7 @@ public class SalesServiceImpl implements SaleService {
             ErrorDetails errorDetails = new ErrorDetails();
             errorDetails.setChartType("bar");
             return new ErrorResponse(
-                    "false",
+                    false,
                     404,
                     "DataFetchError",
                     "There was an error fetching the bar chart data",
@@ -235,7 +235,7 @@ public class SalesServiceImpl implements SaleService {
                 ErrorDetails errorDetails = new ErrorDetails();
                 errorDetails.setChartType("line");
                 return new ErrorResponse(
-                        "false",
+                        false,
                         404,
                         "DataFetchError",
                         "There was an error fetching the line chart data",
@@ -252,7 +252,7 @@ public class SalesServiceImpl implements SaleService {
                     .map(MonthlySalesDTO::getMonth)
                     .collect(Collectors.toList());
             ResponseDTO responseDTO = new ResponseDTO();
-            responseDTO.setStatus("true");
+            responseDTO.setStatus(true);
             responseDTO.setStatus_code(200);
             responseDTO.setMonth(monthList);
             responseDTO.setTotalSales(totalSalesList);
@@ -261,7 +261,7 @@ public class SalesServiceImpl implements SaleService {
             ErrorDetails errorDetails = new ErrorDetails();
             errorDetails.setChartType("line");
             return new ErrorResponse(
-                    "false",
+                    false,
                     404,
                     "DataFetchError",
                     "There was an error fetching the line chart data",
