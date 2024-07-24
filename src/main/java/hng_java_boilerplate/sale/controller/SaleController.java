@@ -51,4 +51,30 @@ public class SaleController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    @GetMapping("/pie-chart-data")
+    @Operation(
+            summary = "Get Pie Chart Data",
+            description = "Retrieve data for pie chart visualization, including sales by month and total sales in degrees."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved pie chart data", content = @Content(schema = @Schema(implementation = ResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Error fetching pie chart data", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "User not Authorized", content = @Content(schema = @Schema(implementation = UserNotFoundException.class))),
+
+    })
+    public ResponseEntity<?> getPieChartData() {
+        Object response = salesService.getPieChartData();
+
+        if (response instanceof ResponseDTO) {
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else if (response instanceof ErrorResponse) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } else if (response instanceof UserNotFoundException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 }
