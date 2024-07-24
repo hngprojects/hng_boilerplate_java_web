@@ -8,10 +8,10 @@ import hng_java_boilerplate.organisation.exception.OrganisationException;
 import hng_java_boilerplate.organisation.exception.response.ErrorResponse;
 import hng_java_boilerplate.organisation.exception.response.SuccessResponse;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
-import hng_java_boilerplate.user.dto.GetUserDto;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,15 +32,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-@AllArgsConstructor
+
 public class OrganisationService {
 
-    private final OrganisationRepository organisationRepository;
+    private OrganisationRepository organisationRepository;
 
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
 
-    private final UserService userService;
+    private UserService userService;
+
+    private UserServiceImpl userServiceImpl;
+
+    public OrganisationService(OrganisationRepository organisationRepository, UserRepository userRepository, UserService userService, UserServiceImpl userServiceImpl) {
+        this.organisationRepository = organisationRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.userServiceImpl = userServiceImpl;
+    }
 
     public Organisation getOrganisationDetails(String organisationId) throws OrganisationException{
         Organisation foundOrganisation = organisationRepository.findById(organisationId)
@@ -49,11 +58,9 @@ public class OrganisationService {
     }
 
     public ResponseEntity<?> validateAndAcceptUserToOrganisation(String invitationLink) throws InvitationValidationException {
-        //        This is a secured method and while i await Auth guy to come through so i can fetch the id of logged-in user
-// TODO: 7/20/2024 fetch user that wants to be added to organisation from the logged in user
-        //        A demo user
 
-       ValidLinkResponse validInviteLink= validateInviteLink(invitationLink);
+        User loggedInUser = userServiceImpl.getLoggedInUser();
+        ValidLinkResponse validInviteLink= validateInviteLink(invitationLink);
         String userId = validInviteLink.getUserId();
         User foundUser = userRepository.findById(userId)
                 .orElseThrow(() -> new OrganisationException("Invalid user id"));

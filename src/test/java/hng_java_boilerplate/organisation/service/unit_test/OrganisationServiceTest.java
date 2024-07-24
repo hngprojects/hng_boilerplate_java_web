@@ -8,6 +8,7 @@ import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.organisation.service.OrganisationService;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
+import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,9 @@ class OrganisationServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UserServiceImpl userServiceImpl;
+
     private User demoUser;
     private Organisation demoOrganisation;
 
@@ -54,6 +58,7 @@ class OrganisationServiceTest {
 
         List<Organisation> organisations = new ArrayList<>();
         demoUser.setOrganisations(organisations);
+
         MockitoAnnotations.openMocks(this);
     }
 
@@ -61,9 +66,13 @@ class OrganisationServiceTest {
     void validateAndAcceptUserToOrganisation() throws InvitationValidationException {
         String invitationLink = "http://api/hello?organisationId=2e94215f-4c31-429b-be66-dbacda4afe79&userId=558ca51d-8ecf-4766-94a4-3427c1960d8c&expires=2025-07-23T00:00:00Z";
 
-        Mockito.when(userRepository.findById(demoUser.getId())).thenReturn(Optional.of(demoUser));
-        Mockito.when(organisationRepository.findById(demoOrganisation.getId())).thenReturn(Optional.of(demoOrganisation));
-        ResponseEntity<?>responseEntity = organisationService.validateAndAcceptUserToOrganisation(invitationLink);
+        Mockito.when(userServiceImpl.getLoggedInUser()).thenReturn(demoUser);
+        Mockito.when(organisationRepository.findById(demoOrganisation.getId()))
+                .thenReturn(Optional.of(demoOrganisation));
+        Mockito.when(userRepository.findById(demoUser.getId()))
+                .thenReturn(Optional.of(demoUser));
+        ResponseEntity<?>responseEntity = organisationService.
+                validateAndAcceptUserToOrganisation(invitationLink);
 
         Assert.assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
         Assert.assertNotNull(responseEntity.getBody());
@@ -76,8 +85,10 @@ class OrganisationServiceTest {
 
     @Test
     void shouldThrowInvitationValidationException() throws InvitationValidationException{
-        String invitationLink = "http://api/hello?organisationId=2e94215f-4c31-429b-be66-dbacda4afe79&expires=2020-07-23T00:00:00Z";
-//        Mockito.when(organisationRepository.findById("2e94215f-4c31-429b-be66-dbacda4afe79")).thenReturn(Optional.of(demoOrganisation));
+        String invitationLink = "http://api/hello?organisationId=2e94215f-4c31-429b-be66-dbacda4afe79&userId=558ca51d-8ecf-4766-94a4-3427c1960d8c&expires=2020-07-23T00:00:00Z";
+//        Mockito.when(userServiceImpl.getLoggedInUser()).thenReturn(demoUser);
+        Mockito.when(organisationRepository.findById(demoOrganisation.getId()))
+                .thenReturn(Optional.of(demoOrganisation));
         InvitationValidationException invitationValidationException = assertThrows(InvitationValidationException.class, () -> {
             organisationService.validateAndAcceptUserToOrganisation(invitationLink);
         });
