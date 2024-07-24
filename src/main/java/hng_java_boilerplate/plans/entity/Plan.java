@@ -1,4 +1,4 @@
-package hng_java_boilerplate.plans;
+package hng_java_boilerplate.plans.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

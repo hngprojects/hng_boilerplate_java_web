@@ -1,5 +1,6 @@
-package hng_java_boilerplate.plans;
+package hng_java_boilerplate.plans.controller;
 
+import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
 import jakarta.validation.Valid;

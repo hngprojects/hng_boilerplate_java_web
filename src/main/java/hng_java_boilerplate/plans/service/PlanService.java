@@ -1,4 +1,4 @@
-package hng_java_boilerplate.plans;
+package hng_java_boilerplate.plans.service;
 
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
 import hng_java_boilerplate.plans.dtos.PlanResponse;

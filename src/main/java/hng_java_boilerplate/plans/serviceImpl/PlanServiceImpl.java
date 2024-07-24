@@ -1,8 +1,11 @@
-package hng_java_boilerplate.plans;
+package hng_java_boilerplate.plans.serviceImpl;
 
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
+import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
+import hng_java_boilerplate.plans.repository.PlanRepository;
+import hng_java_boilerplate.plans.service.PlanService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
