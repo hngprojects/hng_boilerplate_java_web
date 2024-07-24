@@ -1,7 +1,7 @@
 -- Add new columns to organisations table
 ALTER TABLE organisations
 ADD COLUMN slug VARCHAR(255) UNIQUE,
-ADD COLUMN owner_id UUID REFERENCES users(id),
+ADD COLUMN owner_id VARCHAR(255) REFERENCES users(id),
 ADD COLUMN email VARCHAR(255),
 ADD COLUMN industry VARCHAR(255),
 ADD COLUMN type VARCHAR(255),
