@@ -1,13 +1,12 @@
 package hng_java_boilerplate.plans;
 
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
+import hng_java_boilerplate.plans.dtos.PlanResponse;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +15,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Transactional
     @Override
-    public ResponseEntity<Object> create(CreatePlanDto createPlanDto) {
+    public ResponseEntity<PlanResponse> create(CreatePlanDto createPlanDto) {
         boolean planExists = planRepository.existsByName(createPlanDto.name());
 
         if (planExists) {
@@ -31,9 +30,6 @@ public class PlanServiceImpl implements PlanService {
                 .build();
 
         Plan saved = planRepository.save(newPlan);
-        return ResponseEntity.status(201).body(new HashMap<>() {{
-            put("data", saved);
-            put("status_code", 201);
-        }});
+        return ResponseEntity.status(201).body(new PlanResponse(saved, 201, "Plan created successfully"));
     }
 }
