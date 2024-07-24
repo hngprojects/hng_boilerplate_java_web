@@ -1,7 +1,7 @@
 package hng_java_boilerplate.user.service;
 
 import com.google.zxing.WriterException;
-import hng_java_boilerplate.user.dto.request.EnableTwoFactorAuthRequest;
+import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.EnableTwoFactorAuthResponse;
 import hng_java_boilerplate.user.dto.response.VerifyTwoFactorAuthResponse;
 
@@ -11,12 +11,12 @@ public interface TwoFactorAuthService {
 
     EnableTwoFactorAuthResponse enableTwoFA(EnableTwoFactorAuthRequest request) throws IOException, WriterException;
 
-    VerifyTwoFactorAuthResponse verifyTotpCode(String totpCode);
+    VerifyTwoFactorAuthResponse verifyTotpCode(Verify2FARequest request);
 
-    EnableTwoFactorAuthResponse disableTwoFA(String password, String totpCode);
+    EnableTwoFactorAuthResponse disableTwoFA(Disable2FARequest request);
 
-    EnableTwoFactorAuthResponse generateBackupCodes(String password, String totpCode);
+    EnableTwoFactorAuthResponse generateBackupCodes(BackupCodeRequest request);
 
-    EnableTwoFactorAuthResponse recoverBackupCode(String backupCode);
+    EnableTwoFactorAuthResponse recoverBackupCode(RecoverBackupCodeRequest request);
 
 }

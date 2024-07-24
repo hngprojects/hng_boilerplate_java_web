@@ -1,6 +1,6 @@
 package hng_java_boilerplate.user.controller;
 
-import hng_java_boilerplate.user.dto.request.EnableTwoFactorAuthRequest;
+import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.service.TwoFactorAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/api/v1/2fa")
 public class TwoFactorAuthController {
 
     @Autowired
@@ -35,8 +34,8 @@ public class TwoFactorAuthController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<?> verify2FA(@RequestBody Map<String, String> request) {
-      var response = twoFactorAuthService.verifyTotpCode(request.get("totp_code"));
+    public ResponseEntity<?> verify2FA(@RequestBody Verify2FARequest request) {
+      var response = twoFactorAuthService.verifyTotpCode(request);
         try {
             if (response.getMessage().equals("2FA verified and enabled")) {
                 return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -53,11 +52,8 @@ public class TwoFactorAuthController {
     }
 
     @PostMapping("/disable")
-    public ResponseEntity<?> disable2FA(@RequestBody Map<String, String> requestBody) {
-        String password = requestBody.get("password");
-        String totpCode = requestBody.get("totp_code");
-
-        var response = twoFactorAuthService.disableTwoFA(password, totpCode);
+    public ResponseEntity<?> disable2FA(@RequestBody Disable2FARequest request) {
+        var response = twoFactorAuthService.disableTwoFA(request);
         if (response.getStatus_code().equals("200")) {
             return ResponseEntity.ok(response);
         }
@@ -65,11 +61,8 @@ public class TwoFactorAuthController {
     }
 
     @PostMapping("/backup-codes")
-    public ResponseEntity<?> generateBackupCodes(@RequestBody Map<String, String> requestBody) {
-        String password = requestBody.get("password");
-        String totpCode = requestBody.get("totp_code");
-
-        var response = twoFactorAuthService.generateBackupCodes(password, totpCode);
+    public ResponseEntity<?> generateBackupCodes(@RequestBody BackupCodeRequest request) {
+        var response = twoFactorAuthService.generateBackupCodes(request);
         if (response.getStatus_code().equals("200")) {
             return ResponseEntity.ok(response);
         }
@@ -77,10 +70,8 @@ public class TwoFactorAuthController {
     }
 
     @PostMapping("/recover")
-    public ResponseEntity<?> recoverBackupCode(@RequestBody Map<String, String> requestBody) {
-        String backupCode = requestBody.get("backup_code");
-
-        var response = twoFactorAuthService.recoverBackupCode(backupCode);
+    public ResponseEntity<?> recoverBackupCode(@RequestBody RecoverBackupCodeRequest request) {
+        var response = twoFactorAuthService.recoverBackupCode(request);
         if (response.getStatus_code().equals("200")) {
             return ResponseEntity.ok(response);
         }

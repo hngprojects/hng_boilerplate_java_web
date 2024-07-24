@@ -2,7 +2,7 @@ package hng_java_boilerplate.user.serviceImpl;
 
 import com.google.zxing.ReaderException;
 import com.google.zxing.WriterException;
-import hng_java_boilerplate.user.dto.request.EnableTwoFactorAuthRequest;
+import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.EnableTwoFactorAuthResponse;
 import hng_java_boilerplate.user.dto.response.VerifyTwoFactorAuthResponse;
 import hng_java_boilerplate.user.entity.User;
@@ -69,13 +69,13 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
     }
 
     @Override
-    public VerifyTwoFactorAuthResponse verifyTotpCode(String totpCode) {
+    public VerifyTwoFactorAuthResponse verifyTotpCode(Verify2FARequest request) {
         VerifyTwoFactorAuthResponse response = new VerifyTwoFactorAuthResponse();
         Map<String, Object> data = new HashMap<>();
         User loggedInUser = userService.getLoggedInUser();
         if (loggedInUser != null) {
             String secretKey = loggedInUser.getTwoFASecretKey();
-            int code = Integer.parseInt(totpCode);
+            int code = Integer.parseInt(request.getTotp_code());
             boolean isVerified = twoFactorAuthUtils.verifyTotpCode(secretKey, code);
             if (isVerified) {
                 String[] backupCodes = twoFactorAuthUtils.generateBackupCodes();
@@ -98,12 +98,12 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
     }
 
     @Override
-    public EnableTwoFactorAuthResponse disableTwoFA(String password, String totpCode) {
+    public EnableTwoFactorAuthResponse disableTwoFA(Disable2FARequest request) {
         EnableTwoFactorAuthResponse response = new EnableTwoFactorAuthResponse();
         User loggedInUser = userService.getLoggedInUser();
         if (loggedInUser != null) {
-            if (passwordEncoder.matches(password, loggedInUser.getPassword())) {
-                int code = Integer.parseInt(totpCode);
+            if (passwordEncoder.matches(request.getPassword(), loggedInUser.getPassword())) {
+                int code = Integer.parseInt(request.getTotp_code());
                 boolean isVerified = twoFactorAuthUtils.verifyTotpCode(loggedInUser.getTwoFASecretKey(), code);
                 if (isVerified) {
                     loggedInUser.setIs2FAEnabled(false);
@@ -130,12 +130,12 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
     }
 
     @Override
-    public EnableTwoFactorAuthResponse generateBackupCodes(String password, String totpCode) {
+    public EnableTwoFactorAuthResponse generateBackupCodes(BackupCodeRequest request) {
         EnableTwoFactorAuthResponse response = new EnableTwoFactorAuthResponse();
         User loggedInUser = userService.getLoggedInUser();
         if (loggedInUser != null) {
-            if (passwordEncoder.matches(password, loggedInUser.getPassword())) {
-                int code = Integer.parseInt(totpCode);
+            if (passwordEncoder.matches(request.getPassword(), loggedInUser.getPassword())) {
+                int code = Integer.parseInt(request.getTotp_code());
                 boolean isVerified = twoFactorAuthUtils.verifyTotpCode(loggedInUser.getTwoFASecretKey(), code);
                 if (isVerified) {
                     String[] backupCodes = twoFactorAuthUtils.generateBackupCodes();
@@ -163,11 +163,11 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
     }
 
     @Override
-    public EnableTwoFactorAuthResponse recoverBackupCode(String backupCode) {
+    public EnableTwoFactorAuthResponse recoverBackupCode(RecoverBackupCodeRequest request) {
         EnableTwoFactorAuthResponse response = new EnableTwoFactorAuthResponse();
         User loggedInUser = userService.getLoggedInUser();
         if (loggedInUser != null) {
-            if (loggedInUser.getTwoFABackupCodes() != null && List.of(loggedInUser.getTwoFABackupCodes()).contains(backupCode)) {
+            if (loggedInUser.getTwoFABackupCodes() != null && List.of(loggedInUser.getTwoFABackupCodes()).contains(request.getBackup_codes())) {
                 // Logic to verify and recover 2FA
                 response.setStatus_code("200");
                 response.setMessage("2FA verified");
