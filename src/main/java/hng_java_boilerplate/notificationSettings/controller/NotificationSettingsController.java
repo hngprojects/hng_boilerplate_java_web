@@ -1,7 +1,6 @@
 package hng_java_boilerplate.notificationSettings.controller;
 
 import hng_java_boilerplate.notificationSettings.entity.NotificationSettings;
-import hng_java_boilerplate.notificationSettings.service.NotificationCreatorService;
 import hng_java_boilerplate.notificationSettings.service.NotificationSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ public class NotificationSettingsController {
     @Autowired
     private NotificationSettingsService notificationSettingsService;
 
-    private NotificationCreatorService notificationCreatorService;
     @PostMapping("api/v1/settings/notification-settings")
     @PreAuthorize("isAuthenticated")
     public ResponseEntity<?> createOrUpdateNotificationSettings(@RequestBody NotificationSettings settings, BindingResult result){
@@ -30,7 +28,6 @@ public class NotificationSettingsController {
         }
 
         NotificationSettings savedSettings = notificationSettingsService.save(settings);
-        notificationCreatorService.sendNotification("Notification settings updated for user: " + savedSettings.getUserId());
         return ResponseEntity.ok(savedSettings);
     }
 

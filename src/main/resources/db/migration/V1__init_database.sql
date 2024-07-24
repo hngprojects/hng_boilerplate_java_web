@@ -1,12 +1,3 @@
--- V1__Create_users_table.sql
-CREATE TABLE users (
-    id VARCHAR(36) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    profile_id VARCHAR(36) UNIQUE,
-    FOREIGN KEY (profile_id) REFERENCES profiles(id)
-);
-
 -- V1__Create_profiles_table.sql
 CREATE TABLE profiles (
     id VARCHAR(36) PRIMARY KEY,
@@ -14,6 +5,15 @@ CREATE TABLE profiles (
     last_name VARCHAR(255),
     phone VARCHAR(255),
     avatar_url TEXT
+);
+
+-- V1__Create_users_table.sql
+CREATE TABLE users (
+    id VARCHAR(36) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    profile_id VARCHAR(36) UNIQUE,
+    FOREIGN KEY (profile_id) REFERENCES profiles(id)
 );
 
 -- V1__Create_organisations_table.sql
@@ -41,11 +41,3 @@ CREATE TABLE user_organisation (
     FOREIGN KEY (organisation_id) REFERENCES organisations(id)
 );
 
--- V1__Create_notification_settings_table.sql
-CREATE TABLE notification_settings (
-id VARCHAR(36) PRIMARY KEY,
-user_id VARCHAR(36) NOT NULL,
-email_notifications BOOLEAN NOT NULL,
-push_notifications BOOLEAN NOT NULL,
-sms_notifications BOOLEAN NOT NULL
-);
