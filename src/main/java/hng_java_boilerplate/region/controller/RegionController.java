@@ -1,5 +1,4 @@
 package hng_java_boilerplate.region.controller;
-
 import hng_java_boilerplate.mappers.Mapper;
 import hng_java_boilerplate.region.dto.*;
 import hng_java_boilerplate.region.entity.UserRegionEntity;
@@ -16,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
-
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +34,6 @@ public class RegionController {
         this.userRegionMapper = userRegionMapper;
     }
 
-
     @Operation(summary = "Get all regions", description = "Retrieve all available regions")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation, returns a list of regions"),
@@ -45,13 +41,9 @@ public class RegionController {
     })
     @GetMapping()
     public ResponseEntity<?> getAllRegion(){
-
-
         Optional<?> regionList = regionService.getAllAvailableRegions();
         if (regionList.isPresent()) {
-
             Object responseObject = regionList.get();
-
             if (responseObject instanceof List<?> list && !list.isEmpty()) {
 
                 @SuppressWarnings("unchecked")
@@ -60,7 +52,6 @@ public class RegionController {
             } else  if(responseObject instanceof RegionErrorResponseDto error ){
                 return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
             }else {
-
                 return new ResponseEntity<>(
                         RegionErrorResponseDto.builder()
                                 .message("Not found")
@@ -78,10 +69,7 @@ public class RegionController {
                         .build(),
                 HttpStatus.BAD_REQUEST
         );
-
-
     }
-
 
     @Operation(summary = "Assign a region to a user", description = "Assign a region to a user based on the provided information")
     @ApiResponses(value = {
@@ -95,7 +83,6 @@ public class RegionController {
             @RequestBody UserRegionDto userRegionDTO,
             Authentication authentication
     ){
-
         try {
         //check if region is predefined
         if(!regionService.isRegionAvailable(userRegionDTO.getRegionName())){
@@ -108,8 +95,7 @@ public class RegionController {
             );
         }
 
-
-        //========== Ensure that assignee is owner of account. =================
+        // Ensure that assignee is owner of account.
         User user = (User) authentication.getPrincipal();
         String user_id = user.getId();
         if(!user_id.equals(userRegionDTO.getUserId())){
@@ -121,10 +107,6 @@ public class RegionController {
                     HttpStatus.UNAUTHORIZED
             );
         }
-
-
-
-
             if(regionService.hasUserAssignedRegion(userRegionDTO.getUserId())){
                 return new ResponseEntity<>(
                         Optional.of(RegionErrorResponseDto.builder()
@@ -134,8 +116,6 @@ public class RegionController {
                         HttpStatus.CONFLICT
                 );
             }
-
-
             UserRegionEntity userRegionEntity = userRegionMapper.mapFrom(userRegionDTO);
             userRegionEntity.setRegionCode(userRegionDTO.getCountryCode());
             Optional<?> assignedRegion = regionService.saveUserRegion(userRegionEntity);
@@ -159,7 +139,6 @@ public class RegionController {
         }
     }
 
-
     @Operation(summary = "Get user's region", description = "Retrieve the region assigned to a specific user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "302", description = "Successful operation, returns the user's region", content = @Content(schema = @Schema(implementation = UserRegionDto.class))),
@@ -182,7 +161,6 @@ public class RegionController {
                             .build(),
                     HttpStatus.NOT_FOUND
             );
-
         } catch (Exception e) {
             return new ResponseEntity<>(
                     Optional.of(RegionErrorResponseDto.builder()
@@ -192,9 +170,7 @@ public class RegionController {
                     HttpStatus.BAD_REQUEST
             );
         }
-
     }
-
 
     @Operation(summary = "Update user's region", description = "Update the region assigned to a specific user")
     @ApiResponses(value = {
@@ -209,10 +185,7 @@ public class RegionController {
             @RequestBody RegionUpdateDto regionUpdateDto,
             Authentication authentication
     ) {
-
-
-
-//========== Ensure that only the current authenticated users can update their region preferences. ===============================================
+// Ensure that only the current authenticated users can update their region preferences.
         User user = (User) authentication.getPrincipal();
         String user_id = user.getId();
         if(!user_id.equals(userID)){
@@ -226,7 +199,6 @@ public class RegionController {
         }
 
         try {
-
             if(!regionService.isRegionAvailable(regionUpdateDto.getRegionName())){
                 return new ResponseEntity<>(
                         Optional.of(RegionErrorResponseDto.builder()
@@ -236,7 +208,6 @@ public class RegionController {
                         HttpStatus.BAD_REQUEST
                 );
             }
-
             UUID userId = UUID.fromString(userID);
             Optional<UserRegionEntity> updatedUserRegion = regionService.updateUserRegion(userId, regionUpdateDto);
             if(updatedUserRegion.isPresent()){
@@ -255,9 +226,8 @@ public class RegionController {
                             .build()),
                     HttpStatus.BAD_REQUEST
             );
-
         } catch (Exception e) {
-            System.out.println("====== Error message =====> " + e.getMessage());
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(
                     Optional.of(RegionErrorResponseDto.builder()
                             .statusCode("400")
@@ -266,6 +236,5 @@ public class RegionController {
                     HttpStatus.BAD_REQUEST
             );
         }
-
     }
 }
