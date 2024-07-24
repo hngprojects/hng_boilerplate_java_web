@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,6 +47,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         Optional<User> user = userRepository.findByEmail(username);
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
+        }
+        if (user.get().getIsDeactivated()) {
+            throw new DisabledException("user is deactivated");
         }
         return user.get();
     }
@@ -94,6 +98,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
     }
 
+    @Override
     public User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

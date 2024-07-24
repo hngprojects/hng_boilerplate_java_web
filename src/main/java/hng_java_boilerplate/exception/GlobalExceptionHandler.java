@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -30,6 +32,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+  
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ValidationError handleValidation(MethodArgumentNotValidException ex) {
@@ -43,25 +46,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CustomError handleBadRequest(BadRequestException ex) {
-        return new CustomError("Bad Request", ex.getMessage());
+        return new CustomError(400, ex.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public CustomError handleNotFound(NotFoundException ex) {
-        return new CustomError("Not Found", ex.getMessage());
+        return new CustomError(404, ex.getMessage());
     }
 
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public CustomError handleConflict(ConflictException ex) {
-        return new CustomError("Conflict", ex.getMessage());
+        return new CustomError(409, ex.getMessage());
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public CustomError handleAuthorization(AuthorizationDeniedException ex) {
-        return new CustomError("Forbidden", "you do not have authorization to perform action");
+        return new CustomError(403, "you do not have authorization to perform action");
     }
 
     @ExceptionHandler(Exception.class)
@@ -70,5 +73,3 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
-
-
