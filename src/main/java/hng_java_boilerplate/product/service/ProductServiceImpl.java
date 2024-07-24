@@ -4,10 +4,15 @@ import hng_java_boilerplate.product.dto.ErrorDTO;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.exceptions.ValidationError;
 import hng_java_boilerplate.product.repository.ProductRepository;
+import hng_java_boilerplate.user.enums.Role;
+import hng_java_boilerplate.product.exceptions.ProductNotFoundException;
+import hng_java_boilerplate.product.exceptions.UnauthorizedAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 
@@ -28,5 +33,26 @@ public class ProductServiceImpl implements ProductService{
             throw new ValidationError(errorDTO);
         }
         return productRepository.searchProducts(name, category, minPrice, maxPrice, pageable);
+    }
+
+    @Override
+    public void deleteProductById(String id) throws ProductNotFoundException, UnauthorizedAccessException {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+    if (!hasPermissionToDelete(product)){
+        throw new UnauthorizedAccessException("You do not have permission to delete this product");
+    }
+    productRepository.delete(product);
+    }
+    private boolean hasPermissionToDelete(Product product){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()){
+            for (GrantedAuthority authority : authentication.getAuthorities()){
+                Role role = Role.valueOf(authority.getAuthority().replace("ROLE_",""));
+                if (role == Role.ROLE_ADMIN){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

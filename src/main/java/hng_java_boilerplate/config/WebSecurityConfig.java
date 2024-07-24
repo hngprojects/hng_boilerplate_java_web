@@ -1,5 +1,6 @@
 package hng_java_boilerplate.config;
 
+import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(httpRequests ->
                         httpRequests
-//                                .requestMatchers("").hasAuthority(String.valueOf(Role.ADMIN))
+                                .requestMatchers("/api/v1/products/{id}").hasAuthority(String.valueOf(Role.ROLE_ADMIN))
                                 .requestMatchers("/", "/v3/api-docs", "/swagger-ui/index.html" ,"/api/v1/auth/**").permitAll()
                                 .requestMatchers("/api/v1/auth/logout","/api/**").authenticated())
                 .logout(logout -> logout
