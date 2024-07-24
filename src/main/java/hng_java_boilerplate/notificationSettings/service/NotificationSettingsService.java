@@ -9,8 +9,12 @@ import java.util.Optional;
 
 @Service
 public class NotificationSettingsService {
-    @Autowired
-    private NotificationSettingsRepository settingsRepository;
+
+    private final NotificationSettingsRepository settingsRepository;
+
+    public NotificationSettingsService(NotificationSettingsRepository settingsRepository) {
+        this.settingsRepository = settingsRepository;
+    }
 
     public NotificationSettings save(NotificationSettings settings){
         return settingsRepository.save(settings);
