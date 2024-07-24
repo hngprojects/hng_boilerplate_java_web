@@ -6,7 +6,6 @@ import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
 import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping()
+    @PostMapping
     @PreAuthorize("isAuthenticated")
     public ResponseEntity<Product> addProduct(@RequestBody @Validated ProductDTO product, @AuthenticationPrincipal User userDetail) {
         Product savedProduct = productService.addProduct(product, userDetail.getId());
