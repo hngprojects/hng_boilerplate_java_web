@@ -34,15 +34,15 @@ public class AboutPageController {
     }
 
 
-    @PostMapping("/api/v1/content/about")
-    public ResponseEntity<AboutPageDto> createAboutPage(@RequestBody AboutPageDto aboutPageDto) {
-        return new ResponseEntity<>(aboutPageService.createAboutPage(aboutPageDto), HttpStatus.CREATED);
-    }
-
-
-    @GetMapping("/api/v1/content/about/{id}")
-    public ResponseEntity<AboutPageDto> getAboutPage(@PathVariable Long id) {
-        return ResponseEntity.ok(aboutPageService.getAboutPage(id));
-    }
+//    @PostMapping("/api/v1/content/about")
+//    public ResponseEntity<AboutPageDto> createAboutPage(@RequestBody AboutPageDto aboutPageDto) {
+//        return new ResponseEntity<>(aboutPageService.createAboutPage(aboutPageDto), HttpStatus.CREATED);
+//    }
+//
+//
+//    @GetMapping("/api/v1/content/about/{id}")
+//    public ResponseEntity<AboutPageDto> getAboutPage(@PathVariable Long id) {
+//        return ResponseEntity.ok(aboutPageService.getAboutPage(id));
+//    }
 
 }
