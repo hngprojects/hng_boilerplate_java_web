@@ -1,10 +1,16 @@
 package hng_java_boilerplate.SMS.dto;
 
-import jakarta.validation.constraints.Pattern;
-
 public class SmsRequestDto {
     private String phone_number;
     private String message;
+
+    public SmsRequestDto() {
+    }
+
+    public SmsRequestDto(String phone_number, String message) {
+        this.phone_number = phone_number;
+        this.message = message;
+    }
 
     public String getPhone_number() {
         return phone_number;
