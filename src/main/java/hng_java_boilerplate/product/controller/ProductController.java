@@ -6,16 +6,20 @@ import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
 import hng_java_boilerplate.user.entity.User;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import hng_java_boilerplate.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
@@ -27,10 +31,11 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping
-    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO productDTO) {
-        Product product = productService.addProduct(productDTO);
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+    @PostMapping()
+    @PreAuthorize("isAuthenticated")
+    public ResponseEntity<Product> addProduct(@RequestBody @Validated ProductDTO product, @AuthenticationPrincipal User userDetail) {
+        Product savedProduct = productService.addProduct(product, userDetail.getId());
+        return ResponseEntity.ok(savedProduct);
     }
 
     @GetMapping("/search")

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class ProductServiceImpl implements ProductService{
 
     private ProductRepository productRepository;
-//    private UserRepository userRepository;
+    private UserRepository userRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -35,8 +35,8 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
-    public Product addProduct(ProductDTO productDTO) {
-//        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public Product addProduct(ProductDTO productDTO, String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         Product product = new Product();
         product.setName(productDTO.getName());
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService{
         product.setCategory(productDTO.getCategory());
         product.setPrice(productDTO.getPrice());
         product.setImageUrl(productDTO.getImageUrl());
-//        product.setUser(user);
+        product.setUser(user);
 
         return productRepository.save(product);
     }

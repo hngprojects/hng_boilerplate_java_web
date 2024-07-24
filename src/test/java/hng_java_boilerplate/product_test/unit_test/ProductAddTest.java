@@ -27,7 +27,7 @@ class ProductAddTest {
         }
 
         @Override
-        public Product addProduct(ProductDTO productDTO) {
+        public Product addProduct(ProductDTO productDTO, "5") {
             return null;
         }
     };
