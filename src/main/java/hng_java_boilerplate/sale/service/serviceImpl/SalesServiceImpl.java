@@ -165,4 +165,56 @@ public class SalesServiceImpl implements SaleService {
             );
         }
     }
+
+    @Override
+    public Object getBarChartData() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication.isAuthenticated()) || !(authentication instanceof UsernamePasswordAuthenticationToken)) {
+            return new UserNotFoundException("User not authenticated or token is invalid.");
+        }
+        String username = authentication.getName();
+        Optional<User> user = userRepository.findByEmail(username);
+        if (user.isEmpty()) {
+            return new UserNotFoundException("User not authenticated or token is invalid.");
+        }
+        try {
+            List<Sale> sales = salesRepository.findAll();
+            if (sales.isEmpty()) {
+                ErrorDetails errorDetails = new ErrorDetails();
+                errorDetails.setChartType("bar");
+                return new ErrorResponse(
+                        "false",
+                        404,
+                        "DataFetchError",
+                        "There was an error fetching the bar chart data",
+                        errorDetails
+                );
+            }
+            List<MonthlySalesDTO> monthlySalesDTOs = sales.stream()
+                    .map(s -> new MonthlySalesDTO(s.getMonth(), s.getTotalSale()))
+                    .collect(Collectors.toList());
+            List<Double> totalSalesList = monthlySalesDTOs.stream()
+                    .map(MonthlySalesDTO::getTotalSales)
+                    .collect(Collectors.toList());
+            List<String> monthList = monthlySalesDTOs.stream()
+                    .map(MonthlySalesDTO::getMonth)
+                    .collect(Collectors.toList());
+            ResponseDTO responseDTO = new ResponseDTO();
+            responseDTO.setStatus("true");
+            responseDTO.setStatus_code(200);
+            responseDTO.setMonth(monthList);
+            responseDTO.setTotalSales(totalSalesList);
+            return responseDTO;
+        } catch (Exception e) {
+            ErrorDetails errorDetails = new ErrorDetails();
+            errorDetails.setChartType("bar");
+            return new ErrorResponse(
+                    "false",
+                    404,
+                    "DataFetchError",
+                    "There was an error fetching the bar chart data",
+                    errorDetails
+            );
+        }
+    }
 }
