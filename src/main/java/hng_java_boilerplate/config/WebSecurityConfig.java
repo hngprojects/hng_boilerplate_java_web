@@ -72,7 +72,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(httpRequests ->
                         httpRequests
 //                                .requestMatchers("").hasAuthority(String.valueOf(Role.ADMIN))
-                                .requestMatchers("/", "/v3/api-docs", "/swagger-ui/index.html" ,"/api/v1/auth/**").permitAll()
+                                .requestMatchers("/", "/v3/api-docs", "/swagger-ui/index.html" ,"/api/v1/auth/**", "/api/v1/squeeze").permitAll()
                                 .requestMatchers("/api/v1/auth/logout","/api/**").authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")

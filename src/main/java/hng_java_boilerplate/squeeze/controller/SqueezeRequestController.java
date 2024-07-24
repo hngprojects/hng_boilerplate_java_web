@@ -6,7 +6,6 @@ import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
 import hng_java_boilerplate.squeeze.util.ResponseMessage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

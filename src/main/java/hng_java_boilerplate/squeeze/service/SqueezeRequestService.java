@@ -4,7 +4,6 @@ import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.repository.SqueezeRequestRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
