@@ -8,16 +8,18 @@ import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 
+@RequiredArgsConstructor
 public class OrganisationService {
 
-    @Autowired
-    private OrganisationRepository organisationRepository;
 
-    @Autowired
-    private UserRepository userService;
+    private final OrganisationRepository organisationRepository;
+
+
+    private final UserRepository userService;
 
 
     public OrganisationResponseDto addUserToOrganisation(String orgId, AddUserToOrganisationRequestDto request, Authentication authentication) {
