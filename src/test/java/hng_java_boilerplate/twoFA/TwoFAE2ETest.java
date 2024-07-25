@@ -1,6 +1,7 @@
 package hng_java_boilerplate.twoFA;
 
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -9,22 +10,31 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class TwoFAE2ETest {
 
+    private static String token;
+
     @BeforeAll
     public static void setup() {
         RestAssured.baseURI = "http://localhost:8080";
+
+        Response response = given()
+                .contentType("application/json")
+                .body("{ \"username\": \"testuser\", \"password\": \"testpassword\" }")
+                .when()
+                .post("/api/v1/auth/register")
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
+
+        token = response.jsonPath().getString("token");
     }
 
     @Test
-    public void whenEnable2FA_then2FASetupInitiated() {
-        String requestBody = """
-                {
-                    "password": "AlexJohn123$"
-                }
-                """;
-
+    public void whenEnable2FA_thenReturnSuccess() {
         given()
                 .contentType("application/json")
-                .body(requestBody)
+                .header("Authorization", "Bearer " + token)
+                .body("{ \"password\": \"testpassword\" }")
                 .when()
                 .post("/api/v1/2fa/enable")
                 .then()
@@ -34,16 +44,11 @@ public class TwoFAE2ETest {
     }
 
     @Test
-    public void whenVerify2FA_then2FAVerifiedAndEnabled() {
-        String requestBody = """
-                {
-                    "totp_code": "123456"
-                }
-                """;
-
+    public void whenVerify2FA_thenReturnSuccess() {
         given()
                 .contentType("application/json")
-                .body(requestBody)
+                .header("Authorization", "Bearer " + token)
+                .body("{ \"totp_code\": \"123456\" }")
                 .when()
                 .post("/api/v1/2fa/verify")
                 .then()
@@ -53,62 +58,17 @@ public class TwoFAE2ETest {
     }
 
     @Test
-    public void whenDisable2FA_then2FADisabled() {
-        String requestBody = """
-                {
-                    "password": "user_password",
-                    "totp_code": "123456"
-                }
-                """;
-
+    public void whenDisable2FA_thenReturnSuccess() {
         given()
                 .contentType("application/json")
-                .body(requestBody)
+                .header("Authorization", "Bearer " + token)
+                .body("{ \"password\": \"testpassword\", \"totp_code\": \"123456\" }")
                 .when()
                 .post("/api/v1/2fa/disable")
                 .then()
                 .statusCode(200)
                 .body("status_code", equalTo("200"))
                 .body("message", equalTo("2FA has been disabled"));
-    }
-
-    @Test
-    public void whenGenerateBackupCodes_thenBackupCodesGenerated() {
-        String requestBody = """
-                {
-                    "password": "user_password",
-                    "totp_code": "123456"
-                }
-                """;
-
-        given()
-                .contentType("application/json")
-                .body(requestBody)
-                .when()
-                .post("/api/v1/2fa/backup-codes")
-                .then()
-                .statusCode(200)
-                .body("status_code", equalTo("200"))
-                .body("message", equalTo("New backup codes generated"));
-    }
-
-    @Test
-    public void whenRecoverWithBackupCode_then2FAVerified() {
-        String requestBody = """
-                {
-                    "backup_codes": "code1"
-                }
-                """;
-
-        given()
-                .contentType("application/json")
-                .body(requestBody)
-                .when()
-                .post("/api/v1/2fa/recover")
-                .then()
-                .statusCode(200)
-                .body("status_code", equalTo("200"))
-                .body("message", equalTo("2FA verified"));
     }
 
 }

@@ -1,4 +1,4 @@
-Added needed columns
+--Added needed columns
 ALTER TABLE products
 ADD COLUMN category VARCHAR(255),
 ADD COLUMN price DOUBLE PRECISION,
