@@ -53,7 +53,7 @@ jobs:
       # Create configuration files
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/password" >> .env
+          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/postgres" >> .env
           echo "DB_USERNAME=postgres" >> .env
           echo "DB_PASSWORD=password" >> .env
           echo "RABBITMQ_HOST=localhost" >> .env
