@@ -1,4 +1,4 @@
-package hng_java_boilerplate.squeeze.util;
+package hng_java_boilerplate.squeeze.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,14 +9,14 @@ import java.util.List;
 @Setter
 @Getter
 @AllArgsConstructor
-public class ValidationErrorResponse {
+public class ValidationErrorResponseDto {
     private String message;
-    private List<FieldError> errors;
+    private List<FieldErrorDto> errors;
 
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class FieldError {
+    public static class FieldErrorDto {
         private String field;
         private String error;
     }

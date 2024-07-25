@@ -3,7 +3,7 @@ package hng_java_boilerplate.squeeze.controller;
 import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
-import hng_java_boilerplate.squeeze.util.ResponseMessage;
+import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,9 +23,9 @@ public class SqueezeRequestController {
     public ResponseEntity<?> handleSqueezeRequest(@Valid @RequestBody SqueezeRequest request) {
         try {
             service.saveSqueezeRequest(request);
-            return ResponseEntity.ok().body(new ResponseMessage("Your request has been received! You will get a template shortly.", HttpStatus.OK.value()));
+            return ResponseEntity.ok().body(new ResponseMessageDto("Your request has been received! You will get a template shortly.", HttpStatus.OK.value()));
         } catch (DuplicateEmailException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessage(e.getMessage(), HttpStatus.CONFLICT.value()));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessageDto(e.getMessage(), HttpStatus.CONFLICT.value()));
         }
     }
 

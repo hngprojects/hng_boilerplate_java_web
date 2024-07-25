@@ -1,7 +1,7 @@
 package hng_java_boilerplate.exception;
 
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
-import hng_java_boilerplate.squeeze.util.ResponseMessage;
+import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
 import hng_java_boilerplate.user.exception.InvalidRequestException;
@@ -48,13 +48,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
-    public ResponseEntity<ResponseMessage> handleDuplicateEmailException(DuplicateEmailException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessage(ex.getMessage(), HttpStatus.CONFLICT.value()));
+    public ResponseEntity<ResponseMessageDto> handleDuplicateEmailException(DuplicateEmailException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.CONFLICT.value()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResponseMessage> handleGeneralException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    public ResponseEntity<ResponseMessageDto> handleGeneralException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessageDto("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
 }
 
