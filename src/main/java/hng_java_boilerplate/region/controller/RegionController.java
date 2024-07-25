@@ -2,6 +2,10 @@ package hng_java_boilerplate.region.controller;
 import hng_java_boilerplate.mappers.Mapper;
 import hng_java_boilerplate.region.dto.*;
 import hng_java_boilerplate.region.entity.UserRegionEntity;
+import hng_java_boilerplate.region.exceptions.BadRequestException;
+import hng_java_boilerplate.region.exceptions.ConflictException;
+import hng_java_boilerplate.region.exceptions.RegionNotFoundException;
+import hng_java_boilerplate.region.exceptions.UnauthorizedRequestException;
 import hng_java_boilerplate.region.service.RegionService;
 import hng_java_boilerplate.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,23 +57,10 @@ public class RegionController {
             } else  if(responseObject instanceof RegionErrorResponseDto error ){
                 return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
             }else {
-                return new ResponseEntity<>(
-                        RegionErrorResponseDto.builder()
-                                .message("Not found")
-                                .statusCode("404")
-                                .build(),
-                        HttpStatus.NOT_FOUND
-                );
+                throw new RegionNotFoundException("No regions available");
             }
         }
-
-        return new ResponseEntity<>(
-                RegionErrorResponseDto.builder()
-                        .message("Bad request")
-                        .statusCode("400")
-                        .build(),
-                HttpStatus.BAD_REQUEST
-        );
+        throw new BadRequestException("Error retrieving regions");
     }
 
     @Operation(summary = "Assign a region to a user", description = "Assign a region to a user based on the provided information")
@@ -85,38 +75,20 @@ public class RegionController {
             @RequestBody UserRegionDto userRegionDTO,
             Authentication authentication
     ){
-        try {
+
         //check if region is predefined
         if(!regionService.isRegionAvailable(userRegionDTO.getRegionName())){
-            return new ResponseEntity<>(
-                    Optional.of(RegionErrorResponseDto.builder()
-                            .statusCode("404")
-                            .message("Not found")
-                            .build()),
-                    HttpStatus.BAD_REQUEST
-            );
+            throw new RegionNotFoundException("Region not found");
         }
 
         // Ensure that assignee is owner of account.
         User user = (User) authentication.getPrincipal();
         String user_id = user.getId();
         if(!user_id.equals(userRegionDTO.getUserId())){
-            return new ResponseEntity<>(
-                    Optional.of(RegionErrorResponseDto.builder()
-                            .statusCode("401")
-                            .message("Unauthorized request")
-                            .build()),
-                    HttpStatus.UNAUTHORIZED
-            );
+            throw new UnauthorizedRequestException("Unauthorized request");
         }
             if(regionService.hasUserAssignedRegion(userRegionDTO.getUserId())){
-                return new ResponseEntity<>(
-                        Optional.of(RegionErrorResponseDto.builder()
-                                .statusCode("409")
-                                .message("Conflict")
-                                .build()),
-                        HttpStatus.CONFLICT
-                );
+                throw new ConflictException("User already has an assigned region");
             }
             UserRegionEntity userRegionEntity = userRegionMapper.mapFrom(userRegionDTO);
             userRegionEntity.setRegionCode(userRegionDTO.getCountryCode());
@@ -128,17 +100,8 @@ public class RegionController {
                             .countryCode(region.getCountryCode())
                             .userId(region.getUserId())
                             .build()
-                    , HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("========= Error message =========> {}", e.getMessage());
-            return new ResponseEntity<>(
-                    Optional.of(RegionErrorResponseDto.builder()
-                            .statusCode("400")
-                            .message("Bad request")
-                            .build()),
-                    HttpStatus.BAD_REQUEST
+                    , HttpStatus.OK
             );
-        }
     }
 
     @Operation(summary = "Get user's region", description = "Retrieve the region assigned to a specific user")
@@ -156,21 +119,9 @@ public class RegionController {
                 UserRegionDto userRegionDto = userRegionMapper.mapTo(userRegion.get());
                 return new ResponseEntity<>(userRegionDto, HttpStatus.FOUND);
             }
-            return new ResponseEntity<>(
-                    RegionErrorResponseDto.builder()
-                            .statusCode("404")
-                            .message("Not found")
-                            .build(),
-                    HttpStatus.NOT_FOUND
-            );
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    Optional.of(RegionErrorResponseDto.builder()
-                            .statusCode("400")
-                            .message("Bad request")
-                            .build()),
-                    HttpStatus.BAD_REQUEST
-            );
+            throw new RegionNotFoundException("User region not found");
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid user ID format");
         }
     }
 
@@ -191,24 +142,12 @@ public class RegionController {
         User user = (User) authentication.getPrincipal();
         String user_id = user.getId();
         if(!user_id.equals(userID)){
-            return new ResponseEntity<>(
-                    Optional.of(RegionErrorResponseDto.builder()
-                            .statusCode("401")
-                            .message("Unauthorized request")
-                            .build()),
-                    HttpStatus.UNAUTHORIZED
-            );
+            throw new UnauthorizedRequestException("Unauthorized request");
         }
 
         try {
             if(!regionService.isRegionAvailable(regionUpdateDto.getRegionName())){
-                return new ResponseEntity<>(
-                        Optional.of(RegionErrorResponseDto.builder()
-                                .statusCode("400")
-                                .message("Bad request")
-                                .build()),
-                        HttpStatus.BAD_REQUEST
-                );
+                throw new BadRequestException("Region not available");
             }
             UUID userId = UUID.fromString(userID);
             Optional<UserRegionEntity> updatedUserRegion = regionService.updateUserRegion(userId, regionUpdateDto);
@@ -221,22 +160,9 @@ public class RegionController {
                                 .build()
                         , HttpStatus.OK);
             }
-            return new ResponseEntity<>(
-                    Optional.of(RegionErrorResponseDto.builder()
-                            .statusCode("404")
-                            .message("Not found")
-                            .build()),
-                    HttpStatus.BAD_REQUEST
-            );
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(
-                    Optional.of(RegionErrorResponseDto.builder()
-                            .statusCode("400")
-                            .message("Bad request")
-                            .build()),
-                    HttpStatus.BAD_REQUEST
-            );
+            throw new RegionNotFoundException("User region not found");
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid user ID format");
         }
     }
 }
