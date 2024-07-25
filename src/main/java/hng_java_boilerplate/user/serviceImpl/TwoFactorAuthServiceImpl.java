@@ -11,6 +11,8 @@ import hng_java_boilerplate.user.exception.UnauthorizedException;
 import hng_java_boilerplate.user.service.TwoFactorAuthService;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.TwoFactorAuthUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +26,9 @@ import java.util.Map;
 
 @Service
 public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TwoFactorAuthServiceImpl.class);
+
 
     private final UserService userService;
 
@@ -44,7 +49,7 @@ public class TwoFactorAuthServiceImpl implements TwoFactorAuthService {
         Map<String, Object> data = new HashMap<>();
         String password = request.getPassword();
         User loggedInUser = userService.getLoggedInUser();
-        System.out.println("logged in person == " + loggedInUser);
+        logger.info("Logged in user: {}", loggedInUser);
 
         if (loggedInUser != null) {
             if (passwordEncoder.matches(password, loggedInUser.getPassword())) {

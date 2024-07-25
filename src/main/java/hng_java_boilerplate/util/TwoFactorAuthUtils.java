@@ -43,36 +43,12 @@ public class TwoFactorAuthUtils {
         return gAuth.authorize(secret, code);
     }
 
-//    public String storeQRCodeImage(byte[] qrCodeBytes, String username) throws IOException {
-//        // Define the directory to store the QR code images
-//        String qrCodeDirectory = "C:/path/to/your/qr-codes/";
-//
-//        // Create the directory if it doesn't exist
-//        File directory = new File(qrCodeDirectory);
-//        if (!directory.exists()) {
-//            directory.mkdirs();
-//        }
-//
-//        // Define the file path
-//        String filePath = qrCodeDirectory + username + "_qr_code.png";
-//
-//        // Write the QR code bytes to the file
-//        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-//            fos.write(qrCodeBytes);
-//        }
-//
-//        // Return the URL to access the QR code image
-//        // Adjust the URL according to your server setup
-//        return "http://yourserver.com/qr-codes/" + username + "_qr_code.png";
-//    }
 
     public String[] generateBackupCodes() {
-        // Implement logic to generate and store backup codes
         return new String[]{"98765432", "87654321", "76543210", "65432109", "54321098"};
     }
 
 
-    // Generate a 6-digit OTP using the secret key
     public int generateTotpCode(String secret) {
         GoogleAuthenticator gAuth = new GoogleAuthenticator();
         return gAuth.getTotpPassword(secret);

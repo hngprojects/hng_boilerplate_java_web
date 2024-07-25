@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/2fa")
 public class TwoFactorAuthController {
 
-    @Autowired
-    private TwoFactorAuthService twoFactorAuthService;
+
+    private final TwoFactorAuthService twoFactorAuthService;
+
+    public TwoFactorAuthController(TwoFactorAuthService twoFactorAuthService) {
+        this.twoFactorAuthService = twoFactorAuthService;
+    }
 
     @PostMapping("/enable")
     public ResponseEntity<?> enable2FA(@RequestBody EnableTwoFactorAuthRequest request) {
