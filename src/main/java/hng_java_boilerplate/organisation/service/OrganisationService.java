@@ -34,14 +34,9 @@ import java.util.regex.Pattern;
 @Service
 
 public class OrganisationService {
-
     private OrganisationRepository organisationRepository;
-
     private UserRepository userRepository;
-
-
     private UserService userService;
-
     private UserServiceImpl userServiceImpl;
 
     public OrganisationService(OrganisationRepository organisationRepository, UserRepository userRepository, UserService userService, UserServiceImpl userServiceImpl) {
@@ -76,10 +71,8 @@ public class OrganisationService {
                 "Invitation accepted, you have been added to the organization",
                 HttpStatus.OK.value()
         );
-
         return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
     }
-
 
     private void validateField(InvitationRequest invitationRequest ){
         ErrorResponse errorResponse = new ErrorResponse();
@@ -105,7 +98,6 @@ public class OrganisationService {
                     errorResponse.getStatus()
                     );
         }
-
     }
 
     public ValidLinkResponse validateInviteLink(String invitationLink) throws InvitationValidationException{
