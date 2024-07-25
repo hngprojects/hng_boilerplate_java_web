@@ -44,4 +44,5 @@ public class RegionDto {
     @Schema(description = "User who last modified the region", example = "admin")
     @JsonProperty("modified_by")
     private String modifiedBy;
+
 }
