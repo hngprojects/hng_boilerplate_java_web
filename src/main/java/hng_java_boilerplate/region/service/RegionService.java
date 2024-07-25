@@ -20,7 +20,6 @@ public class RegionService {
 
     private final UserRegionRepository userRegionRepository;
 
-    @Autowired
     public RegionService(RegionRepository regionRepository, UserRegionRepository userRegionRepository) {
         this.regionRepository = regionRepository;
         this.userRegionRepository = userRegionRepository;

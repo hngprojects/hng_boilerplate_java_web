@@ -15,10 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/regions")
 @Tag(name = "Regions", description = "Operations related to regions")
@@ -28,7 +31,6 @@ public class RegionController {
 
     private final Mapper<UserRegionEntity, UserRegionDto> userRegionMapper;
 
-    @Autowired
     public RegionController(RegionService regionService, Mapper<UserRegionEntity, UserRegionDto> userRegionMapper) {
         this.regionService = regionService;
         this.userRegionMapper = userRegionMapper;
@@ -128,7 +130,7 @@ public class RegionController {
                             .build()
                     , HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("========= Error message =========> " + e.getMessage());
+            log.error("========= Error message =========> {}", e.getMessage());
             return new ResponseEntity<>(
                     Optional.of(RegionErrorResponseDto.builder()
                             .statusCode("400")

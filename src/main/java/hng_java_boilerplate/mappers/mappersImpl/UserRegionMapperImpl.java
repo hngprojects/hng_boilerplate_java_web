@@ -11,7 +11,6 @@ public class UserRegionMapperImpl implements Mapper<UserRegionEntity, UserRegion
 
     private final ModelMapper modelMapper;
 
-    @Autowired
     public UserRegionMapperImpl(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
