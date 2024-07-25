@@ -2,6 +2,7 @@ package hng_java_boilerplate.waitlist.controller;
 
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
+import hng_java_boilerplate.util.JwtUtils;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,8 @@ public class WaitlistControllerTest {
 
     @MockBean
     private ProductErrorHandler productErrorHandler;
+    @MockBean
+    private JwtUtils jwtUtils;
 
     private MockMvc mockMvc;
 
