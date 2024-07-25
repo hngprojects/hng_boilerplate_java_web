@@ -14,13 +14,27 @@ jobs:
         postgres:  
           image: postgres:latest
           env:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: postgres
+            POSTGRES_USER: ${{ vars.POSTGRES_USER }}
+            POSTGRES_PASSWORD: ${{ vars.POSTGRES_PASSWORD }}
+            POSTGRES_DB: ${{ vars.POSTGRES_DB }}
           ports:
-            - 5432:5432
+            - ${{ vars.POSTGRES_PORT }}:5432
           options: >-
             --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+
+        rabbitmq:
+          image: rabbitmq:3-management
+          env:
+            RABBITMQ_DEFAULT_USER: ${{ vars.RABBITMQ_USERNAME }}
+            RABBITMQ_DEFAULT_PASS: ${{ vars.RABBITMQ_PASSWORD }}
+          ports:
+            - ${{ vars.RABBITMQ_PORT }}:5672
+            - 15672:15672  # Management plugin port
+          options: >-
+            --health-cmd "rabbitmqctl node_health_check"
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
@@ -39,24 +53,14 @@ jobs:
       # Create configuration files
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://localhost:$POSTGRES_PORT/$POSTGRES_DB" >> .env
-          echo "DB_USERNAME=$POSTGRES_USER" >> .env
-          echo "DB_PASSWORD=$POSTGRES_PASSWORD" >> .env
-          echo "RABBITMQ_HOST=$RABBITMQ_HOST" >> .env
-          echo "RABBITMQ_PORT=$RABBITMQ_PORT" >> .env
-          echo "RABBITMQ_USERNAME=$RABBITMQ_USERNAME" >> .env
-          echo "RABBITMQ_PASSWORD=$RABBITMQ_PASSWORD" >> .env
-          echo "JWT_SECRET=$JWT_SECRET" >> .env
-        env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          RABBITMQ_HOST: ${{ secrets.RABBITMQ_HOST }}
-          RABBITMQ_PORT: ${{ secrets.RABBITMQ_PORT }}
-          RABBITMQ_USERNAME: ${{ secrets.RABBITMQ_USERNAME }}
-          RABBITMQ_PASSWORD: ${{ secrets.RABBITMQ_PASSWORD }}
-          
+          echo "DB_CONNECTION_STRING=postgresql://localhost:${{ vars.POSTGRES_PORT }}/${{ vars.POSTGRES_DB }}" >> .env
+          echo "DB_USERNAME=${{ vars.POSTGRES_USER }}" >> .env
+          echo "DB_PASSWORD=${{ vars.POSTGRES_PASSWORD }}" >> .env
+          echo "RABBITMQ_HOST=localhost" >> .env
+          echo "RABBITMQ_PORT=${{ vars.RABBITMQ_PORT }}" >> .env
+          echo "RABBITMQ_USERNAME=${{ vars.RABBITMQ_USERNAME }}" >> .env
+          echo "RABBITMQ_PASSWORD=${{ vars.RABBITMQ_PASSWORD }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
 
       - name: Create application.properties
         uses: ./.github/workflows/create-application-properties
