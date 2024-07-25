@@ -22,7 +22,7 @@ public class WaitlistController {
     private final WaitlistService waitlistService;
     private final EmailProducerService emailProducerService;
 
-    @Autowired
+
     public WaitlistController(WaitlistService waitlistService, EmailProducerService emailProducerService) {
         this.waitlistService = waitlistService;
         this.emailProducerService = emailProducerService;

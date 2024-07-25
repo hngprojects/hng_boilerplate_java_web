@@ -10,7 +10,6 @@ public class WaitlistService {
 
     private final WaitlistRepository waitlistRepository;
 
-    @Autowired
     public WaitlistService(WaitlistRepository waitlistRepository) {
         this.waitlistRepository = waitlistRepository;
     }
