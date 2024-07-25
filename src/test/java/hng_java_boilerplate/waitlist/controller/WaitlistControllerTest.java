@@ -5,6 +5,7 @@ import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.util.JwtUtils;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
+import jakarta.validation.Valid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.UUID;
 
@@ -29,6 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class WaitlistControllerTest {
 
+    private MockMvc mockMvc;
+
     @MockBean
     private WaitlistService waitlistService;
 
@@ -37,10 +41,9 @@ public class WaitlistControllerTest {
 
     @MockBean
     private ProductErrorHandler productErrorHandler;
+
     @MockBean
     private JwtUtils jwtUtils;
-
-    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
