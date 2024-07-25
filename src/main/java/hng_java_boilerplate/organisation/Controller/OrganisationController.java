@@ -19,7 +19,7 @@ public class OrganisationController {
     private final OrganisationService organisationService;
     private final UserService userService;
 
-    @Autowired
+
     public OrganisationController(OrganisationService organisationService, UserService userService) {
         this.organisationService = organisationService;
         this.userService = userService;
