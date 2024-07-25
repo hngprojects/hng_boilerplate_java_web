@@ -69,6 +69,9 @@ public class User implements UserDetails {
     @JsonIgnore
     private Boolean isEnabled = false;
 
+    @JsonIgnore
+    private Boolean isDeactivated = false;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

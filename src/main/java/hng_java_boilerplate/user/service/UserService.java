@@ -12,7 +12,9 @@ public interface UserService {
     GetUserDto getUserWithDetails(String userId) throws BadPaddingException;
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
 
-    public User getLoggedInUser();
-
+//    public User getLoggedInUser();
     void saveUser(User user);
+
+    User getLoggedInUser();
+
 }
