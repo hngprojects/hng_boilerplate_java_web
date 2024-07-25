@@ -2,6 +2,7 @@ package hng_java_boilerplate.SMSTests.e2e;
 
 import hng_java_boilerplate.SMS.entity.SMS;
 import hng_java_boilerplate.SMS.repository.SMSRepository;
+import hng_java_boilerplate.SMS.serviceImpl.RabbitMQProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -31,9 +33,13 @@ public class RabbitMQProducerE2e {
 
     @MockBean
     private SMSRepository smsRepository;
+    @MockBean
+    private RabbitMQProducer rabbitMQProducer;
 
     @BeforeEach
     public void setUp() {
+        ReflectionTestUtils.setField(rabbitMQProducer, "rabbitmq_exchange_key", "exchange_key");
+        ReflectionTestUtils.setField(rabbitMQProducer, "rabbitmq_routing_key", "routing_key");
         Mockito.reset(rabbitTemplate, smsRepository);
     }
 

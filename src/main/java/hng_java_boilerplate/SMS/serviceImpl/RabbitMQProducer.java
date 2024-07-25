@@ -84,6 +84,7 @@ public class RabbitMQProducer implements RabbitMQService {
             status_code = 200;
             response_message = ConstantMessages.SMS_SENT_SUCCESSFULLY.getMessage();
             return new ResponseEntity<>(new SmsResponseDto(status, status_code, response_message), HttpStatus.OK);
+
         } catch (AmqpException exception) {
             throw new BadTwilioCredentialsException(ConstantMessages.FAILED.getMessage());
         }

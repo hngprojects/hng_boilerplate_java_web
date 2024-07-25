@@ -73,7 +73,8 @@ public class WebSecurityConfig {
                         httpRequests
 //                                .requestMatchers("").hasAuthority(String.valueOf(Role.ADMIN))
                                 .requestMatchers("/", "/v3/api-docs", "/swagger-ui/index.html" ,"/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/auth/logout","/api/**").authenticated())
+                                .requestMatchers("/api/v1/auth/logout","/api/**").authenticated()
+                                .requestMatchers("/api/v1/sms/send").authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)
