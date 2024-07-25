@@ -11,5 +11,6 @@ public interface ProductService {
     //Method to Search for products with certain criteria, returns a list of products
     Page<Product> productsSearch(String name, String category, Double minPrice, Double maxPrice, Pageable pageable);
 
+
     Product getProductStock(String productId);
 }
