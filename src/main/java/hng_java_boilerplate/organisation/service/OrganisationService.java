@@ -19,11 +19,6 @@ public class OrganisationService {
     public OrganisationService(OrganisationRepository organisationRepository) {
         this.organisationRepository = organisationRepository;
     }
-
-
-
-
-
     public Organisation updateOrganisation(String id, Organisation updatedOrganisation) {
         Organisation organisation = organisationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Organisation not found"));
@@ -32,17 +27,12 @@ public class OrganisationService {
 
         return organisationRepository.save(organisation);
     }
-
-
-
     public void softDeleteOrganisation(String id) {
         Organisation organisation = organisationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Organisation not found"));
         organisation.setDeleted(true);
         organisationRepository.save(organisation);
     }
-
-
     public Optional<Organisation> findOrganisationById(String id) {
         return organisationRepository.findActiveById(id);
     }
