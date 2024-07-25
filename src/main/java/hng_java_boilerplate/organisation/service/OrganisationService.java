@@ -32,8 +32,7 @@ public class OrganisationService {
                 .orElseThrow(() -> new RuntimeException("Organisation not found"));
         organisation.setDeleted(true);
         organisationRepository.save(organisation);
-    }
-    public Optional<Organisation> findOrganisationById(String id) {
+    }public Optional<Organisation> findOrganisationById(String id) {
         return organisationRepository.findActiveById(id);
     }
 }
