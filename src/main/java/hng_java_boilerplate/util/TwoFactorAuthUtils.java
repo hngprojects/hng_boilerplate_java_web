@@ -18,8 +18,6 @@ public class TwoFactorAuthUtils {
 
     private String secretKey;
 
-    private UserRepository userRepository;
-
 
     public String generateSecretKey() {
       GoogleAuthenticator gAuth = new GoogleAuthenticator();
