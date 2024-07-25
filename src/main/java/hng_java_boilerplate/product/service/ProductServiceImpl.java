@@ -12,11 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
