@@ -10,32 +10,30 @@ import hng_java_boilerplate.SMS.SmsException.PhoneNumberOrMessageNotValidExcepti
 import hng_java_boilerplate.SMS.dto.SmsRequestDto;
 import hng_java_boilerplate.SMS.dto.SmsResponseDto;
 import hng_java_boilerplate.SMS.entity.SMS;
-import hng_java_boilerplate.SMS.serviceImpl.RabbitMQProducer;
 import hng_java_boilerplate.SMS.repository.SMSRepository;
-import hng_java_boilerplate.util.ConstantMessages;
+import hng_java_boilerplate.SMS.serviceImpl.RabbitMQProducer;
+import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import java.time.Instant;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RabbitMQProducerUnitTest {
-
-    @InjectMocks
-    private RabbitMQProducer rabbitMQProducer;
 
     @Mock
     private RabbitTemplate rabbitTemplate;
@@ -46,88 +44,97 @@ public class RabbitMQProducerUnitTest {
     @Mock
     private ObjectMapper objectMapper;
 
-    @Value("${rabbitmq.exchange.key}")
-    private String rabbitmq_exchange_key;
+    @Mock
+    private UserServiceImpl userService;
 
-    @Value("${rabbitmq.routing.key}")
-    private String rabbitmq_routing_key;
-
-    @Value("${twilio.account.sid}")
-    private String ACCOUNT_SID;
-
-    @Value("${twilio.auth.token}")
-    private String AUTH_TOKEN;
-
-    @Value("${twilio.outgoing.sms.number}")
-    private String OUTGOING_SMS_NUMBER;
+    @InjectMocks
+    private RabbitMQProducer rabbitMQProducer;
 
     @BeforeEach
     public void setup() {
+        MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(rabbitMQProducer, "rabbitmq_exchange_key", "exchange_key");
         ReflectionTestUtils.setField(rabbitMQProducer, "rabbitmq_routing_key", "routing_key");
-        ReflectionTestUtils.setField(rabbitMQProducer, "ACCOUNT_SID", "account_sid");
-        ReflectionTestUtils.setField(rabbitMQProducer, "AUTH_TOKEN", "auth_token");
-        ReflectionTestUtils.setField(rabbitMQProducer, "OUTGOING_SMS_NUMBER", "outgoing_sms_number");
 
-        Twilio.init("account_sid", "auth_token");
+        Twilio.init("dummyAccountSid", "dummyAuthToken"); // Mock initialization
     }
 
     @Test
-    public void sendSMS_Success() throws Exception {
-        SmsRequestDto smsRequestDto = new SmsRequestDto("+2349047338735", "Test message");
+    public void testSendSMS_Success() throws Exception {
+        SmsRequestDto smsRequestDto = new SmsRequestDto("+1234567890", "Hello World");
+        User user = new User();
+        user.setId(String.valueOf(1L));
 
+        // Mock static method Message.creator
         try (MockedStatic<Message> mockedMessage = mockStatic(Message.class)) {
             MessageCreator messageCreatorMock = mock(MessageCreator.class);
             Message messageMock = mock(Message.class);
 
+            // Mock Message.creator to return the messageCreatorMock
             mockedMessage.when(() -> Message.creator(any(PhoneNumber.class), any(PhoneNumber.class), anyString()))
                     .thenReturn(messageCreatorMock);
-            when(messageCreatorMock.create()).thenReturn(messageMock);
-            when(objectMapper.writeValueAsString(any(Message.class))).thenReturn("{}");
-            when(smsRepository.save(any())).thenReturn(null);
 
+            // Mock create method to return the messageMock
+            when(messageCreatorMock.create()).thenReturn(messageMock);
+            when(objectMapper.writeValueAsString(any(Message.class))).thenReturn("messageJson");
+            when(userService.getLoggedInUser()).thenReturn(user);
+            when(smsRepository.save(any(SMS.class))).thenReturn(new SMS());
+
+            // Call the method
             ResponseEntity<?> response = rabbitMQProducer.sendSMS(smsRequestDto);
 
+            // Verify results
             assertEquals(HttpStatus.OK, response.getStatusCode());
             SmsResponseDto responseBody = (SmsResponseDto) response.getBody();
-            assertEquals(ConstantMessages.SUCCESS.getMessage(), responseBody.getStatus());
+            assertEquals("success", responseBody.getStatus());
             assertEquals(200, responseBody.getStatus_code());
-            assertEquals(ConstantMessages.SMS_SENT_SUCCESSFULLY.getMessage(), responseBody.getMessage());
+            assertEquals("SMS sent successfully.", responseBody.getMessage());
 
-            verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), anyString());
-            verify(smsRepository, times(1)).save(any());
+            // Verify interactions
+            verify(rabbitTemplate).convertAndSend(anyString(), anyString(), eq("messageJson"));
+            verify(smsRepository).save(any(SMS.class));
         }
     }
     @Test
-    public void sendSMS_InvalidPhoneNumberOrMessage_ThrowsException() {
-        SmsRequestDto smsRequestDto = new SmsRequestDto("invalid_number", "");
+    public void testSendSMS_InvalidPhoneNumber() {
+        SmsRequestDto smsRequestDto = new SmsRequestDto("invalidPhoneNumber", "Hello World");
 
-        assertThrows(PhoneNumberOrMessageNotValidException.class, () -> {
+        Exception exception = assertThrows(PhoneNumberOrMessageNotValidException.class, () -> {
             rabbitMQProducer.sendSMS(smsRequestDto);
         });
+
+        assertEquals("Valid phone number and message content must be provided.", exception.getMessage());
     }
     @Test
-    public void sendSMS_RepositorySaveThrowsException_ThrowsBadTwilioCredentialsException() throws Exception {
-        SmsRequestDto smsRequestDto = new SmsRequestDto("+2349047338735", "Test message");
+    public void testSendSMS_EmptyMessage() {
+        SmsRequestDto smsRequestDto = new SmsRequestDto("+1234567890", "");
 
-        try (MockedStatic<Message> mockedMessage = mockStatic(Message.class)) {
-            MessageCreator messageCreatorMock = mock(MessageCreator.class);
-            Message messageMock = mock(Message.class);
+        Exception exception = assertThrows(PhoneNumberOrMessageNotValidException.class, () -> {
+            rabbitMQProducer.sendSMS(smsRequestDto);
+        });
 
-            mockedMessage.when(() -> Message.creator(any(PhoneNumber.class), any(PhoneNumber.class), anyString()))
-                    .thenReturn(messageCreatorMock);
-            when(messageCreatorMock.create()).thenReturn(messageMock);
-            when(objectMapper.writeValueAsString(any(Message.class))).thenReturn("{}");
+        assertEquals("Valid phone number and message content must be provided.", exception.getMessage());
+    }
+    @Test
+    public void testSendSMS_TwilioException() throws Exception {
+        SmsRequestDto smsRequestDto = new SmsRequestDto("+1234567890", "Hello World");
+        when(userService.getLoggedInUser()).thenReturn(new User());
 
-            when(smsRepository.save(any(SMS.class))).thenThrow(new RuntimeException("Database error"));
+        Exception exception = assertThrows(BadTwilioCredentialsException.class, () -> {
+            rabbitMQProducer.sendSMS(smsRequestDto);
+        });
 
-            assertThrows(BadTwilioCredentialsException.class, () -> {
-                rabbitMQProducer.sendSMS(smsRequestDto);
-            });
+        assertEquals("Failed to send SMS. Please try again later.", exception.getMessage());
+    }
+    @Test
+    public void testSendSMS_GenericException() throws Exception {
+        SmsRequestDto smsRequestDto = new SmsRequestDto("+1234567890", "Hello World");
+        when(userService.getLoggedInUser()).thenReturn(new User());
 
-            verify(smsRepository, times(1)).save(any(SMS.class));
-            verify(rabbitTemplate, times(1)).convertAndSend(anyString(), anyString(), anyString());
+        Exception exception = assertThrows(BadTwilioCredentialsException.class, () -> {
+            rabbitMQProducer.sendSMS(smsRequestDto);
+        });
 
-        }
+        assertEquals("Failed to send SMS. Please try again later.", exception.getMessage());
     }
 }

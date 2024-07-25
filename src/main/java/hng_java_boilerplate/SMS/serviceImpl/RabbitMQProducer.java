@@ -38,6 +38,9 @@ public class RabbitMQProducer implements RabbitMQService {
     String AUTH_TOKEN;
     @Value("${twilio.outgoing.sms.number}")
     String OUTGOING_SMS_NUMBER;
+    String status;
+    int status_code;
+    String response_message;
 
     private RabbitTemplate rabbitTemplate;
     private SMSRepository smsRepository;
@@ -50,9 +53,6 @@ public class RabbitMQProducer implements RabbitMQService {
         this.objectMapper=objectMapper;
         this.userService=userService;
     }
-    String status;
-    int status_code;
-    String response_message;
 
     @PostConstruct
     public void setup(){
@@ -87,7 +87,7 @@ public class RabbitMQProducer implements RabbitMQService {
         } catch (AmqpException exception) {
             throw new BadTwilioCredentialsException(ConstantMessages.FAILED.getMessage());
         }
-        catch (NullPointerException exception) {
+        catch (RuntimeException exception) {
             throw new BadTwilioCredentialsException(ConstantMessages.FAILED.getMessage());
         }
         catch (Exception exception) {
