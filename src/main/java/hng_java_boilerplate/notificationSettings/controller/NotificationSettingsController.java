@@ -2,7 +2,7 @@ package hng_java_boilerplate.notificationSettings.controller;
 
 import hng_java_boilerplate.notificationSettings.entity.NotificationSettings;
 import hng_java_boilerplate.notificationSettings.service.NotificationSettingsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping
+@RequiredArgsConstructor
 public class NotificationSettingsController {
-    @Autowired
-    private NotificationSettingsService notificationSettingsService;
+
+    private final NotificationSettingsService notificationSettingsService;
+
 
     @PostMapping("api/v1/settings/notification-settings")
     @PreAuthorize("isAuthenticated")
