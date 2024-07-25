@@ -31,12 +31,12 @@ public class OrganisationControllerTest {
     private UserServiceImpl userService;
 
     @Test
-    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
     public void deleteOrganisation_ValidRequest_NoContent() throws Exception {
         Organisation org = new Organisation();
         org.setId("org123");
         User user = new User();
-        user.setEmail("user@example.com");
+        user.setEmail("jaminel@example.com");
 
 
         Mockito.when(userService.getLoggedInUser()).thenReturn(user);
@@ -48,7 +48,7 @@ public class OrganisationControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
     public void deleteOrganisation_InvalidOrgIdFormat_BadRequest() throws Exception {
         mockMvc.perform(delete("/api/v1/organizations/invalid-id-format"))
                 .andExpect(status().isBadRequest())
@@ -58,7 +58,7 @@ public class OrganisationControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
     public void deleteOrganisation_NonExistentOrgId_NotFound() throws Exception {
 
         Mockito.when(organisationService.findOrganisationById("nonexistent-id")).thenReturn(Optional.empty());
@@ -71,7 +71,7 @@ public class OrganisationControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
     public void deleteOrganisation_UserNotAuthorized_Unauthorized() throws Exception {
         Organisation org = new Organisation();
         org.setId("org123");
@@ -90,12 +90,12 @@ public class OrganisationControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user@example.com", roles = {"USER"})
+    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
     public void deleteOrganisation_OwnerCheck_Failure() throws Exception {
         Organisation org = new Organisation();
         org.setId("org123");
         User user = new User();
-        user.setEmail("user@example.com");
+        user.setEmail("jaminel@example.com");
 
 
         Mockito.when(userService.getLoggedInUser()).thenReturn(user);
