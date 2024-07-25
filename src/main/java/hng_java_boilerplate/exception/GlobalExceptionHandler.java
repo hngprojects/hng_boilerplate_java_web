@@ -2,7 +2,9 @@ package hng_java_boilerplate.exception;
 
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
+import hng_java_boilerplate.user.exception.InvalidPasswordException;
 import hng_java_boilerplate.user.exception.InvalidRequestException;
+import hng_java_boilerplate.user.exception.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
