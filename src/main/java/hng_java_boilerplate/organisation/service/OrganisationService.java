@@ -11,6 +11,7 @@ import hng_java_boilerplate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +22,7 @@ public class OrganisationService {
     private final OrganisationRepository organisationRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public CreateOrganisationResponseDto create(
             CreateOrganisationRequestDto orgRequest,
             Authentication activeUser
