@@ -10,7 +10,7 @@ runs:
         spring.application.name=hng-java-boilerplate
 
         # datasource configuration
-        spring.datasource.url = jdbc:${DB_CONNECTION_STRING}
+        spring.datasource.url=jdbc:${DB_CONNECTION_STRING}
         spring.datasource.username=${DB_USERNAME}
         spring.datasource.password=${DB_PASSWORD}
         spring.jpa.hibernate.ddl-auto=validate
@@ -56,14 +56,14 @@ runs:
         spring.rabbitmq.port=${RABBITMQ_PORT}
         spring.rabbitmq.username=${RABBITMQ_USERNAME}
         spring.rabbitmq.password=${RABBITMQ_PASSWORD}
-        rabbitmq.queue.email=${QUEUE_EMAIL}
-        rabbitmq.exchange.key=${EXCHANGE_KEY}
-        rabbitmq.routing.key=${ROUTING_KEY}
+        spring.rabbitmq.queue.email=${QUEUE_EMAIL}
+        spring.rabbitmq.exchange.key=${EXCHANGE_KEY}
+        spring.rabbitmq.routing.key=${ROUTING_KEY}
 
         ## twilio configuration
-        twilio.account.sid=${ACCOUNT_SID}
-        twilio.auth.token=${AUTH_TOKEN}
-        twilio.outgoing.sms.number=${SMS_NUMBER}
+        spring.twilio.account.sid=${ACCOUNT_SID}
+        spring.twilio.auth.token=${AUTH_TOKEN}
+        spring.twilio.outgoing.sms.number=${SMS_NUMBER}
 
         # email configuration
         spring.mail.host=smtp.gmail.com
