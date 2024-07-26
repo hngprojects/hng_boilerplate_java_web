@@ -62,7 +62,6 @@ class OrganisationServiceTest {
         );
         user = new User();
         user.setId("user-123");
-//        when(activeUser.getPrincipal()).thenReturn(user);
     }
 
     @Test
