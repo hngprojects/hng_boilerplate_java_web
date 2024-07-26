@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-          
+      
     services:
         postgres:  
           image: postgres:latest
@@ -25,10 +25,19 @@ jobs:
             --health-timeout 5s
             --health-retries 5
 
-    env:
-      connection_string: postgresql://localhost:5432/postgres
-      database_username: postgres
-      database_password: password
+        rabbitmq:
+          image: rabbitmq:3-management
+          env:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
+          ports:
+            - 5672:5672
+            - 15672:15672  # Management plugin port
+          options: >-
+            --health-cmd "rabbitmqctl node_health_check"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -40,6 +49,21 @@ jobs:
           java-version: 17
           distribution: temurin
           cache: maven
+
+      # Create configuration files
+      - name: Create .env file
+        run: |
+          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/postgres" >> .env
+          echo "DB_USERNAME=postgres" >> .env
+          echo "DB_PASSWORD=password" >> .env
+          echo "RABBITMQ_HOST=localhost" >> .env
+          echo "RABBITMQ_PORT=5672" >> .env
+          echo "RABBITMQ_USERNAME=guest" >> .env
+          echo "RABBITMQ_PASSWORD=guest" >> .env
+          # echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+
+      - name: Create application.properties
+        uses: ./.github/workflows/create-application-properties
 
       - name: Download Dependencies
         run: mvn dependency:resolve
