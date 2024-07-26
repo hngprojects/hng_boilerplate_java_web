@@ -56,7 +56,15 @@ runs:
         spring.rabbitmq.port=${RABBITMQ_PORT}
         spring.rabbitmq.username=${RABBITMQ_USERNAME}
         spring.rabbitmq.password=${RABBITMQ_PASSWORD}
+        rabbitmq.queue.email=emailQueue
+        rabbitmq.exchange.key=${EXCHANGE_KEY}
+        rabbitmq.routing.key=${ROUTING_KEY}
 
+        ## twilio configuration
+        twilio.account.sid=${twilio_account_sid}
+        twilio.auth.token=${twilio_auth_token}
+        twilio.outgoing.sms.number=${outgoing_sms_number}
+        
         # email configuration
         spring.mail.host=smtp.gmail.com
 
