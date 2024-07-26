@@ -5,7 +5,8 @@ public enum ConstantMessages {
     UNSUCCESSFUL("unsuccessful", 2),
     SMS_SENT_SUCCESSFULLY("SMS sent successfully.", 3),
     INVALID_PHONE_NUMBER_OR_CONTENT("Valid phone number and message content must be provided.",4),
-    FAILED("Failed to send SMS. Please try again later.",5);
+    FAILED("Failed to send SMS. Please try again later.",5),
+    INTERNAL_ERROR("Internal error.", 6);
 
     public String message;
     public int status;

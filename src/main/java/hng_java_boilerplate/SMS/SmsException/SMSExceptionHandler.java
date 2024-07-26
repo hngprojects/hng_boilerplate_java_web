@@ -24,4 +24,9 @@ public class SMSExceptionHandler {
         exceptionResponse.setMessage(ConstantMessages.FAILED.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse<?>> defaultException(Exception ex) {
+        ExceptionResponse<?> exceptionResponse = new ExceptionResponse<>(ConstantMessages.INTERNAL_ERROR.getMessage(), 500, ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
