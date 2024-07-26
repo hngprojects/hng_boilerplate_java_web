@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-          
+      
     services:
         postgres:  
           image: postgres:latest
@@ -21,6 +21,20 @@ jobs:
             - 5432:5432
           options: >-
             --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+
+        rabbitmq:
+          image: rabbitmq:3-management
+          env:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
+          ports:
+            - 5672:5672
+            - 15672:15672  # Management plugin port
+          options: >-
+            --health-cmd "rabbitmqctl node_health_check"
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
@@ -39,14 +53,15 @@ jobs:
       # Create configuration files
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://localhost:${{secrets.POSTGRES_PORT}}/${{secrets.POSTGRES_DB}}" >> .env
-          echo "DB_USERNAME=${{secrets.POSTGRES_USER}}" >> .env
-          echo "DB_PASSWORD=${{secrets.POSTGRES_PASSWORD}}" >> .env
-          echo "RABBITMQ_HOST=${{ secrets.RABBITMQ_HOST }}" >> .env
-          echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
-          echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
-          echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/postgres" >> .env
+          echo "DB_USERNAME=postgres" >> .env
+          echo "DB_PASSWORD=password" >> .env
+          echo "RABBITMQ_HOST=localhost" >> .env
+          echo "RABBITMQ_PORT=5672" >> .env
+          echo "RABBITMQ_USERNAME=guest" >> .env
+          echo "RABBITMQ_PASSWORD=guest" >> .env
+          # echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+
       - name: Create application.properties
         uses: ./.github/workflows/create-application-properties
 
