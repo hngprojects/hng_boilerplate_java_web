@@ -59,11 +59,11 @@ jobs:
       # Create configuration files
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/${{ secrets.POSTGRES_DB }}" >> .env
+          echo "DB_CONNECTION_STRING=postgresql://localhost:${{ secrets.POSTGRES_PORT }}/${{ secrets.POSTGRES_DB }}" >> .env
           echo "DB_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
           echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
           echo "RABBITMQ_HOST=localhost" >> .env
-          echo "RABBITMQ_PORT=5672" >> .env
+          echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
           echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
           echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
           echo "QUEUE_EMAIL=emailQueue" >> .env
@@ -77,19 +77,17 @@ jobs:
       - name: Create application.properties
         uses: ./.github/workflows/create-application-properties
 
-      - name: Checkout pull request
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
       - name: Download Dependencies
         run: mvn dependency:resolve
 
+      - name: Verify environment variables
+        run: printenv | grep DB_
+
+      - name: Verify application properties
+        run: cat src/main/resources/application.properties
+
       - name: Build the application
         run: mvn clean install
-
-      - name: List target directory contents
-        run: ls -l target
 
       - name: Start Application
         run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &
