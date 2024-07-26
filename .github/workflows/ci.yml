@@ -80,9 +80,6 @@ jobs:
       - name: Download Dependencies
         run: mvn dependency:resolve
 
-      - name: Verify application properties
-        run: cat src/main/resources/application.properties
-
       - name: Build the application
         run: mvn clean install
 
