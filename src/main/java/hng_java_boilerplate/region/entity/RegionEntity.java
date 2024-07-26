@@ -1,6 +1,4 @@
 package hng_java_boilerplate.region.entity;
-
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,5 +50,3 @@ public class RegionEntity {
     @Schema(description = "Identifier of the user who last modified the region", example = "admin")
     private String modifiedBy;
 }
-
-
