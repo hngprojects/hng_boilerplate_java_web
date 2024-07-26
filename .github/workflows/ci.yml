@@ -22,7 +22,7 @@ jobs:
             POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
             POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           ports:
-            - ${{ secrets.POSTGRES_PORT }}:5432
+            - 5432:5432
           options: >-
             --health-cmd pg_isready
             --health-interval 10s
@@ -35,7 +35,7 @@ jobs:
             RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USERNAME }}
             RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
           ports:
-            - ${{ secrets.RABBITMQ_PORT }}:5672
+            - 5672:5672
             - 15672:15672  # Management plugin port
           options: >-
             --health-cmd "rabbitmqctl node_health_check"
@@ -59,11 +59,11 @@ jobs:
       # Create configuration files
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://localhost:${{ secrets.POSTGRES_PORT }}/${{ secrets.POSTGRES_DB }}" >> .env
+          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/${{ secrets.POSTGRES_DB }}" >> .env
           echo "DB_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
           echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
           echo "RABBITMQ_HOST=localhost" >> .env
-          echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
+          echo "RABBITMQ_PORT=5672" >> .env
           echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
           echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
           echo "QUEUE_EMAIL=emailQueue" >> .env
