@@ -66,13 +66,13 @@ jobs:
           echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
           echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
           echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
-          echo "rabbitmq.queue.email=emailQueue" >> .env
+          echo "QUEUE_EMAIL=emailQueue" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-          echo "rabbitmq.exchange.key=${EXCHANGE_KEY}" >> .env
-          echo "rabbitmq.routing.key=${ROUTING_KEY}" >> .env
-          echo "twilio.account.sid=${twilio_account_sid}" >> .env
-          echo "twilio.auth.token=${twilio_auth_token}" >> .env
-          echo "twilio.outgoing.sms.number=${outgoing_sms_number}" >> .env
+          echo "EXCHANGE_KEY=${{ secrets.EXCHANGE_KEY }}" >> .env
+          echo "ROUTING_KEY=${{ secrets.ROUTING_KEY }}" >> .env
+          echo "ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
+          echo "AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
+          echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
 
       - name: Create application.properties
         uses: ./.github/actions/create-application-properties
