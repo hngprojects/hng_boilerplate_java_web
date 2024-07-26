@@ -70,7 +70,6 @@ runs:
 
         # JWT secret
         sha512.string=${JWT_SECRET}
-        #sha512.string=dGhpcyBpcyBhIHNlY3JldCBrZXk #this is just a sample
 
         EOF
       shell: bash
