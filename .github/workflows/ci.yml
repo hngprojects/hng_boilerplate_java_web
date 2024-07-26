@@ -75,7 +75,7 @@ jobs:
           echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
 
       - name: Create application.properties
-        uses: ./.github/actions/create-application-properties
+        uses: ./.github/workflows/create-application-properties
 
       - name: Checkout pull request
         uses: actions/checkout@v3
