@@ -47,6 +47,10 @@ public class RabbitMQProducer implements RabbitMQService {
     private ObjectMapper objectMapper;
     private UserServiceImpl userService;
 
+    public RabbitMQProducer(){
+
+    }
+
     public RabbitMQProducer(RabbitTemplate rabbitTemplate, SMSRepository smsRepository,ObjectMapper objectMapper,UserServiceImpl userService){
         this.rabbitTemplate=rabbitTemplate;
         this.smsRepository=smsRepository;
