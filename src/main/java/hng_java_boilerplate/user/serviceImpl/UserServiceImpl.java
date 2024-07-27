@@ -2,6 +2,7 @@ package hng_java_boilerplate.user.serviceImpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
+import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
@@ -11,6 +12,7 @@ import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
 import hng_java_boilerplate.user.exception.InvalidRequestException;
 import hng_java_boilerplate.user.exception.UserNotFoundException;
+import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
@@ -23,7 +25,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +79,23 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED.value(), "Registration Successful!", data), HttpStatus.CREATED);
     }
 
+    @Override
+    public ResponseEntity<ApiResponse> loginUser(LoginDto loginDto) {
+        UserDetails userDetails = loadUserByUsername(loginDto.getEmail());
+        User user = (User) userDetails;
+
+        if (!isValidPassword(loginDto.getPassword())) {
+            throw new InvalidRequestException("Invalid email or password");
+        }
+
+        String token = jwtUtils.createJwt.apply(userDetails);
+
+        UserResponse userResponse = getUserResponse(user);
+        ResponseData data = new ResponseData(token, userResponse);
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
+
+    }
+
     private UserResponse getUserResponse(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
@@ -90,6 +108,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userResponse.setEmail(user.getEmail());
         userResponse.setCreated_at(user.getCreatedAt());
         return userResponse;
+    }
+
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8 && password.matches(".*\\d.*") && password.matches(".*[a-zA-Z].*");
     }
 
     private void validateEmail(String email) {
