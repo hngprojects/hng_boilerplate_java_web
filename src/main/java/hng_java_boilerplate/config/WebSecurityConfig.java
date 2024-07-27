@@ -83,7 +83,7 @@ public class WebSecurityConfig {
                                         "/swagger-ui/**",
                                         "/api/v1/auth/**",
                                         "/api/v1/waitlist",
-                                        "/api/v1/faqs
+                                        "/api/v1/faqs"
                                 ).permitAll()
                                 .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
                 .logout(logout -> logout
