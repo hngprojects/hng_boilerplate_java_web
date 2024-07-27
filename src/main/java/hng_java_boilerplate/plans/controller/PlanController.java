@@ -1,8 +1,8 @@
 package hng_java_boilerplate.plans.controller;
 
-import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
+import hng_java_boilerplate.plans.service.PlanService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

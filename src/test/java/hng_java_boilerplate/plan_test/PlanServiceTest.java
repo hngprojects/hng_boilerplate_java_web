@@ -1,11 +1,11 @@
 package hng_java_boilerplate.plan_test;
 
-import hng_java_boilerplate.plans.entity.Plan;
-import hng_java_boilerplate.plans.repository.PlanRepository;
-import hng_java_boilerplate.plans.serviceImpl.PlanServiceImpl;
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
+import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
+import hng_java_boilerplate.plans.repository.PlanRepository;
+import hng_java_boilerplate.plans.serviceImpl.PlanServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 
 public class PlanServiceTest {
@@ -37,7 +38,7 @@ public class PlanServiceTest {
 
     @Test
     public void createPlan() {
-        List<String> features = new ArrayList<>(){{
+        List<String> features = new ArrayList<>() {{
             add("Feature 1");
             add("Feature 2");
         }};
@@ -78,7 +79,7 @@ public class PlanServiceTest {
 
     @Test
     public void duplicatePlan() {
-        List<String> features = new ArrayList<>(){{
+        List<String> features = new ArrayList<>() {{
             add("Feature 1");
             add("Feature 2");
         }};
