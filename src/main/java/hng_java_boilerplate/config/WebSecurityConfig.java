@@ -71,13 +71,21 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(httpRequests ->
                         httpRequests
-//                                .requestMatchers("").hasAuthority(String.valueOf(Role.ADMIN))
-                                .requestMatchers("/","/docs","/v3/api-docs/**", "/v3/api-docs",
-                                        "/api/v1/products/search", "/swagger-ui/index.html",
-                                        "/swagger-resources/**", "/webjars/**",
-                                        "/swagger-ui/**"
-                                        ,"/api/v1/auth/**", "/api/v1/faqs").permitAll()
-                                .requestMatchers("/api/v1/auth/logout","/api/**").authenticated())
+                                .requestMatchers(
+                                        "/",
+                                        "/docs",
+                                        "/v3/api-docs/**",
+                                        "/v3/api-docs",
+                                        "/api/v1/products/search",
+                                        "/swagger-ui/index.html",
+                                        "/swagger-resources/**",
+                                        "/webjars/**",
+                                        "/swagger-ui/**",
+                                        "/api/v1/auth/**",
+                                        "/api/v1/waitlist",
+                                        "/api/v1/faqs
+                                ).permitAll()
+                                .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)
