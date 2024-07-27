@@ -22,7 +22,6 @@ public class WaitlistController {
     private final WaitlistService waitlistService;
     private final EmailProducerService emailProducerService;
 
-
     public WaitlistController(WaitlistService waitlistService, EmailProducerService emailProducerService) {
         this.waitlistService = waitlistService;
         this.emailProducerService = emailProducerService;
