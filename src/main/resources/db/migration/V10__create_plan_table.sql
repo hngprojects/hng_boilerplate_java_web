@@ -1,4 +1,4 @@
--- V10__create_plan_table.sql
+-- V7__create_plan_table.sql
 CREATE TABLE plans
 (
     id            VARCHAR(255) PRIMARY KEY,
