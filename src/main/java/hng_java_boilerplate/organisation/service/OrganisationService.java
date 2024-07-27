@@ -32,7 +32,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-
 public class OrganisationService {
     private OrganisationRepository organisationRepository;
     private UserRepository userRepository;
