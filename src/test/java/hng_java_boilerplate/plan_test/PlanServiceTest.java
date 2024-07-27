@@ -14,6 +14,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +37,11 @@ public class PlanServiceTest {
 
     @Test
     public void createPlan() {
-        CreatePlanDto planDto = new CreatePlanDto("plan name", "plan description", 19.99, 1, "day");
+        List<String> features = new ArrayList<>(){{
+            add("Feature 1");
+            add("Feature 2");
+        }};
+        CreatePlanDto planDto = new CreatePlanDto("plan name", "plan description", 19.99, 1, "day", features);
         Plan plan = Plan.builder()
                 .id(UUID.randomUUID().toString())
                 .name("plan name")
@@ -43,6 +49,7 @@ public class PlanServiceTest {
                 .price(19.99)
                 .durationUnit("day")
                 .duration(1)
+                .features(features)
                 .build();
         when(this.planRepository.save(any(Plan.class))).thenReturn(plan);
         when(this.planRepository.existsByName("plan name")).thenReturn(false);
@@ -65,12 +72,17 @@ public class PlanServiceTest {
         assertEquals(plan.getPrice(), 19.99);
         assertEquals(plan.getDuration(), 1);
         assertEquals(plan.getDurationUnit(), "day");
+        assertNotNull(plan.getFeatures());
 
     }
 
     @Test
     public void duplicatePlan() {
-        CreatePlanDto planDto = new CreatePlanDto("plan name", "plan description", 19.99, 1, "day");
+        List<String> features = new ArrayList<>(){{
+            add("Feature 1");
+            add("Feature 2");
+        }};
+        CreatePlanDto planDto = new CreatePlanDto("plan name", "plan description", 19.99, 1, "day", features);
         when(this.planRepository.existsByName(any())).thenReturn(true);
         DuplicatePlanException exception = assertThrows(DuplicatePlanException.class, () -> planService.create(planDto));
         assertEquals("Plan already exists.", exception.getMessage());

@@ -1,7 +1,12 @@
 package hng_java_boilerplate.plans.entity;
 
+import hng_java_boilerplate.plans.util.StringListConverter;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 
 @Setter
@@ -30,4 +35,8 @@ public class Plan {
 
     @Column(nullable = false)
     private String durationUnit;
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "features", nullable = false)
+    private List<String> features = new ArrayList<>();
 }
