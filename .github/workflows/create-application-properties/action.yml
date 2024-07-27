@@ -10,7 +10,7 @@ runs:
         spring.application.name=hng-java-boilerplate
 
         # datasource configuration
-        spring.datasource.url = jdbc:${DB_CONNECTION_STRING}
+        spring.datasource.url=jdbc:${DB_CONNECTION_STRING}
         spring.datasource.username=${DB_USERNAME}
         spring.datasource.password=${DB_PASSWORD}
         spring.jpa.hibernate.ddl-auto=validate
@@ -42,7 +42,7 @@ runs:
         logging.pattern.console = %green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15})- %msg%n
 
         #Swagger doc
-        springdoc.api-docs.path=/docs/yml
+        #springdoc.api-docs.path=/docs/yml
         springdoc.swagger-ui.path=/docs
         springdoc.api-docs.servers[0].url=https://api-java.boilerplate.hng.tech
         springdoc.api-docs.servers[0].description=Production Server
@@ -56,12 +56,20 @@ runs:
         spring.rabbitmq.port=${RABBITMQ_PORT}
         spring.rabbitmq.username=${RABBITMQ_USERNAME}
         spring.rabbitmq.password=${RABBITMQ_PASSWORD}
+        spring.rabbitmq.queue.email=${QUEUE_EMAIL}
+        spring.rabbitmq.exchange.key=${EXCHANGE_KEY}
+        spring.rabbitmq.routing.key=${ROUTING_KEY}
+
+        ## twilio configuration
+        spring.twilio.account.sid=${ACCOUNT_SID}
+        spring.twilio.auth.token=${AUTH_TOKEN}
+        spring.twilio.outgoing.sms.number=${SMS_NUMBER}
 
         # email configuration
         spring.mail.host=smtp.gmail.com
 
         # JWT secret
-        sha512.string=dGhpcyBpcyBhIHNlY3JldCBrZXk #this is just a sample
+        sha512.string=${JWT_SECRET}
 
         EOF
       shell: bash
