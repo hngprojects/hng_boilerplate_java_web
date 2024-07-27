@@ -6,12 +6,15 @@ runs:
     - run: |
         source .env
         cat << EOF > src/main/resources/application.properties
+
         spring.application.name=hng-java-boilerplate
+
         # datasource configuration
-        spring.datasource.url = jdbc:${DB_CONNECTION_STRING}
+        spring.datasource.url=jdbc:${DB_CONNECTION_STRING}
         spring.datasource.username=${DB_USERNAME}
         spring.datasource.password=${DB_PASSWORD}
         spring.jpa.hibernate.ddl-auto=validate
+
         # migration configuration
         spring.flyway.enabled=true
         spring.flyway.baseline-on-migrate=true
@@ -20,6 +23,7 @@ runs:
         spring.flyway.user=${DB_USERNAME}
         spring.flyway.password=${DB_PASSWORD}
         spring.flyway.baseline-version=1
+
         #Database Connection pooling
         spring.datasource.hikari.minimum-idle=5
         spring.datasource.hikari.maximum-pool-size=20
@@ -28,14 +32,17 @@ runs:
         spring.datasource.hikari.max-lifetime=1800000
         spring.datasource.hikari.connection-timeout=20000
         spring.datasource.hikari.leak-detection-threshold=15000
+
         #configures Spring Boot to throw an exception if no handler is found for a request
         spring.mvc.throw-exception-if-no-handler-found=true
         spring.web.resources.add-mappings=false
+
         #Logging
         spring.main.banner-mode=off
         logging.pattern.console = %green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15})- %msg%n
+
         #Swagger doc
-        springdoc.api-docs.path=/docs/yml
+        #springdoc.api-docs.path=/docs/yml
         springdoc.swagger-ui.path=/docs
         springdoc.api-docs.servers[0].url=https://api-java.boilerplate.hng.tech
         springdoc.api-docs.servers[0].description=Production Server
@@ -43,14 +50,26 @@ runs:
         springdoc.api-docs.servers[1].description=Staging Server
         springdoc.api-docs.servers[2].url=https://deployment.api-java.boilerplate.hng.tech
         springdoc.api-docs.servers[2].description=Deployment Server
+
         # RabbitMQ configuration
         spring.rabbitmq.host=${RABBITMQ_HOST}
         spring.rabbitmq.port=${RABBITMQ_PORT}
         spring.rabbitmq.username=${RABBITMQ_USERNAME}
         spring.rabbitmq.password=${RABBITMQ_PASSWORD}
+        spring.rabbitmq.queue.email=${QUEUE_EMAIL}
+        spring.rabbitmq.exchange.key=${EXCHANGE_KEY}
+        spring.rabbitmq.routing.key=${ROUTING_KEY}
+
+        ## twilio configuration
+        spring.twilio.account.sid=${ACCOUNT_SID}
+        spring.twilio.auth.token=${AUTH_TOKEN}
+        spring.twilio.outgoing.sms.number=${SMS_NUMBER}
+
         # email configuration
         spring.mail.host=smtp.gmail.com
+
         # JWT secret
         sha512.string=${JWT_SECRET}
+
         EOF
       shell: bash
