@@ -56,7 +56,7 @@ runs:
         spring.rabbitmq.port=${RABBITMQ_PORT}
         spring.rabbitmq.username=${RABBITMQ_USERNAME}
         spring.rabbitmq.password=${RABBITMQ_PASSWORD}
-        spring.rabbitmq.queue.email=${QUEUE_EMAIL}
+        rabbitmq.queue.email=${QUEUE_EMAIL}
         spring.rabbitmq.exchange.key=${EXCHANGE_KEY}
         spring.rabbitmq.routing.key=${ROUTING_KEY}
 
