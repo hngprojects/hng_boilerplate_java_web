@@ -7,6 +7,7 @@ CREATE TABLE profiles (
     avatar_url TEXT
 );
 
+
 -- V1__Create_users_table.sql
 CREATE TABLE users (
     id VARCHAR(36) PRIMARY KEY,
@@ -15,6 +16,8 @@ CREATE TABLE users (
     profile_id VARCHAR(36) UNIQUE,
     FOREIGN KEY (profile_id) REFERENCES profiles(id)
 );
+
+
 
 -- V1__Create_organisations_table.sql
 CREATE TABLE organisations (
@@ -40,3 +43,5 @@ CREATE TABLE user_organisation (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (organisation_id) REFERENCES organisations(id)
 );
+
+
