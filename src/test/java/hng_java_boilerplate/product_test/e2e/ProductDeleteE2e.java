@@ -21,7 +21,7 @@ public class ProductDeleteE2e {
     @Test
     public void whenDeleteProductWithoutPermission_thenForbidden(){
         String productId = "validProductIdWithoutPermission";
-        given().contentType("application/json").when().delete("/api/v1/products", productId).then().statusCode(403).body("message",equalTo("You do not have permission to delete this product"))
+        given().contentType("application/json").when().delete("/api/v1/products", productId).then().statusCode(403).body("message",equalTo("You do not have permission to delete this product"));
     }
     @Test
     public void whenDeleteNonExistentProduct_thenReturnNotFound(){
