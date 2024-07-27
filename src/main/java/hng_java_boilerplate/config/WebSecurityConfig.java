@@ -76,7 +76,7 @@ public class WebSecurityConfig {
                                         "/api/v1/products/search", "/swagger-ui/index.html",
                                         "/swagger-resources/**", "/webjars/**",
                                         "/swagger-ui/**"
-                                        ,"/api/v1/auth/**").permitAll()
+                                        ,"/api/v1/auth/**", "/api/v1/faqs").permitAll()
                                 .requestMatchers("/api/v1/auth/logout","/api/**").authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
