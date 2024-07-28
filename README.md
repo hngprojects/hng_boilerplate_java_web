@@ -81,13 +81,13 @@ cd hng_project
 Now create a branch using the `git switch` command:
 
 ```bash
-git switch -c your-new-branch-name
+git switch -faq your-new-branch-name
 ```
 
 For example:
 
 ```bash
-git switch -c add-alonzo-church
+git switch -faq add-alonzo-church
 ```
 
 ### Make Changes
@@ -167,8 +167,9 @@ mvn dependency:resolve
 - Flyway Migrations
   - migration files should be placed in the `src/main/resources/db/migration` directory
   - Each migration file should follow the naming convention `V<version>__<description>.sql.` e.g
-    -  `V1__create_users_table.sql`
     -  `V1__init_database.sql`
+    -  `V2__create_users_table.sql`
+
   - sample migration file
 ```sql
 -- V1__create_users_table.sql

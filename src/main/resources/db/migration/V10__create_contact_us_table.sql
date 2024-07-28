@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS contacts (
+    id VARCHAR(100) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(100) NOT NULL,
+    message VARCHAR(255) NOT NULL
+);
