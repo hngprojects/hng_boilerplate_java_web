@@ -21,7 +21,7 @@ public class SqueezeRequestService {
         return repository.save(squeezeRequest);
     }
 
-    public void updateSqueezeRequest(SqueezeRequest squeezeRequest) {
+    public SqueezeRequest updateSqueezeRequest(SqueezeRequest squeezeRequest) {
         SqueezeRequest existingRequest = repository.findByEmail(squeezeRequest.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("No squeeze page record exists for the provided request body"));
 
@@ -40,5 +40,6 @@ public class SqueezeRequestService {
         existingRequest.setUpdated(true);
 
         repository.save(existingRequest);
+        return existingRequest;
     }
 }
