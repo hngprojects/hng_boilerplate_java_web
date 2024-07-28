@@ -2,9 +2,11 @@ package hng_java_boilerplate.squeeze.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
+import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
+import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,9 @@ public class SqueezeRequestControllerTest {
 
     @MockBean
     private SqueezeRequestService service;
+
+    @MockBean
+    private EmailProducerService emailProducerService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -71,7 +76,7 @@ public class SqueezeRequestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Your request has been received. You will get a template shortly."));
+                .andExpect(jsonPath("$.message").value("You are all signed up!"));
     }
 
     @Test

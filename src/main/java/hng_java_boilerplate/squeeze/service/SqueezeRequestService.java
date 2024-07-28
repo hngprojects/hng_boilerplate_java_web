@@ -1,5 +1,6 @@
 package hng_java_boilerplate.squeeze.service;
 
+import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.repository.SqueezeRequestRepository;
@@ -16,8 +17,6 @@ public class SqueezeRequestService {
         if (repository.existsByEmail(squeezeRequest.getEmail())) {
             throw new DuplicateEmailException("Email address already exists");
         }
-        SqueezeRequest savedRequest = repository.save(squeezeRequest);
-        // TODO: Call email service when it is implemented and send mail template
-        return savedRequest;
+        return repository.save(squeezeRequest);
     }
 }
