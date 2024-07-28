@@ -81,13 +81,13 @@ cd hng_project
 Now create a branch using the `git switch` command:
 
 ```bash
-git switch -faq your-new-branch-name
+git switch -c your-new-branch-name
 ```
 
 For example:
 
 ```bash
-git switch -faq add-alonzo-church
+git switch -c add-alonzo-church
 ```
 
 ### Make Changes
