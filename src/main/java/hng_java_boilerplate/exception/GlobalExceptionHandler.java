@@ -79,6 +79,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse( "The JWT token has expired", ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
+
     @ExceptionHandler(SignatureException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<ErrorResponse> handleInvalidJwtSignatureException(SignatureException ex) {
