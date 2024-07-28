@@ -1,8 +1,6 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.profile.entity.Profile;
-import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -43,7 +41,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
-    private final ProfileRepository profileRepository;
 
 
     @Override
@@ -63,12 +60,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         validateEmail(signupDto.getEmail());
 
         User user = new User();
-        user.setName(signupDto.getFullName());
+        user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
         user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
-
-        updateProfile(user);
 
         User savedUser = userRepository.save(user);
 
@@ -130,19 +125,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
-    }
-
-    private void updateProfile(User user){
-        String[] nameParts = user.getName().split(" ", 2);
-        String firstName = nameParts.length > 0 ? nameParts[0] : "";
-        String lastName = nameParts.length > 1 ? nameParts[1] : "";
-
-        Profile profile = new Profile();
-        profile.setFirstName(firstName);
-        profile.setLastName(lastName);
-        profile.setUser(user);
-
-        profileRepository.save(profile);
     }
 
     @Transactional
