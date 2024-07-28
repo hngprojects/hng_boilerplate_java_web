@@ -1,5 +1,0 @@
-CREATE TABLE IF NOT EXISTS faqs (
-    id VARCHAR(255) PRIMARY KEY,
-    question VARCHAR(255) NOT NULL,
-    answer VARCHAR(255) NOT NULL
-);
