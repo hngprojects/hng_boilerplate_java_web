@@ -79,7 +79,7 @@ public class WebSecurityConfig {
                                         "/api/v1/products/search",
                                         "/swagger-ui/index.html",
                                         "/swagger-resources/**",
-                                        "/webjars/**",
+                                        "/webjars/**","/metrics",
                                         "/swagger-ui/**",
                                         "/api/v1/auth/**",
                                         "/api/v1/waitlist",
