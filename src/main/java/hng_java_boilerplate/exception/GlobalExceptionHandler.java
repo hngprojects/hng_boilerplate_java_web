@@ -1,5 +1,6 @@
 package hng_java_boilerplate.exception;
 
+import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
 import hng_java_boilerplate.user.exception.InvalidRequestException;
@@ -61,6 +62,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CustomError handleBadRequest(BadRequestException ex) {
         return new CustomError(400, ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicatePlanException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleDuplicatePlanException(DuplicatePlanException ex) {
+        var error = new ErrorResponse(ex.getMessage(), "Bad request", HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(Exception.class)
