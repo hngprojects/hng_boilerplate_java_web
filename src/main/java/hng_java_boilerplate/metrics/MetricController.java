@@ -1,4 +1,4 @@
-package hng_java_boilerplate;
+package hng_java_boilerplate.metrics;
 
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 import lombok.RequiredArgsConstructor;
