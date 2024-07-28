@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/plans")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class PlanController {
 
     private final PlanService planService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PlanResponse> createPlan(@RequestBody @Valid CreatePlanDto createPlanDto) {
         return planService.create(createPlanDto);
     }
