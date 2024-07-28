@@ -1,11 +1,11 @@
 package hng_java_boilerplate.payment.entity;
 
 import hng_java_boilerplate.payment.enums.PaymentStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,13 +14,18 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
+@ToString
 public class Payment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String userEmail;
 
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 
     private String transactionReference;

@@ -4,27 +4,42 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class PaymentInitializationResponse {
 
-    private String authorizationUrl;
-    private String reference;
+    private String status_code;
 
-    public String getAuthorizationUrl() {
-        return authorizationUrl;
+    private String message;
+
+    private Map<String, Object> data;
+
+    public String getStatus_code() {
+        return status_code;
     }
 
-    public void setAuthorizationUrl(String authorizationUrl) {
-        this.authorizationUrl = authorizationUrl;
+    public void setStatus_code(String status_code) {
+        this.status_code = status_code;
     }
 
-    public String getReference() {
-        return reference;
+    public String getMessage() {
+        return message;
     }
 
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setMessage(String message) {
+        this.message = message;
     }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, Object> data) {
+        this.data = data;
+    }
+
+
 }

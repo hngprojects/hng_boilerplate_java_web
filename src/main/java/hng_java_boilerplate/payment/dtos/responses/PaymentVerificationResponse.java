@@ -5,66 +5,43 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class PaymentVerificationResponse {
 
-    private String status;
+    private String status_code;
 
-    private  String reference;
-    private String amount;
+    private String message;
 
-    private String currency;
-    private String paid_at;
+    private Map<String, Object> data;
 
-    private String channel;
-
-    public String getStatus() {
-        return status;
+    public String getStatus_code() {
+        return status_code;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus_code(String status_code) {
+        this.status_code = status_code;
     }
 
-    public String getReference() {
-        return reference;
+    public String getMessage() {
+        return message;
     }
 
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getAmount() {
-        return amount;
+    public Map<String, Object> getData() {
+        return data;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public void setData(Map<String, Object> data) {
+        this.data = data;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
 
-    public String getPaid_at() {
-        return paid_at;
-    }
-
-    public void setPaid_at(String paid_at) {
-        this.paid_at = paid_at;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
 }

@@ -10,10 +10,6 @@ public class PaymentRequest {
     @Positive(message = "Amount must be positive")
     private Integer amount;
 
-    @NotEmpty(message = "Order ID is required")
-    private String orderId;
-
-
 
     public Integer getAmount() {
         return amount;
@@ -23,13 +19,6 @@ public class PaymentRequest {
         this.amount = amount;
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
 
 
 

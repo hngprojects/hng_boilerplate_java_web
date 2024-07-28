@@ -1,5 +1,8 @@
 package hng_java_boilerplate.payment.service;
 
+import hng_java_boilerplate.payment.Utils;
+import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
+import hng_java_boilerplate.payment.dtos.responses.PaymentResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
 import hng_java_boilerplate.payment.exceptions.UserNotFoundException;
@@ -19,11 +22,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static hng_java_boilerplate.payment.Utils.convertToDto;
 
 
 @Service
-public class PaystackServiceImpl implements PaystackService {
+public class PaystackServiceImpl implements PaymentService {
 
     public PaystackServiceImpl(UserService userService, PaymentRepository paymentRepository) {
         this.userService = userService;
@@ -38,9 +44,11 @@ public class PaystackServiceImpl implements PaystackService {
     @Value("${paystack.secret.key}")
     private String paystackSecretKey;
 
+
     @Override
     public ResponseEntity<?> initiatePayment(PaymentRequest request) {
         User user = validateLoggedInUser();
+        System.out.println("ser -- " + user);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + paystackSecretKey);
@@ -53,17 +61,17 @@ public class PaystackServiceImpl implements PaystackService {
 
         HttpEntity<String> httpEntity = new HttpEntity<>(requestPayload.toString(), headers);
         ResponseEntity<String> response = restTemplate.exchange("https://api.paystack.co/transaction/initialize", HttpMethod.POST, httpEntity, String.class);
-        System.out.println(response.getBody());
         if (response.getStatusCode() == HttpStatus.OK) {
             JSONObject jsonResponse = new JSONObject(response.getBody());
             String authorizationUrl = jsonResponse.getJSONObject("data").getString("authorization_url");
             String reference = jsonResponse.getJSONObject("data").getString("reference");
-            logger.info("Authorization URL: {}", authorizationUrl);
-            logger.info("Reference: {}", reference);
+
             Payment payment = Payment.builder().initiatedAt(LocalDateTime.now()).transactionReference(reference).amount(new BigDecimal(request.getAmount())).userEmail(user.getEmail()).build();
-            var respons = paymentRepository.save(payment);
-            System.out.println("pay res -- " + respons);
-            PaymentInitializationResponse initializationResponse = PaymentInitializationResponse.builder().authorizationUrl(authorizationUrl).reference(reference).build();
+            paymentRepository.save(payment);
+            Map<String, Object> data = new HashMap<>();
+            data.put("authorization_url", authorizationUrl);
+            data.put("reference", reference);
+            PaymentInitializationResponse initializationResponse = PaymentInitializationResponse.builder().message("Paystack Payment Successfully Initialized").status_code("200").data(data).build();
             return ResponseEntity.ok(initializationResponse);
         } else {
             logger.error("Failed to initiate payment. Status code: {}, Response body: {}", response.getStatusCode(), response.getBody());
@@ -90,26 +98,71 @@ public class PaystackServiceImpl implements PaystackService {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange("https://api.paystack.co/transaction/verify/" + reference, HttpMethod.GET, entity, String.class);
-        validatePaymentVerificationResponse(user.getEmail(), response);
+
+        validatePaymentVerificationResponse(reference, user.getEmail(), response);
         JSONObject jsonResponse = new JSONObject(response.getBody());
+
         JSONObject dataObject = jsonResponse.getJSONObject("data");
-        PaymentVerificationResponse verificationResponse = PaymentVerificationResponse.builder().reference(dataObject.getString("reference")).status(dataObject.getString("status")).currency(dataObject.getString("currency")).channel(dataObject.getString("channel")).paid_at(dataObject.getString("paid_at")).amount(String.valueOf(dataObject.getLong("amount"))).build();
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("status", dataObject.getString("status"));
+        data.put("reference", reference);
+        data.put("amount", String.valueOf(dataObject.getLong("amount")));
+        data.put("channel", dataObject.getString("channel"));
+        data.put("currency", dataObject.getString("currency"));
+
+        if (!dataObject.isNull("paid_at")) {
+            dataObject.put("paid_at", String.valueOf(LocalDateTime.parse(dataObject.getString("paid_at").replace("Z", ""))));
+        } else {
+            dataObject.put("paid_at", "");
+        }
+        PaymentVerificationResponse verificationResponse = PaymentVerificationResponse.builder().message("Verification Successful").status_code("200").data(data).build();
         return ResponseEntity.ok(verificationResponse);
     }
 
-    private void validatePaymentVerificationResponse(String email, ResponseEntity<String> response) {
+
+
+    @Override
+    public PaymentObjectResponse<?> getPaymentsByUserEmail(String email) {
+        List<Payment> payments = paymentRepository.findByUserEmail(email);
+        List<PaymentResponse> response = payments.stream().map(Utils::convertToDto).collect(Collectors.toList());
+        return PaymentObjectResponse.builder().message("User payments successfully fetched").status_code("200").data(response).build();
+    }
+
+
+    @Override
+    public PaymentObjectResponse<?>  findPaymentByReference(String reference) {
+        Optional<Payment> paymentOpt = paymentRepository.findByTransactionReference(reference);
+
+        if (paymentOpt.isPresent()) {
+            Payment payment = paymentOpt.get();
+            PaymentResponse convertedPaymentResponse = convertToDto(payment);
+            return PaymentObjectResponse.builder().data(convertedPaymentResponse).status_code("200").message("Payment fetched successfully").build();
+        } else {
+            return PaymentObjectResponse.builder().status_code("404").message(String.format("Payment with %s not found",  reference)).build();
+        }
+    }
+
+
+    private void validatePaymentVerificationResponse(String reference, String email, ResponseEntity<String> response) {
         if (response.getStatusCode() == HttpStatus.OK) {
             JSONObject jsonResponse = new JSONObject(response.getBody());
             JSONObject data = jsonResponse.getJSONObject("data");
             String status = data.getString("status");
-            Optional<Payment> payment = paymentRepository.findByUserEmail(email);
+            Optional<Payment> payment = paymentRepository.findByUserEmailAndTransactionReference(email, reference);
             if (payment.isPresent()) {
                 Payment fondPayment = payment.get();
                 fondPayment.setPaymentStatus(getPaymentStatus(status));
-                fondPayment.setPaymentChannel(data.getString("currency"));
-                fondPayment.setCompletedAt(LocalDateTime.parse(data.getString("paid_at").replace("Z", "")));
+                fondPayment.setPaymentChannel(data.getString("channel"));
                 fondPayment.setAmount(BigDecimal.valueOf(data.getLong("amount")));
                 fondPayment.setCurrency(data.getString("currency"));
+
+                if (!data.isNull("paid_at")) {
+                    fondPayment.setCompletedAt(LocalDateTime.parse(data.getString("paid_at").replace("Z", "")));
+                } else {
+                    fondPayment.setCompletedAt(null);
+                }
+
+                paymentRepository.save(fondPayment);
             }
         } else {
             logger.error("Failed to verify payment. Status code: {}, Response body: {}", response.getStatusCode(), response.getBody());
@@ -120,7 +173,7 @@ public class PaystackServiceImpl implements PaystackService {
         PaymentStatus paymentStatus;
         switch (status) {
             case "success" -> {
-                paymentStatus = PaymentStatus.PAID;
+                paymentStatus = PaymentStatus.SUCCESSFUL;
             }
             case "failed" -> paymentStatus = PaymentStatus.FAILED;
             case "processing" -> paymentStatus = PaymentStatus.PROCESSING;
