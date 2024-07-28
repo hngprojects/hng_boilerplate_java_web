@@ -1,7 +1,10 @@
 package hng_java_boilerplate.product.controller;
 
+import hng_java_boilerplate.product.dto.ProductErrorDTO;
 import hng_java_boilerplate.product.dto.ProductSearchDTO;
 import hng_java_boilerplate.product.entity.Product;
+import hng_java_boilerplate.product.exceptions.ProductNotFoundException;
+import hng_java_boilerplate.product.exceptions.UnauthorizedAccessException;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,5 +60,21 @@ public class ProductController {
         productSearchDTO.setPage(products.getNumber());
         productSearchDTO.setSuccess(true);
         return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProductById(@PathVariable String id){
+        try{
+            productService.deleteProductById(id);
+            return ResponseEntity.noContent().build();
+        }catch (ProductNotFoundException e){
+            ProductErrorDTO errorDTO = new ProductErrorDTO(false,"Product not found",HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
+        }catch (UnauthorizedAccessException e){
+            ProductErrorDTO errorDTO = new ProductErrorDTO(false,"You do not have permission to delete this product",HttpStatus.FORBIDDEN.value());
+            return new ResponseEntity<>(errorDTO, HttpStatus.FORBIDDEN);
+        }catch (Exception e){
+            ProductErrorDTO errorDTO = new ProductErrorDTO(false,"Internal server error",HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
