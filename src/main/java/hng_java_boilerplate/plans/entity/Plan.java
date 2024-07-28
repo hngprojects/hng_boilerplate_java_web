@@ -1,7 +1,12 @@
 package hng_java_boilerplate.plans.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import hng_java_boilerplate.plans.util.StringListConverter;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Setter
@@ -29,5 +34,10 @@ public class Plan {
     private int duration;
 
     @Column(nullable = false)
+    @JsonProperty("duration_unit")
     private String durationUnit;
+
+    @Convert(converter = StringListConverter.class)
+    @Column(name = "features", nullable = false)
+    private List<String> features = new ArrayList<>();
 }

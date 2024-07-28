@@ -33,6 +33,7 @@ public class PlanServiceImpl implements PlanService {
                 .description(createPlanDto.description())
                 .duration(createPlanDto.duration())
                 .durationUnit(createPlanDto.durationUnit())
+                .features(createPlanDto.features())
                 .build();
 
         Plan saved = planRepository.save(newPlan);
