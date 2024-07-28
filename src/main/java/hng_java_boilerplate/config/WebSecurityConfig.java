@@ -82,7 +82,8 @@ public class WebSecurityConfig {
                                         "/webjars/**",
                                         "/swagger-ui/**",
                                         "/api/v1/auth/**",
-                                        "/api/v1/waitlist"
+                                        "/api/v1/waitlist",
+                                        "/api/v1/squeeze/"
                                 ).permitAll()
                                 .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
                 .logout(logout -> logout
