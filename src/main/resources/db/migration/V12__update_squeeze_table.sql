@@ -1,0 +1,1 @@
+ALTER TABLE squeeze_request ADD COLUMN updated BOOLEAN DEFAULT FALSE;

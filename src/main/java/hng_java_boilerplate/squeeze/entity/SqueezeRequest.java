@@ -52,4 +52,6 @@ public class SqueezeRequest {
     @NotBlank
     private String referral_source;
 
+    private boolean updated = false;
+
 }
