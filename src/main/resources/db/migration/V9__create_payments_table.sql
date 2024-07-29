@@ -6,7 +6,6 @@ CREATE TABLE payments (
     transaction_reference VARCHAR(255),
     amount DECIMAL(19, 4),
     currency VARCHAR(10),
-    status VARCHAR(50),
     payment_channel VARCHAR(50),
     initiated_at TIMESTAMP,
     completed_at TIMESTAMP

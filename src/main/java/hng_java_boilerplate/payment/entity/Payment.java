@@ -34,8 +34,6 @@ public class Payment {
 
     private String currency;
 
-    private String status;
-
     private String paymentChannel;
 
     private LocalDateTime initiatedAt;
