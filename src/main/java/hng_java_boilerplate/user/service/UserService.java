@@ -10,9 +10,14 @@ import org.springframework.http.ResponseEntity;
 import javax.crypto.BadPaddingException;
 
 public interface UserService {
+
     GetUserDto getUserWithDetails(String userId) throws BadPaddingException;
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
+
+    void saveUser(User user);
+
     User getLoggedInUser();
 
     ResponseEntity<ApiResponse> loginUser(LoginDto loginDto);
+
 }

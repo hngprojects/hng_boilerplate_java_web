@@ -127,6 +127,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
+    @Override
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
     @Transactional
     @Override
     public GetUserDto getUserWithDetails(String userId) throws BadPaddingException {
