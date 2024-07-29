@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1/squeeze")
@@ -37,6 +38,20 @@ public class SqueezeRequestController {
             return ResponseEntity.ok().body(new ResponseMessageDto("You are all signed up!", HttpStatus.OK.value()));
         } catch (DuplicateEmailException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessageDto(e.getMessage(), HttpStatus.CONFLICT.value()));
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateSqueezeRequest(@Valid @RequestBody SqueezeRequest request) {
+        try {
+            service.updateSqueezeRequest(request);
+            return ResponseEntity.ok().body(new ResponseMessageDto("Your record has been successfully updated. You cannot update it again.", HttpStatus.OK.value()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessageDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessageDto(e.getMessage(), HttpStatus.NOT_FOUND.value()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessageDto(e.getMessage(), HttpStatus.FORBIDDEN.value()));
         }
     }
 

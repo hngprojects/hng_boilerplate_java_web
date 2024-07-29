@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -33,9 +34,16 @@ public class PlanServiceImpl implements PlanService {
                 .description(createPlanDto.description())
                 .duration(createPlanDto.duration())
                 .durationUnit(createPlanDto.durationUnit())
+                .features(createPlanDto.features())
                 .build();
 
         Plan saved = planRepository.save(newPlan);
         return ResponseEntity.status(201).body(new PlanResponse(saved, 201, "Plan created successfully"));
+    }
+
+    @Override
+    public ResponseEntity<List<Plan>> findAll() {
+        List<Plan> plans = planRepository.findAll();
+        return ResponseEntity.status(200).body(plans);
     }
 }
