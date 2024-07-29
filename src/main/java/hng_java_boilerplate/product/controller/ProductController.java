@@ -76,7 +76,7 @@ public class ProductController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createProduct(@Valid @RequestBody ProductCreateDto productCreateDto) {
         // get the user from security context
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
