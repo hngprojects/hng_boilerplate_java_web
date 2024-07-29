@@ -88,4 +88,42 @@ public class PlanServiceTest {
         DuplicatePlanException exception = assertThrows(DuplicatePlanException.class, () -> planService.create(planDto));
         assertEquals("Plan already exists.", exception.getMessage());
     }
+
+    @Test
+    public void getAllPlans() {
+        List<String> features = new ArrayList<>() {{
+            add("Feature 1");
+            add("Feature 2");
+        }};
+        Plan plan1 = Plan.builder()
+                .id(UUID.randomUUID().toString())
+                .name("plan name")
+                .description("plan description")
+                .price(19.99)
+                .durationUnit("day")
+                .duration(1)
+                .features(features)
+                .build();
+        Plan plan2 = Plan.builder()
+                .id(UUID.randomUUID().toString())
+                .name("plan name")
+                .description("plan description")
+                .price(19.99)
+                .durationUnit("day")
+                .duration(1)
+                .features(features)
+                .build();
+        List<Plan> plans = List.of(plan1, plan2);
+        when(this.planRepository.findAll()).thenReturn(plans);
+        ResponseEntity<List<Plan>> response = planService.findAll();
+
+        assertNotNull(response);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+        List<Plan> body = response.getBody();
+        assertNotNull(body);
+        assertTrue(body.contains(plan1));
+        assertTrue(body.contains(plan2));
+
+    }
 }
