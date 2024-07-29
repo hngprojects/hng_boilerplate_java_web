@@ -4,7 +4,6 @@ import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
-import hng_java_boilerplate.util.GoogleJwtUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
