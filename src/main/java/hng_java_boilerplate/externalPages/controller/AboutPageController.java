@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 
 @RequiredArgsConstructor
-@RestController("/api/v1/content/about")
+@RestController
+@RequestMapping("/api/v1/content/about")
 public class AboutPageController {
     private final AboutPageService aboutPageService;
     @GetMapping
