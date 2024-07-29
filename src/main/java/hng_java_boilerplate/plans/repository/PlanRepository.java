@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface PlanRepository extends JpaRepository<Plan, UUID> {
+public interface PlanRepository extends JpaRepository<Plan, String> {
     boolean existsByName(String name);
 
 }

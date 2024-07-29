@@ -1,6 +1,8 @@
 package hng_java_boilerplate.plans.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hng_java_boilerplate.plans.enums.Category;
+import hng_java_boilerplate.plans.enums.MembershipType;
 import hng_java_boilerplate.plans.util.ValidList;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +24,10 @@ public record CreatePlanDto(
         String durationUnit,
         @ValidList
         @NotNull
-        List<String> features
+        List<String> features,
+        @JsonProperty("membership_type")
+
+        MembershipType membershipType,
+        Category category
 ) {
 }

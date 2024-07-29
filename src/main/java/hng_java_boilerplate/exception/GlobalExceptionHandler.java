@@ -1,6 +1,7 @@
 package hng_java_boilerplate.exception;
 
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
+import hng_java_boilerplate.plans.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
@@ -98,6 +99,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
         ErrorResponse errorResponse = new ErrorResponse("You are not allowed to access this endpoint.", ex.getMessage(), HttpStatus.FORBIDDEN.value());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ResponseMessageDto> handleResourceNotException(DuplicateEmailException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
     }
 
     @ExceptionHandler(Exception.class)

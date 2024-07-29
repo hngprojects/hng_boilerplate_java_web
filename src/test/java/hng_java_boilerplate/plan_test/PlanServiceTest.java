@@ -3,6 +3,8 @@ package hng_java_boilerplate.plan_test;
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
 import hng_java_boilerplate.plans.entity.Plan;
+import hng_java_boilerplate.plans.enums.Category;
+import hng_java_boilerplate.plans.enums.MembershipType;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.plans.repository.PlanRepository;
 import hng_java_boilerplate.plans.serviceImpl.PlanServiceImpl;
@@ -42,7 +44,9 @@ public class PlanServiceTest {
             add("Feature 1");
             add("Feature 2");
         }};
-        CreatePlanDto planDto = new CreatePlanDto("plan name", "plan description", 19.99, 1, "day", features);
+        CreatePlanDto planDto = new CreatePlanDto("plan name",
+                "plan description", 19.99, 1,
+                "day", features, MembershipType.BASIC, Category.ANNUAL);
         Plan plan = Plan.builder()
                 .id(UUID.randomUUID().toString())
                 .name("plan name")
@@ -50,6 +54,8 @@ public class PlanServiceTest {
                 .price(19.99)
                 .durationUnit("day")
                 .duration(1)
+                .category(Category.ANNUAL)
+                .membershipType(MembershipType.BASIC)
                 .features(features)
                 .build();
         when(this.planRepository.save(any(Plan.class))).thenReturn(plan);
@@ -73,6 +79,8 @@ public class PlanServiceTest {
         assertEquals(plan.getPrice(), 19.99);
         assertEquals(plan.getDuration(), 1);
         assertEquals(plan.getDurationUnit(), "day");
+        assertEquals(plan.getCategory(), Category.ANNUAL);
+        assertEquals(plan.getMembershipType(), MembershipType.BASIC);
         assertNotNull(plan.getFeatures());
 
     }
@@ -83,7 +91,9 @@ public class PlanServiceTest {
             add("Feature 1");
             add("Feature 2");
         }};
-        CreatePlanDto planDto = new CreatePlanDto("plan name", "plan description", 19.99, 1, "day", features);
+        CreatePlanDto planDto = new CreatePlanDto("plan name",
+                "plan description", 19.99, 1,
+                "day", features, MembershipType.BASIC, Category.ANNUAL);
         when(this.planRepository.existsByName(any())).thenReturn(true);
         DuplicatePlanException exception = assertThrows(DuplicatePlanException.class, () -> planService.create(planDto));
         assertEquals("Plan already exists.", exception.getMessage());

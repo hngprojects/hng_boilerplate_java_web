@@ -1,6 +1,8 @@
 package hng_java_boilerplate.plans.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hng_java_boilerplate.plans.enums.Category;
+import hng_java_boilerplate.plans.enums.MembershipType;
 import hng_java_boilerplate.plans.util.StringListConverter;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,6 +34,12 @@ public class Plan {
 
     @Column(nullable = false)
     private int duration;
+
+    @Enumerated(EnumType.STRING)
+    private MembershipType membershipType;
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @Column(nullable = false)
     @JsonProperty("duration_unit")
