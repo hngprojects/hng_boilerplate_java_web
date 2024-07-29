@@ -70,5 +70,9 @@ runs:
         # JWT secret
         sha512.string=${JWT_SECRET}
 
+        #Security configuration
+        spring.security.oauth2.client.registration.google.client-id=${GOOGLE_ID}
+        spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_SECRET}
+        
         EOF
       shell: bash
