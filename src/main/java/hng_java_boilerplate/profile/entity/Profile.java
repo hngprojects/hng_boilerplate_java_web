@@ -1,27 +1,59 @@
 package hng_java_boilerplate.profile.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import hng_java_boilerplate.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+//@Data
 @Table(name = "profiles")
 public class Profile {
     @Id
     private String id;
 
+    @JsonProperty("first_name")
     private String firstName;
+
+    @JsonProperty("last_name")
     private String lastName;
+
+    @JsonProperty("phone_number")
     private String phone;
+
+    @JsonProperty("avatar_url")
     private String avatarUrl;
+
+    @JsonProperty("pronouns")
+    private String pronouns;
+
+    @JsonProperty("job_title")
+    private String jobTitle;
+
+    @JsonProperty("department")
+    private String department;
+
+    @JsonProperty("social")
+    private String social;
+
+    @JsonProperty("bio")
+    private String bio;
+
+    @JsonProperty("recovery_email")
+    private String recoveryEmail;
 
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     @JsonIgnore
     private User user;
+
 
     public String getId() {
         return id;
@@ -61,6 +93,54 @@ public class Profile {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getPronouns() {
+        return pronouns;
+    }
+
+    public void setPronouns(String pronouns) {
+        this.pronouns = pronouns;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getSocial() {
+        return social;
+    }
+
+    public void setSocial(String social) {
+        this.social = social;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getRecoveryEmail() {
+        return recoveryEmail;
+    }
+
+    public void setRecoveryEmail(String recoveryEmail) {
+        this.recoveryEmail = recoveryEmail;
     }
 
     public User getUser() {
