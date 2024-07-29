@@ -19,6 +19,7 @@ public class AuthController {
     private final UserService userService;
     private final GoogleJwtUtils googleJwtUtils;
 
+
     @GetMapping("/google/{tkn}")
     public ResponseEntity<String> authorizeOauthUser(@PathVariable("tkn") String token){
         return ResponseEntity.ok(googleJwtUtils.googleOauthUserJWT(token));
