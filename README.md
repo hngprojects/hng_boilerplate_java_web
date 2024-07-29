@@ -1,4 +1,4 @@
-# [App Name] Integration Guide
+ # [App Name] Integration Guide
 
 ## Overview
 
