@@ -55,7 +55,7 @@ public class FlutterwaveServiceImpl implements PaymentService{
         requestBody.put("tx_ref", transactionReference);
         requestBody.put("amount", request.getAmount());
         requestBody.put("currency", "NGN");
-        requestBody.put("redirect_url", "https://example_company.com/redirect");
+        requestBody.put("redirect_url", "https://api-java.boilerplate.hng.tech/docs");
 
         Map<String, Object> customer = new HashMap<>();
         customer.put("email", user.getEmail());
