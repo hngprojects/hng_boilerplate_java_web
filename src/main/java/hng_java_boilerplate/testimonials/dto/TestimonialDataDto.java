@@ -17,4 +17,6 @@ public class TestimonialDataDto {
     private String content;
     @JsonProperty("created_at")
     private LocalDate createdAt;
+    @JsonProperty("updated_at")
+    private LocalDate updatedAt;
 }

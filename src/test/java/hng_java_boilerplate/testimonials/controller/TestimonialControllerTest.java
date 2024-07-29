@@ -3,6 +3,7 @@ package hng_java_boilerplate.testimonials.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.testimonials.dto.TestimonialRequestDto;
+import hng_java_boilerplate.testimonials.dto.UpdateTestimonialRequestDto;
 import hng_java_boilerplate.testimonials.entity.Testimonial;
 import hng_java_boilerplate.testimonials.service.TestimonialService;
 import hng_java_boilerplate.user.entity.User;
@@ -28,6 +29,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,6 +55,9 @@ class TestimonialControllerTest {
 
     @MockBean
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
@@ -170,5 +175,36 @@ class TestimonialControllerTest {
                 .andExpect(jsonPath("$.pagination.per_page").value(3))
                 .andExpect(jsonPath("$.pagination.total_pages").value(1))
                 .andExpect(jsonPath("$.pagination.total_testimonials").value(2));
+    }
+
+    @Test
+    void shouldUpdateTestimonial() throws Exception {
+        User mockUser = new User();
+        mockUser.setId("userId123");
+
+        when(userService.getLoggedInUser()).thenReturn(mockUser);
+
+        Testimonial testimonial = new Testimonial();
+        testimonial.setUserId("userId123");
+        testimonial.setName("John Doe");
+        testimonial.setContent("Updated content");
+        testimonial.setCreatedAt(LocalDate.now());
+        testimonial.setUpdatedAt(LocalDate.now());
+
+        when(testimonialService.updateTestimonial("testimonialId123", "userId123", "Updated content")).thenReturn(testimonial);
+
+        UpdateTestimonialRequestDto request = new UpdateTestimonialRequestDto();
+        request.setContent("Updated content");
+
+        mockMvc.perform(patch("/api/v1/testimonials/testimonialId123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.message").value("Testimonial updated successfully"))
+                .andExpect(jsonPath("$.data.user_id").value("userId123"))
+                .andExpect(jsonPath("$.data.content").value("Updated content"))
+                .andExpect(jsonPath("$.data.updated_at").value(testimonial.getUpdatedAt().toString()));
     }
 }
