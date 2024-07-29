@@ -1,12 +1,13 @@
 package hng_java_boilerplate.exception;
 
+import hng_java_boilerplate.payment.exceptions.UserNotFoundException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
 import hng_java_boilerplate.user.exception.InvalidRequestException;
-import hng_java_boilerplate.user.exception.UserNotFoundException;
+
 import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -104,6 +105,24 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseMessageDto> handleGeneralException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessageDto("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
+
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ErrorResponse> handlePasswordMatchException(InvalidPasswordException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "Bad Request", HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "Unauthorized", HttpStatus.UNAUTHORIZED.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+
+
+
+
 }
 
 
