@@ -25,18 +25,9 @@ public class TestimonialController {
     @PostMapping
     public ResponseEntity<?> createTestimonial(@AuthenticationPrincipal UserDetails userDetails,
                                                @Valid @RequestBody TestimonialRequestDto request) {
-        Testimonial testimonial = testimonialService.createTestimonial(
-                userDetails.getUsername(),
-                request.getName(),
-                request.getContent()
-        );
+        Testimonial testimonial = testimonialService.createTestimonial(userDetails.getUsername(), request.getName(), request.getContent());
 
-        TestimonialDataDto testimonialData = new TestimonialDataDto(
-                testimonial.getUserId(),
-                testimonial.getName(),
-                testimonial.getContent(),
-                testimonial.getCreatedAt()
-        );
+        TestimonialDataDto testimonialData = new TestimonialDataDto(testimonial.getUserId(), testimonial.getName(), testimonial.getContent(), testimonial.getCreatedAt());
 
         TestimonialResponseDto response = new TestimonialResponseDto("success", "Testimonial created successfully", testimonialData);
 
