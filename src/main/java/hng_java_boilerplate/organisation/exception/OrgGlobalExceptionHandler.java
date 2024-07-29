@@ -37,6 +37,51 @@ public class OrgGlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(PermissionNameAlreadyExistsException.class)
+    public ResponseEntity<AuthErrorResponse> handleEntityNotFoundExceptions(
+            PermissionNameAlreadyExistsException ex
+    ) {
+        var authErr = new AuthErrorResponse(
+                "Bad request",
+                "Permission name already exists",
+                409
+        );
+        return new ResponseEntity<>(
+                authErr,
+                HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(RoleNameAlreadyExistsException.class)
+    public ResponseEntity<AuthErrorResponse> handleEntityNotFoundExceptions(
+            RoleNameAlreadyExistsException ex
+    ) {
+        var authErr = new AuthErrorResponse(
+                "Bad request",
+                "Role already exists",
+                409
+        );
+        return new ResponseEntity<>(
+                authErr,
+                HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(PermissionNotFoundException.class)
+    public ResponseEntity<AuthErrorResponse> handleEntityNotFoundExceptions(
+            PermissionNotFoundException ex
+    ) {
+        var authErr = new AuthErrorResponse(
+                "Bad request",
+                "One or more permissions not found",
+                404
+        );
+        return new ResponseEntity<>(
+                authErr,
+                HttpStatus.NOT_FOUND
+        );
+    }
+
     private List<ValidationError> getAllValidationErrors(BindingResult bindingResult) {
         List<ValidationError> errors = new ArrayList<>();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {

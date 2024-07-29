@@ -22,6 +22,9 @@ public class OrgRole {
     @Id
     private String id;
 
+    @Column(nullable = false, unique = true)
+    private String name;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "org_role_permissions",
