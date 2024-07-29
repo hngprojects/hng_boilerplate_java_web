@@ -5,9 +5,12 @@ import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.exceptions.UserNotFoundException;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class Utils {
 
     private final UserService userService;
@@ -17,7 +20,7 @@ public class Utils {
     }
 
     public String generateTransactionReference() {
-        return "TRANS_" + UUID.randomUUID().toString();
+        return "TRANS_" + UUID.randomUUID();
     }
 
     public User validateLoggedInUser() {
@@ -37,9 +40,8 @@ public class Utils {
                 .amount(payment.getAmount().toString())
                 .currency(payment.getCurrency())
                 .status(String.valueOf(payment.getPaymentStatus()))
+                .paymentProvider(String.valueOf(payment.getProvider()))
                 .paymentChannel(payment.getPaymentChannel())
-                .initiatedAt(payment.getInitiatedAt().toString())
-                .completedAt(payment.getCompletedAt() != null ? payment.getCompletedAt().toString() : null)
                 .build();
     }
 

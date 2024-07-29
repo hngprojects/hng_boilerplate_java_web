@@ -3,6 +3,7 @@ CREATE TABLE payments (
     id BIGSERIAL PRIMARY KEY,
     user_email VARCHAR(255) NOT NULL,
     payment_status VARCHAR(50),
+    payment_provider VARCHAR(50),
     transaction_reference VARCHAR(255),
     amount DECIMAL(19, 4),
     currency VARCHAR(10),

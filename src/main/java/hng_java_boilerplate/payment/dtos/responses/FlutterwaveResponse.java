@@ -1,7 +1,10 @@
 package hng_java_boilerplate.payment.dtos.responses;
 
+import lombok.ToString;
+
 import java.math.BigDecimal;
 
+@ToString
 public class FlutterwaveResponse {
 
     private String status;
@@ -32,6 +35,7 @@ public class FlutterwaveResponse {
         this.data = data;
     }
 
+    @ToString
     public static class Data {
         private String id;
         private String tx_ref;

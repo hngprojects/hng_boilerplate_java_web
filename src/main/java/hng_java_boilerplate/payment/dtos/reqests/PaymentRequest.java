@@ -10,6 +10,8 @@ public class PaymentRequest {
     @Positive(message = "Amount must be positive")
     private Integer amount;
 
+    private String provider;
+
 
     public Integer getAmount() {
         return amount;
@@ -19,7 +21,11 @@ public class PaymentRequest {
         this.amount = amount;
     }
 
+    public String getProvider() {
+        return provider;
+    }
 
-
-
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
 }

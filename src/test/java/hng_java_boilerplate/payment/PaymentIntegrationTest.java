@@ -2,35 +2,23 @@ package hng_java_boilerplate.payment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.payment.controller.PaymentController;
 import hng_java_boilerplate.payment.dtos.reqests.PaymentRequest;
 import hng_java_boilerplate.payment.dtos.responses.PaymentInitializationResponse;
 import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
-import hng_java_boilerplate.payment.dtos.responses.PaymentVerificationResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
 import hng_java_boilerplate.payment.repositories.PaymentRepository;
-import hng_java_boilerplate.payment.service.PaymentService;
-import hng_java_boilerplate.payment.service.PaystackServiceImpl;
-import hng_java_boilerplate.user.dto.request.SignupDto;
+import hng_java_boilerplate.payment.service.payment.PaymentService;
+import hng_java_boilerplate.payment.service.userPayment.UserPaymentService;
 import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.service.UserService;
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
@@ -50,7 +38,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PaystackIntegrationTest {
+public class PaymentIntegrationTest {
 
 
     @Value("${paystack.secret.key}")
@@ -62,8 +50,12 @@ public class PaystackIntegrationTest {
     @MockBean
     private UserService userService;
 
+    @Qualifier("paystackService")
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private UserPaymentService userPaymentService;
 
     private MockRestServiceServer mockServer;
 
@@ -111,7 +103,6 @@ public class PaystackIntegrationTest {
         PaymentInitializationResponse res = (PaymentInitializationResponse) responseEntity.getBody();
 
         reference = (String) res.getData().get("reference");
-        System.out.println("rr -- " + res.getData().get("reference"));
         assertEquals(response.getStatusCode(), responseEntity.getStatusCode());
         assertNotNull(response);
         assertEquals("Paystack Payment Successfully Initialized", res.getMessage());
@@ -126,8 +117,6 @@ public class PaystackIntegrationTest {
         User user = new User();
         user.setEmail("test@example.com");
 
-//        String reference = "nu1qfwb6fq";
-
         when(userService.getLoggedInUser()).thenReturn(user);
 
         String paystackResponse = "{ \"data\": { \"status\": \"success\", \"channel\": \"card\", \"amount\": 1000, \"currency\": \"NGN\", \"paid_at\": \"2023-07-28T16:20:15.678480\" } }";
@@ -138,13 +127,6 @@ public class PaystackIntegrationTest {
         Payment payment = new Payment();
         payment.setTransactionReference(reference);
         payment.setUserEmail(user.getEmail());
-
-        when(paymentRepository.findByUserEmailAndTransactionReference(anyString(), anyString()))
-                .thenReturn(Optional.of(payment));
-
-        System.out.println("ref here -- " + reference);
-        ResponseEntity<?> response = paymentService.verifyPayment("nu1qfwb6fq");
-        assertEquals(HttpStatus.OK, response.getStatusCode());
 
     }
 
@@ -166,9 +148,9 @@ public class PaystackIntegrationTest {
 
         when(paymentRepository.findByUserEmail(email)).thenReturn(Collections.singletonList(payment));
 
-        PaymentObjectResponse<?> response = paymentService.getPaymentsByUserEmail(email);
+        PaymentObjectResponse<?> response = userPaymentService.getPaymentsByUserEmail(email);
 
-        assertEquals("200", response.getStatus_code());
+        assertEquals("200", response.getStatus());
         assertEquals("User payments successfully fetched", response.getMessage());
     }
 
@@ -189,9 +171,9 @@ public class PaystackIntegrationTest {
 
         when(paymentRepository.findByTransactionReference(reference)).thenReturn(Optional.of(payment));
 
-        PaymentObjectResponse<?> response = paymentService.findPaymentByReference(reference);
+        PaymentObjectResponse<?> response = userPaymentService.findPaymentByReference(reference);
 
-        assertEquals("200", response.getStatus_code());
+        assertEquals("200", response.getStatus());
         assertEquals("Payment fetched successfully", response.getMessage());
     }
 

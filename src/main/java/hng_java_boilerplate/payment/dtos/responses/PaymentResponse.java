@@ -14,7 +14,7 @@ public class PaymentResponse {
     private String currency;
     private String status;
     private String paymentChannel;
-    private String initiatedAt;
-    private String completedAt;
+    private String paymentProvider;
+
 
 }

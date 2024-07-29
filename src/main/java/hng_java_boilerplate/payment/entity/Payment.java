@@ -1,5 +1,6 @@
 package hng_java_boilerplate.payment.entity;
 
+import hng_java_boilerplate.payment.enums.PaymentProvider;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,10 @@ public class Payment {
 
     private String currency;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_provider")
+    private PaymentProvider provider;
+
     private String paymentChannel;
 
     private LocalDateTime initiatedAt;
@@ -58,6 +63,14 @@ public class Payment {
 
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
+    }
+
+    public PaymentProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(PaymentProvider provider) {
+        this.provider = provider;
     }
 
     public void setPaymentStatus(PaymentStatus paymentStatus) {
@@ -88,13 +101,6 @@ public class Payment {
         this.currency = currency;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public String getPaymentChannel() {
         return paymentChannel;

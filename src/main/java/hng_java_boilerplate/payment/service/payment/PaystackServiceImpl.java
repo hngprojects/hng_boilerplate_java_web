@@ -1,9 +1,7 @@
-package hng_java_boilerplate.payment.service;
+package hng_java_boilerplate.payment.service.payment;
 
-import hng_java_boilerplate.payment.Utils;
-import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
-import hng_java_boilerplate.payment.dtos.responses.PaymentResponse;
 import hng_java_boilerplate.payment.entity.Payment;
+import hng_java_boilerplate.payment.enums.PaymentProvider;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
 import hng_java_boilerplate.payment.exceptions.UserNotFoundException;
 import hng_java_boilerplate.payment.repositories.PaymentRepository;
@@ -15,6 +13,7 @@ import hng_java_boilerplate.user.service.UserService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -23,12 +22,10 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static hng_java_boilerplate.payment.Utils.convertToDto;
 
 
 @Service
+@Qualifier("paystackService")
 public class PaystackServiceImpl implements PaymentService {
 
     public PaystackServiceImpl(UserService userService, PaymentRepository paymentRepository) {
@@ -66,7 +63,7 @@ public class PaystackServiceImpl implements PaymentService {
             String authorizationUrl = jsonResponse.getJSONObject("data").getString("authorization_url");
             String reference = jsonResponse.getJSONObject("data").getString("reference");
 
-            Payment payment = Payment.builder().initiatedAt(LocalDateTime.now()).transactionReference(reference).amount(new BigDecimal(request.getAmount())).userEmail(user.getEmail()).build();
+            Payment payment = Payment.builder().provider(PaymentProvider.PAYSTACK).initiatedAt(LocalDateTime.now()).transactionReference(reference).amount(new BigDecimal(request.getAmount())).userEmail(user.getEmail()).build();
             paymentRepository.save(payment);
             Map<String, Object> data = new HashMap<>();
             data.put("authorization_url", authorizationUrl);
@@ -120,28 +117,10 @@ public class PaystackServiceImpl implements PaymentService {
     }
 
 
-
     @Override
-    public PaymentObjectResponse<?> getPaymentsByUserEmail(String email) {
-        List<Payment> payments = paymentRepository.findByUserEmail(email);
-        List<PaymentResponse> response = payments.stream().map(Utils::convertToDto).collect(Collectors.toList());
-        return PaymentObjectResponse.builder().message("User payments successfully fetched").status_code("200").data(response).build();
+    public ResponseEntity<?> verifyPayment(String reference, String status, String transactionId) {
+        return null;
     }
-
-
-    @Override
-    public PaymentObjectResponse<?>  findPaymentByReference(String reference) {
-        Optional<Payment> paymentOpt = paymentRepository.findByTransactionReference(reference);
-
-        if (paymentOpt.isPresent()) {
-            Payment payment = paymentOpt.get();
-            PaymentResponse convertedPaymentResponse = convertToDto(payment);
-            return PaymentObjectResponse.builder().data(convertedPaymentResponse).status_code("200").message("Payment fetched successfully").build();
-        } else {
-            return PaymentObjectResponse.builder().status_code("404").message(String.format("Payment with %s not found",  reference)).build();
-        }
-    }
-
 
     private void validatePaymentVerificationResponse(String reference, String email, ResponseEntity<String> response) {
         if (response.getStatusCode() == HttpStatus.OK) {
