@@ -45,7 +45,6 @@ public class PaystackServiceImpl implements PaymentService {
     @Override
     public ResponseEntity<?> initiatePayment(PaymentRequest request) {
         User user = validateLoggedInUser();
-        System.out.println("ser -- " + user);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + paystackSecretKey);
