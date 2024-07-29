@@ -9,12 +9,16 @@ import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/testimonials")
@@ -55,5 +59,32 @@ public class TestimonialController {
 
         TestimonialDataDto testimonialData = new TestimonialDataDto(testimonial.getUserId(), testimonial.getName(), testimonial.getContent(), testimonial.getCreatedAt());
         return ResponseEntity.ok(Map.of("message", "Testimonial fetched successfully", "status_code", 200, "data", testimonialData));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllTestimonials(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "3") int size) {
+        User loggedInUser = userService.getLoggedInUser();
+
+        if (loggedInUser == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
+        }
+
+        Page<Testimonial> testimonialsPage = testimonialService.getAllTestimonials(page, size);
+        List<TestimonialDataDto> testimonials = testimonialsPage.getContent().stream()
+                .map(testimonial -> new TestimonialDataDto(testimonial.getUserId(), testimonial.getName(), testimonial.getContent(), testimonial.getCreatedAt()))
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Testimonials retrieved successfully");
+        response.put("status_code", 200);
+        response.put("data", testimonials);
+        response.put("pagination", Map.of(
+                "current_page", testimonialsPage.getNumber() + 1,
+                "per_page", testimonialsPage.getSize(),
+                "total_pages", testimonialsPage.getTotalPages(),
+                "total_testimonials", testimonialsPage.getTotalElements()
+        ));
+
+        return ResponseEntity.ok(response);
     }
 }
