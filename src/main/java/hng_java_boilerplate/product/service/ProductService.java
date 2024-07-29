@@ -1,5 +1,6 @@
 package hng_java_boilerplate.product.service;
 
+import hng_java_boilerplate.product.dto.ProductCreateDto;
 import hng_java_boilerplate.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,4 +14,6 @@ public interface ProductService {
 
 
     Product getProductStock(String productId);
+
+    Product createProduct(ProductCreateDto productCreateDto, String user);
 }

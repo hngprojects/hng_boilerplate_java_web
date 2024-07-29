@@ -1,10 +1,10 @@
 package hng_java_boilerplate.product.controller;
 
-import hng_java_boilerplate.product.dto.ProductSearchDTO;
-import hng_java_boilerplate.product.dto.ProductStockDTO;
+import hng_java_boilerplate.product.dto.*;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,5 +73,33 @@ public class ProductController {
                 product.getLastUpdated()
         );
         return new ResponseEntity<>(productStockDTO, HttpStatus.OK);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductCreateDto productCreateDto) {
+        // get the user from security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        System.out.println("This is the user name " +currentUsername);
+
+        Product product = productService.createProduct(productCreateDto, currentUsername);
+
+        ProductResponseDto response = ProductResponseDto.builder()
+                .status("success")
+                .message("Product created successfully")
+                .data(ProductResponseInfo.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .description(product.getDescription())
+                        .category(product.getCategory())
+                        .price(product.getPrice())
+                        .createdAt(product.getCreatedAt())
+                        .updatedAt(product.getUpdatedAt())
+                        .build())
+                .build();
+
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

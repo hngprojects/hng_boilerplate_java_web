@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -30,9 +31,17 @@ public class Product {
     @Column(name = "current_stock")
     private double currentStock;
 
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @CreationTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @UpdateTimestamp
     @Column(name = "last_updated")
-    private LocalDateTime lastUpdated;
+    private LocalDateTime lastUpdated; // This will be for stock
 
     @ManyToOne
     @JsonIgnore
