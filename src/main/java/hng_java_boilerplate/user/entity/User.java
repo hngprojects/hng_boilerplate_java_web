@@ -36,17 +36,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "two_FA_status")
-    private boolean is2FAEnabled;
-
-    @Column(name = "two_FA_secret_key")
-    private String twoFASecretKey;
-
-    @ElementCollection
-    @CollectionTable(name = "two_fa_backup_codes", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "backup_code")
-    private List<String> twoFABackupCodes = new ArrayList<>();
-
     @Enumerated(EnumType.STRING)
     private Role userRole;
 
@@ -79,23 +68,6 @@ public class User implements UserDetails {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public boolean isIs2FAEnabled() {
-        return is2FAEnabled;
-    }
-
-    public void setIs2FAEnabled(boolean is2FAEnabled) {
-        this.is2FAEnabled = is2FAEnabled;
-    }
-
-
-    public List<String> getTwoFABackupCodes() {
-        return twoFABackupCodes;
-    }
-
-    public void setTwoFABackupCodes(List<String> twoFABackupCodes) {
-        this.twoFABackupCodes = twoFABackupCodes;
-    }
 
     @PrePersist
     public void prePersist() {
