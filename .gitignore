@@ -33,5 +33,5 @@ build/
 ### VS Code ###
 .vscode/
 
-src/main/resources/application.properties
+../hng_boilerplate_java_web2/src/main/java/hng_java_boilerplate/utils/application.properties
 
