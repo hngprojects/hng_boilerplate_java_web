@@ -22,4 +22,8 @@ public class TestimonialService {
 
         return testimonialRepository.save(testimonial);
     }
+
+    public Testimonial getTestimonialById(String testimonialId) {
+        return testimonialRepository.findById(testimonialId).orElse(null);
+    }
 }

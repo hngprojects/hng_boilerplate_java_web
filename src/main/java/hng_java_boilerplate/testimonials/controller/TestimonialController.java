@@ -11,11 +11,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/testimonials")
@@ -39,5 +38,22 @@ public class TestimonialController {
         TestimonialResponseDto response = new TestimonialResponseDto("success", "Testimonial created successfully", testimonialData);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{testimonial_id}")
+    public ResponseEntity<?> getTestimonialById(@PathVariable("testimonial_id") String testimonialId) {
+        User loggedInUser = userService.getLoggedInUser();
+
+        if (loggedInUser == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authenticated");
+        }
+
+        Testimonial testimonial = testimonialService.getTestimonialById(testimonialId);
+        if (testimonial == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("status_code", 404, "message", "Testimonial not found"));
+        }
+
+        TestimonialDataDto testimonialData = new TestimonialDataDto(testimonial.getUserId(), testimonial.getName(), testimonial.getContent(), testimonial.getCreatedAt());
+        return ResponseEntity.ok(Map.of("message", "Testimonial fetched successfully", "status_code", 200, "data", testimonialData));
     }
 }
