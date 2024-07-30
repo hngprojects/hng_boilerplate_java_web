@@ -5,6 +5,7 @@ runs:
   steps:
     - run: |
         source .env
+        touch src/main/resources/application.properties
         cat << EOF > src/main/resources/application.properties
 
         spring.application.name=hng-java-boilerplate
