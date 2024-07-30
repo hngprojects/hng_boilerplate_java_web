@@ -167,8 +167,9 @@ mvn dependency:resolve
 - Flyway Migrations
   - migration files should be placed in the `src/main/resources/db/migration` directory
   - Each migration file should follow the naming convention `V<version>__<description>.sql.` e.g
-    -  `V1__create_users_table.sql`
     -  `V1__init_database.sql`
+    -  `V2__create_users_table.sql`
+
   - sample migration file
 ```sql
 -- V1__create_users_table.sql
