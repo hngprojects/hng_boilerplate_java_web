@@ -3,8 +3,13 @@ name: CI
 on:
   push:
     branches: [dev, staging, main]
+  
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+    branches: [main, staging, dev]
+
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [assigned, opened, synchronize, reopened]
     branches: [dev, staging, main]
 
 permissions:
