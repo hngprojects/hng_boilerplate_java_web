@@ -1,7 +1,0 @@
-ALTER TABLE profiles
-ADD COLUMN pronouns VARCHAR(255),
-ADD COLUMN job_title VARCHAR(255),
-ADD COLUMN department VARCHAR(255),
-ADD COLUMN social TEXT,
-ADD COLUMN bio TEXT,
-ADD COLUMN recovery_email VARCHAR(255);
