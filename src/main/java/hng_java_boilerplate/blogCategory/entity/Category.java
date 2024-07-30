@@ -19,16 +19,6 @@ public class Category {
 
     private String name;
 
-//    private String testCategory;
-
-//    public Category(String id, String name) {
-//        this.id = id;
-//        this.name = name;
-//        this.testCategory = testCategory;
-//    }
-
-
-
 
     @PrePersist
     public void prePersist() {

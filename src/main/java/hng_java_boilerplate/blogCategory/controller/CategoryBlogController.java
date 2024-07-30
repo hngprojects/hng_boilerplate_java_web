@@ -20,9 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/create")
 public class CategoryBlogController {
 
-    @Autowired
-    private CreateBlogCategoryService createBlogCategoryService;
+    private final CreateBlogCategoryService createBlogCategoryService;
 
+    @Autowired
+    public CategoryBlogController(CreateBlogCategoryService createBlogCategoryService) {
+        this.createBlogCategoryService = createBlogCategoryService;
+    }
 
     @PostMapping("/blog-categories")
     public ResponseEntity<?> createBlogCategory(@Valid @RequestBody CreateBlogCategoryRequestDTO blogCategoryRequestDTO) {
