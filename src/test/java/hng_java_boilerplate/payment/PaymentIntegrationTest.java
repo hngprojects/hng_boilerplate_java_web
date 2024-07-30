@@ -7,7 +7,7 @@ import hng_java_boilerplate.payment.dtos.responses.PaymentInitializationResponse
 import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
-import hng_java_boilerplate.payment.repositories.PaymentRepository;
+import hng_java_boilerplate.payment.repository.PaymentRepository;
 import hng_java_boilerplate.payment.service.payment.PaymentService;
 import hng_java_boilerplate.payment.service.userPayment.UserPaymentService;
 import hng_java_boilerplate.user.entity.User;

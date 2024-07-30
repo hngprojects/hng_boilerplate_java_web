@@ -1,14 +1,14 @@
 package hng_java_boilerplate.payment.service.payment;
 
+import hng_java_boilerplate.payment.dtos.responses.PaymentVerificationResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentProvider;
-import hng_java_boilerplate.payment.enums.PaymentStatus;
-import hng_java_boilerplate.payment.exceptions.UserNotFoundException;
-import hng_java_boilerplate.payment.repositories.PaymentRepository;
 import hng_java_boilerplate.payment.dtos.reqests.PaymentRequest;
 import hng_java_boilerplate.payment.dtos.responses.PaymentInitializationResponse;
-import hng_java_boilerplate.payment.dtos.responses.PaymentVerificationResponse;
+import hng_java_boilerplate.payment.enums.PaymentStatus;
+import hng_java_boilerplate.payment.repository.PaymentRepository;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.service.UserService;
 import org.json.JSONObject;
 import org.slf4j.Logger;

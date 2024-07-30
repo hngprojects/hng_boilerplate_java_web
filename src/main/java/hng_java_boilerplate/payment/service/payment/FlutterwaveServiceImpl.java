@@ -10,7 +10,7 @@ import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentProvider;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
-import hng_java_boilerplate.payment.repositories.PaymentRepository;
+import hng_java_boilerplate.payment.repository.PaymentRepository;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;

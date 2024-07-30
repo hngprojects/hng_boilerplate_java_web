@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
+
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -40,6 +41,5 @@ public class PaymentInitializationResponse {
     public void setData(Map<String, Object> data) {
         this.data = data;
     }
-
 
 }

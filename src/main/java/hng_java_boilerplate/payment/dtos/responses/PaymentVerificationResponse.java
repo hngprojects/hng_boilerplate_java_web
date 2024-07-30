@@ -1,6 +1,5 @@
 package hng_java_boilerplate.payment.dtos.responses;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,5 @@ public class PaymentVerificationResponse {
     public void setData(Map<String, Object> data) {
         this.data = data;
     }
-
-
 
 }

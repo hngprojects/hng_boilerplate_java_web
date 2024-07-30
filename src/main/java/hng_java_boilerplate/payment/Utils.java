@@ -2,8 +2,8 @@ package hng_java_boilerplate.payment;
 
 import hng_java_boilerplate.payment.dtos.responses.PaymentResponse;
 import hng_java_boilerplate.payment.entity.Payment;
-import hng_java_boilerplate.payment.exceptions.UserNotFoundException;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.service.UserService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
-package hng_java_boilerplate.payment.repositories;
+package hng_java_boilerplate.payment.repository;
 
-import aj.org.objectweb.asm.commons.Remapper;
 import hng_java_boilerplate.payment.entity.Payment;
+import hng_java_boilerplate.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Component
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
+
 
     List<Payment> findByUserEmail(String email);
 

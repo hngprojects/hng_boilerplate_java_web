@@ -4,7 +4,7 @@ import hng_java_boilerplate.payment.Utils;
 import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
 import hng_java_boilerplate.payment.dtos.responses.PaymentResponse;
 import hng_java_boilerplate.payment.entity.Payment;
-import hng_java_boilerplate.payment.repositories.PaymentRepository;
+import hng_java_boilerplate.payment.repository.PaymentRepository;
 import hng_java_boilerplate.payment.service.payment.PaystackServiceImpl;
 import hng_java_boilerplate.user.service.UserService;
 import org.slf4j.Logger;
