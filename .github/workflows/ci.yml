@@ -44,6 +44,11 @@ jobs:
             --health-retries 5
 
     steps:
+      - name: Checkout base branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          
       - name: Checkout repository base
         uses: actions/checkout@v3
         with:
