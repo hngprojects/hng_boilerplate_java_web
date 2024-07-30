@@ -1,5 +1,6 @@
 package hng_java_boilerplate.user.login_unit_test;
 
+import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
@@ -66,6 +67,7 @@ class UserLoginTest {
         mockUser.setCreatedAt(LocalDateTime.now());
 
         when(userRepository.findByEmail(loginDto.getEmail())).thenReturn(Optional.of(mockUser));
+        when(passwordEncoder.matches(loginDto.getPassword(), mockUser.getPassword())).thenReturn(true);
 
         ResponseEntity<ApiResponse> responseEntity = userService.loginUser(loginDto);
 
@@ -88,7 +90,7 @@ class UserLoginTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(password, user.getPassword())).thenReturn(false);
 
-        assertThrows(InvalidRequestException.class, () -> userService.loginUser(loginDto));
+        assertThrows(BadRequestException.class, () -> userService.loginUser(loginDto));
     }
 
     @Test
