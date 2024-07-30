@@ -3,6 +3,7 @@ package hng_java_boilerplate.profile.controller;
 import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
 import hng_java_boilerplate.profile.dto.response.ProfileUpdateResponseDto;
 import hng_java_boilerplate.profile.entity.Profile;
+import hng_java_boilerplate.profile.exceptions.InternalServerErrorException;
 import hng_java_boilerplate.profile.exceptions.NotFoundException;
 import hng_java_boilerplate.profile.exceptions.UnauthorizedException;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
@@ -28,13 +29,9 @@ public class UserProfileController {
 
     private final ProfileService profileService;
 
-    private final ProfileRepository profileRepository;
-
-    public UserProfileController(ProfileService profileService, ProfileRepository profileRepository) {
+    public UserProfileController(ProfileService profileService) {
         this.profileService = profileService;
-        this.profileRepository = profileRepository;
     }
-
 
     @Operation(summary = "Update User Profile", description = "Updates the profile information for the specified user ID.")
     @ApiResponses(value = {
@@ -43,7 +40,9 @@ public class UserProfileController {
             @ApiResponse(responseCode = "401", description = "User not authorized",
                     content = @Content(schema = @Schema(implementation = UnauthorizedException.class))),
             @ApiResponse(responseCode = "404", description = "User not found",
-                    content = @Content(schema = @Schema(implementation = NotFoundException.class)))
+                    content = @Content(schema = @Schema(implementation = NotFoundException.class))),
+            @ApiResponse(responseCode = "500", description = "Unexpected error",
+                    content = @Content(schema = @Schema(implementation = InternalServerErrorException.class)))
     })
     @PatchMapping("/{user_id}")
     public ResponseEntity<?> updateUserProfile(
@@ -55,18 +54,9 @@ public class UserProfileController {
         User user = (User) authentication.getPrincipal();
         String userId = user.getId();
         if(!user_id.equals(userId)){
-            System.out.println("---------inside--------------");
             throw new UnauthorizedException("User not authorized");
         }
         Optional<?> updatedUserProfile = profileService.updateUserProfile(userId, updateUserProfileDto);
         return new ResponseEntity<>(updatedUserProfile, HttpStatus.OK);
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> createProfile(
-            @RequestBody Profile profile
-    ){
-        Profile update = profileRepository.save(profile);
-        return new ResponseEntity<>(update, HttpStatus.CREATED);
     }
 }

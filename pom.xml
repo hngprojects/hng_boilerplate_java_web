@@ -167,16 +167,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-				<version>${flyway.version}</version> <!-- Use the appropriate Flyway version -->
-				<configuration>
-					<url>jdbc:postgresql://dpg-cqd84adds78s73823h8g-a.oregon-postgres.render.com:5432/hng_4_10h7</url>
-					<user>hng_4</user>
-					<password>VpVWADLy3XcSr472AUs0F4BNMj8qVoYA</password>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 </project>

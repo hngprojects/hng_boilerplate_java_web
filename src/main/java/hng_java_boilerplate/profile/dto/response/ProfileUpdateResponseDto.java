@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfileUpdateResponseDto {
-
     @JsonProperty("message")
     private String message;
 
@@ -22,4 +21,3 @@ public class ProfileUpdateResponseDto {
     @JsonProperty("data")
     private Profile data;
 }
-

@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-
 @Service
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
@@ -73,8 +72,11 @@ public class ProfileServiceImpl implements ProfileService {
                         .data(profile)
                         .build()
                 );
+            }else {
+                throw new NotFoundException("User not found");
             }
-            throw new NotFoundException("User not found");
+        }catch (NotFoundException e) {
+            throw e;
         }catch (Exception e){
             throw new InternalServerErrorException("An unexpected error occurred");
         }

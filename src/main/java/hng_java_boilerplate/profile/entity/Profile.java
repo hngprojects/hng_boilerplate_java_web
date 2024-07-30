@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@Data
 @Table(name = "profiles")
 public class Profile {
     @Id
@@ -53,7 +52,6 @@ public class Profile {
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     @JsonIgnore
     private User user;
-
 
     public String getId() {
         return id;

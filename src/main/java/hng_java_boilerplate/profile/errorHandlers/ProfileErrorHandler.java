@@ -4,12 +4,13 @@ import hng_java_boilerplate.profile.dto.response.ProfileErrorResponseDto;
 import hng_java_boilerplate.profile.exceptions.InternalServerErrorException;
 import hng_java_boilerplate.profile.exceptions.NotFoundException;
 import hng_java_boilerplate.profile.exceptions.UnauthorizedException;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-
+@Order(1)
 @ControllerAdvice
 public class ProfileErrorHandler {
 
@@ -18,6 +19,7 @@ public class ProfileErrorHandler {
         return new ResponseEntity<>(ProfileErrorResponseDto.builder()
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .message(ex.getMessage())
+                .error("Unauthorized")
                 .build(), HttpStatus.UNAUTHORIZED);
     }
 
@@ -26,6 +28,7 @@ public class ProfileErrorHandler {
         return new ResponseEntity<>(ProfileErrorResponseDto.builder()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .message(ex.getMessage())
+                .error("Not found")
                 .build(), HttpStatus.NOT_FOUND);
     }
 
@@ -34,6 +37,7 @@ public class ProfileErrorHandler {
         return new ResponseEntity<>(ProfileErrorResponseDto.builder()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .message(ex.getMessage())
+                .error("Internal server error")
                 .build(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -1,6 +1,4 @@
 package hng_java_boilerplate.profile.dto.request;
-
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
