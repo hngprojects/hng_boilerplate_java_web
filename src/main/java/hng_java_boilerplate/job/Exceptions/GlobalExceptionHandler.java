@@ -6,13 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import hng_java_boilerplate.job.models.ResponseWrapper;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex) {
-        ErrorResponse errorDetails = new ErrorResponse(ex.getMessage());
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ResponseWrapper<Void>> resourceNotFoundException(ResourceNotFoundException ex) {
+        ResponseWrapper<Void> errorResponse = new ResponseWrapper<>("404", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     // Add more exception handlers as needed

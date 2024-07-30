@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,13 +30,15 @@ public class JobControllerTest {
     @MockBean
     private JobService jobService;
 
-    @Test
+     @Test
     public void testGetAllJobs() throws Exception {
         when(jobService.getAllJobs()).thenReturn(Arrays.asList(new Job(), new Job()));
 
-        mockMvc.perform(get("/api/jobs"))
+        mockMvc.perform(get("/api/v1/jobs"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.status").value("200"))
+                .andExpect(jsonPath("$.message").value("Jobs retrieved successfully"))
+                .andExpect(jsonPath("$.data.length()").value(2));
     }
 
     @Test
@@ -44,7 +47,7 @@ public class JobControllerTest {
         job.setTitle("Software Engineer");
         when(jobService.createJob(any(Job.class))).thenReturn(job);
 
-        mockMvc.perform(post("/api/jobs")
+        mockMvc.perform(post("/api/v1/jobs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"title\":\"Software Engineer\"}"))
                 .andExpect(status().isOk())
@@ -58,10 +61,12 @@ public class JobControllerTest {
         job.setTitle("Software Engineer");
         when(jobService.getJobById(1L)).thenReturn(Optional.of(job));
 
-        mockMvc.perform(get("/api/jobs/1"))
+        mockMvc.perform(get("/api/v1/jobs/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.title").value("Software Engineer"));
+                .andExpect(jsonPath("$.status").value("200"))
+                .andExpect(jsonPath("$.message").value("Job retrieved successfully"))
+                .andExpect(jsonPath("$.data.id").value(1))
+                .andExpect(jsonPath("$.data.title").value("Software Engineer"));
     }
 
     @Test
@@ -71,7 +76,7 @@ public class JobControllerTest {
         job.setTitle("Updated Software Engineer");
         when(jobService.updateJob(eq(1L), any(Job.class))).thenReturn(job);
 
-        mockMvc.perform(put("/api/jobs/1")
+        mockMvc.perform(put("/api/v1/jobs/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"title\":\"Updated Software Engineer\"}"))
                 .andExpect(status().isOk())
@@ -82,7 +87,7 @@ public class JobControllerTest {
     public void testDeleteJob() throws Exception {
         doNothing().when(jobService).deleteJob(1L);
 
-        mockMvc.perform(delete("/api/jobs/1"))
+        mockMvc.perform(delete("/api/v1/jobs/1"))
                 .andExpect(status().isOk());
 
         verify(jobService, times(1)).deleteJob(1L);
