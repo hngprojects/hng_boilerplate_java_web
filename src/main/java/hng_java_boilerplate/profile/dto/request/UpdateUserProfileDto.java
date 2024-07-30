@@ -37,7 +37,4 @@ public class UpdateUserProfileDto {
 
     @JsonProperty("avatar_url")
     private String avatarUrl;
-
-    @JsonProperty("recovery_email")
-    private String recoveryEmail;
 }
