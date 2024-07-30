@@ -4,7 +4,7 @@ CREATE TABLE testimonials (
     name VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     created_at DATE NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at DATE NOT NULL
 );
 
 CREATE OR REPLACE FUNCTION update_timestamp()
