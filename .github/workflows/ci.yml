@@ -3,11 +3,6 @@ name: CI
 on:
   push:
     branches: [dev, staging, main]
-  
-  # pull_request:
-  #   types: [assigned, opened, synchronize, reopened]
-  #   branches: [main, staging, dev]
-
   pull_request_target:
     types: [assigned, opened, synchronize, reopened]
     branches: [dev, staging, main]
@@ -18,46 +13,46 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-      
+    
+    # Add this to ensure the job only runs once per PR
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    
     services:
-        postgres:  
-          image: postgres:latest
-          env:
-            POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
-            POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-            POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          ports:
-            - 5432:5432
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
+      postgres:  
+        image: postgres:latest
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-        rabbitmq:
-          image: rabbitmq:3-management
-          env:
-            RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USERNAME }}
-            RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
-          ports:
-            - 5672:5672
-            - 15672:15672  # Management plugin port
-          options: >-
-            --health-cmd "rabbitmqctl node_health_check"
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
+      rabbitmq:
+        image: rabbitmq:3-management
+        env:
+          RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USERNAME }}
+          RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
+        ports:
+          - 5672:5672
+          - 15672:15672
+        options: >-
+          --health-cmd "rabbitmqctl node_health_check"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-      # - name: Checkout base branch
-      #   uses: actions/checkout@v3
-      #   with:
-      #     ref: ${{ github.event.pull_request.base.ref }}
-          
-      # - name: Checkout repository base
-      #   uses: actions/checkout@v3
-      #   with:
-      #     ref: ${{ github.event.pull_request.base.sha }}
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          # For pull_request_target, we need to checkout the PR code
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
