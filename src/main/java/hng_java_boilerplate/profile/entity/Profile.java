@@ -46,9 +46,6 @@ public class Profile {
     @JsonProperty("bio")
     private String bio;
 
-    @JsonProperty("recovery_email")
-    private String recoveryEmail;
-
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     @JsonIgnore
     private User user;
@@ -131,14 +128,6 @@ public class Profile {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public String getRecoveryEmail() {
-        return recoveryEmail;
-    }
-
-    public void setRecoveryEmail(String recoveryEmail) {
-        this.recoveryEmail = recoveryEmail;
     }
 
     public User getUser() {

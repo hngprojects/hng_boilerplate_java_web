@@ -63,7 +63,6 @@ public class ProfileServiceImpl implements ProfileService {
                 profile.setBio(updateUserProfileDto.getBio());
                 profile.setPhone(updateUserProfileDto.getPhoneNumber());
                 profile.setAvatarUrl(updateUserProfileDto.getAvatarUrl());
-                profile.setRecoveryEmail(updateUserProfileDto.getRecoveryEmail());
 
                 profile = profileRepository.save(profile);
                 return Optional.of( ProfileUpdateResponseDto.builder()
