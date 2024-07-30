@@ -7,7 +7,6 @@ import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,7 +22,6 @@ import java.util.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
