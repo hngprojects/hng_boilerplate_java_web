@@ -11,5 +11,4 @@ public class MetricsConfig {
     public PrometheusMeterRegistry prometheusMeterRegistry() {
         return new PrometheusMeterRegistry(io.micrometer.prometheus.PrometheusConfig.DEFAULT);
     }
-
 }
