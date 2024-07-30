@@ -1,2 +1,0 @@
-ALTER TABLE users
-ADD COLUMN is_deactivated BOOLEAN DEFAULT FALSE;
