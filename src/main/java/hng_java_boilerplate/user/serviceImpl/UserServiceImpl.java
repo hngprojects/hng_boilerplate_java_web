@@ -1,6 +1,7 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -96,7 +97,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     }
 
-    private UserResponse getUserResponse(User user){
+    public UserResponse getUserResponse(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
         String lastName = nameParts.length > 1 ? nameParts[1] : "";
