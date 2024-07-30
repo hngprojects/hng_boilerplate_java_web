@@ -48,9 +48,9 @@ class FaqControllerTest {
     @Test
     @WithMockUser
     void shouldGetFaqs() throws Exception {
-        FaqResponse res1 = new FaqResponse("status", "1", "q1", "a1");
-        FaqResponse res2 = new FaqResponse("status", "2", "q2", "a2");
-        FaqResponse res3 = new FaqResponse("status", "3", "q3", "a3");
+        FaqResponse res1 = new FaqResponse("status", "1", "q1", "a1", null);
+        FaqResponse res2 = new FaqResponse("status", "2", "q2", "a2", null);
+        FaqResponse res3 = new FaqResponse("status", "3", "q3", "a3", null);
 
         List<FaqResponse> responses = List.of(res1, res2, res3);
         when(faqService.getFaqs()).thenReturn(responses);
@@ -93,7 +93,7 @@ class FaqControllerTest {
         request.setQuestion("q1");
         request.setAnswer("a1");
 
-        FaqResponse res = new FaqResponse("success", "faq-id", "q1", "a1");
+        FaqResponse res = new FaqResponse("success", "faq-id", "q1", "a1", null);
         when(faqService.createFaq(request)).thenReturn(res);
 
         ObjectMapper mapper = new ObjectMapper();

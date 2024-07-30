@@ -9,4 +9,5 @@ public class FaqRequest {
     private String question;
     @NotBlank(message = "answer is required")
     private String answer;
+    private String category;
 }

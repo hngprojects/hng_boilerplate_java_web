@@ -21,6 +21,8 @@ public class FAQ {
     private String question;
     @Column(nullable = false)
     private String answer;
+    @Column
+    private String category;
 
     @PrePersist
     public void prePersist() {

@@ -21,9 +21,12 @@ public class FaqServiceImpl implements FaqService {
         FAQ faq = new FAQ();
         faq.setQuestion(request.getQuestion());
         faq.setAnswer(request.getAnswer());
+        faq.setCategory(request.getCategory());
 
         faqRepository.saveAndFlush(faq);
-        return new FaqResponse("success", faq.getId(), faq.getQuestion(), faq.getAnswer());
+        return new FaqResponse("success",
+                faq.getId(), faq.getQuestion(),
+                faq.getAnswer(), faq.getCategory());
     }
 
     @Override
@@ -34,7 +37,8 @@ public class FaqServiceImpl implements FaqService {
                 new FaqResponse("success",
                         faq.getId(),
                         faq.getQuestion(),
-                        faq.getAnswer())).toList();
+                        faq.getAnswer(),
+                        faq.getCategory())).toList();
     }
 
     @Override
@@ -42,12 +46,14 @@ public class FaqServiceImpl implements FaqService {
         FAQ faq = faqRepository.findById(faqId)
                 .orElseThrow(() -> new BadRequestException("invalid request"));
 
-        if (request.getAnswer() == null && request.getQuestion() == null) {
+        if (request.getAnswer() == null
+                && request.getQuestion() == null && request.getCategory() == null) {
             throw new BadRequestException("you need to provide field to update");
         }
 
         faq.setQuestion(request.getQuestion() != null ? request.getQuestion() : faq.getQuestion());
         faq.setAnswer(request.getAnswer() != null ? request.getAnswer() : faq.getAnswer());
+        faq.setCategory(request.getCategory() != null ? request.getCategory() : faq.getCategory());
 
         faqRepository.save(faq);
         return new CustomResponse("success", "faq updated successfully");

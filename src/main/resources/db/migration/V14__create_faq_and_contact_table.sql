@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS faqs (
     id VARCHAR(255) PRIMARY KEY,
     question VARCHAR(255) NOT NULL,
+    category VARCHAR(150),
     answer VARCHAR(255) NOT NULL
 );
 

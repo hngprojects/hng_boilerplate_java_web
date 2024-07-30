@@ -62,9 +62,9 @@ class FaqServiceImplTest {
 
     @Test
     void shouldGetFaqs() {
-        FAQ faq1 = new FAQ("faq-id1", "q1", "a1");
-        FAQ faq2 = new FAQ("faq-id2", "q2", "a2");
-        FAQ faq3 = new FAQ("faq-id2", "q2", "a2");
+        FAQ faq1 = new FAQ("faq-id1", "q1", "a1", null);
+        FAQ faq2 = new FAQ("faq-id2", "q2", "a2", null);
+        FAQ faq3 = new FAQ("faq-id2", "q2", "a2", "works");
 
         when(faqRepository.findAll()).thenReturn(List.of(faq1, faq2, faq3));
 
@@ -73,15 +73,15 @@ class FaqServiceImplTest {
 
         assertThat(responses.size()).isEqualTo(3);
         assertThat(responses).containsExactlyInAnyOrder(
-                new FaqResponse("success", faq1.getId(), faq1.getQuestion(), faq1.getAnswer()),
-                new FaqResponse("success", faq2.getId(), faq2.getQuestion(), faq2.getAnswer()),
-                new FaqResponse("success", faq3.getId(), faq3.getQuestion(), faq3.getAnswer())
+                new FaqResponse("success", faq1.getId(), faq1.getQuestion(), faq1.getAnswer(), null),
+                new FaqResponse("success", faq2.getId(), faq2.getQuestion(), faq2.getAnswer(), null),
+                new FaqResponse("success", faq3.getId(), faq3.getQuestion(), faq3.getAnswer(), faq3.getCategory())
         );
     }
 
     @Test
     void shouldUpdateFaq() {
-        FAQ faq1 = new FAQ("faq-id1", "q1", "a1");
+        FAQ faq1 = new FAQ("faq-id1", "q1", "a1", "damn");
 
         when(faqRepository.findById(faq1.getId())).thenReturn(Optional.of(faq1));
 
@@ -98,7 +98,7 @@ class FaqServiceImplTest {
 
     @Test
     void updateFaqWhenNoRequestBody() {
-        FAQ faq1 = new FAQ("faq-id1", "q1", "a1");
+        FAQ faq1 = new FAQ("faq-id1", "q1", "a1", null);
         when(faqRepository.findById(faq1.getId())).thenReturn(Optional.of(faq1));
 
         FaqRequest request = new FaqRequest();
@@ -117,7 +117,7 @@ class FaqServiceImplTest {
 
     @Test
     void shouldDeleteFaq() {
-        FAQ faq1 = new FAQ("faq-id1", "q1", "a1");
+        FAQ faq1 = new FAQ("faq-id1", "q1", "a1", null);
         when(faqRepository.findById(faq1.getId())).thenReturn(Optional.of(faq1));
 
         CustomResponse response = underTest.deleteFaq(faq1.getId());
