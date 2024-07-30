@@ -41,7 +41,6 @@ public class Utils {
                 .currency(payment.getCurrency())
                 .status(String.valueOf(payment.getPaymentStatus()))
                 .paymentProvider(String.valueOf(payment.getProvider()))
-                .paymentChannel(payment.getPaymentChannel())
                 .build();
     }
 

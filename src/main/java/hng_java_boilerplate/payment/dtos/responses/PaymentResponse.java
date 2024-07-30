@@ -13,7 +13,6 @@ public class PaymentResponse {
     private String amount;
     private String currency;
     private String status;
-    private String paymentChannel;
     private String paymentProvider;
 
 

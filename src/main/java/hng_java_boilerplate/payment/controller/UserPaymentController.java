@@ -1,7 +1,6 @@
 package hng_java_boilerplate.payment.controller;
 
 import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
-import hng_java_boilerplate.payment.service.payment.PaymentService;
 import hng_java_boilerplate.payment.service.userPayment.UserPaymentService;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
@@ -37,7 +36,7 @@ public class UserPaymentController {
     public ResponseEntity<?> getPaymentsForUser() {
         User user = userService.getLoggedInUser();
         if (user == null) {
-            var response = PaymentObjectResponse.builder().message("Unauthorized").status("401").build();
+            var response = PaymentObjectResponse.builder().message("Unauthorized").status_code("401").build();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
         PaymentObjectResponse<?>  response = paymentService.getPaymentsByUserEmail(user.getEmail());
@@ -47,7 +46,7 @@ public class UserPaymentController {
     @GetMapping("/reference/{reference}")
     public ResponseEntity<?> getPaymentByReference(@PathVariable String reference) {
         PaymentObjectResponse<?> response = paymentService.findPaymentByReference(reference);
-        if ("200".equals(response.getStatus())) {
+        if ("200".equals(response.getStatus_code())) {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);

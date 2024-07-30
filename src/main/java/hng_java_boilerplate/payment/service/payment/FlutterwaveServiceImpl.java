@@ -35,7 +35,7 @@ public class FlutterwaveServiceImpl implements PaymentService{
     @Value("${flutterwave.secret.key}")
     private String flutterwaveSecretKey;
 
-//    @Autowired
+
     public FlutterwaveServiceImpl(UserService userService, Utils utils, PaymentRepository paymentRepository) {
         this.userService = userService;
         this.utils = utils;
@@ -72,7 +72,7 @@ public class FlutterwaveServiceImpl implements PaymentService{
         );
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            Payment payment = Payment.builder().provider(PaymentProvider.FLUTTER_WAVE).initiatedAt(LocalDateTime.now())
+            Payment payment = Payment.builder().provider(PaymentProvider.FLUTTERWAVE).initiatedAt(LocalDateTime.now())
                     .userEmail(user.getEmail()).amount(new BigDecimal(request.getAmount()))
                     .transactionReference(transactionReference).currency("NGN").build();
             paymentRepository.save(payment);
@@ -85,10 +85,11 @@ public class FlutterwaveServiceImpl implements PaymentService{
 
             Map<String, Object> map = new HashMap<>();
             map.put("redirect_url", link);
-            PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("200").message("Flutterwave Payment Successfully initialized").data(map).build();
+            map.put("reference", transactionReference);
+            PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("200").message("Flutterwave Payment Successfully initialized").data(map).build();
             return ResponseEntity.status(HttpStatus.OK).body(paymentResponse);
         } else {
-            PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status(response.getStatusCode().toString()).message("Flutterwave Payment Initialization Failed").data(response.getBody()).build();
+            PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code(response.getStatusCode().toString()).message("Flutterwave Payment Initialization Failed").data(response.getBody()).build();
             return ResponseEntity.status(response.getStatusCode()).body(paymentResponse);
         }
     }
@@ -108,18 +109,18 @@ public class FlutterwaveServiceImpl implements PaymentService{
                     map.put("reference", txRef);
                     map.put("amount", transactionDetails.getAmount());
                     map.put("currency", "NGN");
-                    PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("200").message("Verification successful").data(map).build();
+                    PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("200").message("Verification successful").data(map).build();
                     return ResponseEntity.status(HttpStatus.OK).body(paymentResponse);
                 } else {
-                    PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("400").message("Payment verification failed").build();
+                    PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("400").message("Payment verification failed").build();
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(paymentResponse);
                 }
             } else {
-                PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("404").message("Transaction not found").build();
+                PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("404").message("Transaction not found").build();
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(paymentResponse);
             }
         }
-        PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("404").message("Payment not completed").build();
+        PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("404").message("Payment not completed").build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(paymentResponse);
     }
 

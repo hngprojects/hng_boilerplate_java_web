@@ -22,7 +22,6 @@ public class PaymentController {
     private PaymentServiceFactory paymentServiceFactory;
 
 
-    @Autowired
     public PaymentController(@Qualifier("paystackService") PaymentService paymentService, UserService userService, PaymentServiceFactory paymentServiceFactory) {
         this.paymentService = paymentService;
         this.userService = userService;

@@ -2,7 +2,7 @@ package hng_java_boilerplate.payment.enums;
 
 public enum PaymentProvider {
 
-    PAYSTACK("PAYSTACK"), FLUTTER_WAVE("FLUTTERWAVE");
+    PAYSTACK("PAYSTACK"), FLUTTERWAVE("FLUTTERWAVE");
 
     private final String name;
 

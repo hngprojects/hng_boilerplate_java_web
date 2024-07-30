@@ -36,7 +36,7 @@ public class UserPaymentServiceImpl implements UserPaymentService {
     public PaymentObjectResponse<?> getPaymentsByUserEmail(String email) {
         List<Payment> payments = paymentRepository.findByUserEmail(email);
         List<PaymentResponse> response = payments.stream().map(Utils::convertToDto).collect(Collectors.toList());
-        return PaymentObjectResponse.builder().message("User payments successfully fetched").status("200").data(response).build();
+        return PaymentObjectResponse.builder().message("User payments successfully fetched").status_code("200").data(response).build();
     }
 
 
@@ -47,9 +47,9 @@ public class UserPaymentServiceImpl implements UserPaymentService {
         if (paymentOpt.isPresent()) {
             Payment payment = paymentOpt.get();
             PaymentResponse convertedPaymentResponse = convertToDto(payment);
-            return PaymentObjectResponse.builder().data(convertedPaymentResponse).status("200").message("Payment fetched successfully").build();
+            return PaymentObjectResponse.builder().data(convertedPaymentResponse).status_code("200").message("Payment fetched successfully").build();
         } else {
-            return PaymentObjectResponse.builder().status("404").message(String.format("Payment with %s not found",  reference)).build();
+            return PaymentObjectResponse.builder().status_code("404").message(String.format("Payment with %s not found",  reference)).build();
         }
     }
 

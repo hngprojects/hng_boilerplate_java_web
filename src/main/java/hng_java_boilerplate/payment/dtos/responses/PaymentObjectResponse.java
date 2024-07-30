@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 public class PaymentObjectResponse<T> {
 
-    private String status;
+    private String status_code;
 
     private String message;
 

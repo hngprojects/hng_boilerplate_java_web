@@ -28,7 +28,6 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -150,7 +149,7 @@ public class PaymentIntegrationTest {
 
         PaymentObjectResponse<?> response = userPaymentService.getPaymentsByUserEmail(email);
 
-        assertEquals("200", response.getStatus());
+        assertEquals("200", response.getStatus_code());
         assertEquals("User payments successfully fetched", response.getMessage());
     }
 
@@ -173,7 +172,7 @@ public class PaymentIntegrationTest {
 
         PaymentObjectResponse<?> response = userPaymentService.findPaymentByReference(reference);
 
-        assertEquals("200", response.getStatus());
+        assertEquals("200", response.getStatus_code());
         assertEquals("Payment fetched successfully", response.getMessage());
     }
 
