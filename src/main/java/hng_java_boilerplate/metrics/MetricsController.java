@@ -13,9 +13,10 @@ public class MetricsController {
 
     private final PrometheusMeterRegistry prometheusMeterRegistry;
 
-    @GetMapping
-    public String getMetrics(){
-        return prometheusMeterRegistry.scrape();
+     @GetMapping(produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getMetrics() {
+        String metrics = prometheusMeterRegistry.scrape();
+        return ResponseEntity.ok(metrics);
     }
 
 }
