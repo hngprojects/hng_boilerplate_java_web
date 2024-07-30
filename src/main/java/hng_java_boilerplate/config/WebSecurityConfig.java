@@ -32,7 +32,6 @@ public class WebSecurityConfig {
     private final UserServiceImpl userService;
     private final JwtAuthenticationFilter authentication;
 
-    @Autowired
     public WebSecurityConfig(@Lazy UserServiceImpl userService, JwtAuthenticationFilter authentication) {
         this.userService = userService;
         this.authentication = authentication;
@@ -63,7 +62,7 @@ public class WebSecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(userService::loadUserByUsername);
+        daoAuthenticationProvider.setUserDetailsService(userService);
         return daoAuthenticationProvider;
     }
 

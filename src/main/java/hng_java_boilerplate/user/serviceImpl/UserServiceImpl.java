@@ -1,6 +1,6 @@
 package hng_java_boilerplate.user.serviceImpl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -17,7 +17,6 @@ import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.DisabledException;
@@ -29,10 +28,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.crypto.BadPaddingException;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -84,8 +81,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         UserDetails userDetails = loadUserByUsername(loginDto.getEmail());
         User user = (User) userDetails;
 
-        if (!isValidPassword(loginDto.getPassword())) {
-            throw new InvalidRequestException("Invalid email or password");
+        boolean isValidPassword =
+                passwordEncoder.matches(loginDto.getPassword(), userDetails.getPassword());
+
+        if (!isValidPassword) {
+            throw new BadRequestException("Invalid email or password");
         }
 
         String token = jwtUtils.createJwt.apply(userDetails);
@@ -110,10 +110,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userResponse;
     }
 
-    private boolean isValidPassword(String password) {
-        return password.length() >= 8 && password.matches(".*\\d.*") && password.matches(".*[a-zA-Z].*");
-    }
-
     private void validateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new EmailAlreadyExistsException("Email already exist");
@@ -127,11 +123,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
-    @Transactional
     @Override
-    public GetUserDto getUserWithDetails(String userId) throws BadPaddingException {
+    @Transactional
+    public GetUserDto getUserWithDetails(String userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(BadPaddingException::new);
+                .orElseThrow(() -> new UserNotFoundException("user not found with id"));
 
         GetUserDto userDto = GetUserDto
                 .builder()
@@ -170,7 +166,5 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userDto.setOrganisations(organisations);
 
         return userDto;
-    };
-
-
+    }
 }
