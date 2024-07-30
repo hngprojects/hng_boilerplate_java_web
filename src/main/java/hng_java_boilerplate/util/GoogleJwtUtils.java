@@ -1,6 +1,5 @@
 package hng_java_boilerplate.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -33,7 +32,6 @@ import java.util.function.Function;
 
 @Component
 public class GoogleJwtUtils {
-
 
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String CLIENT_ID;
@@ -70,14 +68,13 @@ public class GoogleJwtUtils {
             return SignupDto
                     .builder()
                     .email(email)
-                    .firstName(givenName)
-                    .lastName(familyName)
+                    .first_name(givenName)
+                    .last_name(familyName)
                     .password("GOOGLELOGIN1")
                     .build();
         }
         return null;
     };
-
 
     public Function<SignupDto, ResponseData> saveOauthUser = userDto -> {
         if (userRepository.existsByEmail(userDto.getEmail())){
@@ -86,11 +83,10 @@ public class GoogleJwtUtils {
 
             UserResponse userResponse = userService.getUserResponse((User)userDetails);
             return new ResponseData(token, userResponse);
-
         }
         else{
             User user = new User();
-            user.setName(userDto.getFirstName() + " " + userDto.getLastName());
+            user.setName(userDto.getFirst_name() + " " + userDto.getLast_name());
             user.setEmail(userDto.getEmail());
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             user.setUserRole(Role.ROLE_USER);
@@ -100,7 +96,6 @@ public class GoogleJwtUtils {
 
             UserResponse userResponse = userService.getUserResponse(savedUser);
             return new ResponseData(token, userResponse);
-
         }
     };
 

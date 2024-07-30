@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SignupDto {
     @NotBlank(message = "First name is required")
-    private String firstName;
+    private String first_name;
 
     @NotBlank(message = "Last name is required")
-    private String lastName;
+    private String last_name;
 
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")

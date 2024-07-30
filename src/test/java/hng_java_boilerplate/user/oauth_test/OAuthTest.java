@@ -1,5 +1,6 @@
-package hng_java_boilerplate.user.controller;
+package hng_java_boilerplate.user.oauth_test;
 
+import hng_java_boilerplate.user.controller.AuthController;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
@@ -62,7 +63,7 @@ class OAuthTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.token").value("mockedJwtToken"))
-                .andExpect(jsonPath("$.status_code").value(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                 .andExpect(jsonPath("$.message").value("Login Successful!"))
                 .andExpect(jsonPath("$.data.user.id").value("1"))
                 .andExpect(jsonPath("$.data.user.first_name").value("John"))

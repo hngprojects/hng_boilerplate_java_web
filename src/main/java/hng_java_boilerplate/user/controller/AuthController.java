@@ -3,13 +3,10 @@ package hng_java_boilerplate.user.controller;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
-import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.GoogleJwtUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
     private final UserService userService;
     private final GoogleJwtUtils googleJwtUtils;
 
