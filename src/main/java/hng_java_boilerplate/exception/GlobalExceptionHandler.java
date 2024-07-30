@@ -1,5 +1,7 @@
 package hng_java_boilerplate.exception;
 
+import hng_java_boilerplate.job.Exceptions.ResourceNotFoundException;
+import hng_java_boilerplate.job.models.ResponseWrapper;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
 import hng_java_boilerplate.user.exception.InvalidRequestException;
@@ -53,6 +55,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ResponseWrapper<Void>> resourceNotFoundException(ResourceNotFoundException ex) {
+        ResponseWrapper<Void> errorResponse = new ResponseWrapper<>("404", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
 

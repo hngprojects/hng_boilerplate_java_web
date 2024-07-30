@@ -17,5 +17,5 @@ public class Job {
     private String location;
     private double salary;
 
-    // Constructors, getters, and setters
+    
 }

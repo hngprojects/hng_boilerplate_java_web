@@ -1,6 +1,6 @@
 package hng_java_boilerplate.job.Exceptions;
 
-// ErrorResponse.java
+
 public class ErrorResponse {
     private String message;
 
@@ -8,7 +8,7 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    // Getter and setter
+    
     public String getMessage() {
         return message;
     }

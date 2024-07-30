@@ -1,6 +1,6 @@
 package hng_java_boilerplate.job.service;
 
-// JobService.java
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +14,13 @@ import hng_java_boilerplate.job.models.Job;
 
 @Service
 public class JobService {
+    
+    private final JobRepository jobRepository;
+
     @Autowired
-    private JobRepository jobRepository;
+    public JobService(JobRepository jobRepository){
+        this.jobRepository=jobRepository;
+    }
 
     public List<Job> getAllJobs() {
         return jobRepository.findAll();

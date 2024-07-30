@@ -16,8 +16,12 @@ import hng_java_boilerplate.job.service.JobService;
 @RestController
 @RequestMapping("/api/v1/jobs")
 public class JobController {
+    private final JobService jobService;
+
     @Autowired
-    private JobService jobService;
+    public JobController(JobService jobService) {
+        this.jobService = jobService;
+    }
 
     @GetMapping
     public ResponseEntity<ResponseWrapper<List<Job>>> getAllJobs() {
