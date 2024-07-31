@@ -3,6 +3,7 @@ package hng_java_boilerplate.profile.controller;
 import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
 import hng_java_boilerplate.profile.dto.response.DeactivateUserResponse;
 import hng_java_boilerplate.profile.service.ProfileService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/accounts")
+@Tag(name="Profiles")
 public class ProfileController {
     private final ProfileService profileService;
 
