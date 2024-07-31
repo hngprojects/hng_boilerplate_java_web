@@ -23,6 +23,6 @@ public class CustomSection {
     @OneToOne
     @JoinColumn(name = "about_page_id")
     @JsonBackReference
-    private AboutPage aboutPage;
+    private About aboutPage;
 
 }

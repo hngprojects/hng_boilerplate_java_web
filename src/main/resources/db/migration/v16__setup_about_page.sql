@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS about_page (
 CREATE TABLE custom_section (
     id SERIAL PRIMARY KEY,
     about_page_id INTEGER,
-    CONSTRAINT fk_about_page FOREIGN KEY(about_page_id) REFERENCES about_page(id)
+    CONSTRAINT fk_abouts FOREIGN KEY(about_page_id) REFERENCES abouts(id)
 );
 
 -- Create the services table

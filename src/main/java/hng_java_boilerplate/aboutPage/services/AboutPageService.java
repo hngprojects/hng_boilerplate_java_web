@@ -1,7 +1,7 @@
 package hng_java_boilerplate.aboutPage.services;
 import hng_java_boilerplate.aboutPage.dtos.AboutPageDTO;
 import hng_java_boilerplate.aboutPage.dtos.RetrievalDTO;
-import hng_java_boilerplate.aboutPage.entities.AboutPage;
+import hng_java_boilerplate.aboutPage.entities.About;
 import hng_java_boilerplate.aboutPage.repository.AboutPageRepository;
 import hng_java_boilerplate.aboutPage.repository.CustomSectionRepository;
 import hng_java_boilerplate.aboutPage.repository.ServiceRepository;
@@ -21,7 +21,7 @@ public class AboutPageService {
 
     @Transactional
     public RetrievalDTO getAboutPage(){
-        AboutPage aboutPage = aboutPageRepository.findAll().stream().findFirst().orElseThrow(() -> new RuntimeException("About page not found"));
+        About aboutPage = aboutPageRepository.findAll().stream().findFirst().orElseThrow(() -> new RuntimeException("About page not found"));
         RetrievalDTO aboutPageDto = new RetrievalDTO();
         aboutPageDto.setTitle(aboutPage.getTitle());
         aboutPageDto.setIntroduction(aboutPage.getIntroduction());
@@ -40,7 +40,7 @@ public class AboutPageService {
     }
     @Transactional
     public AboutPageDTO updateAboutPage(AboutPageDTO aboutPageDTO){
-        AboutPage aboutPage = aboutPageRepository.findAll().stream().findFirst().orElseThrow(() -> new RuntimeException("About page not found"));
+        About aboutPage = aboutPageRepository.findAll().stream().findFirst().orElseThrow(() -> new RuntimeException("About page not found"));
         aboutPage.setTitle(aboutPageDTO.getTitle());
         aboutPage.setIntroduction(aboutPageDTO.getIntroduction());
 

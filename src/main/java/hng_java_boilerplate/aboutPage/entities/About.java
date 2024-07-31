@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @Entity
-@Table(name = "about_page")
-public class AboutPage {
+@Table(name = "abouts")
+public class About {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

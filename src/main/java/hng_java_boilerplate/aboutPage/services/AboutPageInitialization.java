@@ -1,6 +1,6 @@
 package hng_java_boilerplate.aboutPage.services;
 
-import hng_java_boilerplate.aboutPage.entities.AboutPage;
+import hng_java_boilerplate.aboutPage.entities.About;
 import hng_java_boilerplate.aboutPage.entities.CustomSection;
 import hng_java_boilerplate.aboutPage.entities.ServiceEntity;
 import hng_java_boilerplate.aboutPage.entities.StatEntity;
@@ -24,7 +24,7 @@ public class AboutPageInitialization {
     @EventListener(ApplicationReadyEvent.class)
     public void initializeDefaultAboutPage(){
         if (aboutPageRepository.count()==0){
-            AboutPage aboutPage = new AboutPage();
+            About aboutPage = new About();
             ServiceEntity service = new ServiceEntity();
             CustomSection customSection = new CustomSection();
             StatEntity statEntity = new StatEntity();
