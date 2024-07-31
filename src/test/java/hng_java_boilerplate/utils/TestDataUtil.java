@@ -28,7 +28,6 @@ public final class TestDataUtil {
                 .department("Engineering")
                 .social("@john_doe")
                 .bio("Experienced developer with a passion for creating innovative solutions.")
-                .recoveryEmail("john.doe.recovery@example.com")
                 .build();
     }
 
@@ -44,7 +43,6 @@ public final class TestDataUtil {
                 .department("Engineering")
                 .social("@john_doe")
                 .bio("Experienced developer with a passion for creating innovative solutions.")
-                .recoveryEmail("john.doe.recovery@example.com")
                 .build();
     }
 }
