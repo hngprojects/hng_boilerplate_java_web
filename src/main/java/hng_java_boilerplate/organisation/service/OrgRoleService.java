@@ -6,17 +6,21 @@ import hng_java_boilerplate.organisation.dto.PermissionsListDto;
 import hng_java_boilerplate.organisation.dto.RoleDataDto;
 import hng_java_boilerplate.organisation.entity.OrgPermission;
 import hng_java_boilerplate.organisation.entity.OrgRole;
+import hng_java_boilerplate.organisation.entity.Organisation;
+import hng_java_boilerplate.organisation.exception.OrganisationNotFoundException;
 import hng_java_boilerplate.organisation.exception.PermissionNameAlreadyExistsException;
 import hng_java_boilerplate.organisation.exception.PermissionNotFoundException;
 import hng_java_boilerplate.organisation.exception.RoleNameAlreadyExistsException;
 import hng_java_boilerplate.organisation.repository.OrgPermissionRepository;
 import hng_java_boilerplate.organisation.repository.OrgRoleRepository;
+import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,9 +30,13 @@ import java.util.stream.Collectors;
 public class OrgRoleService {
     private final OrgRoleRepository orgRoleRepository;
     private final OrgPermissionRepository orgPermissionRepository;
+    private final OrganisationRepository organisationRepository;
 
     @Transactional
-    public CreateRoleResponseDto createRole(CreateRoleRequestDto request) {
+    public CreateRoleResponseDto createRole(CreateRoleRequestDto request, String orgId) {
+        Organisation organisation = organisationRepository.findById(orgId)
+                .orElseThrow(OrganisationNotFoundException::new);
+
         if (orgRoleRepository.findByName(request.name()).isPresent()) {
             throw new RoleNameAlreadyExistsException();
         }
@@ -41,6 +49,8 @@ public class OrgRoleService {
             permissions.add(permission);
         }
         role.setPermissions(permissions);
+        role.setOrganisation(organisation);
+        role.setCreatedAt(LocalDateTime.now());
         orgRoleRepository.save(role);
 
         return CreateRoleResponseDto.builder()

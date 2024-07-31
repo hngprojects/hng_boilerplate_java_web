@@ -1,5 +1,6 @@
 package hng_java_boilerplate.organisation.exception;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -7,11 +8,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@ControllerAdvice
+@Order(1)
+@RestControllerAdvice
 public class OrgGlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -41,6 +44,7 @@ public class OrgGlobalExceptionHandler {
     public ResponseEntity<AuthErrorResponse> handleEntityNotFoundExceptions(
             PermissionNameAlreadyExistsException ex
     ) {
+        System.out.println("Handling PermissionNameAlreadyExistsException: " + ex.getMessage());
         var authErr = new AuthErrorResponse(
                 "Bad request",
                 "Permission name already exists",
@@ -49,6 +53,36 @@ public class OrgGlobalExceptionHandler {
         return new ResponseEntity<>(
                 authErr,
                 HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(OrganisationNotFoundException.class)
+    public ResponseEntity<AuthErrorResponse> handleEntityNotFoundExceptions(
+            OrganisationNotFoundException ex
+    ) {
+        var authErr = new AuthErrorResponse(
+                "Bad request",
+                "Organisation not found",
+                404
+        );
+        return new ResponseEntity<>(
+                authErr,
+                HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler(NotPermittedException.class)
+    public ResponseEntity<AuthErrorResponse> handleEntityNotFoundExceptions(
+            NotPermittedException ex
+    ) {
+        var authErr = new AuthErrorResponse(
+                "Bad request",
+                ex.getMessage(),
+                400
+        );
+        return new ResponseEntity<>(
+                authErr,
+                HttpStatus.BAD_REQUEST
         );
     }
 

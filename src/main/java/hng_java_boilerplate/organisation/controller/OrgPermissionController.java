@@ -10,23 +10,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/permissions")
+@RequestMapping("/api/v1/organisation")
 public class OrgPermissionController {
     private final OrgPermissionService orgPermissionService;
 
-    @PostMapping
+    @PostMapping("/{orgId}/permissions")
     public ResponseEntity<CreatePermissionResponseDto> createPermission(
-            @RequestBody @Valid CreatePermissionRequestDto createPermissionRequestDto
+            @RequestBody @Valid CreatePermissionRequestDto createPermissionRequestDto,
+            @PathVariable(name = "orgId") String orgId
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                orgPermissionService.createPermission(createPermissionRequestDto)
+                orgPermissionService.createPermission(createPermissionRequestDto, orgId)
         );
     }
 }
