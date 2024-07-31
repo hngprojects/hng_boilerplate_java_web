@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: [dev, staging, main]
-  pull_request_target:
+  pull_request:
     types: [assigned, opened, synchronize, reopened]
     branches: [dev, staging, main]
 
@@ -13,9 +13,6 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
-    # Add this to ensure the job only runs once per PR
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     
     services:
       postgres:  
@@ -49,10 +46,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          # For pull_request_target, we need to checkout the PR code
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
 
       - name: Check directory structure
         run: |
@@ -70,7 +63,7 @@ jobs:
       - name: Create .env file
         run: |
           echo "DB_CONNECTION_STRING=postgresql://localhost:${{ secrets.POSTGRES_PORT }}/${{ secrets.POSTGRES_DB }}" >> .env
-          echo "DB_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "DB_USERNAME=${{ secrets.POSTGRES_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
           echo "RABBITMQ_HOST=localhost" >> .env
           echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
@@ -85,7 +78,6 @@ jobs:
           echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
 
       - name: Create application.properties
-        # uses: ./.github/workflows/create-application-properties
         run: |          
           cat << EOF > src/main/resources/application.properties
 
