@@ -1,6 +1,7 @@
 package hng_java_boilerplate.metrics;
 
 import io.micrometer.prometheus.PrometheusMeterRegistry;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/metrics")
+@Hidden
 public class MetricsController {
 
     private final PrometheusMeterRegistry prometheusMeterRegistry;

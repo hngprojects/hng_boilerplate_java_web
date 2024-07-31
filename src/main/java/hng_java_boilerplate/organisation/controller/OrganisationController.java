@@ -3,6 +3,7 @@ package hng_java_boilerplate.organisation.controller;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.service.OrganisationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/organisations")
+@Tag(name="Organisation")
 public class OrganisationController {
     private final OrganisationService organisationService;
 

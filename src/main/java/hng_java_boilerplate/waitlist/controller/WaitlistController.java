@@ -3,6 +3,7 @@ package hng_java_boilerplate.waitlist.controller;
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/waitlist")
+@Tag(name="Waitlist")
 public class WaitlistController {
 
     private final WaitlistService waitlistService;
