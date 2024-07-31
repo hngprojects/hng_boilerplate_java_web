@@ -47,8 +47,8 @@ jobs:
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v3
-        # with:
-        #   ref: ${{ github.event.pull_request.base.sha }}
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
