@@ -14,10 +14,10 @@ public class CustomSection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(mappedBy = "customSection", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "custom_section", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private StatEntity stats;
-    @OneToOne(mappedBy = "customSection", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "custom_section", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private ServiceEntity services;
     @OneToOne
