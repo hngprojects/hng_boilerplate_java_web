@@ -1,5 +1,7 @@
 package hng_java_boilerplate.user.serviceImpl;
 
+import hng_java_boilerplate.profile.entity.Profile;
+import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
@@ -10,7 +12,6 @@ import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
-import hng_java_boilerplate.user.exception.InvalidRequestException;
 import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
-
+    private final ProfileRepository profileRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -57,12 +58,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         validateEmail(signupDto.getEmail());
 
         User user = new User();
-        user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
+        user.setName(signupDto.getFirst_name().trim() + " " + signupDto.getLast_name().trim());
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
         user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
 
+        Profile profile = populateProfile(user);
+
+        user.setProfile(profile);
+
         User savedUser = userRepository.save(user);
+
 
         Optional<User> createdUserCheck = userRepository.findByEmail(user.getEmail());
         if (createdUserCheck.isEmpty()) {
@@ -96,7 +102,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     }
 
-    private UserResponse getUserResponse(User user){
+    private Profile populateProfile(User user){
+        String[] nameParts = user.getName().split(" ", 2);
+        String firstName = nameParts.length > 0 ? nameParts[0] : "";
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+
+        Profile profile = new Profile();
+        profile.setFirstName(firstName);
+        profile.setLastName(lastName);
+        profile.setUser(user);
+        return profileRepository.save(profile);
+    }
+
+    public UserResponse getUserResponse(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
         String lastName = nameParts.length > 1 ? nameParts[1] : "";

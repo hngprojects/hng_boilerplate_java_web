@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignupDto {
     @NotBlank(message = "First name is required")
-    private String firstName;
+    private String first_name;
 
     @NotBlank(message = "Last name is required")
-    private String lastName;
+    private String last_name;
 
     @Email(message = "Email should be valid")
     @NotBlank(message = "Email is required")
@@ -24,6 +24,5 @@ public class SignupDto {
 
     @NotBlank(message = "Password is required")
     @ValidPassword
-//    @Size(min = 8, message = "Password must be at least 8 characters long and contain alphanumeric characters")
     private String password;
 }

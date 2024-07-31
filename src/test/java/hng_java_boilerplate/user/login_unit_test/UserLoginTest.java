@@ -1,6 +1,7 @@
 package hng_java_boilerplate.user.login_unit_test;
 
 import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
@@ -26,7 +27,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +37,9 @@ class UserLoginTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ProfileRepository profileRepository;
 
     @Mock
     private JwtUtils jwtUtils;
@@ -50,7 +53,7 @@ class UserLoginTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(passwordEncoder, userRepository, jwtUtils);
+        userService = new UserServiceImpl(passwordEncoder, userRepository, jwtUtils, profileRepository);
         jwtUtils.createJwt = mock(Function.class);
     }
 
@@ -66,7 +69,12 @@ class UserLoginTest {
         mockUser.setEmail("testuser@example.com");
         mockUser.setCreatedAt(LocalDateTime.now());
 
+        String validPassword = "ValidPassword1";
+        String encodedPassword = passwordEncoder.encode(validPassword);
+        mockUser.setPassword(encodedPassword);
+
         when(userRepository.findByEmail(loginDto.getEmail())).thenReturn(Optional.of(mockUser));
+
         when(passwordEncoder.matches(loginDto.getPassword(), mockUser.getPassword())).thenReturn(true);
 
         ResponseEntity<ApiResponse> responseEntity = userService.loginUser(loginDto);

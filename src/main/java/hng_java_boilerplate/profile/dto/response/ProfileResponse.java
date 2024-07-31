@@ -1,4 +1,4 @@
-package hng_java_boilerplate.user.dto.response;
+package hng_java_boilerplate.profile.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiResponse {
+public class ProfileResponse {
     private int Status;
     private String Message;
-    private ResponseData Data;
+    private ProfileData Data;
 }

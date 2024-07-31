@@ -1,5 +1,7 @@
 package hng_java_boilerplate.user.signup_unit_test;
 
+import hng_java_boilerplate.profile.entity.Profile;
+import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
@@ -45,6 +47,9 @@ class UserServiceImplTest {
     @Mock
     JwtUtils jwtUtils;
 
+    @Mock
+    ProfileRepository profileRepository;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -56,15 +61,15 @@ class UserServiceImplTest {
         SignupDto signupDto = new SignupDto("John", "Doe", "john.doe@example.com", "password123");
         User user = new User();
         user.setId("someUserId");
-        user.setName(signupDto.getFirstName() + " " + signupDto.getLastName());
+        user.setName(signupDto.getFirst_name() + " " + signupDto.getLast_name());
         user.setEmail(signupDto.getEmail());
         user.setPassword("encodedPassword");
         user.setCreatedAt(LocalDateTime.now());
 
-
         when(passwordEncoder.encode(signupDto.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(new User()));
+        when(profileRepository.save(any(Profile.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(jwtUtils.createJwt.apply(any(User.class))).thenReturn("someToken");
 
         ResponseEntity<ApiResponse> responseEntity = userService.registerUser(signupDto);
@@ -74,7 +79,7 @@ class UserServiceImplTest {
 
         ApiResponse response = responseEntity.getBody();
         assertNotNull(response);
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
@@ -96,7 +101,6 @@ class UserServiceImplTest {
 
         assertThrows(EmailAlreadyExistsException.class, () -> userService.registerUser(signupDto));
     }
-
 
     @Test
     void testRegisterUser_UserNotFoundAfterSave() {
@@ -123,7 +127,7 @@ class UserServiceImplTest {
 
         User user = new User();
         user.setId("someUserId");
-        user.setName(signupDto.getFirstName() + " " + signupDto.getLastName());
+        user.setName(signupDto.getFirst_name() + " " + signupDto.getLast_name());
         user.setEmail(signupDto.getEmail());
         user.setPassword("encodedPassword");
         user.setCreatedAt(LocalDateTime.now());
@@ -143,7 +147,7 @@ class UserServiceImplTest {
 
         ApiResponse response = responseEntity.getBody();
         assertNotNull(response);
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();

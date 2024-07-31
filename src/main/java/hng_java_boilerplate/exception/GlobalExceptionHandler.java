@@ -1,6 +1,7 @@
 package hng_java_boilerplate.exception;
 
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
+import hng_java_boilerplate.profile.exceptions.ProfileNotFoundException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
@@ -40,6 +41,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Bad request", HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProfileNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProfileNotFoundException(ProfileNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Bad request", HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
