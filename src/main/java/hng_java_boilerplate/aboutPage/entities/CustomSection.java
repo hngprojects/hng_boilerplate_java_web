@@ -21,7 +21,7 @@ public class CustomSection {
     @JsonManagedReference
     private ServiceEntity services;
     @OneToOne
-    @JoinColumn(name = "about_page_id")
+    @JoinColumn(name = "aboutPage_id")
     @JsonBackReference
     private AboutPage aboutPage;
 
