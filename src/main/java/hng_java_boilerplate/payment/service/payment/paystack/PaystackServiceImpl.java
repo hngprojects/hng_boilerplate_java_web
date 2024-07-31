@@ -40,6 +40,8 @@ public class PaystackServiceImpl implements PaystackService {
         this.planRepository = planRepository;
     }
 
+    private BigDecimal usdToNgnExchangeRate = new BigDecimal("750");
+
     private final OrganisationRepository organisationRepository;
 
     private final PaymentRepository paymentRepository;
@@ -64,7 +66,7 @@ public class PaystackServiceImpl implements PaystackService {
 
         JSONObject requestPayload = new JSONObject();
         requestPayload.put("email", user.getEmail().replace("\"", "").trim());
-        requestPayload.put("amount", request.getAmount() * 100);
+        requestPayload.put("amount", new BigDecimal(request.getAmount()));
         requestPayload.put("channels", new String[]{"card", "bank", "ussd", "qr", "bank_transfer"});
 
         HttpEntity<String> httpEntity = new HttpEntity<>(requestPayload.toString(), headers);
@@ -133,16 +135,26 @@ public class PaystackServiceImpl implements PaystackService {
             plan = foundPlan.get();
         }
 
-        PaymentRequest paymentRequest = PaymentRequest.builder().amount(Integer.valueOf(String.valueOf(plan.getPrice()))).provider("paystack").build();
+        PaymentRequest paymentRequest = PaymentRequest.builder().amount(String.valueOf(plan.getPrice())).provider("paystack").build();
         ResponseEntity<?> response = initiatePayment(paymentRequest);
-
         String customerCode = createCustomer(user.getEmail(), user.getName(), "");
-        String customerPlan = createPlan("HNG Subscription", subscriptionPlanRequest.getBillingOption(), plan.getPrice());
+        int amount = 0;
+        if (plan.getPrice() == 50) {
+            amount = 50;
+        } else if (plan.getPrice() == 20) {
+            amount = 20;
+        } else if (plan.getPrice() == 100) {
+            amount = 100;
+        } else if (plan.getPrice() == 0) {
+            PaymentObjectResponse<?> objectResponse = PaymentObjectResponse.builder().status("400").message("Free plan need no upgrade").build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(objectResponse);
+        }
 
+
+        String customerPlan = createPlan("HNG Subscription", subscriptionPlanRequest.getBillingOption(), BigDecimal.valueOf(amount));
         JSONObject jsonResponse = (JSONObject) response.getBody();
 
         assert jsonResponse != null;
-        System.out.println("json -- " + jsonResponse);
         String authorizationUrl = jsonResponse.getJSONObject("data").getString("authorization_url");
         String authorizationCode = jsonResponse.getJSONObject("data").getString("access_code");
         String reference = jsonResponse.getJSONObject("data").getString("reference");
@@ -246,17 +258,25 @@ public class PaystackServiceImpl implements PaystackService {
     }
 
 
-    public String createPlan(String name, String interval, Double amount) {
+    public String createPlan(String name, String interval, BigDecimal amountInUsd) {
         String url = "https://api.paystack.co/plan";
         HttpHeaders headers = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
         headers.set("Authorization", "Bearer " + paystackSecretKey);
         headers.set("Content-Type", "application/json");
 
+        BigDecimal amountInNgn = amountInUsd.multiply(usdToNgnExchangeRate);
+        BigDecimal amountInKobo = amountInNgn.multiply(BigDecimal.valueOf(100));
+        int amountInKoboInt = amountInKobo.intValue();
+
+        if (amountInKoboInt < 100) {
+            throw new IllegalArgumentException("Amount must be at least 1 NGN (100 kobo)");
+        }
+
         Map<String, Object> request = new HashMap<>();
         request.put("name", name);
         request.put("interval", interval);
-        request.put("amount", amount * 100);
+        request.put("amount", amountInKoboInt);
 
         HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(request, headers);
         ResponseEntity<Map> response = restTemplate.postForEntity(url, httpEntity, Map.class);
