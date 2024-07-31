@@ -3,48 +3,51 @@ name: CI
 on:
   push:
     branches: [dev, staging, main]
-  pull_request:
-    branches: [dev, staging, main]
   pull_request_target:
+    types: [opened, synchronize, reopened]
     branches: [dev, staging, main]
+
+permissions:
+  contents: read
 
 jobs:
-  build-test-and-integrate:
+  build-and-test:
     runs-on: ubuntu-latest
-    
+      
     services:
-      postgres:  
-        image: postgres:latest
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      rabbitmq:
-        image: rabbitmq:3-management
-        env:
-          RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USERNAME }}
-          RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
-        ports:
-          - 5672:5672
-          - 15672:15672
-        options: >-
-          --health-cmd "rabbitmqctl node_health_check"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        postgres:  
+          image: postgres:latest
+          env:
+            POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
+            POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          ports:
+            - 5432:5432
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+
+        rabbitmq:
+          image: rabbitmq:3-management
+          env:
+            RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USERNAME }}
+            RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
+          ports:
+            - 5672:5672
+            - 15672:15672  # Management plugin port
+          options: >-
+            --health-cmd "rabbitmqctl node_health_check"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
 
     steps:
-      - name: Checkout
+      - name: Checkout repository base
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          ref: ${{ github.event.pull_request.base.sha }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -53,6 +56,7 @@ jobs:
           distribution: temurin
           cache: maven
 
+      # Create configuration files
       - name: Create .env file
         run: |
           echo "DB_CONNECTION_STRING=postgresql://localhost:${{ secrets.POSTGRES_PORT }}/${{ secrets.POSTGRES_DB }}" >> .env
@@ -71,62 +75,13 @@ jobs:
           echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
 
       - name: Create application.properties
-        run: |
-          mkdir -p src/main/resources
-          source .env
-          cat << EOF > src/main/resources/application.properties
-          spring.application.name=hng-java-boilerplate
-          spring.datasource.url=jdbc:${DB_CONNECTION_STRING}
-          spring.datasource.username=${DB_USERNAME}
-          spring.datasource.password=${DB_PASSWORD}
-          spring.jpa.hibernate.ddl-auto=validate
-          spring.flyway.enabled=true
-          spring.flyway.baseline-on-migrate=true
-          spring.flyway.location=classpath:db/migration
-          spring.flyway.url=jdbc:${DB_CONNECTION_STRING}
-          spring.flyway.user=${DB_USERNAME}
-          spring.flyway.password=${DB_PASSWORD}
-          spring.flyway.baseline-version=1
-          spring.datasource.hikari.minimum-idle=5
-          spring.datasource.hikari.maximum-pool-size=20
-          spring.datasource.hikari.idle-timeout=30000
-          spring.datasource.hikari.pool-name=HikariCP
-          spring.datasource.hikari.max-lifetime=1800000
-          spring.datasource.hikari.connection-timeout=20000
-          spring.datasource.hikari.leak-detection-threshold=15000
-          spring.mvc.throw-exception-if-no-handler-found=true
-          spring.web.resources.add-mappings=false
-          spring.main.banner-mode=off
-          logging.pattern.console=%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15})- %msg%n
-          springdoc.swagger-ui.path=/docs
-          springdoc.api-docs.servers[0].url=https://api-java.boilerplate.hng.tech
-          springdoc.api-docs.servers[0].description=Production Server
-          springdoc.api-docs.servers[1].url=https://staging.api-java.boilerplate.hng.tech
-          springdoc.api-docs.servers[1].description=Staging Server
-          springdoc.api-docs.servers[2].url=https://deployment.api-java.boilerplate.hng.tech
-          springdoc.api-docs.servers[2].description=Deployment Server
-          spring.rabbitmq.host=${RABBITMQ_HOST}
-          spring.rabbitmq.port=${RABBITMQ_PORT}
-          spring.rabbitmq.username=${RABBITMQ_USERNAME}
-          spring.rabbitmq.password=${RABBITMQ_PASSWORD}
-          rabbitmq.queue.email=${QUEUE_EMAIL}
-          spring.rabbitmq.exchange.key=${EXCHANGE_KEY}
-          spring.rabbitmq.routing.key=${ROUTING_KEY}
-          spring.twilio.account.sid=${ACCOUNT_SID}
-          spring.twilio.auth.token=${AUTH_TOKEN}
-          spring.twilio.outgoing.sms.number=${SMS_NUMBER}
-          spring.mail.host=smtp.gmail.com
-          sha512.string=${JWT_SECRET}
-          EOF
+        uses: ./.github/workflows/create-application-properties
 
       - name: Download Dependencies
         run: mvn dependency:resolve
 
-      - name: Build and Run Unit Tests
-        run: mvn clean test
-
-      - name: Build for Integration Tests
-        run: mvn clean package -DskipTests
+      - name: Build the application
+        run: mvn clean install
 
       - name: Start Application
         run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &
@@ -134,18 +89,12 @@ jobs:
       - name: Wait for Application to be Ready
         run: sleep 30
 
-      - name: Run Integration Tests
-        run: mvn verify -DskipUnitTests
+      - name: Unit and Integration Testing
+        run: mvn -B test
 
-      - name: Archive Test Results
+      - name: Archive Test Result
         uses: actions/upload-artifact@v3
         if: always()
         with: 
           name: test-results
-          path: target/surefire-reports/*.xml
-
-      - name: Archive Build Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: application-jar
           path: target/*.jar
