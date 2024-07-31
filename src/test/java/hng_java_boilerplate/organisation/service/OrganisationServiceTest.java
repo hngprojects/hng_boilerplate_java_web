@@ -1,12 +1,14 @@
 package hng_java_boilerplate.organisation.service;
 
-import hng_java_boilerplate.organisation.dto.*;
+import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
+import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.entity.Organisation;
-import hng_java_boilerplate.organisation.exception.*;
-import hng_java_boilerplate.organisation.mapper.OrganisationMapper;
+import hng_java_boilerplate.organisation.exception.ExceptionResponse;
+import hng_java_boilerplate.organisation.exception.OrgGlobalExceptionHandler;
+import hng_java_boilerplate.organisation.exception.OrganisationNameAlreadyExistsException;
+import hng_java_boilerplate.organisation.exception.ValidationError;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,9 +37,6 @@ class OrganisationServiceTest {
     private OrganisationRepository organisationRepository;
 
     @Mock
-    private OrganisationMapper organisationMapper;
-
-    @Mock
     private UserRepository userRepository;
 
     @Mock
@@ -47,7 +47,6 @@ class OrganisationServiceTest {
 
     private CreateOrganisationRequestDto orgRequest;
     private User user;
-    private Organisation organisation;
 
     @BeforeEach
     void setUp() {
@@ -63,12 +62,6 @@ class OrganisationServiceTest {
         );
         user = new User();
         user.setId("user-123");
-        user.setEmail("user@example.com");
-
-        organisation = new Organisation();
-        organisation.setId("org-id");
-        organisation.setName("Test Organisation");
-        organisation.setOwner(user);
     }
 
     @Test
@@ -90,23 +83,6 @@ class OrganisationServiceTest {
     void create_shouldCreateOrganisationSuccessfully_whenNameIsUnique() {
         when(organisationRepository.findByName(orgRequest.name())).thenReturn(Optional.empty());
         when(activeUser.getPrincipal()).thenReturn(user);
-
-        DataDto orgDataDto = new DataDto(
-                organisation.getId(),
-                orgRequest.name(),
-                orgRequest.description(),
-                user.getId(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-        when(organisationMapper.toOrgDataDto(any(Organisation.class), any(User.class))).thenReturn(orgDataDto);
 
         CreateOrganisationResponseDto response = organisationService.create(orgRequest, activeUser);
 
@@ -150,59 +126,4 @@ class OrganisationServiceTest {
         assertEquals("Name must not be empty", errors.get(0).message());
     }
 
-    @Test
-    void updateOrganisation_throwsExceptionIfOrganisationNotFound() {
-        UpdateOrganisationRequestDto requestDto = new UpdateOrganisationRequestDto("Updated Name", "Updated Description");
-
-        when(organisationRepository.findById("invalid-org-id")).thenReturn(Optional.empty());
-
-        assertThrows(OrganisationNotFoundException.class, () ->
-                organisationService.update(requestDto, "invalid-org-id", activeUser)
-        );
-    }
-
-    @Test
-    void updateOrganisation_updatesOrganisationAndReturnsResponse() {
-        UpdateOrganisationRequestDto requestDto = new UpdateOrganisationRequestDto("Updated Name", "Updated Description");
-
-        when(organisationRepository.findById("org-id")).thenReturn(Optional.of(organisation));
-        when(activeUser.getPrincipal()).thenReturn(user);
-
-        UpdateOrganisationResponseDto responseDto = organisationService.update(requestDto, "org-id", activeUser);
-
-        assertNotNull(responseDto);
-        assertEquals("Organisation updated successfully", responseDto.message());
-        assertEquals("Updated Name", responseDto.org().name());
-    }
-
-    @Test
-    void userOrganisations_throwsExceptionIfUserNotFound() {
-        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.empty());
-        when(activeUser.getName()).thenReturn("user@example.com");
-
-        assertThrows(UserNotFoundException.class, () ->
-                organisationService.userOrganisations(activeUser)
-        );
-    }
-
-    @Test
-    void userOrganisations_returnsOrganisationsForUser() {
-        user.setOrganisations(List.of(organisation));
-
-        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
-        when(activeUser.getName()).thenReturn("user@example.com");
-
-        OrganisationsListDto orgListDto = new OrganisationsListDto(organisation.getId(), organisation.getName(), organisation.getDescription());
-        when(organisationMapper.mapToOranisationListDto(organisation)).thenReturn(orgListDto);
-
-        UserOrganisationsResponseDto responseDto = organisationService.userOrganisations(activeUser);
-
-        assertNotNull(responseDto);
-        assertEquals("success", responseDto.status());
-        assertEquals("Organisations retrieved successfully", responseDto.message());
-        assertNotNull(responseDto.data());
-        assertFalse(responseDto.data().organisations().isEmpty());
-        assertEquals(1, responseDto.data().organisations().size());
-        assertEquals("Test Organisation", responseDto.data().organisations().get(0).name());
-    }
 }
