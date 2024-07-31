@@ -15,7 +15,7 @@ public class AboutPage {
     private Long id;
     private String title;
     private String introduction;
-    @OneToOne(mappedBy = "aboutPage", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "about_page", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private CustomSection custom_sections;
 }
