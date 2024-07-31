@@ -28,14 +28,13 @@ public class BlogPostController {
         if (principal != null) {
             authUserName = principal.getName();
         }
-        //find blogPost by id
+
         Optional<BlogPost> optionalPost = this.blogPostService.getById(id);
-        //if post exist put it in model
+
         if (optionalPost.isPresent()) {
             BlogPost post = optionalPost.get();
             model.addAttribute("post", post);
 
-            //if current logged-in user is owner of post and let view template take action accordingly
 
             if (authUserName.equals(post.getAuthor().getUsername())) {
                 model.addAttribute("isOwner", true);
@@ -68,7 +67,7 @@ public class BlogPostController {
         if (principal != null) {
             authUsername = principal.getName();
         }
-        //find post by id to get current logged-in user
+
         Optional<BlogPost> optionalPost = blogPostService.getById(blog_id);
         if (optionalPost.isPresent()) {
             BlogPost post = optionalPost.get();
@@ -95,7 +94,7 @@ public class BlogPostController {
         if (principal != null) {
             authUsername = principal.getName();
         }
-        //to find post by id to verify and get current logged=in user
+
         Optional<BlogPost> optionalPost = blogPostService.getById(blog_id);
         if (optionalPost.isPresent()) {
             BlogPost post = optionalPost.get();

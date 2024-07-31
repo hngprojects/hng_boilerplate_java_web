@@ -35,8 +35,6 @@ public class GlobalException extends ResponseEntityExceptionHandler {
         errorDetail.setMessage(exception.getMessage());
         return new ResponseEntity<>(errorDetail, HttpStatus.BAD_REQUEST);
     }
-
-    //Global exception
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetail> globalExceptionHandler(Exception exception, WebRequest webRequest) {
         ErrorDetail errorDetail = new ErrorDetail();
@@ -46,14 +44,12 @@ public class GlobalException extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    //Bean Validation
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatusCode status,
                                                                   WebRequest request) {
-        //get all the validation errors
+
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();

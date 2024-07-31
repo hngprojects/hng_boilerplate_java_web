@@ -1,6 +1,5 @@
 package hng_java_boilerplate.blogPosts.entity;
 
-import hng_java_boilerplate.util.UUIDGenarator;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
