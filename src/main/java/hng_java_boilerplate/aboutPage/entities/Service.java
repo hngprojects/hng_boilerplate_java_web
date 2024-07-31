@@ -9,11 +9,11 @@ import lombok.Data;
 @Embeddable
 public class Service {
 
-    private String title;
+    private String titles;
     private String description;
 
-    public Service(String title, String description) {
-        this.title = title;
+    public Service(String titles, String description) {
+        this.titles = titles;
         this.description = description;
     }
 
