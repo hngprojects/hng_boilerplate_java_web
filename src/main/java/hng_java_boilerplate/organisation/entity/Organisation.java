@@ -8,9 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -41,12 +39,6 @@ public class Organisation {
     @ManyToMany(mappedBy = "organisations")
     @JsonIgnore
     private List<User> users;
-
-    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<OrgRole> orgRoles = new HashSet<>();
-
-    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<OrgPermission> orgPermissions = new HashSet<>();
 
     @PrePersist
     public void prePersist() {
