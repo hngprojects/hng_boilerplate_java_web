@@ -13,6 +13,7 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    environment: PR-Validation
       
     services:
         postgres:  
