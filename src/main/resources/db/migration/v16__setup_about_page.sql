@@ -1,5 +1,5 @@
 -- Create the aboutPage table
-CREATE TABLE aboutPage (
+CREATE TABLE IF NOT EXISTS about_page (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     introduction TEXT
@@ -8,8 +8,8 @@ CREATE TABLE aboutPage (
 -- Create the custom_section table
 CREATE TABLE custom_section (
     id SERIAL PRIMARY KEY,
-    aboutPage_id INTEGER,
-    CONSTRAINT fk_about_page FOREIGN KEY(aboutPage_id) REFERENCES aboutPage(id)
+    about_page_id INTEGER,
+    CONSTRAINT fk_about_page FOREIGN KEY(about_page_id) REFERENCES about_page(id)
 );
 
 -- Create the services table
