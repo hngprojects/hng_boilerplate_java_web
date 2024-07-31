@@ -8,7 +8,7 @@ import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
 import hng_java_boilerplate.payment.repository.PaymentRepository;
-import hng_java_boilerplate.payment.service.payment.PaymentService;
+import hng_java_boilerplate.payment.service.payment.paystack.PaystackService;
 import hng_java_boilerplate.payment.service.userPayment.UserPaymentService;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
@@ -49,10 +49,8 @@ public class PaymentIntegrationTest {
     @MockBean
     private UserService userService;
 
-    @Qualifier("paystackService")
-    @Autowired
-    private PaymentService paymentService;
-
+    @MockBean
+    private PaystackService paystackService;
     @Autowired
     private UserPaymentService userPaymentService;
 
@@ -97,7 +95,7 @@ public class PaymentIntegrationTest {
                 .andRespond(withSuccess("{\"status\": true, \"data\": {\"authorization_url\": \"https://paystack.com/pay/abc123\", \"reference\": \"67890\"}}", MediaType.APPLICATION_JSON));
 
         ResponseEntity<String> response = restTemplate.exchange("https://api.paystack.co/transaction/initialize", HttpMethod.POST, httpEntity, String.class);
-        ResponseEntity<?> responseEntity = paymentService.initiatePayment(request);
+        ResponseEntity<?> responseEntity = paystackService.initiatePayment(request);
 
         PaymentInitializationResponse res = (PaymentInitializationResponse) responseEntity.getBody();
 

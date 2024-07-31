@@ -3,7 +3,13 @@ package hng_java_boilerplate.payment.dtos.reqests;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class PaymentRequest {
 
     @NotNull(message = "Amount is required")

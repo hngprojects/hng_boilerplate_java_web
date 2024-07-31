@@ -24,7 +24,6 @@ public class Payment {
 
     private String userEmail;
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
@@ -34,6 +33,12 @@ public class Payment {
     private BigDecimal amount;
 
     private String currency;
+
+
+    @Column(name = "payment_interval")
+    private String interval;
+    private String organizationId;
+    private String planId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_provider")
@@ -101,6 +106,30 @@ public class Payment {
         this.currency = currency;
     }
 
+
+    public String getInterval() {
+        return interval;
+    }
+
+    public void setInterval(String interval) {
+        this.interval = interval;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    public String getPlanId() {
+        return planId;
+    }
+
+    public void setPlanId(String planId) {
+        this.planId = planId;
+    }
 
     public String getPaymentChannel() {
         return paymentChannel;

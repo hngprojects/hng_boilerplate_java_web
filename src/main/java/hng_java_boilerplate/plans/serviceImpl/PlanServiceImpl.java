@@ -51,7 +51,7 @@ public class PlanServiceImpl implements PlanService {
         List<Map<String, Object>> list = plans.stream().map(singlePlan -> {
             Map<String, Object> data = new LinkedHashMap<>();
             data.put("id", singlePlan.getId());
-            data.put("name", singlePlan.getPlanType());
+//            data.put("name", singlePlan.getPlanType());
             data.put("price", singlePlan.getPrice());
             data.put("description", singlePlan.getDescription());
             return data;
@@ -66,7 +66,7 @@ public class PlanServiceImpl implements PlanService {
                 .orElseThrow(() -> new PlanNotFoundException("Plan not found"));
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("id", plan.getId());
-        data.put("name", plan.getPlanType());
+//        data.put("name", plan.getPlanType());
         data.put("price", plan.getPrice());
         data.put("description", plan.getDescription());
 

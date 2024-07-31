@@ -43,9 +43,9 @@ public class Plan {
     @Column(name = "features", nullable = false)
     private List<String> features = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "plan_type")
-    private PlanType planType;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "plan_type")
+//    private PlanType planType;
 
 
 }

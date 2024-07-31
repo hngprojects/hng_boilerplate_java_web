@@ -1,6 +1,8 @@
-package hng_java_boilerplate.payment.service.payment;
+package hng_java_boilerplate.payment.service.payment.paystack;
 
+import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.payment.dtos.reqests.SubscriptionPlanRequest;
+import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
 import hng_java_boilerplate.payment.dtos.responses.PaymentVerificationResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentProvider;
@@ -14,7 +16,6 @@ import hng_java_boilerplate.user.service.UserService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,13 @@ import java.util.*;
 @Service
 public class PaystackServiceImpl implements PaystackService {
 
-    public PaystackServiceImpl(UserService userService, PaymentRepository paymentRepository) {
+    public PaystackServiceImpl(UserService userService, PaymentRepository paymentRepository, OrganisationRepository organisationRepository) {
         this.userService = userService;
         this.paymentRepository = paymentRepository;
+        this.organisationRepository = organisationRepository;
     }
+
+    private final OrganisationRepository organisationRepository;
 
     private final PaymentRepository paymentRepository;
     private Logger logger = LoggerFactory.getLogger(PaystackServiceImpl.class);
@@ -60,15 +64,17 @@ public class PaystackServiceImpl implements PaystackService {
         if (response.getStatusCode() == HttpStatus.OK) {
             JSONObject jsonResponse = new JSONObject(response.getBody());
             String authorizationUrl = jsonResponse.getJSONObject("data").getString("authorization_url");
+            String authorizationCode = jsonResponse.getJSONObject("data").getString("access_code");
             String reference = jsonResponse.getJSONObject("data").getString("reference");
 
-            Payment payment = Payment.builder().provider(PaymentProvider.PAYSTACK).initiatedAt(LocalDateTime.now()).transactionReference(reference).amount(new BigDecimal(request.getAmount())).userEmail(user.getEmail()).build();
-            paymentRepository.save(payment);
-            Map<String, Object> data = new HashMap<>();
-            data.put("authorization_url", authorizationUrl);
-            data.put("reference", reference);
-            PaymentInitializationResponse initializationResponse = PaymentInitializationResponse.builder().message("Paystack Payment Successfully Initialized").status_code("200").data(data).build();
-            return ResponseEntity.ok(initializationResponse);
+//            Payment payment = Payment.builder().provider(PaymentProvider.PAYSTACK).initiatedAt(LocalDateTime.now()).transactionReference(reference).amount(new BigDecimal(request.getAmount())).userEmail(user.getEmail()).build();
+//            paymentRepository.save(payment);
+//            Map<String, Object> data = new HashMap<>();
+//            data.put("authorization_url", authorizationUrl);
+//            data.put("reference", reference);
+//            data.put("authorizationCode", authorizationCode);
+//            PaymentInitializationResponse initializationResponse = PaymentInitializationResponse.builder().message("Paystack Payment Successfully Initialized").status_code("200").data(data).build();
+            return ResponseEntity.ok().body(jsonResponse);
         } else {
             logger.error("Failed to initiate payment. Status code: {}, Response body: {}", response.getStatusCode(), response.getBody());
             return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
@@ -116,8 +122,59 @@ public class PaystackServiceImpl implements PaystackService {
     }
 
     @Override
-    public ResponseEntity<?> createSubscriptionPlan(SubscriptionPlanRequest request) {
-        return null;
+    public ResponseEntity<?> createSubscriptionPlan(SubscriptionPlanRequest subscriptionPlanRequest) {
+        User user = validateLoggedInUser();
+        var organization = organisationRepository.findById(subscriptionPlanRequest.getOrganizationId());
+        if (organization.isEmpty()) {
+            PaymentObjectResponse<?> objectResponse = PaymentObjectResponse.builder().status("404").message("Organization does not exist").build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(objectResponse);
+        }
+
+        PaymentRequest paymentRequest = PaymentRequest.builder().amount(5000).provider("paystack").build();
+        ResponseEntity<?> response = initiatePayment(paymentRequest);
+
+        String customerCode = createCustomer(user.getEmail(), user.getName(), "");
+        String customerPlan = createPlan("HNG Subscription", subscriptionPlanRequest.getBillingOption(), 5000);
+
+        JSONObject jsonResponse = (JSONObject) response.getBody();
+
+        assert jsonResponse != null;
+        System.out.println("json -- " + jsonResponse);
+        String authorizationUrl = jsonResponse.getJSONObject("data").getString("authorization_url");
+        String authorizationCode = jsonResponse.getJSONObject("data").getString("access_code");
+        String reference = jsonResponse.getJSONObject("data").getString("reference");
+        String url = "https://api.paystack.co/subscription";
+        HttpHeaders headers = new HttpHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+
+        headers.set("Authorization", "Bearer " + paystackSecretKey);
+        headers.set("Content-Type", "application/json");
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("customer", customerCode);
+        request.put("plan", customerPlan);
+
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(request, headers);
+        ResponseEntity<String> httpResponse = restTemplate.postForEntity(url, httpEntity, String.class);
+
+        if (httpResponse.getStatusCode().is2xxSuccessful()) {
+            Payment payment = new Payment();
+            payment.setOrganizationId(subscriptionPlanRequest.getOrganizationId());
+            payment.setInterval(subscriptionPlanRequest.getBillingOption());
+            payment.setPlanId(subscriptionPlanRequest.getPlanId());
+            payment.setProvider(PaymentProvider.PAYSTACK);
+            payment.setOrganizationId(organization.get().getId());
+            payment.setAmount(BigDecimal.valueOf(5000));
+            payment.setCurrency("NGN");
+            payment.setInitiatedAt(LocalDateTime.now());
+            paymentRepository.save(payment);
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("payment_url", authorizationUrl);
+
+        PaymentObjectResponse<?> objectResponse = PaymentObjectResponse.builder().status("200").message("Payment initiated successfully").data(data).build();
+        return ResponseEntity.status(HttpStatus.OK).body(objectResponse);
     }
 
 
@@ -161,5 +218,55 @@ public class PaystackServiceImpl implements PaystackService {
         }
         return paymentStatus;
     }
+
+    public String createCustomer(String email, String firstName, String lastName) {
+        String url = "https://api.paystack.co/customer";
+        HttpHeaders headers = new HttpHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+        headers.set("Authorization", "Bearer " + paystackSecretKey);
+        headers.set("Content-Type", "application/json");
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("email", email);
+        request.put("first_name", firstName);
+//        request.put("last_name", lastName);
+
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(request, headers);
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, httpEntity, Map.class);
+
+        Map<String, Object> responseBody = response.getBody();
+        if (responseBody != null && responseBody.get("status").equals(true)) {
+            Map<String, Object> data = (Map<String, Object>) responseBody.get("data");
+            return (String) data.get("customer_code");
+        } else {
+            throw new RuntimeException("Customer creation failed");
+        }
+    }
+
+
+    public String createPlan(String name, String interval, int amount) {
+        String url = "https://api.paystack.co/plan";
+        HttpHeaders headers = new HttpHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+        headers.set("Authorization", "Bearer " + paystackSecretKey);
+        headers.set("Content-Type", "application/json");
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("name", name);
+        request.put("interval", interval);
+        request.put("amount", amount * 100); // Paystack expects amount in kobo
+
+        HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(request, headers);
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, httpEntity, Map.class);
+
+        Map<String, Object> responseBody = response.getBody();
+        if (responseBody != null && responseBody.get("status").equals(true)) {
+            Map<String, Object> data = (Map<String, Object>) responseBody.get("data");
+            return (String) data.get("plan_code");
+        } else {
+            throw new RuntimeException("Plan creation failed");
+        }
+    }
+
 
 }
