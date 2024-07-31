@@ -24,7 +24,6 @@ public class UserPaymentController {
 
 
 
-    @Autowired
     public UserPaymentController(UserPaymentService paymentService, UserService userService) {
         this.paymentService = paymentService;
         this.userService = userService;
