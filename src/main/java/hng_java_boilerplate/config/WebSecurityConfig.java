@@ -27,14 +27,12 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
 
+    private final UserServiceImpl userService;
+    private final JwtAuthenticationFilter authentication;
 
-    private UserServiceImpl userService;
-    private JwtAuthenticationFilter authentication;
-
-    @Autowired
     public WebSecurityConfig(@Lazy UserServiceImpl userService, JwtAuthenticationFilter authentication) {
         this.userService = userService;
         this.authentication = authentication;
@@ -65,7 +63,7 @@ public class WebSecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(username -> userService.loadUserByUsername(username));
+        daoAuthenticationProvider.setUserDetailsService(userService);
         return daoAuthenticationProvider;
     }
 
@@ -87,6 +85,8 @@ public class WebSecurityConfig {
                                         "/swagger-ui/**",
                                         "/api/v1/auth/**",
                                         "/api/v1/waitlist",
+                                        "/api/v1/faqs",
+                                        "/api/v1/contacts",
                                         "/api/v1/squeeze/"
                                 ).permitAll()
                                 .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
