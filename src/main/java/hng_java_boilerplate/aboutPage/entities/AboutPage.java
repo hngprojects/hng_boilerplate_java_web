@@ -14,7 +14,7 @@ public class AboutPage {
     private Long id;
 
     private String title;
-    private String description;
+    private String introduction;
 
     @Embedded
     private CustomSections customSections;
@@ -23,7 +23,7 @@ public class AboutPage {
 
     public AboutPage() {
         this.title = "More Than Just A BoilerPlate";
-        this.description = "Welcome to Hng Boilerplate, where passion meets innovation.";
+        this.introduction = "Welcome to Hng Boilerplate, where passion meets innovation.";
         this.customSections = new CustomSections();
         this.lastUpdated = LocalDateTime.now();
     }
