@@ -88,7 +88,8 @@ public class WebSecurityConfig {
                                         "/api/v1/contacts",
                                         "/api/v1/squeeze/"
                                 ).permitAll()
-                                .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
+                                .requestMatchers("/api/v1/auth/logout", "/api/**", "/api/v1/create/blog-categories").hasAnyAuthority( "ROLE_SUPER_ADMIN")
+                                .anyRequest().authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)
