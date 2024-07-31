@@ -85,9 +85,8 @@ jobs:
           echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
 
       - name: Create application.properties
-        # uses: ./.github/workflows/create-application-properties
-      - run: |
-          source .env
+        run: |
+          mkdir -p src/main/resources
           
           cat << EOF > src/main/resources/application.properties
 
@@ -154,7 +153,6 @@ jobs:
 
           # JWT secret
           sha512.string=${JWT_SECRET}
-
           EOF        
 
       - name: Verify application.properties
