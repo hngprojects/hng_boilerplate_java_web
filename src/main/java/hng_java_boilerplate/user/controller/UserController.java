@@ -20,11 +20,6 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserDetails(@PathVariable String userId) {
-        try {
-            return ResponseEntity.ok(userService.getUserWithDetails(userId));
-        } catch (BadPaddingException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("user not found");
-        }
+        return ResponseEntity.ok(userService.getUserWithDetails(userId));
     }
 }
