@@ -9,8 +9,8 @@ CREATE TABLE aboutPage (
 -- Create the custom_section table
 CREATE TABLE custom_section (
     id SERIAL PRIMARY KEY,
-    about_page_id INTEGER,
-    CONSTRAINT fk_about_page FOREIGN KEY(about_page_id) REFERENCES aboutPage(id)
+    aboutPage_id INTEGER,
+    CONSTRAINT fk_about_page FOREIGN KEY(aboutPage_id) REFERENCES aboutPage(id)
 );
 
 -- Create the services table
