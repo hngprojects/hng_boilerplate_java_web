@@ -3,56 +3,52 @@ name: CI
 on:
   push:
     branches: [dev, staging, main]
-  pull_request_target:
-    types: [assigned, opened, synchronize, reopened]
+  pull_request:
+    types: [opened, synchronize, reopened]
     branches: [dev, staging, main]
 
-permissions:
-  contents: read
+# permissions:
+#   contents: read
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
-    # Add this to ensure the job only runs once per PR
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
-    
+    #environment: PR-Validation
+      
     services:
-      postgres:  
-        image: postgres:latest
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        postgres:  
+          image: postgres:latest
+          env:
+            POSTGRES_USER: "admin"
+            POSTGRES_PASSWORD: "password123"
+            POSTGRES_DB: "postgres"
+          ports:
+            - 5432:5432
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
 
-      rabbitmq:
-        image: rabbitmq:3-management
-        env:
-          RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USERNAME }}
-          RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
-        ports:
-          - 5672:5672
-          - 15672:15672
-        options: >-
-          --health-cmd "rabbitmqctl node_health_check"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        rabbitmq:
+          image: rabbitmq:3-management
+          env:
+            RABBITMQ_DEFAULT_USER: "guest"
+            RABBITMQ_DEFAULT_PASS: "guest"
+          ports:
+            - 5672:5672
+            - 15672:15672  # Management plugin port
+          options: >-
+            --health-cmd "rabbitmqctl node_health_check"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
 
     steps:
-      - name: Checkout
+      - name: Checkout repository base
         uses: actions/checkout@v3
-        with:
-          # For pull_request_target, we need to checkout the PR code
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
+        # with:
+        #   ref: ${{ github.event.pull_request.base.sha }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -64,20 +60,15 @@ jobs:
       # Create configuration files
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://localhost:${{ secrets.POSTGRES_PORT }}/${{ secrets.POSTGRES_DB }}" >> .env
-          echo "DB_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-          echo "RABBITMQ_HOST=localhost" >> .env
-          echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
-          echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
-          echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
-          echo "QUEUE_EMAIL=emailQueue" >> .env
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-          echo "EXCHANGE_KEY=${{ secrets.EXCHANGE_KEY }}" >> .env
-          echo "ROUTING_KEY=${{ secrets.ROUTING_KEY }}" >> .env
-          echo "ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
-          echo "AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
-          echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
+          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/postgres" >> .env
+          echo "DB_USERNAME=admin" >> .env
+          echo "DB_PASSWORD=password123" >> .env
+          echo "RABBITMQ_PORT=5672" >> .env
+          echo "RABBITMQ_USERNAME=guest" >> .env
+          echo "RABBITMQ_PASSWORD=guest" >> .env
+          # echo "ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
+          # echo "AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
+          # echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
 
       - name: Create application.properties
         uses: ./.github/workflows/create-application-properties
