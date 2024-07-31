@@ -110,10 +110,22 @@ public class GoogleJwtUtils {
             user.setProfile(profile);
             User savedUser = userRepository.save(user);
 
-            UserResponse userResponse = userService.getUserResponse(savedUser);
+            UserResponse userResponse = getAuthResponse(userDto, savedUser);
             return new ResponseData(utils.createJwt.apply(userService.loadUserByUsername(user.getUsername())), userResponse);
         }
     };
+
+    public UserResponse getAuthResponse(OAuthDto authDto, User user){
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
+        userResponse.setFirst_name(authDto.getFirst_name());
+        userResponse.setLast_name(authDto.getLast_name());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setRole(user.getUserRole().name());
+        userResponse.setImr_url(authDto.getImg_url());
+        userResponse.setCreated_at(user.getCreatedAt());
+        return userResponse;
+    }
 
     private Profile populateProfile(OAuthDto user){
         Profile profile = new Profile();
