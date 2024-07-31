@@ -1,12 +1,12 @@
 -- V1__Create_AboutPage_Tables.sql
-CREATE TABLE aboutPage (
+CREATE TABLE about_page (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     introduction TEXT NOT NULL,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-ALTER TABLE aboutPage
+ALTER TABLE about_page
 ADD COLUMN stats_years_in_business INT NOT NULL DEFAULT 10,
 ADD COLUMN stats_customers INT NOT NULL DEFAULT 75000,
 ADD COLUMN stats_monthly_blog_readers INT NOT NULL DEFAULT 100000,
