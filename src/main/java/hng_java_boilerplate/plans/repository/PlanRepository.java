@@ -7,10 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface PlanRepository extends JpaRepository<Plan, UUID> {
+public interface PlanRepository extends JpaRepository<Plan, String> {
     boolean existsByName(String name);
-
-    Optional<Plan> findById(String planId);
-
 
 }

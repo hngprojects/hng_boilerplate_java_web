@@ -3,6 +3,7 @@ package hng_java_boilerplate.payment.service.payment.flutterwave;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.organisation.service.OrganisationService;
 import hng_java_boilerplate.payment.Utils;
@@ -15,6 +16,8 @@ import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentProvider;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
 import hng_java_boilerplate.payment.repository.PaymentRepository;
+import hng_java_boilerplate.plans.entity.Plan;
+import hng_java_boilerplate.plans.repository.PlanRepository;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
 import jakarta.transaction.Transactional;
@@ -32,6 +35,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService{
 
     private final UserService userService;
 
+    private final PlanRepository planRepository;
     private final OrganisationRepository organisationRepository;
 
     private final PaymentRepository paymentRepository;
@@ -44,11 +48,13 @@ public class FlutterwaveServiceImpl implements FlutterwaveService{
 
 
     public FlutterwaveServiceImpl(UserService userService, Utils utils,
-                                  PaymentRepository paymentRepository, OrganisationRepository organisationRepository) {
+                                  PaymentRepository paymentRepository, OrganisationRepository organisationRepository,
+                                  PlanRepository planRepository) {
         this.userService = userService;
         this.utils = utils;
         this.paymentRepository = paymentRepository;
         this.organisationRepository = organisationRepository;
+        this.planRepository = planRepository;
     }
 
     public ResponseEntity<?> initiatePayment(PaymentRequest request) throws JsonProcessingException {
@@ -171,9 +177,12 @@ public class FlutterwaveServiceImpl implements FlutterwaveService{
     public ResponseEntity<?> createSubscriptionPlan(SubscriptionPlanRequest request) throws JsonProcessingException {
         User user = utils.validateLoggedInUser();
         var organization = organisationRepository.findById(request.getOrganizationId());
-        if (organization.isEmpty()) {
-            PaymentObjectResponse<?> objectResponse = PaymentObjectResponse.builder().status("404").message("Organization does not exist").build();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(objectResponse);
+        ResponseEntity<? extends PaymentObjectResponse<? extends Object>> NOT_FOUND = validateOrganizationAndPlanId(request, organization);
+        Plan plan;
+        if (NOT_FOUND != null) return NOT_FOUND;
+        else {
+            Optional<Plan> foundPlan = planRepository.findById(request.getPlanId());
+            plan = foundPlan.get();
         }
         HttpHeaders headers = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
@@ -183,7 +192,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService{
         headers.set("Authorization", "Bearer " + flutterwaveSecretKey);
 
         Map<String, Object> planDetails = new HashMap<>();
-        planDetails.put("amount", 5000);
+        planDetails.put("amount", formatAmount(String.valueOf(plan.getPrice())));
         planDetails.put("name", user.getName());
         planDetails.put("interval", request.getBillingOption());
 
@@ -211,7 +220,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService{
         payment.setProvider(PaymentProvider.FLUTTERWAVE);
         payment.setTransactionReference(transactionReference);
         payment.setOrganizationId(organization.get().getId());
-        payment.setAmount(BigDecimal.valueOf(5000));
+        payment.setAmount(convertToBigDecimal(request.getPlanId()));
         payment.setCurrency("NGN");
         payment.setInitiatedAt(LocalDateTime.now());
         paymentRepository.save(payment);
@@ -229,6 +238,19 @@ public class FlutterwaveServiceImpl implements FlutterwaveService{
         return ResponseEntity.status(HttpStatus.OK).body(objectResponse);
     }
 
+    private ResponseEntity<? extends PaymentObjectResponse<? extends Object>> validateOrganizationAndPlanId(SubscriptionPlanRequest request, Optional<Organisation> organization) {
+        if (organization.isEmpty()) {
+            PaymentObjectResponse<?> objectResponse = PaymentObjectResponse.builder().status("404").message("Organization does not exist").build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(objectResponse);
+        }
+
+        if (!planRepository.existsById(request.getPlanId())) {
+            PaymentObjectResponse<?> objectResponse = PaymentObjectResponse.builder().status("404").message("Plan id does not exist").build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(objectResponse);
+        }
+        return null;
+    }
+
 
     private String extractPlanId(String responseBody) {
         try {
@@ -237,6 +259,14 @@ public class FlutterwaveServiceImpl implements FlutterwaveService{
             return root.path("data").path("id").asText();
         } catch (Exception e) {
             throw new RuntimeException("Failed to extract plan ID", e);
+        }
+    }
+
+    public BigDecimal convertToBigDecimal(String amount) {
+        try {
+            return new BigDecimal(amount);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid amount: " + amount);
         }
     }
 
@@ -268,6 +298,14 @@ public class FlutterwaveServiceImpl implements FlutterwaveService{
 
 
 
+    public String formatAmount(String amount) {
+        try {
+            double numericAmount = Double.parseDouble(amount);
+            return String.format("$%.2f", numericAmount);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid amount: " + amount);
+        }
+    }
 
 
 

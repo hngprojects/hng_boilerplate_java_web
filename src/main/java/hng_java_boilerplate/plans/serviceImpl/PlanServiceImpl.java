@@ -1,7 +1,7 @@
 package hng_java_boilerplate.plans.serviceImpl;
 
+import hng_java_boilerplate.plans.dtos.AllPlansDto;
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
-import hng_java_boilerplate.plans.dtos.PlanObjectResponse;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
@@ -13,8 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,59 +34,29 @@ public class PlanServiceImpl implements PlanService {
                 .id(UUID.randomUUID().toString())
                 .price(createPlanDto.price())
                 .name(createPlanDto.name())
-                .description(createPlanDto.description())
-                .duration(createPlanDto.duration())
-                .durationUnit(createPlanDto.durationUnit())
-                .features(createPlanDto.features())
                 .build();
 
         Plan saved = planRepository.save(newPlan);
-        return ResponseEntity.status(201).body(new PlanResponse(saved, 201, "Plan created successfully"));
+        return ResponseEntity.status(201).body(new PlanResponse( 201, "Plan created successfully", saved));
     }
 
-
     @Override
-    public PlanObjectResponse<?> findAll() {
+    public ResponseEntity<AllPlansDto> findAll() {
         List<Plan> plans = planRepository.findAll();
-
-        List<Map<String, Object>> list = plans.stream().map(singlePlan -> {
-            Map<String, Object> data = new LinkedHashMap<>();
-            data.put("id", singlePlan.getId());
-//            data.put("name", singlePlan.getPlanType());
-            data.put("price", singlePlan.getPrice());
-            data.put("description", singlePlan.getDescription());
-            return data;
-        }).collect(Collectors.toList());
-
-        return PlanObjectResponse.builder().message("Billing plans retrieved successfully").status("200").data(list).build();
+        return ResponseEntity.status(200).body(new AllPlansDto(200, "Billing plans retrieved successfully", plans));
     }
 
     @Override
-    public PlanObjectResponse<?> getSinglePlan(String planId) {
-        Plan plan = planRepository.findById(planId)
-                .orElseThrow(() -> new PlanNotFoundException("Plan not found"));
-        Map<String, Object> data = new LinkedHashMap<>();
-        data.put("id", plan.getId());
-//        data.put("name", plan.getPlanType());
-        data.put("price", plan.getPrice());
-        data.put("description", plan.getDescription());
-
-        return PlanObjectResponse.builder().message("Billing plan retrieved successfully").status("200").data(data).build();
+    public Optional<Plan> findOne(String id) {
+        return planRepository.findById(id);
     }
 
-
-//    @Override
-//    public PlanObjectResponse<?> findAll() {
-//        List<Plan> plans = planRepository.findAll();
-//        List<Object> list = new ArrayList<>();
-//        for (Plan singlePlan: plans) {
-//            Map<String, Object> data = new LinkedHashMap<>();
-//            data.put("id", singlePlan.getId());
-//            data.put("name", singlePlan.getPlanType());
-//            data.put("price", singlePlan.getPrice());
-//            data.put("description", singlePlan.getDescription());
-//            list.add(data);
-//        }
-//        return PlanObjectResponse.builder().message("Billing plans retrieved successfully").status("200").data(list).build();
-//    }
+    @Override
+    public ResponseEntity<PlanResponse> getPlan(String id) {
+        Optional<Plan> plan = findOne(id);
+        if (plan.isEmpty()) {
+            throw new PlanNotFoundException("Pricing Plan not found");
+        }
+        return ResponseEntity.status(200).body(new PlanResponse(200, "Billing plan retrieved successfully", plan.get()));
+    }
 }

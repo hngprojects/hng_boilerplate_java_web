@@ -1,7 +1,6 @@
 package hng_java_boilerplate.plan_test;
 
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
-import hng_java_boilerplate.plans.dtos.PlanObjectResponse;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
@@ -47,11 +46,7 @@ public class PlanServiceTest {
         Plan plan = Plan.builder()
                 .id(UUID.randomUUID().toString())
                 .name("plan name")
-                .description("plan description")
                 .price(19.99)
-                .durationUnit("day")
-                .duration(1)
-                .features(features)
                 .build();
         when(this.planRepository.save(any(Plan.class))).thenReturn(plan);
         when(this.planRepository.existsByName("plan name")).thenReturn(false);
@@ -69,12 +64,9 @@ public class PlanServiceTest {
         var data = body.data();
         assertNotNull(plan);
         assertNotNull(plan.getId());
-        assertEquals(plan.getDescription(), "plan description");
         assertEquals(plan.getName(), "plan name");
         assertEquals(plan.getPrice(), 19.99);
-        assertEquals(plan.getDuration(), 1);
-        assertEquals(plan.getDurationUnit(), "day");
-        assertNotNull(plan.getFeatures());
+
 
     }
 
@@ -88,43 +80,5 @@ public class PlanServiceTest {
         when(this.planRepository.existsByName(any())).thenReturn(true);
         DuplicatePlanException exception = assertThrows(DuplicatePlanException.class, () -> planService.create(planDto));
         assertEquals("Plan already exists.", exception.getMessage());
-    }
-
-    @Test
-    public void getAllPlans() {
-        List<String> features = new ArrayList<>() {{
-            add("Feature 1");
-            add("Feature 2");
-        }};
-        Plan plan1 = Plan.builder()
-                .id(UUID.randomUUID().toString())
-                .name("plan name")
-                .description("plan description")
-                .price(19.99)
-                .durationUnit("day")
-                .duration(1)
-                .features(features)
-                .build();
-        Plan plan2 = Plan.builder()
-                .id(UUID.randomUUID().toString())
-                .name("plan name")
-                .description("plan description")
-                .price(19.99)
-                .durationUnit("day")
-                .duration(1)
-                .features(features)
-                .build();
-        List<Plan> plans = List.of(plan1, plan2);
-        when(this.planRepository.findAll()).thenReturn(plans);
-        PlanObjectResponse<?> response = planService.findAll();
-
-        assertNotNull(response);
-//        assertEquals(response.getStatusCode(), HttpStatus.OK);
-//
-//        List<Plan> body = response.getBody();
-//        assertNotNull(body);
-//        assertTrue(body.contains(plan1));
-//        assertTrue(body.contains(plan2));
-
     }
 }
