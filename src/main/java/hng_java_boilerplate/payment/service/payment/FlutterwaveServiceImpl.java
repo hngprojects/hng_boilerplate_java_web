@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.payment.Utils;
 import hng_java_boilerplate.payment.dtos.reqests.PaymentRequest;
+import hng_java_boilerplate.payment.dtos.reqests.SubscriptionPlanRequest;
 import hng_java_boilerplate.payment.dtos.responses.FlutterwaveResponse;
 import hng_java_boilerplate.payment.dtos.responses.PaymentObjectResponse;
 import hng_java_boilerplate.payment.entity.Payment;
@@ -24,8 +25,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Qualifier("flutterwaveService")
-public class FlutterwaveServiceImpl implements PaymentService{
+public class FlutterwaveServiceImpl implements FlutterwaveService{
 
     private final UserService userService;
 
@@ -34,6 +34,8 @@ public class FlutterwaveServiceImpl implements PaymentService{
 
     @Value("${flutterwave.secret.key}")
     private String flutterwaveSecretKey;
+
+    private final String BASE_API_URL = "https://api.flutterwave.com/v3";
 
 
     public FlutterwaveServiceImpl(UserService userService, Utils utils, PaymentRepository paymentRepository) {
@@ -86,10 +88,10 @@ public class FlutterwaveServiceImpl implements PaymentService{
             Map<String, Object> map = new HashMap<>();
             map.put("redirect_url", link);
             map.put("reference", transactionReference);
-            PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("200").message("Flutterwave Payment Successfully initialized").data(map).build();
+            PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("200").message("Flutterwave Payment Successfully initialized").data(map).build();
             return ResponseEntity.status(HttpStatus.OK).body(paymentResponse);
         } else {
-            PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code(response.getStatusCode().toString()).message("Flutterwave Payment Initialization Failed").data(response.getBody()).build();
+            PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status(response.getStatusCode().toString()).message("Flutterwave Payment Initialization Failed").data(response.getBody()).build();
             return ResponseEntity.status(response.getStatusCode()).body(paymentResponse);
         }
     }
@@ -109,18 +111,18 @@ public class FlutterwaveServiceImpl implements PaymentService{
                     map.put("reference", txRef);
                     map.put("amount", transactionDetails.getAmount());
                     map.put("currency", "NGN");
-                    PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("200").message("Verification successful").data(map).build();
+                    PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("200").message("Verification successful").data(map).build();
                     return ResponseEntity.status(HttpStatus.OK).body(paymentResponse);
                 } else {
-                    PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("400").message("Payment verification failed").build();
+                    PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("400").message("Payment verification failed").build();
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(paymentResponse);
                 }
             } else {
-                PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("404").message("Transaction not found").build();
+                PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("404").message("Transaction not found").build();
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(paymentResponse);
             }
         }
-        PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status_code("404").message("Payment not completed").build();
+        PaymentObjectResponse<?> paymentResponse = PaymentObjectResponse.builder().status("404").message("Payment not completed").build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(paymentResponse);
     }
 
@@ -157,11 +159,64 @@ public class FlutterwaveServiceImpl implements PaymentService{
         return handlePaymentCallback(reference,status,transactionId);
     }
 
-
     @Override
-    public ResponseEntity<?> verifyPayment(String refernce) {
-        return null;
+    public ResponseEntity<?> createSubscriptionPlan(SubscriptionPlanRequest request) {
+        System.out.println("inside here");
+        User user = utils.validateLoggedInUser();
+        HttpHeaders headers = new HttpHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+
+        String url = BASE_API_URL + "/payment-plans";
+        headers.set("Content-Type", "application/json");
+        headers.set("Authorization", "Bearer " + flutterwaveSecretKey);
+
+        Map<String, Object> planDetails = new HashMap<>();
+        planDetails.put("amount", 5000);
+        planDetails.put("name", user.getName());
+        planDetails.put("interval", request.getBillingOption());
+
+        HttpEntity<Map<String, Object>> planEntity = new HttpEntity<>(planDetails, headers);
+        ResponseEntity<String> planResponse = restTemplate.exchange(url, HttpMethod.POST, planEntity, String.class);
+
+        System.out.println("ppp --- " + planResponse);
+
+        if (!planResponse.getStatusCode().is2xxSuccessful()) {
+            return planResponse;
+        }
+
+        String planId = extractPlanId(planResponse.getBody());
+
+        // Add user to subscription
+        String subscribeUrl = BASE_API_URL + "/payments";
+
+        Map<String, Object> customerDetails = new HashMap<>();
+        customerDetails.put("email", user.getEmail());
+        customerDetails.put("full_name", user.getName());
+        customerDetails.put("plan", planId);
+        customerDetails.put("redirect_url", request.getRedirectUrl());
+        customerDetails.put("tx_ref", utils.generateTransactionReference());
+
+        HttpEntity<Map<String, Object>> subscribeEntity = new HttpEntity<>(customerDetails, headers);
+        ResponseEntity<String> subscribeResponse = restTemplate.exchange(subscribeUrl, HttpMethod.POST, subscribeEntity, String.class);
+
+        System.out.println("ssss --- " + subscribeResponse);
+        return subscribeResponse;
     }
+
+
+    private String extractPlanId(String responseBody) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(responseBody);
+            return root.path("data").path("id").asText();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to extract plan ID", e);
+        }
+    }
+
+
+
+
 
 
 

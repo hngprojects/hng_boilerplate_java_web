@@ -1,9 +1,11 @@
 package hng_java_boilerplate.plans.serviceImpl;
 
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
+import hng_java_boilerplate.plans.dtos.PlanObjectResponse;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
+import hng_java_boilerplate.plans.exceptions.PlanNotFoundException;
 import hng_java_boilerplate.plans.repository.PlanRepository;
 import hng_java_boilerplate.plans.service.PlanService;
 import jakarta.transaction.Transactional;
@@ -11,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,9 +43,49 @@ public class PlanServiceImpl implements PlanService {
         return ResponseEntity.status(201).body(new PlanResponse(saved, 201, "Plan created successfully"));
     }
 
+
     @Override
-    public ResponseEntity<List<Plan>> findAll() {
+    public PlanObjectResponse<?> findAll() {
         List<Plan> plans = planRepository.findAll();
-        return ResponseEntity.status(200).body(plans);
+
+        List<Map<String, Object>> list = plans.stream().map(singlePlan -> {
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("id", singlePlan.getId());
+            data.put("name", singlePlan.getPlanType());
+            data.put("price", singlePlan.getPrice());
+            data.put("description", singlePlan.getDescription());
+            return data;
+        }).collect(Collectors.toList());
+
+        return PlanObjectResponse.builder().message("Billing plans retrieved successfully").status("200").data(list).build();
     }
+
+    @Override
+    public PlanObjectResponse<?> getSinglePlan(String planId) {
+        Plan plan = planRepository.findById(planId)
+                .orElseThrow(() -> new PlanNotFoundException("Plan not found"));
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("id", plan.getId());
+        data.put("name", plan.getPlanType());
+        data.put("price", plan.getPrice());
+        data.put("description", plan.getDescription());
+
+        return PlanObjectResponse.builder().message("Billing plan retrieved successfully").status("200").data(data).build();
+    }
+
+
+//    @Override
+//    public PlanObjectResponse<?> findAll() {
+//        List<Plan> plans = planRepository.findAll();
+//        List<Object> list = new ArrayList<>();
+//        for (Plan singlePlan: plans) {
+//            Map<String, Object> data = new LinkedHashMap<>();
+//            data.put("id", singlePlan.getId());
+//            data.put("name", singlePlan.getPlanType());
+//            data.put("price", singlePlan.getPrice());
+//            data.put("description", singlePlan.getDescription());
+//            list.add(data);
+//        }
+//        return PlanObjectResponse.builder().message("Billing plans retrieved successfully").status("200").data(list).build();
+//    }
 }

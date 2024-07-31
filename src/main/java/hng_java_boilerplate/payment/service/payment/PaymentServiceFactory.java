@@ -15,8 +15,8 @@ public class PaymentServiceFactory {
 
 
     public PaymentServiceFactory(UserService userService, PaymentRepository paymentRepository,
-                                 @Qualifier("paystackService") PaymentService paystackService,
-                                 @Qualifier("flutterwaveService") PaymentService flutterwaveService) {
+                                 PaymentService paystackService,
+                                 PaymentService flutterwaveService) {
         this.userService = userService;
         this.paymentRepository = paymentRepository;
         this.paystackService = paystackService;

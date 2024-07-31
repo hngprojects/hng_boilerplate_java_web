@@ -1,5 +1,6 @@
 package hng_java_boilerplate.payment.service.payment;
 
+import hng_java_boilerplate.payment.dtos.reqests.SubscriptionPlanRequest;
 import hng_java_boilerplate.payment.dtos.responses.PaymentVerificationResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentProvider;
@@ -25,8 +26,7 @@ import java.util.*;
 
 
 @Service
-@Qualifier("paystackService")
-public class PaystackServiceImpl implements PaymentService {
+public class PaystackServiceImpl implements PaystackService {
 
     public PaystackServiceImpl(UserService userService, PaymentRepository paymentRepository) {
         this.userService = userService;
@@ -115,11 +115,11 @@ public class PaystackServiceImpl implements PaymentService {
         return ResponseEntity.ok(verificationResponse);
     }
 
-
     @Override
-    public ResponseEntity<?> verifyPayment(String reference, String status, String transactionId) {
+    public ResponseEntity<?> createSubscriptionPlan(SubscriptionPlanRequest request) {
         return null;
     }
+
 
     private void validatePaymentVerificationResponse(String reference, String email, ResponseEntity<String> response) {
         if (response.getStatusCode() == HttpStatus.OK) {

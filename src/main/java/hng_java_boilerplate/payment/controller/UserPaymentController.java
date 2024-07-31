@@ -36,7 +36,7 @@ public class UserPaymentController {
     public ResponseEntity<?> getPaymentsForUser() {
         User user = userService.getLoggedInUser();
         if (user == null) {
-            var response = PaymentObjectResponse.builder().message("Unauthorized").status_code("401").build();
+            var response = PaymentObjectResponse.builder().message("Unauthorized").status("401").build();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
         PaymentObjectResponse<?>  response = paymentService.getPaymentsByUserEmail(user.getEmail());
@@ -46,7 +46,7 @@ public class UserPaymentController {
     @GetMapping("/reference/{reference}")
     public ResponseEntity<?> getPaymentByReference(@PathVariable String reference) {
         PaymentObjectResponse<?> response = paymentService.findPaymentByReference(reference);
-        if ("200".equals(response.getStatus_code())) {
+        if ("200".equals(response.getStatus())) {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);

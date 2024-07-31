@@ -1,6 +1,7 @@
 package hng_java_boilerplate.plans.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import hng_java_boilerplate.plans.PlanType;
 import hng_java_boilerplate.plans.util.StringListConverter;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,19 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Setter
-@Getter
-@Entity
+
+@Entity(name = "plans")
+@Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@Builder()
-@Table(name = "plans")
+@RequiredArgsConstructor
+@ToString
+@Getter
+@Setter
 public class Plan {
 
     @Id
     private String id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
@@ -40,4 +42,10 @@ public class Plan {
     @Convert(converter = StringListConverter.class)
     @Column(name = "features", nullable = false)
     private List<String> features = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "plan_type")
+    private PlanType planType;
+
+
 }

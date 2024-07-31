@@ -149,7 +149,7 @@ public class PaymentIntegrationTest {
 
         PaymentObjectResponse<?> response = userPaymentService.getPaymentsByUserEmail(email);
 
-        assertEquals("200", response.getStatus_code());
+        assertEquals("200", response.getStatus());
         assertEquals("User payments successfully fetched", response.getMessage());
     }
 
@@ -172,7 +172,7 @@ public class PaymentIntegrationTest {
 
         PaymentObjectResponse<?> response = userPaymentService.findPaymentByReference(reference);
 
-        assertEquals("200", response.getStatus_code());
+        assertEquals("200", response.getStatus());
         assertEquals("Payment fetched successfully", response.getMessage());
     }
 
