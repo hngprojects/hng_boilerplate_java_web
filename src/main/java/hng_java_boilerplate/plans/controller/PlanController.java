@@ -4,6 +4,7 @@ import hng_java_boilerplate.plans.dtos.CreatePlanDto;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/plans")
 @RequiredArgsConstructor
+@Tag(name="Plans")
 public class PlanController {
 
     private final PlanService planService;

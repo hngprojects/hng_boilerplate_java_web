@@ -4,6 +4,7 @@ import hng_java_boilerplate.helpCenter.faq.dto.request.FaqRequest;
 import hng_java_boilerplate.helpCenter.faq.dto.response.CustomResponse;
 import hng_java_boilerplate.helpCenter.faq.dto.response.FaqResponse;
 import hng_java_boilerplate.helpCenter.faq.service.FaqService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/faqs")
+@Tag(name="Faq")
 public class FaqController {
     private final FaqService faqService;
 

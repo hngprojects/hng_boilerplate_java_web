@@ -5,6 +5,7 @@ import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/v1/squeeze")
 @Validated
 @RequiredArgsConstructor
+@Tag(name="Squeeze")
 public class SqueezeRequestController {
 
     private final SqueezeRequestService service;
