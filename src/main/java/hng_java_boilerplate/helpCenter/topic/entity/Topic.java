@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "articles_table")
+@Table(name = "help_center_topics")
 @Getter
 @Setter
 @AllArgsConstructor
