@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS abouts (
 CREATE TABLE custom_section (
     id SERIAL PRIMARY KEY,
     about_page_id INTEGER,
-    CONSTRAINT fk_abouts FOREIGN KEY(about_page_id) REFERENCES abouts(id)
+    FOREIGN KEY (about_page_id) REFERENCES abouts(id)
 );
 
 -- Create the services table
@@ -18,7 +18,7 @@ CREATE TABLE services (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     custom_section_id INTEGER,
-    CONSTRAINT fk_custom_section FOREIGN KEY(custom_section_id) REFERENCES custom_section(id)
+    FOREIGN KEY (custom_section_id) REFERENCES custom_section(id)
 );
 
 -- Create the stat table
@@ -29,5 +29,5 @@ CREATE TABLE stat (
     monthly_blog_readers INTEGER,
     social_followers INTEGER,
     custom_section_id INTEGER,
-    CONSTRAINT fk_stat_custom_section FOREIGN KEY(custom_section_id) REFERENCES custom_section(id)
+    FOREIGN KEY(custom_section_id) REFERENCES custom_section(id)
 );
