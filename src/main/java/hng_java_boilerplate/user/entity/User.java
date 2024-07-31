@@ -1,6 +1,7 @@
 package hng_java_boilerplate.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hng_java_boilerplate.organisation.entity.OrgRole;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.profile.entity.Profile;
@@ -38,6 +39,14 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role userRole;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_org_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "org_role_id")
+    )
+    private Set<OrgRole> orgRoles = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
