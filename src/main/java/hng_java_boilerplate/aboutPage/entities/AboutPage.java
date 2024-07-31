@@ -8,14 +8,14 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @Entity
-@Table(name = "about_page")
+@Table(name = "aboutPage")
 public class AboutPage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String introduction;
-    @OneToOne(mappedBy = "about_page", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "aboutPage", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private CustomSection custom_sections;
 }

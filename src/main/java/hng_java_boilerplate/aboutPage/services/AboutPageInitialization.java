@@ -33,7 +33,7 @@ public class AboutPageInitialization {
             aboutPage.setIntroduction("Trained to give you the best boiler codes");
             aboutPageRepository.save(aboutPage);
 
-            customSection.setAbout_page(aboutPage);
+            customSection.setAboutPage(aboutPage);
             customSectionRepository.save(customSection);
 
             statEntity.setYears_in_business(10);

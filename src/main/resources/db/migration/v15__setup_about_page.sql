@@ -1,6 +1,6 @@
 
 -- Create the aboutPage table
-CREATE TABLE about_page (
+CREATE TABLE aboutPage (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     introduction TEXT
