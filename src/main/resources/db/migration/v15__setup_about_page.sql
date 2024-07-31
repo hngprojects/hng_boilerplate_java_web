@@ -1,4 +1,3 @@
-
 -- Create the aboutPage table
 CREATE TABLE aboutPage (
     id SERIAL PRIMARY KEY,
@@ -32,4 +31,3 @@ CREATE TABLE stat (
     custom_section_id INTEGER,
     CONSTRAINT fk_stat_custom_section FOREIGN KEY(custom_section_id) REFERENCES custom_section(id)
 );
-
