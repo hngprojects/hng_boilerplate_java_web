@@ -26,7 +26,7 @@ public class NotificationService {
         return repository.countByIsRead(false);
     }
 
-    public List<Notification> getUnreadNotifications(UUID userId) {
+    public List<Notification> getUnreadNotifications(String userId) {
         return repository.findByUserIdAndIsRead(userId, false);
     }
 
