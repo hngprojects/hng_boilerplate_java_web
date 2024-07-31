@@ -1,10 +1,10 @@
 package hng_java_boilerplate.notification.services;
 
 import hng_java_boilerplate.notification.models.Notification;
+import hng_java_boilerplate.notification.models.NotificationSettings;
 import hng_java_boilerplate.notification.repositories.NotificationRepository;
 import hng_java_boilerplate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,7 +38,12 @@ public class NotificationService {
         notification.setMessage(message);
         notification.setIsRead(false);
         notification.setCreatedAt(LocalDateTime.now());
-        notification.setUserId(userId);  // Set the userId in the notification
+        notification.setUserId(userId);
+
+        NotificationSettings settings = new NotificationSettings();
+        settings.setUserId(userId);
+        notification.setNotificationSettings(settings);
+
         return repository.save(notification);
     }
 
@@ -57,6 +62,6 @@ public class NotificationService {
             notification.setIsRead(true);
             repository.save(notification);
         });
-        return notifications; // Return the list of notifications that were marked as read
+        return notifications;
     }
 }

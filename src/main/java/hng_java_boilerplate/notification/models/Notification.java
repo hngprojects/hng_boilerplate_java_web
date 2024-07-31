@@ -24,4 +24,8 @@ public class Notification {
     private String message;
     private Boolean isRead;
     private LocalDateTime createdAt;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "notification_settings_id", referencedColumnName = "id")
+    private NotificationSettings notificationSettings;
 }

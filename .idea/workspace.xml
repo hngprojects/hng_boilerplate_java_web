@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/notification/controllers/NotificationSettingsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/notification/models/NotificationSettings.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/notification/repositories/NotificationSettingsRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/notification/services/NotificationSettingsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V17__create_notification_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V10__create_squeeze_request_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V11__alter_plan_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V12__update_squeeze_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V14__create_faq_and_contact_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V15__create_org_roles_and_permissions.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V16__create_topics_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V17__create_notification_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V1__init_database.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V2__alter_products_table_schema.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V3__update_users_and_related_tables.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V4__alter_user_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V5__alter_user_data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V6__alter_user_password.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V7__create_plan_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V8__create_waitlist_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/db/migration/V9__update_organisations.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/Program.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/config/DatabaseSeeder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/config/FilterConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/config/RabbitMQConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/email/EmailServices/EmailConsumerService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/email/EmailServices/EmailProducerService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/email/entity/EmailMessage.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/exception/BadRequestException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/exception/CustomError.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/exception/ValidationError.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/contactUs/dto/request/ContactUsRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/contactUs/dto/response/CustomResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/contactUs/entity/Contact.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/contactUs/repository/ContactUsRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/contactUs/service/ContactUsService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/contactUs/serviceImpl/ContactUsServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/faq/dto/request/FaqRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/faq/dto/response/CustomResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/faq/dto/response/FaqResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/faq/entity/FAQ.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/faq/repository/FaqRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/faq/service/FaqService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/helpCenter/faq/serviceImpl/FaqServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/dto/CreateOrganisationRequestDto$CreateOrganisationRequestDtoBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/dto/CreateOrganisationRequestDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/dto/CreateOrganisationResponseDto$CreateOrganisationResponseDtoBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/dto/CreateOrganisationResponseDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/dto/DataDto$DataDtoBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/dto/DataDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/entity/Organisation.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/exception/AuthErrorResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/exception/ExceptionResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/exception/OrgGlobalExceptionHandler.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/exception/OrganisationNameAlreadyExistsException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/exception/ValidationError.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/repository/OrganisationRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/organisation/service/OrganisationService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/dtos/CreatePlanDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/dtos/PlanResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/entity/Plan$PlanBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/entity/Plan.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/exceptions/DuplicatePlanException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/repository/PlanRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/service/PlanService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/serviceImpl/PlanServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/util/ListOfStringsValidator.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/util/StringListConverter.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/plans/util/ValidList.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/dto/ErrorDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/dto/ProductDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/dto/ProductErrorDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/dto/ProductSearchDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/dto/ProductValidatorDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/entity/Product.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/errorhandler/ProductErrorHandler.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/exceptions/ValidationError.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/product_mapper/ProductMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/product_mapper/ProductMapperImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/repository/ProductRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/service/ProductService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/product/service/ProductServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/profile/dto/request/DeactivateUserRequest$DeactivateUserRequestBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/profile/dto/request/DeactivateUserRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/profile/dto/response/DeactivateUserResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/profile/entity/Profile.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/profile/repository/ProfileRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/profile/service/ProfileService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/squeeze/dto/ResponseMessageDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/squeeze/dto/ValidationErrorResponseDto$FieldErrorDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/squeeze/dto/ValidationErrorResponseDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/squeeze/entity/SqueezeRequest$SqueezeRequestBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/squeeze/entity/SqueezeRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/squeeze/exceptions/DuplicateEmailException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/squeeze/repository/SqueezeRequestRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/squeeze/service/SqueezeRequestService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/squeeze/util/StringListConverter.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/GetUserDto$GetUserDtoBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/GetUserDto$OrganisationDto$OrganisationDtoBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/GetUserDto$OrganisationDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/GetUserDto$ProductDto$ProductDtoBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/GetUserDto$ProductDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/GetUserDto$ProfileDto$ProfileDtoBuilder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/GetUserDto$ProfileDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/GetUserDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/LoginDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/request/SignupDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/response/ApiResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/response/ErrorResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/response/ResponseData.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/dto/response/UserResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/entity/User.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/enums/Role.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/exception/EmailAlreadyExistsException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/exception/InvalidRequestException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/exception/UserNotFoundException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/exception/UsernameNotFoundException.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/user/repository/UserRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/util/JwtUtils.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/util/PasswordValidator.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/util/UUIDGenarator.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/util/ValidPassword.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/util/ratelimit/filter/RateLimitFilter.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/util/ratelimit/service/RateLimitService$RequestInfo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/util/ratelimit/service/RateLimitService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/waitlist/entity/Waitlist.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/waitlist/repository/WaitlistRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/waitlist/service/EmailService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/waitlist/service/WaitlistService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/hng_java_boilerplate/welcome/WelcomeController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/generated-sources/annotations/hng_java_boilerplate/product/product_mapper/ProductMapperImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.ProgramTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.helpCenter.contactUs.controller.ContactUsControllerTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.helpCenter.contactUs.serviceImpl.ContactUsServiceImplTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.helpCenter.faq.controller.FaqControllerTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.helpCenter.faq.serviceImpl.FaqServiceImplTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.notification.NotificationControllerTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.organisation.service.OrganisationServiceTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.plan_test.PlanServiceTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.product_test.unit_test.ProductSearchTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.profile.controller.ProfileControllerTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.profile.serviceImpl.ProfileServiceImplTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.squeeze.controller.SqueezeRequestControllerTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.squeeze.service.SqueezeRequestServiceTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.user.login_unit_test.UserLoginTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.user.signup_unit_test.UserServiceImplTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.waitlist.controller.WaitlistControllerTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-hng_java_boilerplate.welcome.WelcomeControllerTest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.ProgramTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.helpCenter.contactUs.controller.ContactUsControllerTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.helpCenter.contactUs.serviceImpl.ContactUsServiceImplTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.helpCenter.faq.controller.FaqControllerTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.helpCenter.faq.serviceImpl.FaqServiceImplTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.notification.NotificationControllerTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.organisation.service.OrganisationServiceTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.plan_test.PlanServiceTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.product_test.unit_test.ProductSearchTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.profile.controller.ProfileControllerTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.profile.serviceImpl.ProfileServiceImplTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.squeeze.controller.SqueezeRequestControllerTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.squeeze.service.SqueezeRequestServiceTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.user.login_unit_test.UserLoginTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.user.signup_unit_test.UserServiceImplTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.waitlist.controller.WaitlistControllerTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/surefire-reports/hng_java_boilerplate.welcome.WelcomeControllerTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/ProgramTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/helpCenter/contactUs/controller/ContactUsControllerTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/helpCenter/contactUs/serviceImpl/ContactUsServiceImplTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/helpCenter/faq/controller/FaqControllerTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/helpCenter/faq/serviceImpl/FaqServiceImplTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/notification/NotificationControllerTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/organisation/service/OrganisationServiceTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/organisation/service/e2e.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/plan_test/PlanServiceTest$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/plan_test/PlanServiceTest$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/plan_test/PlanServiceTest$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/plan_test/PlanServiceTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/product_test/e2e/ProductSearchE2e.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/product_test/unit_test/ProductSearchTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/profile/controller/ProfileControllerTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/profile/serviceImpl/ProfileServiceImplTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/squeeze/controller/SqueezeRequestControllerTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/squeeze/service/SqueezeRequestServiceTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/user/login_unit_test/UserLoginTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/user/signup_unit_test/UserServiceImplTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/waitlist/controller/WaitlistControllerTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/test-classes/hng_java_boilerplate/welcome/WelcomeControllerTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/notification/models/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/notification/models/Notification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/notification/services/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/notification/services/NotificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V13__create_notification_table.sql" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2jSUrIbrkLUxAz03YXGPuCkvWnM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Rebasing feat/notification-api&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Desktop/sabiBank&quot;
+  }
+}</component>
+  <component name="RunManager" selected="Application.Program">
+    <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NotificationControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.notification.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SmsControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.sms.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.sms" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.sms.SmsControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WaitlistControllerTest.createWaitlist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.waitlist.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.waitlist.controller" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.waitlist.controller.WaitlistControllerTest" />
+      <option name="METHOD_NAME" value="createWaitlist" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Program" />
+        <item itemvalue="JUnit.NotificationControllerTest" />
+        <item itemvalue="JUnit.SmsControllerTest" />
+        <item itemvalue="JUnit.WaitlistControllerTest.createWaitlist" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="" />
+      <created>1721380209697</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1721380209697</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java</url>
+          <line>97</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
