@@ -85,9 +85,8 @@ jobs:
           echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
 
       - name: Create application.properties
-        run: |
-          mkdir -p src/main/resources
-          
+        # uses: ./.github/workflows/create-application-properties
+        run: |          
           cat << EOF > src/main/resources/application.properties
 
           spring.application.name=hng-java-boilerplate
