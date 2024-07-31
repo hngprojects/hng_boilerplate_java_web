@@ -13,7 +13,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    environment: PR-Validation
+    #environment: PR-Validation
       
     services:
         postgres:  
