@@ -1,14 +1,14 @@
 package hng_java_boilerplate.comments.controller;
 
 import hng_java_boilerplate.comments.entity.Comment;
-import hng_java_boilerplate.comments.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.comments.service.CommentService;
-import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
 import java.util.Collection;
 
 @RequiredArgsConstructor
@@ -28,35 +28,34 @@ public class CommentController {
         Collection<org.hibernate.annotations.Comment> comments = commentService.getCommentsForAPost(blog_id);
         return ResponseEntity.ok(comments);
     }
-   // @PostMapping("/delete/{comment_id}")
-    //public ResponseEntity<Comment> deleteAComment(String blog_id,@PathVariable String commentId){
-      //  Comment deletedComment = commentService.deleteAComment(commentId);}
+    @PostMapping("/{comment_id}")
+    public ResponseEntity<String> deleteAComment(@PathVariable("comment_id") String commentId){
+      String deletedComment = commentService.deleteAComment(commentId);
+      return ResponseEntity.ok(deletedComment);
+    }
 
     @PostMapping("/{commentId}/reply")
     public ResponseEntity<Comment> replyToComment(
             @PathVariable String commentId,
             @RequestBody Comment reply,
-            @RequestParam String userId) {
-        User user = userService.getUserById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found")).getUser();
+            @RequestParam String userId) throws BadPaddingException {
+        GetUserDto user = userService.getUserWithDetails(userId);
         Comment repliedComment = commentService.replyToComment(commentId, reply, user);
         return ResponseEntity.ok(repliedComment);
     }
     @PostMapping("/{commentId}/like")
     public ResponseEntity<Comment> likeComment(
             @PathVariable String commentId,
-            @RequestParam String userId) {
-        User user = userService.getUserById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found")).getUser();
+            @RequestParam String userId) throws BadPaddingException {
+        GetUserDto user = userService.getUserWithDetails(userId);
         Comment likedComment = commentService.likeComment(commentId, user);
         return ResponseEntity.ok(likedComment);
     }
     @PostMapping("/{commentId}/dislike")
     public ResponseEntity<Comment> dislikeComment(
             @PathVariable String commentId,
-            @RequestParam String userId) {
-        User user = userService.getUserById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found")).getUser();
+            @RequestParam String userId) throws BadPaddingException {
+        GetUserDto user = userService.getUserWithDetails(userId);
         Comment dislikedComment = commentService.dislikeComment(commentId, user);
         return ResponseEntity.ok(dislikedComment);
     }
@@ -64,9 +63,8 @@ public class CommentController {
     public ResponseEntity<Comment> editComment(
             @PathVariable String commentId,
             @RequestBody String newText,
-            @RequestParam String userId) {
-        User user = userService.getUserById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found")).getUser();
+            @RequestParam String userId) throws BadPaddingException {
+        GetUserDto user = userService.getUserWithDetails(userId);
         Comment editedComment = commentService.editComment(commentId, newText, user);
         return ResponseEntity.ok(editedComment);
     }

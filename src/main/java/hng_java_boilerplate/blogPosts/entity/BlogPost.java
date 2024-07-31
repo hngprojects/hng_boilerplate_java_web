@@ -34,7 +34,7 @@ public class BlogPost {
     @NotEmpty(message = "Add image link")
     @Column(name = "image_url", nullable = false)
     private List<String> imageUrls;
-    @Column(name = "tag", nullable = true)
+    @Column(name = "tag")
     private List<String> tags;
 @NotNull
 @ManyToOne

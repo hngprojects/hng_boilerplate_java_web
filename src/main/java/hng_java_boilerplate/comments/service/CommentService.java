@@ -1,7 +1,7 @@
 package hng_java_boilerplate.comments.service;
 
 import hng_java_boilerplate.comments.entity.Comment;
-import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.dto.request.GetUserDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,19 +16,19 @@ public interface CommentService {
 
     Comment getACommentForAPost(String blog_id, String commentId);
 
-    String deleteAComment(String blog_id, String commentId);
+    String deleteAComment(String commentId);
 
     @Transactional
-    Comment replyToComment(String commentId, Comment reply, User user);
+    Comment replyToComment(String commentId, Comment reply, GetUserDto user);
 
     @Transactional
-    Comment likeComment(String commentId, User user);
+    Comment likeComment(String commentId, GetUserDto user);
 
     @Transactional
-    Comment dislikeComment(String commentId, User user);
+    Comment dislikeComment(String commentId, GetUserDto user);
 
     @Transactional
-    Comment editComment(String commentId, String newText, User user);
+    Comment editComment(String commentId, String newText, GetUserDto user);
 
 }
 

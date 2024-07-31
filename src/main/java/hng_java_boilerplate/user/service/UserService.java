@@ -13,5 +13,5 @@ public interface UserService {
     GetUserDto getUserWithDetails(String userId) throws BadPaddingException;
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
 
-    Optional<Comment> getUserById(String userId);
+
 }

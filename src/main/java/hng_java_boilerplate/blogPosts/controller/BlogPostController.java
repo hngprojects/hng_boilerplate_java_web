@@ -1,7 +1,6 @@
 package hng_java_boilerplate.blogPosts.controller;
 
 import hng_java_boilerplate.blogPosts.entity.BlogPost;
-import hng_java_boilerplate.blogPosts.entity.BlogSuperAdminUser;
 import hng_java_boilerplate.blogPosts.service.BlogPostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import java.util.Optional;
 @SessionAttributes("post")
 public class BlogPostController {
     private final BlogPostService blogPostService;
-    private final BlogSuperAdminUser blogSuperAdminUser;
 
     @GetMapping("/{blog_id}")
     public String getBlogPost(@PathVariable String id, Model model, Principal principal) {
@@ -53,7 +51,6 @@ public class BlogPostController {
             System.err.println("Post not validated");
             return "postForm";
         }
-        //save post if all is good
         this.blogPostService.save(post);
         System.err.println("SAVE post:" + post);
         sessionStatus.setComplete();

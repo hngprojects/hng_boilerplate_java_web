@@ -37,7 +37,6 @@ public class JwtUtils {
                     .toInstant());
 
     private <T> T extractClaims(String token, Function<Claims, T> claimResolver) {
-        // Use deprecated parser method
         final Claims claims = Jwts.parser()
                 .setSigningKey(getKey.get())
                 .parseClaimsJws(token)
