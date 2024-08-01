@@ -31,7 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
-
 ../hng_boilerplate_java_web2/src/main/java/hng_java_boilerplate/utils/application.properties
 
+
 ../../../IdeaProjects/springSecClass/src/main/java/com/ofektom/springsecclass/utils/application.properties
+src/main/resources/application.properties
+
