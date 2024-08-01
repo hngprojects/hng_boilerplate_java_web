@@ -49,13 +49,15 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment with id" + commentId+"not found"));
-        if(comment.getPost().getId().equals(post.getId())){
-           return comment;
-        }else{ throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to the post");
-        }
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + commentId + " not found"));
 
+        if (comment.getPost().getId().equals(post.getId())) {
+            return comment;
+        } else {
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to the post");
+        }
     }
+
     @Override
     public String deleteAComment(String commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new ResourceNotFoundException("Comment not found"));

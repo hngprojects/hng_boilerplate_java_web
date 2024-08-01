@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,11 +27,11 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
-    private UserServiceImpl userService;
-    private JwtAuthenticationFilter authentication;
+    private final UserServiceImpl userService;
+    private final JwtAuthenticationFilter authentication;
 
-    @Autowired
     public WebSecurityConfig(@Lazy UserServiceImpl userService, JwtAuthenticationFilter authentication) {
         this.userService = userService;
         this.authentication = authentication;
@@ -61,7 +62,7 @@ public class WebSecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(username -> userService.loadUserByUsername(username));
+        daoAuthenticationProvider.setUserDetailsService(userService);
         return daoAuthenticationProvider;
     }
 
@@ -71,9 +72,23 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(httpRequests ->
                         httpRequests
-//                                .requestMatchers("").hasAuthority(String.valueOf(Role.ADMIN))
-                                .requestMatchers("/", "/v3/api-docs", "/swagger-ui/index.html" ,"/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/auth/logout","/api/**").authenticated())
+                                .requestMatchers(
+                                        "/",
+                                        "/docs",
+                                        "/v3/api-docs/**",
+                                        "/v3/api-docs",
+                                        "/api/v1/products/search",
+                                        "/swagger-ui/index.html",
+                                        "/swagger-resources/**",
+                                        "/webjars/**","/metrics",
+                                        "/swagger-ui/**",
+                                        "/api/v1/auth/**",
+                                        "/api/v1/waitlist",
+                                        "/api/v1/faqs",
+                                        "/api/v1/contacts",
+                                        "/api/v1/squeeze/"
+                                ).permitAll()
+                                .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)

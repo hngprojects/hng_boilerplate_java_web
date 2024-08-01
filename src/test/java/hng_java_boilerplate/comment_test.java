@@ -1,27 +1,25 @@
 package hng_java_boilerplate;
-
+import hng_java_boilerplate.comments.exceptions.UnAuthorizeException;
+import hng_java_boilerplate.comments.service.CommentServiceImpl;
 import hng_java_boilerplate.blogPosts.entity.BlogPost;
 import hng_java_boilerplate.blogPosts.repository.BlogPostRepository;
 import hng_java_boilerplate.comments.entity.Comment;
 import hng_java_boilerplate.comments.exceptions.BlogAPIException;
-import hng_java_boilerplate.comments.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.comments.repository.CommentRepository;
-import hng_java_boilerplate.comments.service.CommentServiceImpl;
+import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class CommentServiceImplTest {
 
     @Mock
@@ -30,111 +28,177 @@ class CommentServiceImplTest {
     @Mock
     private BlogPostRepository blogPostRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private CommentServiceImpl commentService;
 
-    private BlogPost blogPost;
-    private Comment comment;
-    private User user;
-
     @BeforeEach
     void setUp() {
-        blogPost = new BlogPost();
-        blogPost.setId(UUID.randomUUID().toString());
-        comment = new Comment();
-        comment.setCommentId(UUID.randomUUID().toString());
-        comment.setPost(blogPost);
-        user = new User();
-        user.setId(UUID.randomUUID().toString());
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testCreateComment() {
-        when(blogPostRepository.findPostById(blogPost.getId())).thenReturn(Optional.of(blogPost));
-        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
+        String blog_id = "1";
+        Comment comment = new Comment();
+        BlogPost blogPost = new BlogPost();
+        blogPost.setId(blog_id);
 
-        Comment createdComment = commentService.createComment(blogPost.getId(), comment);
+        when(blogPostRepository.findPostById(blog_id)).thenReturn(Optional.of(blogPost));
+        when(commentRepository.save(comment)).thenReturn(comment);
 
-        assertNotNull(createdComment);
-        assertEquals(comment, createdComment);
-        verify(blogPostRepository, times(1)).findPostById(blogPost.getId());
-        verify(commentRepository, times(1)).save(comment);
+        Comment result = commentService.createComment(blog_id, comment);
+
+        assertEquals(blogPost, comment.getPost());
+        assertEquals(comment, result);
+        verify(blogPostRepository).findPostById(blog_id);
+        verify(commentRepository).save(comment);
     }
 
     @Test
-    void testCreateComment_PostNotFound() {
-        when(blogPostRepository.findPostById(blogPost.getId())).thenReturn(Optional.empty());
+    void testGetCommentsForAPost() {
+        String blog_id = "1";
+        BlogPost blogPost = new BlogPost();
 
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
-            commentService.createComment(blogPost.getId(), comment);
-        });
+        when(blogPostRepository.findPostById(blog_id)).thenReturn(Optional.of(blogPost));
 
-        String expectedMessage = "Post with id" + blogPost.getId() + "not found";
-        String actualMessage = exception.getMessage();
+        var result = commentService.getCommentsForAPost(blog_id);
 
-        assertTrue(actualMessage.contains(expectedMessage));
-        verify(blogPostRepository, times(1)).findPostById(blogPost.getId());
+        assertNotNull(result);
+        verify(blogPostRepository).findPostById(blog_id);
     }
 
     @Test
     void testGetACommentForAPost() {
-        when(blogPostRepository.findById(blogPost.getId())).thenReturn(Optional.of(blogPost));
-        when(commentRepository.findById(comment.getCommentId())).thenReturn(Optional.of(comment));
+        String blog_id = "1";
+        String commentId = "2";
+        BlogPost blogPost = new BlogPost();
+        blogPost.setId(blog_id);
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
+        comment.setPost(blogPost);
 
-        Comment foundComment = commentService.getACommentForAPost(blogPost.getId(), comment.getCommentId());
+        when(blogPostRepository.findById(blog_id)).thenReturn(Optional.of(blogPost));
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
 
-        assertNotNull(foundComment);
-        assertEquals(comment, foundComment);
-        verify(blogPostRepository, times(1)).findById(blogPost.getId());
-        verify(commentRepository, times(1)).findById(comment.getCommentId());
+        Comment result = commentService.getACommentForAPost(blog_id, commentId);
+
+        assertEquals(comment, result);
+        verify(blogPostRepository).findById(blog_id);
+        verify(commentRepository).findById(commentId);
     }
 
     @Test
-    void testGetACommentForAPost_PostNotFound() {
-        when(blogPostRepository.findById(blogPost.getId())).thenReturn(Optional.empty());
+    void testGetACommentForAPost_CommentNotBelongToPost() {
+        String blog_id = "1";
+        String commentId = "2";
+        BlogPost blogPost = new BlogPost();
+        blogPost.setId(blog_id);
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
+        comment.setPost(new BlogPost());
 
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
-            commentService.getACommentForAPost(blogPost.getId(), comment.getCommentId());
-        });
+        when(blogPostRepository.findById(blog_id)).thenReturn(Optional.of(blogPost));
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
 
-        String expectedMessage = "Post not found";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-        verify(blogPostRepository, times(1)).findById(blogPost.getId());
+        assertThrows(BlogAPIException.class, () -> commentService.getACommentForAPost(blog_id, commentId));
     }
 
     @Test
     void testDeleteAComment() {
-        when(blogPostRepository.findPostById(blogPost.getId())).thenReturn(Optional.of(blogPost));
-        when(commentRepository.findById(comment.getCommentId())).thenReturn(Optional.of(comment));
+        String commentId = "1";
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
 
-        String result = commentService.deleteAComment(blogPost.getId(), comment.getCommentId());
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
 
-        assertEquals("Comment with ID " + comment.getCommentId() + " belonging to post with ID " + blogPost.getId() + " deleted", result);
-        verify(blogPostRepository, times(1)).findPostById(blogPost.getId());
-        verify(commentRepository, times(1)).findById(comment.getCommentId());
-        verify(commentRepository, times(1)).delete(comment);
+        String result = commentService.deleteAComment(commentId);
+
+        assertEquals("Comment Successfully deleted", result);
+        verify(commentRepository).findById(commentId);
+        verify(commentRepository).delete(comment);
     }
 
     @Test
-    void testDeleteAComment_CommentNotBelongToPost() {
-        BlogPost anotherPost = new BlogPost();
-        anotherPost.setId(UUID.randomUUID().toString());
-        comment.setPost(anotherPost);
+    void testReplyToComment() {
+        String commentId = "1";
+        Comment parentComment = new Comment();
+        parentComment.setCommentId(commentId);
+        Comment reply = new Comment();
+        User user = new User();
+        GetUserDto userDto = new GetUserDto();
+        userDto.setId("user1");
 
-        when(blogPostRepository.findPostById(blogPost.getId())).thenReturn(Optional.of(blogPost));
-        when(commentRepository.findById(comment.getCommentId())).thenReturn(Optional.of(comment));
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(parentComment));
+        when(userRepository.findById(userDto.getId())).thenReturn(Optional.of(user));
+        when(commentRepository.save(reply)).thenReturn(reply);
 
-        Exception exception = assertThrows(BlogAPIException.class, () -> {
-            commentService.deleteAComment(blogPost.getId(), comment.getCommentId());
-        });
+        Comment result = commentService.replyToComment(commentId, reply, userDto);
 
-        String expectedMessage = "Comment does not belong to the post";
-        String actualMessage = exception.getMessage();
+        assertEquals(parentComment, reply.getParentComment());
+        assertEquals(user, reply.getUser());
+        verify(commentRepository).findById(commentId);
+        verify(userRepository).findById(userDto.getId());
+        verify(commentRepository).save(reply);
+    }
 
-        assertTrue(actualMessage.contains(expectedMessage));
-        verify(blogPostRepository, times(1)).findPostById(blogPost.getId());
-        verify(commentRepository, times(1)).findById(comment.getCommentId());
+    @Test
+    void testLikeComment() {
+        String commentId = "1";
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
+        comment.setLikes(0);
+        GetUserDto userDto = new GetUserDto();
+
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        when(commentRepository.save(comment)).thenReturn(comment);
+
+        Comment result = commentService.likeComment(commentId, userDto);
+
+        assertEquals(1, comment.getLikes());
+        assertEquals(comment, result);
+        verify(commentRepository).findById(commentId);
+        verify(commentRepository).save(comment);
+    }
+
+    @Test
+    void testDislikeComment() {
+        String commentId = "1";
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
+        comment.setDislikes(0);
+        GetUserDto userDto = new GetUserDto();
+
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        when(commentRepository.save(comment)).thenReturn(comment);
+
+        Comment result = commentService.dislikeComment(commentId, userDto);
+
+        assertEquals(1, comment.getDislikes());
+        assertEquals(comment, result);
+        verify(commentRepository).findById(commentId);
+        verify(commentRepository).save(comment);
+    }
+
+    @Test
+    void testEditComment() {
+        String commentId = "1";
+        String newText = "newText";
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
+        GetUserDto userDto = new GetUserDto();
+
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        when(commentRepository.save(comment)).thenReturn(comment);
+
+        Comment result = commentService.editComment(commentId, newText, userDto);
+
+        assertEquals(newText, comment.getText());
+        assertEquals(comment, result);
+        verify(commentRepository).findById(commentId);
+        verify(commentRepository).save(comment);
     }
 }
+

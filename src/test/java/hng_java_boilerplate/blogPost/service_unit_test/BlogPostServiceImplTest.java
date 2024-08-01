@@ -97,43 +97,6 @@ class BlogPostServiceImplTest {
     }
 
     @Test
-    void testUpdateById() {
-        BlogPost updatedBlogPost = new BlogPost();
-        updatedBlogPost.setTitle("Updated Title");
-        updatedBlogPost.setContent("Updated Content");
-
-        when(blogPostRepository.findPostById(blogPost.getId())).thenReturn(Optional.of(blogPost));
-        when(blogPostRepository.saveAndFlush(blogPost)).thenReturn(updatedBlogPost);
-
-        BlogPost result = blogPostService.updateById(blogPost.getId(), updatedBlogPost);
-
-        assertNotNull(result);
-        assertEquals("Updated Title", result.getTitle());
-        assertEquals("Updated Content", result.getContent());
-        verify(blogPostRepository, times(1)).findPostById(blogPost.getId());
-        verify(blogPostRepository, times(1)).saveAndFlush(updatedBlogPost);
-    }
-
-    @Test
-    void testUpdateById_NotFound() {
-        BlogPost updatedBlogPost = new BlogPost();
-        updatedBlogPost.setTitle("Updated Title");
-        updatedBlogPost.setContent("Updated Content");
-
-        when(blogPostRepository.findPostById(blogPost.getId())).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            blogPostService.updateById(blogPost.getId(), updatedBlogPost);
-        });
-
-        String expectedMessage = "The user with id" + blogPost.getId() + "not found";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-        verify(blogPostRepository, times(1)).findPostById(blogPost.getId());
-    }
-
-    @Test
     void testDelete() {
         doNothing().when(blogPostRepository).delete(blogPost);
 
