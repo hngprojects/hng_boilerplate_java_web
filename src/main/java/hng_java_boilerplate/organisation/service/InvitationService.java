@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,12 +35,11 @@ public class InvitationService {
 
     @Transactional
     public ResponseEntity<?>createSingleInvite(SingleInviteDto singleInviteDto){
-        SingleResponseDto singleResponseDto = new SingleResponseDto();
-        List<String> data = new ArrayList<>();
         User loggedInUser = userService.getLoggedInUser();
         loggedInUser.getUserRole();
         Organisation organisationDetails = organisationService.getOrganisationDetails(
                 singleInviteDto.getOrganisation_id());
+
         Invitation invitationTable = new Invitation();
         invitationTable.setId(UUID.randomUUID().toString());
         invitationTable.setToken(UUID.randomUUID().toString());
@@ -52,9 +52,10 @@ public class InvitationService {
         invitationTable.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         invitationTable.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
         String invitationLInk = "http://api/hello?token=" + invitationTable.getToken();
+
+        SingleResponseDto singleResponseDto = new SingleResponseDto();
         singleResponseDto.setMessage("Invitation link created successfully");
-        data.add(invitationLInk);
-        singleResponseDto.setData(data);
+        singleResponseDto.setData(Collections.singletonList(invitationLInk));
         singleResponseDto.setStatus(HttpStatus.CREATED.value());
         invitationRepository.save(invitationTable);
         return new ResponseEntity<>(singleResponseDto, HttpStatus.OK);
