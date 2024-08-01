@@ -34,7 +34,7 @@ public class SqueezeRequestController {
             service.saveSqueezeRequest(request);
 
             String to = request.getEmail();
-            String subject = "EmailTemplates Template Confirmation";
+            String subject = "Email Template Confirmation";
             String text = "This is your email template";
             emailProducerService.sendEmailMessage(to, subject, text);
 

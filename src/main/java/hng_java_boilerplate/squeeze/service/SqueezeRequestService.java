@@ -17,7 +17,7 @@ public class SqueezeRequestService {
 
     public SqueezeRequest saveSqueezeRequest(SqueezeRequest squeezeRequest) throws DuplicateEmailException {
         if (repository.existsByEmail(squeezeRequest.getEmail())) {
-            throw new DuplicateEmailException("EmailTemplates address already exists");
+            throw new DuplicateEmailException("Email address already exists");
         }
         return repository.save(squeezeRequest);
     }

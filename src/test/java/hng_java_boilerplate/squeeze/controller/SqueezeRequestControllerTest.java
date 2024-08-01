@@ -82,13 +82,13 @@ public class SqueezeRequestControllerTest {
 
     @Test
     public void testHandleSqueezeRequest_DuplicateEmail() throws Exception {
-        when(service.saveSqueezeRequest(any(SqueezeRequest.class))).thenThrow(new DuplicateEmailException("EmailTemplates address already exists"));
+        when(service.saveSqueezeRequest(any(SqueezeRequest.class))).thenThrow(new DuplicateEmailException("Email address already exists"));
 
         mockMvc.perform(post("/api/v1/squeeze")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validRequest)))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value("EmailTemplates address already exists"))
+                .andExpect(jsonPath("$.message").value("Email address already exists"))
                 .andExpect(jsonPath("$.status_code").value(409));
     }
 

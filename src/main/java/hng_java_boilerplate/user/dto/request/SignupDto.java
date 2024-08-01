@@ -18,8 +18,8 @@ public class SignupDto {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
-    @Email(message = "EmailTemplates should be valid")
-    @NotBlank(message = "EmailTemplates is required")
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is required")
     private String email;
 
     @NotBlank(message = "Password is required")
