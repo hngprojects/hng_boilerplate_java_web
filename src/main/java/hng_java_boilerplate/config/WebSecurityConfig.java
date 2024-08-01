@@ -86,9 +86,12 @@ public class WebSecurityConfig {
                                         "/api/v1/waitlist",
                                         "/api/v1/faqs",
                                         "/api/v1/contacts",
-                                        "/api/v1/squeeze/"
+                                        "/api/v1/squeeze/",
+                                        "/api/v1/pages/newsletter"
                                 ).permitAll()
-                                .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
+                                .requestMatchers("/api/v1/auth/logout", "/api/**", "/api/v1/create/blog-categories",
+                                        "/api/v1/pages/listOfNewslettersSubscribers").hasAnyAuthority( "ROLE_SUPER_ADMIN", "ROLE_ADMIN")
+                                .anyRequest().authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)
