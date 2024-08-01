@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/waitlist/pages")
+@RequestMapping("/api/v1/waitlist/config")
 @Tag(name = "Waitlist Pages")
 @PreAuthorize("hasRole('ADMIN')")
 public class WaitlistPageController {
