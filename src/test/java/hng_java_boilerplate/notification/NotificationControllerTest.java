@@ -91,16 +91,16 @@ public class NotificationControllerTest {
 
     @Test
     public void testMarkAsRead() throws Exception {
-        UUID notificationId = UUID.randomUUID();
+        UUID notification_id = UUID.randomUUID();
         Notification notification = new Notification();
-        notification.setNotification_id(notificationId);
+        notification.setNotification_id(notification_id);
         notification.setIs_read(true);
 
-        when(notificationService.markAsRead(notificationId)).thenReturn(notification);
+        when(notificationService.markAsRead(notification_id)).thenReturn(notification);
 
-        mockMvc.perform(patch("/api/v1/notifications/{notificationId}", notificationId.toString()))
+        mockMvc.perform(patch("/api/v1/notifications/{notificationId}", notification_id.toString()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.notificationId").value(notificationId.toString()))
+                .andExpect(jsonPath("$.notificationId").value(notification_id.toString()))
                 .andExpect(jsonPath("$.isRead").value(true));
     }
 
