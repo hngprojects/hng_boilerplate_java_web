@@ -74,7 +74,7 @@ public class WaitlistControllerTest {
 
         // Verify that the expected methods were called
         verify(waitlistService).saveWaitlist(any(Waitlist.class));
-        verify(emailProducerService).sendEmailMessage("test@example.com", "Confirmation Email", "You are all signed up!");
+        verify(emailProducerService).sendEmailMessage("test@example.com", "Confirmation EmailTemplates", "You are all signed up!");
     }
 
     @Test

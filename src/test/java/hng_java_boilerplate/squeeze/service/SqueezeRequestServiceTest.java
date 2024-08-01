@@ -66,7 +66,7 @@ public class SqueezeRequestServiceTest {
             service.saveSqueezeRequest(validRequest);
         });
 
-        assertEquals("Email address already exists", exception.getMessage());
+        assertEquals("EmailTemplates address already exists", exception.getMessage());
     }
 
     @Test

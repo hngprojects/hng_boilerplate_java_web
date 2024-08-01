@@ -12,8 +12,8 @@ public record CreateOrganisationRequestDto (
         @NotBlank(message = "Organisation Description is required")
         String description,
 
-        @Email(message = "Organisation Email is not properly formatted")
-        @NotBlank(message = "Organisation Email is required")
+        @Email(message = "Organisation EmailTemplates is not properly formatted")
+        @NotBlank(message = "Organisation EmailTemplates is required")
         String email,
 
         @NotBlank(message = "Organisation Industry is required")

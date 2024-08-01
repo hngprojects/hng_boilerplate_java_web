@@ -36,7 +36,7 @@ public class WaitlistController {
         waitlistService.saveWaitlist(waitlist);
 
         String to = waitlist.getEmail();
-        String subject = "Confirmation Email";
+        String subject = "Confirmation EmailTemplates";
         String text = "You are all signed up!";
         emailProducerService.sendEmailMessage(to, subject, text);
 

@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private void validateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException("Email already exist");
+            throw new EmailAlreadyExistsException("EmailTemplates already exist");
         }
     }
 

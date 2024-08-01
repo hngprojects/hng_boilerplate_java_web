@@ -23,8 +23,8 @@ public class Waitlist {
     private UUID id;
     @NotBlank(message = "fullName is required")
     private String fullName;
-    @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is required")
+    @Email(message = "EmailTemplates should be valid")
+    @NotBlank(message = "EmailTemplates is required")
     private String email;
     @Column(name = "signup_date")
     private LocalDateTime signupDate;
