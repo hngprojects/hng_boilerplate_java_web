@@ -1,4 +1,4 @@
-package hng_java_boilerplate.organisation.dto;
+package hng_java_boilerplate.organisation.dto.requestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
