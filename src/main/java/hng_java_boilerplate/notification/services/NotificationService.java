@@ -37,9 +37,9 @@ public class NotificationService {
 
         Notification notification = new Notification();
         notification.setMessage(message);
-        notification.setIsRead(false);
+        notification.setIs_read(false);
         notification.setCreatedAt(LocalDateTime.now());
-        notification.setUserId(userId);
+        notification.setUser_id(userId);
 
         NotificationSettings settings = new NotificationSettings();
         settings.setUserId(userId);
@@ -50,14 +50,14 @@ public class NotificationService {
 
     public Notification markAsRead(UUID notificationId) {
         Notification notification = repository.findById(notificationId).orElseThrow(()-> new ResourceNotFoundException("Notification not found"));
-        notification.setIsRead(true);
+        notification.setIs_read(true);
         return repository.save(notification);
     }
 
     public List<Notification> markAllAsRead() {
         List<Notification> notifications = repository.findByIsRead(false);
         notifications.forEach(notification -> {
-            notification.setIsRead(true);
+            notification.setIs_read(true);
             repository.save(notification);
         });
         return notifications;

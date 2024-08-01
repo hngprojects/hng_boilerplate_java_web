@@ -19,12 +19,12 @@ public class NotificationSettings {
 
     private String userId;
 
-    private Boolean mobilePushNotifications = false;
-    private Boolean emailNotificationActivityInWorkspace = false;
-    private Boolean emailNotificationAlwaysSendEmailNotifications = false;
-    private Boolean emailNotificationEmailDigest = false;
-    private Boolean emailNotificationAnnouncementAndUpdateEmails = false;
-    private Boolean slackNotificationsActivityOnYourWorkspace = false;
-    private Boolean slackNotificationsAlwaysSendEmailNotifications = false;
-    private Boolean slackNotificationsAnnouncementAndUpdateEmails = false;
+    private Boolean mobile_push_notifications = false;
+    private Boolean email_notification_activity_in_workspace = false;
+    private Boolean email_notification_always_send_email_notifications = false;
+    private Boolean email_notification_email_digest = false;
+    private Boolean email_notification_announcement_and_update_emails = false;
+    private Boolean slack_notifications_activity_on_your_workspace = false;
+    private Boolean slack_notifications_always_send_email_notifications = false;
+    private Boolean slack_notifications_announcement_and_update_emails = false;
 }

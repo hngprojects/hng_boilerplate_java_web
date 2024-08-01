@@ -19,11 +19,11 @@ import java.util.UUID;
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID notificationId;
+    private UUID notification_id;
 
-    private String userId;
+    private String user_id;
     private String message;
-    private Boolean isRead;
+    private Boolean is_read;
     private LocalDateTime createdAt;
 
     @JsonIgnore
