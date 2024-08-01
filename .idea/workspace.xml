@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a0bc114c-e9d3-40d8-80cb-99f70ec60706" name="Changes" comment="" />
+    <list default="true" id="a0bc114c-e9d3-40d8-80cb-99f70ec60706" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V5__notification_settings_database.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V23__notification_settings_database.sql" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
