@@ -1,14 +1,20 @@
 package hng_java_boilerplate.organisation.service;
 
 import hng_java_boilerplate.email.EmailServices.EmailConsumerService;
-import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.email.entity.EmailMessage;
 import hng_java_boilerplate.organisation.dto.*;
+import hng_java_boilerplate.organisation.dto.requestDto.MembershipInviteDto;
+import hng_java_boilerplate.organisation.dto.requestDto.SendInviteResponseDto;
+import hng_java_boilerplate.organisation.dto.requestDto.SingleInviteDto;
 import hng_java_boilerplate.organisation.entity.Invitation;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.entity.Status;
+import hng_java_boilerplate.organisation.exception.InvitationValidationException;
+import hng_java_boilerplate.organisation.exception.InviteErrorResponse;
 import hng_java_boilerplate.organisation.repository.InvitationRepository;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.exception.InvalidRequestException;
+import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,10 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +34,8 @@ public class InvitationService {
     private final OrganisationService organisationService;
     private final InvitationRepository invitationRepository;
     private final EmailConsumerService emailConsumerService;
+
+    private final UserRepository userRepository;
 
     private final UserService userService;
 
@@ -51,11 +58,13 @@ public class InvitationService {
                         2024,8,3,23,30)));
         invitationTable.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         invitationTable.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
-        String invitationLInk = "http://api/hello?token=" + invitationTable.getToken();
-
+        InvitationLink invitationLink = new InvitationLink();
+        invitationLink.setInvitationLink("http://api/hello?token=" + invitationTable.getToken());
+        List<InvitationLink>iv = new ArrayList<>();
+        iv.add(invitationLink);
         SingleResponseDto singleResponseDto = new SingleResponseDto();
         singleResponseDto.setMessage("Invitation link created successfully");
-        singleResponseDto.setData(Collections.singletonList(invitationLInk));
+        singleResponseDto.setData(iv);
         singleResponseDto.setStatus(HttpStatus.CREATED.value());
         invitationRepository.save(invitationTable);
         return new ResponseEntity<>(singleResponseDto, HttpStatus.OK);
@@ -105,6 +114,52 @@ public class InvitationService {
         sendInviteResponseDto.setInvitations(invitations);
         invitationRepository.saveAll(invitationList);
         return new ResponseEntity<>(sendInviteResponseDto, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> acceptUserIntoOrganization(InvitationLink invitationLink) throws InvitationValidationException{
+        User loggedInUser = userService.getLoggedInUser();
+        InviteErrorResponse inviteErrorResponse = new InviteErrorResponse();
+        List<String> error = new ArrayList<>();
+        Pattern pattern = Pattern.compile("token=([\\w-]+)");
+        Matcher matcher = pattern.matcher(invitationLink.getInvitationLink());
+        String invitationToken = null;
+        if (matcher.find()){
+            invitationToken = matcher.group(1);
+        }else {
+            error.add("Invalid link format");
+            inviteErrorResponse.setMessage("Invalid or expired invitation link");
+            inviteErrorResponse.setError(error);
+            inviteErrorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            throw new InvitationValidationException(
+                   inviteErrorResponse.getMessage(),
+                    inviteErrorResponse.getError(),
+                    inviteErrorResponse.getStatus()
+            );
+        }
+        Invitation invitation = invitationRepository.findByToken(invitationToken)
+                .orElseThrow(() -> new RuntimeException("Invitation"));
+        if (invitation.getStatus() == Status.EXPIRED || invitation.getStatus() ==Status.ACCEPTED){
+            throw new InvalidRequestException("Invalid Invite Link");
+        }
+        if (Timestamp.valueOf(LocalDateTime.now()).after(invitation.getExpiresAt())){
+            error.add("Expired InvitationLink");
+            throw new InvitationValidationException("Invalid or expired invitation link",
+                    inviteErrorResponse.getError(),
+                    inviteErrorResponse.getStatus());
+        }
+        Organisation organisation = invitation.getOrganisation();
+        List<Organisation> loggedInUserOrganisations = loggedInUser.getOrganisations();
+        if (loggedInUserOrganisations.contains(organisation)){
+            throw new RuntimeException("User Already belong to org");
+        }
+       loggedInUserOrganisations.add(organisation);
+        loggedInUser.setOrganisations(loggedInUserOrganisations);
+        invitation.setStatus(Status.ACCEPTED);
+        invitationRepository.save(invitation);
+        userRepository.save(loggedInUser);
+        ValidLinkResponse validLinkResponse = new ValidLinkResponse("Invitation accepted, you have been added to the organization",
+                HttpStatus.OK.value());
+        return new ResponseEntity<>(validLinkResponse, HttpStatus.ACCEPTED);
     }
 
 }

@@ -1,6 +1,8 @@
 package hng_java_boilerplate.exception;
 
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
+import hng_java_boilerplate.organisation.exception.InvitationValidationException;
+import hng_java_boilerplate.organisation.exception.InviteErrorResponse;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
@@ -110,5 +112,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse("This resource does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvitationValidationException.class)
+    public ResponseEntity<?> invitationValidationHandler(InvitationValidationException invitationValidationException){
+        InviteErrorResponse errorResponse = new InviteErrorResponse(
+                invitationValidationException.getMessage(),
+                invitationValidationException.getError(),
+                invitationValidationException.getStatus()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

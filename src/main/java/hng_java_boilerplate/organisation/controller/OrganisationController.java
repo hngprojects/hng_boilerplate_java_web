@@ -3,7 +3,8 @@ package hng_java_boilerplate.organisation.controller;
 import hng_java_boilerplate.organisation.dto.CreateInvitationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
-import hng_java_boilerplate.organisation.dto.SingleInviteDto;
+import hng_java_boilerplate.organisation.dto.InvitationLink;
+import hng_java_boilerplate.organisation.dto.requestDto.SingleInviteDto;
 import hng_java_boilerplate.organisation.service.InvitationService;
 import hng_java_boilerplate.organisation.service.OrganisationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,6 +49,14 @@ public class OrganisationController {
         if (singleInviteDto == null){
             throw new RuntimeException("Request Body cannot be empty");
         }
-        return new ResponseEntity<>(invitationService.createSingleInvite(singleInviteDto), HttpStatus.OK);
+        return new ResponseEntity<>(invitationService.createSingleInvite(singleInviteDto).getBody(), HttpStatus.OK);
+    }
+
+    @PostMapping("/accept")
+    public ResponseEntity<?> acceptToOrganisation(@RequestBody InvitationLink invitationLink){
+        if (invitationLink == null || invitationLink.getInvitationLink() == " "){
+            throw new RuntimeException("Request Body cannot be empty");
+        }
+        return new ResponseEntity<>(invitationService.acceptUserIntoOrganization(invitationLink).getBody(),HttpStatus.OK);
     }
 }
