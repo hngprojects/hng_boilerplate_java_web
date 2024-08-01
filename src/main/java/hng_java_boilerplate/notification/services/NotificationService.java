@@ -1,5 +1,6 @@
 package hng_java_boilerplate.notification.services;
 
+import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.notification.models.Notification;
 import hng_java_boilerplate.notification.models.NotificationSettings;
 import hng_java_boilerplate.notification.repositories.NotificationRepository;
@@ -48,12 +49,9 @@ public class NotificationService {
     }
 
     public Notification markAsRead(UUID notificationId) {
-        Notification notification = repository.findById(notificationId).orElse(null);
-        if (notification != null) {
-            notification.setIsRead(true);
-            return repository.save(notification);
-        }
-        return null;
+        Notification notification = repository.findById(notificationId).orElseThrow(()-> new ResourceNotFoundException("Notification not found"));
+        notification.setIsRead(true);
+        return repository.save(notification);
     }
 
     public List<Notification> markAllAsRead() {
