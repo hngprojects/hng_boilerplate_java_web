@@ -68,14 +68,14 @@ public class NotificationSettingsControllerTest {
         // Configure your NotificationSettings object with valid data
         settings.setId(1L);
         settings.setUserId("user123");
-        settings.setMobilePushNotifications(true);
-        settings.setEmailNotificationActivityInWorkspace(true);
-        settings.setEmailNotificationAlwaysSendEmailNotifications(false);
-        settings.setEmailNotificationEmailDigest(true);
-        settings.setEmailNotificationAnnouncementAndUpdateEmails(false);
-        settings.setSlackNotificationsActivityOnYourWorkspace(true);
-        settings.setSlackNotificationsAlwaysSendEmailNotifications(false);
-        settings.setSlackNotificationsAnnouncementAndUpdateEmails(true);
+        settings.setMobile_push_notifications(true);
+        settings.setEmail_notification_activity_in_workspace(true);
+        settings.setEmail_notification_always_send_email_notifications(false);
+        settings.setEmail_notification_email_digest(true);
+        settings.setEmail_notification_announcement_and_update_emails(false);
+        settings.setSlack_notifications_activity_on_your_workspace(true);
+        settings.setSlack_notifications_always_send_email_notifications(false);
+        settings.setSlack_notifications_announcement_and_update_emails(true);
 
         when(service.updateSettings(Mockito.any(NotificationSettings.class))).thenReturn(settings);
 

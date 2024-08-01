@@ -1,5 +1,6 @@
 package hng_java_boilerplate.notification.controllers;
 
+import hng_java_boilerplate.notification.dto.NotificationRequest;
 import hng_java_boilerplate.notification.models.Notification;
 import hng_java_boilerplate.notification.services.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,8 @@ public class NotificationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createNotification(@RequestBody Map<String, String> request) {
-        String message = request.get("message");
+    public ResponseEntity<?> createNotification(@RequestBody NotificationRequest request) {
+        String message = request.message();
 
         Notification notification = service.createNotification(message);
         Map<String, Object> response = new HashMap<>();
