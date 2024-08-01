@@ -1,4 +1,4 @@
-CREATE TABLE squeeze_page (
+CREATE TABLE squeeze_config (
     id UUID PRIMARY KEY,
     page_title VARCHAR(255) NOT NULL,
     url_slug VARCHAR(255) NOT NULL UNIQUE,
