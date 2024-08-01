@@ -5,15 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailConsumerService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailProducerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailProducerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/entity/EmailMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/entity/EmailMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/enums/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/enums/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/newsletter/e2e_test/NewsletterControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/newsletter/e2e_test/NewsletterControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +45,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feat/newsletter-&&-blogcategories",
+    "git-widget-placeholder": "feat/newsletter-blogcategories",
     "last_opened_file_path": "C:/Users/USER/Desktop/hng_boilerplate_java_web_2/src/main/resources",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
@@ -69,7 +61,7 @@
       <recent name="C:\Users\USER\Desktop\hng_boilerplate_java_web_2\src\main\java\hng_java_boilerplate" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Program">
+  <component name="RunManager" selected="JUnit.NewsletterControllerTest">
     <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
       <module name="hng-java-boilerplate" />
@@ -79,6 +71,21 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NewsletterControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.newsletter.e2e_test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.newsletter.e2e_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.newsletter.e2e_test.NewsletterControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -115,21 +122,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NotificationControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hng-java-boilerplate" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.notification.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationControllerTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="NotificationSettingsControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
@@ -147,11 +139,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.NewsletterControllerTest" />
         <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.NewsletterControllerTest.testJoinNewsletter_existingEmail" />
         <item itemvalue="JUnit.NewsletterControllerTest.testJoinNewsletter" />
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
-        <item itemvalue="JUnit.NotificationControllerTest" />
       </list>
     </recent_temporary>
   </component>
