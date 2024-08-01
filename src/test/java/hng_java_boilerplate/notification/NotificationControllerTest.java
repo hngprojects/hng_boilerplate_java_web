@@ -76,7 +76,7 @@ public class NotificationControllerTest {
     public void testCreateNotification() throws Exception {
         Notification notification = new Notification();
         notification.setMessage("New message");
-        notification.setUserId("mock-user-id");
+        notification.setUser_id("mock-user-id");
 
         when(notificationService.createNotification(anyString())).thenReturn(notification);
 
@@ -93,8 +93,8 @@ public class NotificationControllerTest {
     public void testMarkAsRead() throws Exception {
         UUID notificationId = UUID.randomUUID();
         Notification notification = new Notification();
-        notification.setNotificationId(notificationId);
-        notification.setIsRead(true);
+        notification.setNotification_id(notificationId);
+        notification.setIs_read(true);
 
         when(notificationService.markAsRead(notificationId)).thenReturn(notification);
 
@@ -108,7 +108,7 @@ public class NotificationControllerTest {
     public void testMarkAllAsRead() throws Exception {
         List<Notification> notifications = new ArrayList<>();
         Notification notification = new Notification();
-        notification.setIsRead(true);
+        notification.setIs_read(true);
         notifications.add(notification);
 
         when(notificationService.markAllAsRead()).thenReturn(notifications);
