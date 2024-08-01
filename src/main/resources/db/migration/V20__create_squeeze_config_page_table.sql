@@ -10,7 +10,7 @@ CREATE TABLE squeeze_config (
 );
 
 -- Create an index on url_slug for faster lookups
-CREATE INDEX idx_squeeze_page_url_slug ON squeeze_page(url_slug);
+CREATE INDEX idx_squeeze_page_url_slug ON squeeze_config(url_slug);
 
 -- Create an index on created_date for sorting
-CREATE INDEX idx_squeeze_page_created_date ON squeeze_page(created_date);
+CREATE INDEX idx_squeeze_page_created_date ON squeeze_config(created_date);
