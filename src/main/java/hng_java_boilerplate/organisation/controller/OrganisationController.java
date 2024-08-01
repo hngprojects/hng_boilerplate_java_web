@@ -3,6 +3,7 @@ package hng_java_boilerplate.organisation.controller;
 import hng_java_boilerplate.organisation.dto.CreateInvitationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
+import hng_java_boilerplate.organisation.dto.SingleInviteDto;
 import hng_java_boilerplate.organisation.service.InvitationService;
 import hng_java_boilerplate.organisation.service.OrganisationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,10 +36,18 @@ public class OrganisationController {
     }
 
     @PostMapping("/send-invite")
-    public ResponseEntity<?> createInvitationLink(@RequestBody CreateInvitationRequestDto request){
+    public ResponseEntity<?> createInvitationLink(@Valid @RequestBody CreateInvitationRequestDto request){
         if (request == null){
             throw new RuntimeException("Request Body Cannot be empty");
         }
         return new ResponseEntity<>(invitationService.createInvitationLink(request).getBody(), HttpStatus.OK);
+    }
+
+    @PostMapping ("/create")
+    public ResponseEntity<?> createSingleInvite(@Valid @RequestBody SingleInviteDto singleInviteDto){
+        if (singleInviteDto == null){
+            throw new RuntimeException("Request Body cannot be empty");
+        }
+        return new ResponseEntity<>(invitationService.createSingleInvite(singleInviteDto), HttpStatus.OK);
     }
 }

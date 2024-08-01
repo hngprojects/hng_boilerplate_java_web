@@ -3,13 +3,13 @@ package hng_java_boilerplate.organisation.service;
 import hng_java_boilerplate.email.EmailServices.EmailConsumerService;
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.email.entity.EmailMessage;
-import hng_java_boilerplate.organisation.dto.CreateInvitationRequestDto;
-import hng_java_boilerplate.organisation.dto.MembershipInviteDto;
-import hng_java_boilerplate.organisation.dto.SendInviteResponseDto;
+import hng_java_boilerplate.organisation.dto.*;
 import hng_java_boilerplate.organisation.entity.Invitation;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.entity.Status;
 import hng_java_boilerplate.organisation.repository.InvitationRepository;
+import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +28,38 @@ public class InvitationService {
     private final OrganisationService organisationService;
     private final InvitationRepository invitationRepository;
     private final EmailConsumerService emailConsumerService;
+
+    private final UserService userService;
+
+
+    @Transactional
+    public ResponseEntity<?>createSingleInvite(SingleInviteDto singleInviteDto){
+        SingleResponseDto singleResponseDto = new SingleResponseDto();
+        List<String> data = new ArrayList<>();
+        User loggedInUser = userService.getLoggedInUser();
+        loggedInUser.getUserRole();
+        Organisation organisationDetails = organisationService.getOrganisationDetails(
+                singleInviteDto.getOrganisation_id());
+        Invitation invitationTable = new Invitation();
+        invitationTable.setId(UUID.randomUUID().toString());
+        invitationTable.setToken(UUID.randomUUID().toString());
+        invitationTable.setUserEmail(singleInviteDto.getEmail());
+        invitationTable.setStatus(Status.PENDING);
+        invitationTable.setOrganisation(organisationDetails);
+        invitationTable.setExpiresAt(Timestamp.valueOf(
+                LocalDateTime.of(
+                        2024,8,3,23,30)));
+        invitationTable.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        invitationTable.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        String invitationLInk = "http://api/hello?token=" + invitationTable.getToken();
+        singleResponseDto.setMessage("Invitation link created successfully");
+        data.add(invitationLInk);
+        singleResponseDto.setData(data);
+        singleResponseDto.setStatus(HttpStatus.CREATED.value());
+        invitationRepository.save(invitationTable);
+        return new ResponseEntity<>(singleResponseDto, HttpStatus.OK);
+    }
+
 
     @Transactional
     public ResponseEntity<?> createInvitationLink(CreateInvitationRequestDto createInvitationRequest){
