@@ -35,6 +35,7 @@ public class WaitlistPageController {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Waitlist page created successfully");
         response.put("id", savedPage.getId());
+        response.put("status_code", HttpStatus.CREATED.value());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -44,9 +45,9 @@ public class WaitlistPageController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("pages", waitlistPages.getContent());
-        response.put("currentPage", waitlistPages.getNumber());
-        response.put("totalItems", waitlistPages.getTotalElements());
-        response.put("totalPages", waitlistPages.getTotalPages());
+        response.put("current_page", waitlistPages.getNumber());
+        response.put("total_items", waitlistPages.getTotalElements());
+        response.put("total_pages", waitlistPages.getTotalPages());
         response.put("status_code", HttpStatus.OK.value());
         response.put("message", "Retrieved waitlist pages successfully");
 
@@ -59,9 +60,9 @@ public class WaitlistPageController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("pages", waitlistPages.getContent());
-        response.put("currentPage", waitlistPages.getNumber());
-        response.put("totalItems", waitlistPages.getTotalElements());
-        response.put("totalPages", waitlistPages.getTotalPages());
+        response.put("current_page", waitlistPages.getNumber());
+        response.put("total_items", waitlistPages.getTotalElements());
+        response.put("total_pages", waitlistPages.getTotalPages());
         response.put("status_code", HttpStatus.OK.value());
         response.put("message", "Search completed successfully");
 
