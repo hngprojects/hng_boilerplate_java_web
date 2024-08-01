@@ -31,14 +31,14 @@ public class NotificationSettingsService {
         NotificationSettings existingSettings = repository.findByUserId(userId);
         if (existingSettings != null) {
             // Update the settings
-            existingSettings.setMobilePushNotifications(settings.getMobilePushNotifications());
-            existingSettings.setEmailNotificationActivityInWorkspace(settings.getEmailNotificationActivityInWorkspace());
-            existingSettings.setEmailNotificationAlwaysSendEmailNotifications(settings.getEmailNotificationAlwaysSendEmailNotifications());
-            existingSettings.setEmailNotificationEmailDigest(settings.getEmailNotificationEmailDigest());
-            existingSettings.setEmailNotificationAnnouncementAndUpdateEmails(settings.getEmailNotificationAnnouncementAndUpdateEmails());
-            existingSettings.setSlackNotificationsActivityOnYourWorkspace(settings.getSlackNotificationsActivityOnYourWorkspace());
-            existingSettings.setSlackNotificationsAlwaysSendEmailNotifications(settings.getSlackNotificationsAlwaysSendEmailNotifications());
-            existingSettings.setSlackNotificationsAnnouncementAndUpdateEmails(settings.getSlackNotificationsAnnouncementAndUpdateEmails());
+            existingSettings.setMobile_push_notifications(settings.getMobile_push_notifications());
+            existingSettings.setEmail_notification_activity_in_workspace(settings.getEmail_notification_activity_in_workspace());
+            existingSettings.setEmail_notification_always_send_email_notifications(settings.getEmail_notification_always_send_email_notifications());
+            existingSettings.setEmail_notification_email_digest(settings.getEmail_notification_email_digest());
+            existingSettings.setEmail_notification_announcement_and_update_emails(settings.getEmail_notification_announcement_and_update_emails());
+            existingSettings.setSlack_notifications_activity_on_your_workspace(settings.getSlack_notifications_activity_on_your_workspace());
+            existingSettings.setSlack_notifications_always_send_email_notifications(settings.getSlack_notifications_always_send_email_notifications());
+            existingSettings.setSlack_notifications_announcement_and_update_emails(settings.getSlack_notifications_announcement_and_update_emails());
             return repository.save(existingSettings);
         } else {
             // Handle case where settings do not exist, maybe throw an exception or create new settings
