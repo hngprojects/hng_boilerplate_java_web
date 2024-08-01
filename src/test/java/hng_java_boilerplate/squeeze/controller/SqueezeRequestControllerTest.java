@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -89,6 +90,45 @@ public class SqueezeRequestControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value("EmailTemplates address already exists"))
                 .andExpect(jsonPath("$.status_code").value(409));
+    }
+
+    @Test
+    public void testGetAllSqueezeRequests() throws Exception {
+        SqueezeRequest request1 = SqueezeRequest.builder()
+                .email("email1@example.com")
+                .first_name("FirstName1")
+                .last_name("LastName1")
+                .phone("1234567890")
+                .location("Location1")
+                .job_title("JobTitle1")
+                .company("Company1")
+                .interests(new ArrayList<>(List.of("Interest1", "Interest2")))
+                .referral_source("ReferralSource1")
+                .build();
+
+        SqueezeRequest request2 = SqueezeRequest.builder()
+                .email("email2@example.com")
+                .first_name("FirstName2")
+                .last_name("LastName2")
+                .phone("0987654321")
+                .location("Location2")
+                .job_title("JobTitle2")
+                .company("Company2")
+                .interests(new ArrayList<>(List.of("Interest3", "Interest4")))
+                .referral_source("ReferralSource2")
+                .build();
+
+        List<SqueezeRequest> requests = List.of(request1, request2);
+
+        when(service.getAllSqueezeRequests()).thenReturn(requests);
+
+        mockMvc.perform(get("/api/v1/squeeze")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].email").value("email1@example.com"))
+                .andExpect(jsonPath("$[0].first_name").value("FirstName1"))
+                .andExpect(jsonPath("$[1].email").value("email2@example.com"))
+                .andExpect(jsonPath("$[1].first_name").value("FirstName2"));
     }
 
 }
