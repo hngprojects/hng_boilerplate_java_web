@@ -2,6 +2,7 @@ package hng_java_boilerplate.notification.controllers;
 
 import hng_java_boilerplate.notification.models.NotificationSettings;
 import hng_java_boilerplate.notification.services.NotificationSettingsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +12,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/notification-settings")
+@RequiredArgsConstructor
 public class NotificationSettingsController {
-    @Autowired
-    private NotificationSettingsService service;
+
+    private final NotificationSettingsService service;
 
     @GetMapping
     public ResponseEntity<?> getSettings() {

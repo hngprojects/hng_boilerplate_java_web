@@ -1,5 +1,6 @@
 package hng_java_boilerplate.notification.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class Notification {
     private Boolean isRead;
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "notification_settings_id", referencedColumnName = "id")
     private NotificationSettings notificationSettings;

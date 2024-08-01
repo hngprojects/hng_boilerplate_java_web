@@ -254,7 +254,7 @@
     &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Desktop/sabiBank&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.Program">
+  <component name="RunManager" selected="JUnit.NotificationSettingsControllerTest">
     <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
       <module name="hng-java-boilerplate" />
@@ -278,6 +278,21 @@
       </extension>
       <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NotificationSettingsControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.notification.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationSettingsControllerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -316,8 +331,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Program" />
+        <item itemvalue="JUnit.NotificationSettingsControllerTest" />
         <item itemvalue="JUnit.NotificationControllerTest" />
+        <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.SmsControllerTest" />
         <item itemvalue="JUnit.WaitlistControllerTest.createWaitlist" />
       </list>
