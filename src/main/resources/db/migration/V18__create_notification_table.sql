@@ -1,4 +1,4 @@
--- V17__Create_notification_and_notification_settings_tables.sql
+-- V18__Create_notification_and_notification_settings_tables.sql
 
 -- Creating the notification_settings table
 CREATE TABLE notification_settings (
