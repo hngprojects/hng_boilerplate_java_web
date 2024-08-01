@@ -80,4 +80,21 @@ public class WaitlistPageController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteWaitlistPage(@PathVariable String id) {
+        boolean deleted = waitlistPageService.deleteWaitlistPage(id);
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (deleted) {
+            response.put("message", "Waitlist page deleted successfully");
+            response.put("statusCode", 200);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            response.put("message", "Waitlist page not found");
+            response.put("statusCode", 404);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
 }

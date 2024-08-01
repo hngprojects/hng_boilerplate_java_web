@@ -44,4 +44,12 @@ public class WaitlistPageService {
         waitlistPage.setActive(!waitlistPage.isActive());
         return waitlistPageRepository.save(waitlistPage);
     }
+
+    public boolean deleteWaitlistPage(String id) {
+        if (waitlistPageRepository.existsById(UUID.fromString(id))) {
+            waitlistPageRepository.deleteById(UUID.fromString(id));
+            return true;
+        }
+        return false;
+    }
 }
