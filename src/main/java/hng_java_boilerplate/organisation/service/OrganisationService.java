@@ -79,4 +79,12 @@ public class OrganisationService {
                 .status_code(201)
                 .build();
     }
+
+
+    @Transactional
+    public Organisation getOrganisationDetails(String organisationId) throws OrganisationNameAlreadyExistsException{
+        Organisation foundOrganisation = organisationRepository.findById(organisationId)
+                .orElseThrow(()-> new OrganisationNameAlreadyExistsException("Invalid Organisation Id"));
+        return foundOrganisation;
+    }
 }

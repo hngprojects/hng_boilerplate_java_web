@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -40,6 +41,8 @@ public class Organisation {
     @JsonIgnore
     private List<User> users;
 
+    @OneToMany(mappedBy ="organisation" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Invitation> InvitationTables;
     @PrePersist
     public void prePersist() {
         if (this.id == null) {
