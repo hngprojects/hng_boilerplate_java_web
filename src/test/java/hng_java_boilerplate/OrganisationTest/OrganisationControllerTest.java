@@ -9,7 +9,9 @@ import hng_java_boilerplate.organisation.entity.Role;
 import hng_java_boilerplate.organisation.exception.ResourceNotFoundException;
 import hng_java_boilerplate.organisation.exception.UnauthorizedException;
 import hng_java_boilerplate.organisation.service.OrganisationServices;
+import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -40,6 +42,12 @@ class OrganisationControllerTest {
 
     @MockBean
     private OrganisationServices organisationServices;
+
+    @MockBean
+    private ProductErrorHandler productErrorHandler;
+
+    @MockBean
+    private JwtUtils jwtUtils;
 
     private User mockUser;
     private Organisation mockOrganisation;
