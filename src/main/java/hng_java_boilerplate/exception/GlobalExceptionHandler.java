@@ -69,6 +69,12 @@ public class GlobalExceptionHandler {
         return new CustomError(400, ex.getMessage());
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public CustomError handleNotFound(NotFoundException ex) {
+        return new CustomError(404, ex.getMessage());
+    }
+
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ResponseMessageDto> handleDuplicateEmailException(DuplicateEmailException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.CONFLICT.value()));
