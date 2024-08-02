@@ -12,11 +12,11 @@ import java.time.LocalDate;
 @Setter
 public class TestimonialDataDto {
     @JsonProperty("user_id")
-    private String userId;
+    private String user_id;
     private String name;
     private String content;
     @JsonProperty("created_at")
-    private LocalDate createdAt;
+    private LocalDate created_at;
     @JsonProperty("updated_at")
-    private LocalDate updatedAt;
+    private LocalDate updated_at;
 }
