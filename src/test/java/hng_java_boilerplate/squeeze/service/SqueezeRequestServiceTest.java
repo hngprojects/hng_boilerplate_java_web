@@ -105,4 +105,3 @@ public class SqueezeRequestServiceTest {
         assertEquals("The squeeze page record can only be updated once.", exception.getMessage());
     }
 }
-
