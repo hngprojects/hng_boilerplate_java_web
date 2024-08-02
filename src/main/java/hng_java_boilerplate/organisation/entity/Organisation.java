@@ -2,7 +2,7 @@ package hng_java_boilerplate.organisation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hng_java_boilerplate.user.entity.User;
-<<<<<<< HEAD
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Data
-=======
+
+
 import hng_java_boilerplate.util.UUIDGenarator;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,26 +27,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "organisations")
-<<<<<<< HEAD
 @FilterDef(name = "deletedFilter", parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
 @Filter(name = "deletedFilter", condition = "deleted = :isDeleted")
-=======
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
+
 public class Organisation {
     @Id
     private String id;
 
     private String name;
     private String description;
-<<<<<<< HEAD
+
     private boolean deleted;
-=======
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
 
     private String slug;
     private String email;
@@ -66,21 +62,20 @@ public class Organisation {
     @JsonIgnore
     private List<User> users;
 
-<<<<<<< HEAD
+
     @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Role> roles;
 
-=======
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
+
     @PrePersist
     public void prePersist() {
         if (this.id == null) {
             this.id = UUID.randomUUID().toString();
         }
     }
-<<<<<<< HEAD
-}
-=======
+
+
+
 
     public String getId() {
         return id;
@@ -194,4 +189,4 @@ public class Organisation {
         this.owner = owner;
     }
 }
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
+
