@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateInvitationRequestDto {
-    @Email
+
     private List<String> email;
     private String organisation_id;
 }
