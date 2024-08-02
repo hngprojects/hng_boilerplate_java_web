@@ -2,6 +2,7 @@ package hng_java_boilerplate.organisation.service;
 
 import hng_java_boilerplate.email.EmailServices.EmailConsumerService;
 import hng_java_boilerplate.email.entity.EmailMessage;
+import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.organisation.dto.*;
 import hng_java_boilerplate.organisation.dto.requestDto.MembershipInviteDto;
 import hng_java_boilerplate.organisation.dto.requestDto.SendInviteResponseDto;
@@ -73,15 +74,17 @@ public class InvitationService {
     @Transactional
     public ResponseEntity<?> createInvitationLink(CreateInvitationRequestDto createInvitationRequest){
 //        ADMIN CONSTRAINTS, LOGGED IN USER PERMISSION
-        String organisation_id = createInvitationRequest.getOrganisation_id();
-        Organisation organisationDetails = organisationService.getOrganisationDetails(organisation_id);
         List<Invitation> invitationList  = new ArrayList<>();
         List<String> strings = new ArrayList<>();
-        SendInviteResponseDto sendInviteResponseDto = new SendInviteResponseDto();
         MembershipInviteDto inviteDto = new MembershipInviteDto();
+        SendInviteResponseDto sendInviteResponseDto = new SendInviteResponseDto();
+        String invitationLink = null;
+
         List<MembershipInviteDto> invitations = sendInviteResponseDto.getInvitations();
         List<String> emails = createInvitationRequest.getEmail();
-        String invitationLink = null;
+        String organisation_id = createInvitationRequest.getOrganisation_id();
+        Organisation organisationDetails = organisationService.getOrganisationDetails(organisation_id);
+
         for (String email: emails) {
             Invitation invitationTable = new Invitation();
             EmailMessage emailMessage = new EmailMessage();
@@ -114,13 +117,15 @@ public class InvitationService {
         return new ResponseEntity<>(sendInviteResponseDto, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> acceptUserIntoOrganization(InvitationLink invitationLink) throws InvitationValidationException{
+    public ResponseEntity<?> acceptUserIntoOrganization(InvitationLink invitationLink) throws Exception {
         User loggedInUser = userService.getLoggedInUser();
         InviteErrorResponse inviteErrorResponse = new InviteErrorResponse();
         List<String> error = new ArrayList<>();
+        String invitationToken = null;
+
         Pattern pattern = Pattern.compile("token=([\\w-]+)");
         Matcher matcher = pattern.matcher(invitationLink.getInvitationLink());
-        String invitationToken = null;
+
         if (matcher.find()){
             invitationToken = matcher.group(1);
         }else {
@@ -135,20 +140,22 @@ public class InvitationService {
             );
         }
         Invitation invitation = invitationRepository.findByToken(invitationToken)
-                .orElseThrow(() -> new RuntimeException("Invitation"));
+                .orElseThrow(() -> new ResourceNotFoundException("Doesn't Exist"));
         if (invitation.getStatus() == Status.EXPIRED || invitation.getStatus() ==Status.ACCEPTED){
             throw new InvalidRequestException("Invalid Invite Link");
         }
         if (Timestamp.valueOf(LocalDateTime.now()).after(invitation.getExpiresAt())){
             error.add("Expired InvitationLink");
+            inviteErrorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             throw new InvitationValidationException("Invalid or expired invitation link",
                     inviteErrorResponse.getError(),
                     inviteErrorResponse.getStatus());
         }
         Organisation organisation = invitation.getOrganisation();
         List<Organisation> loggedInUserOrganisations = loggedInUser.getOrganisations();
+
         if (loggedInUserOrganisations.contains(organisation)){
-            throw new RuntimeException("User Already belong to org");
+            throw new Exception("User Already belong to org");
         }
        loggedInUserOrganisations.add(organisation);
         loggedInUser.setOrganisations(loggedInUserOrganisations);

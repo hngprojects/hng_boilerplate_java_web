@@ -53,7 +53,7 @@ public class OrganisationController {
     }
 
     @PostMapping("/accept")
-    public ResponseEntity<?> acceptToOrganisation(@RequestBody InvitationLink invitationLink){
+    public ResponseEntity<?> acceptToOrganisation(@RequestBody InvitationLink invitationLink) throws Exception {
         if (invitationLink == null || invitationLink.getInvitationLink() == " "){
             throw new RuntimeException("Request Body cannot be empty");
         }
