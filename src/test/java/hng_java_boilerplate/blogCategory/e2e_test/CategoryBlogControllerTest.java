@@ -33,7 +33,7 @@ public class CategoryBlogControllerTest {
     public void testCreateBlogCategorySuccess() throws Exception {
 
         CreateBlogCategoryRequestDTO requestDTO = new CreateBlogCategoryRequestDTO();
-        requestDTO.setName("Testssv Category");
+        requestDTO.setName("Tes Category");
 
 
         MvcResult result = mockMvc.perform(
@@ -42,12 +42,12 @@ public class CategoryBlogControllerTest {
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.data.name.name").value("Testssv Category"))
+                .andExpect(jsonPath("$.data.name.name").value("Tes Category"))
                 .andReturn();
 
 
         String responseContent = result.getResponse().getContentAsString();
         CreateBlogCategoryResponseDTO responseDTO = objectMapper.readValue(responseContent, CreateBlogCategoryResponseDTO.class);
-        assertEquals("Testssv Category", responseDTO.getData().getName().getName());
+        assertEquals("Tes Category", responseDTO.getData().getName().getName());
     }
 }
