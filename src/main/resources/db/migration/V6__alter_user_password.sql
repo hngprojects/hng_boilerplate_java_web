@@ -1,7 +1,7 @@
-<<<<<<< HEAD
+
 ALTER TABLE users
 ALTER COLUMN password SET NOT NULL;
-=======
+
 ALTER TABLE users
 ALTER COLUMN password SET NOT NULL;
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
+

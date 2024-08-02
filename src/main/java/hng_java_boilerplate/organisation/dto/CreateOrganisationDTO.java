@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class CreateOrganisationDTO {
     @NotBlank(message = "Name is mandatory")
     private String name;

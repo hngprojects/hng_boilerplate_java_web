@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
