@@ -1,0 +1,39 @@
+name: Dev-Deployment
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types:
+      - completed
+    branches: [dev]
+
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion=='success' && github.event.workflow_run.head_branch == 'dev' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Add SSH Key to Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: SSH into Server and Execute Command
+        run: |
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
+          cd ~/hng_boilerplate_java_web && git fetch origin dev && git stash && git checkout dev && git pull && chmod +x deploy.sh && ./deploy.sh && sudo systemctl start java_app.service && \
+          exit"
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USERNAME: ${{ secrets.DEV_SSH_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.DEV_SSH_PASSWORD }}
+  
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion=='failure' }}
+    steps:
+      - run: echo "Triggering the Workflow Failed"
