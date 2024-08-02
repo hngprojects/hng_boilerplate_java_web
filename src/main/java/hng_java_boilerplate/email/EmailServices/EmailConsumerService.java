@@ -17,10 +17,7 @@ public class EmailConsumerService {
 
     @Autowired
     public EmailConsumerService(JavaMailSender emailSender) {
-<<<<<<< HEAD
 
-=======
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
         this.emailSender = emailSender;
     }
 
