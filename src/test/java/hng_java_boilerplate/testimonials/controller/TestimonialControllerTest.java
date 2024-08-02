@@ -79,10 +79,10 @@ class TestimonialControllerTest {
         requestDto.setContent("Great service!");
 
         Testimonial testimonial = new Testimonial();
-        testimonial.setUserId(mockUser.getId());
+        testimonial.setUser_id(mockUser.getId());
         testimonial.setName(requestDto.getName());
         testimonial.setContent(requestDto.getContent());
-        testimonial.setCreatedAt(LocalDate.now());
+        testimonial.setCreated_at(LocalDate.now());
 
         when(testimonialService.createTestimonial(any(String.class), any(String.class), any(String.class)))
                 .thenReturn(testimonial);
@@ -107,10 +107,10 @@ class TestimonialControllerTest {
         when(userService.getLoggedInUser()).thenReturn(mockUser);
 
         Testimonial testimonial = new Testimonial();
-        testimonial.setUserId("userId123");
+        testimonial.setUser_id("userId123");
         testimonial.setName("John Doe");
         testimonial.setContent("Great service!");
-        testimonial.setCreatedAt(LocalDate.now());
+        testimonial.setCreated_at(LocalDate.now());
 
         when(testimonialService.getTestimonialById("testimonialId123")).thenReturn(testimonial);
 
@@ -122,7 +122,7 @@ class TestimonialControllerTest {
                 .andExpect(jsonPath("$.data.user_id").value("userId123"))
                 .andExpect(jsonPath("$.data.name").value("John Doe"))
                 .andExpect(jsonPath("$.data.content").value("Great service!"))
-                .andExpect(jsonPath("$.data.created_at").value(testimonial.getCreatedAt().toString()));
+                .andExpect(jsonPath("$.data.created_at").value(testimonial.getCreated_at().toString()));
     }
 
     @Test
@@ -142,16 +142,16 @@ class TestimonialControllerTest {
         when(userService.getLoggedInUser()).thenReturn(mockUser);
 
         Testimonial testimonial1 = new Testimonial();
-        testimonial1.setUserId("userId1");
+        testimonial1.setUser_id("userId1");
         testimonial1.setName("John Doe");
         testimonial1.setContent("Great service!");
-        testimonial1.setCreatedAt(LocalDate.now());
+        testimonial1.setCreated_at(LocalDate.now());
 
         Testimonial testimonial2 = new Testimonial();
-        testimonial2.setUserId("userId2");
+        testimonial2.setUser_id("userId2");
         testimonial2.setName("Jane Smith");
         testimonial2.setContent("Excellent support!");
-        testimonial2.setCreatedAt(LocalDate.now());
+        testimonial2.setCreated_at(LocalDate.now());
 
         List<Testimonial> testimonials = List.of(testimonial1, testimonial2);
         Page<Testimonial> testimonialPage = new PageImpl<>(testimonials, PageRequest.of(0, 3), testimonials.size());
@@ -166,11 +166,11 @@ class TestimonialControllerTest {
                 .andExpect(jsonPath("$.data[0].user_id").value("userId1"))
                 .andExpect(jsonPath("$.data[0].name").value("John Doe"))
                 .andExpect(jsonPath("$.data[0].content").value("Great service!"))
-                .andExpect(jsonPath("$.data[0].created_at").value(testimonial1.getCreatedAt().toString()))
+                .andExpect(jsonPath("$.data[0].created_at").value(testimonial1.getCreated_at().toString()))
                 .andExpect(jsonPath("$.data[1].user_id").value("userId2"))
                 .andExpect(jsonPath("$.data[1].name").value("Jane Smith"))
                 .andExpect(jsonPath("$.data[1].content").value("Excellent support!"))
-                .andExpect(jsonPath("$.data[1].created_at").value(testimonial2.getCreatedAt().toString()))
+                .andExpect(jsonPath("$.data[1].created_at").value(testimonial2.getCreated_at().toString()))
                 .andExpect(jsonPath("$.pagination.current_page").value(1))
                 .andExpect(jsonPath("$.pagination.per_page").value(3))
                 .andExpect(jsonPath("$.pagination.total_pages").value(1))
@@ -185,11 +185,11 @@ class TestimonialControllerTest {
         when(userService.getLoggedInUser()).thenReturn(mockUser);
 
         Testimonial testimonial = new Testimonial();
-        testimonial.setUserId("userId123");
+        testimonial.setUser_id("userId123");
         testimonial.setName("John Doe");
         testimonial.setContent("Updated content");
-        testimonial.setCreatedAt(LocalDate.now());
-        testimonial.setUpdatedAt(LocalDate.now());
+        testimonial.setCreated_at(LocalDate.now());
+        testimonial.setUpdated_at(LocalDate.now());
 
         when(testimonialService.updateTestimonial("testimonialId123", "userId123", "Updated content")).thenReturn(testimonial);
 
@@ -205,6 +205,6 @@ class TestimonialControllerTest {
                 .andExpect(jsonPath("$.message").value("Testimonial updated successfully"))
                 .andExpect(jsonPath("$.data.user_id").value("userId123"))
                 .andExpect(jsonPath("$.data.content").value("Updated content"))
-                .andExpect(jsonPath("$.data.updated_at").value(testimonial.getUpdatedAt().toString()));
+                .andExpect(jsonPath("$.data.updated_at").value(testimonial.getUpdated_at().toString()));
     }
 }

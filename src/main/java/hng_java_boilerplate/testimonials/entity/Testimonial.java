@@ -21,7 +21,7 @@ public class Testimonial {
     private String id;
 
     @Column(nullable = false)
-    private String userId;
+    private String user_id;
 
     @Column(nullable = false)
     private String name;
@@ -30,8 +30,8 @@ public class Testimonial {
     private String content;
 
     @Column(nullable = false)
-    private LocalDate createdAt;
+    private LocalDate created_at;
 
     @Column(nullable = false)
-    private LocalDate updatedAt;
+    private LocalDate updated_at;
 }

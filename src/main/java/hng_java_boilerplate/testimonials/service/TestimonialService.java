@@ -20,10 +20,10 @@ public class TestimonialService {
 
     public Testimonial createTestimonial(String userId, String name, String content) {
         Testimonial testimonial = new Testimonial();
-        testimonial.setUserId(userId);
+        testimonial.setUser_id(userId);
         testimonial.setName(name);
         testimonial.setContent(content);
-        testimonial.setCreatedAt(LocalDate.now());
+        testimonial.setCreated_at(LocalDate.now());
 
         return testimonialRepository.save(testimonial);
     }
@@ -41,12 +41,12 @@ public class TestimonialService {
         Testimonial testimonial = testimonialRepository.findById(testimonialId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Testimonial not found"));
 
-        if (!testimonial.getUserId().equals(userId)) {
+        if (!testimonial.getUser_id().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only owners of testimonial can update");
         }
 
         testimonial.setContent(content);
-        testimonial.setUpdatedAt(LocalDate.now());
+        testimonial.setUpdated_at(LocalDate.now());
 
         return testimonialRepository.save(testimonial);
     }

@@ -38,7 +38,7 @@ public class TestimonialController {
         }
         Testimonial testimonial = testimonialService.createTestimonial(loggedInUser.getId(), request.getName(), request.getContent());
 
-        TestimonialDataDto testimonialData = new TestimonialDataDto(testimonial.getUserId(), testimonial.getName(), testimonial.getContent(), testimonial.getCreatedAt(), testimonial.getUpdatedAt());
+        TestimonialDataDto testimonialData = new TestimonialDataDto(testimonial.getUser_id(), testimonial.getName(), testimonial.getContent(), testimonial.getCreated_at(), testimonial.getUpdated_at());
 
         TestimonialResponseDto response = new TestimonialResponseDto("success", "Testimonial created successfully", testimonialData);
 
@@ -58,7 +58,7 @@ public class TestimonialController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("status_code", 404, "message", "Testimonial not found"));
         }
 
-        TestimonialDataDto testimonialData = new TestimonialDataDto(testimonial.getUserId(), testimonial.getName(), testimonial.getContent(), testimonial.getCreatedAt(), testimonial.getUpdatedAt());
+        TestimonialDataDto testimonialData = new TestimonialDataDto(testimonial.getUser_id(), testimonial.getName(), testimonial.getContent(), testimonial.getCreated_at(), testimonial.getUpdated_at());
         return ResponseEntity.ok(Map.of("message", "Testimonial fetched successfully", "status_code", 200, "data", testimonialData));
     }
 
@@ -72,7 +72,7 @@ public class TestimonialController {
 
         Page<Testimonial> testimonialsPage = testimonialService.getAllTestimonials(page, size);
         List<TestimonialDataDto> testimonials = testimonialsPage.getContent().stream()
-                .map(testimonial -> new TestimonialDataDto(testimonial.getUserId(), testimonial.getName(), testimonial.getContent(), testimonial.getCreatedAt(), testimonial.getUpdatedAt()))
+                .map(testimonial -> new TestimonialDataDto(testimonial.getUser_id(), testimonial.getName(), testimonial.getContent(), testimonial.getCreated_at(), testimonial.getUpdated_at()))
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
@@ -100,7 +100,7 @@ public class TestimonialController {
 
         Testimonial testimonial = testimonialService.updateTestimonial(testimonialId, loggedInUser.getId(), request.getContent());
 
-        TestimonialDataDto testimonialData = new TestimonialDataDto(testimonial.getUserId(), testimonial.getName(), testimonial.getContent(), testimonial.getUpdatedAt(), testimonial.getCreatedAt());
+        TestimonialDataDto testimonialData = new TestimonialDataDto(testimonial.getUser_id(), testimonial.getName(), testimonial.getContent(), testimonial.getUpdated_at(), testimonial.getCreated_at());
 
         TestimonialResponseDto response = new TestimonialResponseDto("success", "Testimonial updated successfully", testimonialData);
 

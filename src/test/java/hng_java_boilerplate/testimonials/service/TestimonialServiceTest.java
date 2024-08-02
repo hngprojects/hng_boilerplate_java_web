@@ -36,36 +36,36 @@ class TestimonialServiceTest {
     @Test
     void createTestimonial_shouldSaveAndReturnTestimonial() {
         Testimonial testimonial = new Testimonial();
-        testimonial.setUserId("userId123");
+        testimonial.setUser_id("userId123");
         testimonial.setName("John Doe");
         testimonial.setContent("Great service!");
-        testimonial.setCreatedAt(LocalDate.now());
+        testimonial.setCreated_at(LocalDate.now());
 
         when(testimonialRepository.save(any(Testimonial.class))).thenReturn(testimonial);
 
         Testimonial result = testimonialService.createTestimonial("userId123", "John Doe", "Great service!");
 
-        assertEquals("userId123", result.getUserId());
+        assertEquals("userId123", result.getUser_id());
         assertEquals("John Doe", result.getName());
         assertEquals("Great service!", result.getContent());
-        assertEquals(LocalDate.now(), result.getCreatedAt());
+        assertEquals(LocalDate.now(), result.getCreated_at());
     }
 
     @Test
     void getTestimonialById_shouldReturnTestimonialWhenFound() {
         Testimonial testimonial = new Testimonial();
         testimonial.setId("testimonialId123");
-        testimonial.setUserId("userId123");
+        testimonial.setUser_id("userId123");
         testimonial.setName("John Doe");
         testimonial.setContent("Great service!");
-        testimonial.setCreatedAt(LocalDate.now());
+        testimonial.setCreated_at(LocalDate.now());
 
         when(testimonialRepository.findById("testimonialId123")).thenReturn(Optional.of(testimonial));
 
         Testimonial result = testimonialService.getTestimonialById("testimonialId123");
 
         assertEquals("testimonialId123", result.getId());
-        assertEquals("userId123", result.getUserId());
+        assertEquals("userId123", result.getUser_id());
         assertEquals("John Doe", result.getName());
         assertEquals("Great service!", result.getContent());
     }
@@ -83,17 +83,17 @@ class TestimonialServiceTest {
     void getAllTestimonials_shouldReturnPagedTestimonials() {
         Testimonial testimonial1 = new Testimonial();
         testimonial1.setId("testimonialId1");
-        testimonial1.setUserId("userId1");
+        testimonial1.setUser_id("userId1");
         testimonial1.setName("John Doe");
         testimonial1.setContent("Great service!");
-        testimonial1.setCreatedAt(LocalDate.now());
+        testimonial1.setCreated_at(LocalDate.now());
 
         Testimonial testimonial2 = new Testimonial();
         testimonial2.setId("testimonialId2");
-        testimonial2.setUserId("userId2");
+        testimonial2.setUser_id("userId2");
         testimonial2.setName("Jane Doe");
         testimonial2.setContent("Excellent service!");
-        testimonial2.setCreatedAt(LocalDate.now());
+        testimonial2.setCreated_at(LocalDate.now());
 
         Page<Testimonial> page = new PageImpl<>(Arrays.asList(testimonial1, testimonial2), PageRequest.of(0, 2), 2);
 
@@ -111,10 +111,10 @@ class TestimonialServiceTest {
     void updateTestimonial_shouldUpdateAndReturnTestimonial() {
         Testimonial testimonial = new Testimonial();
         testimonial.setId("testimonialId123");
-        testimonial.setUserId("userId123");
+        testimonial.setUser_id("userId123");
         testimonial.setName("John Doe");
         testimonial.setContent("Great service!");
-        testimonial.setCreatedAt(LocalDate.now());
+        testimonial.setCreated_at(LocalDate.now());
 
         when(testimonialRepository.findById("testimonialId123")).thenReturn(Optional.of(testimonial));
         when(testimonialRepository.save(any(Testimonial.class))).thenReturn(testimonial);
@@ -122,9 +122,9 @@ class TestimonialServiceTest {
         Testimonial result = testimonialService.updateTestimonial("testimonialId123", "userId123", "Updated content");
 
         assertEquals("testimonialId123", result.getId());
-        assertEquals("userId123", result.getUserId());
+        assertEquals("userId123", result.getUser_id());
         assertEquals("Updated content", result.getContent());
-        assertEquals(LocalDate.now(), result.getUpdatedAt());
+        assertEquals(LocalDate.now(), result.getUpdated_at());
     }
 
     @Test
@@ -140,10 +140,10 @@ class TestimonialServiceTest {
     void updateTestimonial_shouldThrowExceptionWhenUserNotAuthorized() {
         Testimonial testimonial = new Testimonial();
         testimonial.setId("testimonialId123");
-        testimonial.setUserId("anotherUserId");
+        testimonial.setUser_id("anotherUserId");
         testimonial.setName("John Doe");
         testimonial.setContent("Great service!");
-        testimonial.setCreatedAt(LocalDate.now());
+        testimonial.setCreated_at(LocalDate.now());
 
         when(testimonialRepository.findById("testimonialId123")).thenReturn(Optional.of(testimonial));
 
