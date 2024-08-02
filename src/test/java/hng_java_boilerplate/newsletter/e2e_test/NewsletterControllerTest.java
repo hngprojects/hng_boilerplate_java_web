@@ -27,18 +27,18 @@ public class NewsletterControllerTest {
 
     @Test
     public void testJoinNewsletter() throws Exception {
-        NewsletterEmailRequestDto subscriptionEmailRequestDto = new NewsletterEmailRequestDto("lex@gmail.com");
+        NewsletterEmailRequestDto subscriptionEmailRequestDto = new NewsletterEmailRequestDto("test00@gmail.com");
 
         mockMvc.perform(post("/api/v1/pages/newsletter")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(subscriptionEmailRequestDto)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
     public void testJoinNewsletter_existingEmail() throws Exception {
-        NewsletterEmailRequestDto subscriptionEmailRequestDto = new NewsletterEmailRequestDto("lex@gmail.com");
+        NewsletterEmailRequestDto subscriptionEmailRequestDto = new NewsletterEmailRequestDto("test00@gmail.com");
 
         mockMvc.perform(post("/api/v1/pages/newsletter")
                         .contentType(MediaType.APPLICATION_JSON)
