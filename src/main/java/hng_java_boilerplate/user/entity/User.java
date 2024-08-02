@@ -82,6 +82,14 @@ public class User implements UserDetails {
         return new ArrayList<>(Collections.singleton(new SimpleGrantedAuthority(this.userRole.name())));
     }
 
+    public Role getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(Role userRole) {
+        this.userRole = userRole;
+    }
+
     @Override
     @JsonIgnore
     public String getUsername() {
