@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/blogCategory/e2e_test/CategoryBlogControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/blogCategory/e2e_test/CategoryBlogControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/newsletter/e2e_test/NewsletterControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/newsletter/e2e_test/NewsletterControllerTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,7 +55,7 @@
       <recent name="C:\Users\USER\Desktop\hng_boilerplate_java_web_2\src\main\java\hng_java_boilerplate" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Program">
+  <component name="RunManager" selected="JUnit.NewsletterControllerTest">
     <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
       <module name="hng-java-boilerplate" />
@@ -104,16 +101,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NotificationControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="NewsletterControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.notification.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.newsletter.e2e_test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationControllerTest" />
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.newsletter.e2e_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.newsletter.e2e_test.NewsletterControllerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -136,11 +133,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.NewsletterControllerTest" />
         <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.CategoryBlogControllerTest.testCreateBlogCategorySuccess" />
         <item itemvalue="JUnit.CategoryBlogControllerTest.testCreateBlogCategory" />
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
-        <item itemvalue="JUnit.NotificationControllerTest" />
       </list>
     </recent_temporary>
   </component>
