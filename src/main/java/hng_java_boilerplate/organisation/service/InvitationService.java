@@ -54,12 +54,11 @@ public class InvitationService {
         invitationTable.setStatus(Status.PENDING);
         invitationTable.setOrganisation(organisationDetails);
         invitationTable.setExpiresAt(Timestamp.valueOf(
-                LocalDateTime.of(
-                        2024,8,3,23,30)));
+                LocalDateTime.now().plusDays(2)));
         invitationTable.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         invitationTable.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
         InvitationLink invitationLink = new InvitationLink();
-        invitationLink.setInvitationLink("http://api/hello?token=" + invitationTable.getToken());
+        invitationLink.setInvitationLink("http://invite/accept?token=" + invitationTable.getToken());
         List<InvitationLink>iv = new ArrayList<>();
         iv.add(invitationLink);
         SingleResponseDto singleResponseDto = new SingleResponseDto();
@@ -92,11 +91,10 @@ public class InvitationService {
             invitationTable.setStatus(Status.PENDING);
             invitationTable.setOrganisation(organisationDetails);
             invitationTable.setExpiresAt(Timestamp.valueOf(
-                    LocalDateTime.of(
-                            2024,8,3,23,30)));
+                    LocalDateTime.now().plusDays(2)));
             invitationTable.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
             invitationTable.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
-            invitationLink = "http://api/hello?token=" +invitationTable.getToken() ;
+            invitationLink = "http://invite/accept?token=" +invitationTable.getToken() ;
 
             emailMessage.setTo(email);
             emailMessage.setSubject("Invitation Link to Organisation");
