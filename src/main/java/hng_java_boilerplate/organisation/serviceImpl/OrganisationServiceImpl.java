@@ -1,19 +1,22 @@
 package hng_java_boilerplate.organisation.serviceImpl;
 
 
-import hng_java_boilerplate.email.EmailServices.EmailConsumerService;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationDTO;
+import hng_java_boilerplate.organisation.dto.CreateRoleDTO;
 import hng_java_boilerplate.organisation.dto.UpdateOrganisationDTO;
 import hng_java_boilerplate.organisation.entity.Invitation;
 import hng_java_boilerplate.organisation.entity.Organisation;
+import hng_java_boilerplate.organisation.entity.Permission;
 import hng_java_boilerplate.organisation.exception.ResourceNotFoundException;
 import hng_java_boilerplate.organisation.exception.UnauthorizedException;
 import hng_java_boilerplate.organisation.repository.InvitationRepository;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
+import hng_java_boilerplate.organisation.repository.PermissionRepository;
+import hng_java_boilerplate.organisation.repository.RoleRepository;
 import hng_java_boilerplate.organisation.service.OrganisationServices;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.organisation.entity.Role;
 import hng_java_boilerplate.user.repository.UserRepository;
-import hng_java_boilerplate.util.ValidPassword;
 import hng_java_boilerplate.waitlist.service.EmailService;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OrganisationServiceImpl implements OrganisationServices {
@@ -36,15 +36,22 @@ public class OrganisationServiceImpl implements OrganisationServices {
 
      private final EmailService emailService;
      private final InvitationRepository invitationRepository;
+     private final RoleRepository roleRepository;
+     private final PermissionRepository permissionRepository;
 
     @Value("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
     private String secretKey;
 
-    public OrganisationServiceImpl(OrganisationRepository organisationRepository, UserRepository userRepository,EmailService emailService,InvitationRepository invitationRepository) {
+    public OrganisationServiceImpl(OrganisationRepository organisationRepository, UserRepository userRepository,
+                                   EmailService emailService,
+                                   InvitationRepository invitationRepository,
+    RoleRepository roleRepository, PermissionRepository permissionRepository) {
         this.organisationRepository = organisationRepository;
         this.userRepository= userRepository;
         this.emailService=emailService;
         this.invitationRepository= invitationRepository;
+        this.roleRepository=roleRepository;
+        this.permissionRepository= permissionRepository;
     }
 
     @Override
@@ -206,7 +213,112 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new ResourceNotFoundException("Invalid invitation token");
         }
     }
+
+    @Override
+    public Role createRoleInOrganisation(String orgId, CreateRoleDTO dto, User owner) {
+        Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
+        if (organisationOpt.isPresent()) {
+            Organisation organisation = organisationOpt.get();
+            if (organisation.getOwner().getId().equals(owner.getId())) {
+                Role role = new Role();
+                role.setName(dto.getName());
+                role.setDescription(dto.getDescription());
+                role.setOrganisation(organisation);
+                return roleRepository.save(role);
+            } else {
+                throw new UnauthorizedException("User not authorized to create roles in this organization");
+            }
+        } else {
+            throw new ResourceNotFoundException("Invalid organization ID");
+        }
+    }
+    @Override
+    public List<Role> getAllRolesInOrganisation(String orgId, User requester) {
+        Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
+        if (organisationOpt.isPresent()) {
+            Organisation organisation = organisationOpt.get();
+            if (organisation.getOwner().getId().equals(requester.getId())) {
+                return roleRepository.findByOrganisationId(orgId);
+            } else {
+                throw new UnauthorizedException("User not authorized to view roles in this organization");
+            }
+        } else {
+            throw new ResourceNotFoundException("Invalid organization ID");
+        }
+    }
+    @Override
+    public Role getRoleDetails(String orgId, String roleId, User owner) {
+        Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
+        if (organisationOpt.isPresent()) {
+            Organisation organisation = organisationOpt.get();
+            if (organisation.getOwner().getId().equals(owner.getId())) {
+                Optional<Role> roleOpt = roleRepository.findByIdAndOrganisationId(roleId, orgId);
+                if (roleOpt.isPresent()) {
+                    return roleOpt.get();
+                } else {
+                    throw new ResourceNotFoundException("Role not found in the organization");
+                }
+            } else {
+                throw new UnauthorizedException("User not authorized to view roles in this organization");
+            }
+        } else {
+            throw new ResourceNotFoundException("Invalid organization ID");
+        }
+    }
+    @Override
+    public Role updateRoleInOrganisation(String orgId, String roleId, Role updatedRoleData, User owner) {
+        Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
+        if (organisationOpt.isPresent()) {
+            Organisation organisation = organisationOpt.get();
+            if (organisation.getOwner().getId().equals(owner.getId())) {
+                Optional<Role> roleOpt = roleRepository.findByIdAndOrganisationId(roleId, orgId);
+                if (roleOpt.isPresent()) {
+                    Role role = roleOpt.get();
+                    role.setName(updatedRoleData.getName());
+                    role.setDescription(updatedRoleData.getDescription());
+                    return roleRepository.save(role);
+                } else {
+                    throw new ResourceNotFoundException("Role not found in the organization");
+                }
+            } else {
+                throw new UnauthorizedException("User not authorized to update roles in this organization");
+            }
+        } else {
+            throw new ResourceNotFoundException("Invalid organization ID");
+        }
+    }
+    @Override
+    public Role updateRolePermissions(String orgId, String roleId, Set<String> permissionIds, User owner) {
+        Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
+        if (!organisationOpt.isPresent()) {
+            throw new ResourceNotFoundException("Invalid organization ID");
+        }
+
+        Organisation organisation = organisationOpt.get();
+        if (!organisation.getOwner().getId().equals(owner.getId())) {
+            throw new UnauthorizedException("User not authorized to update roles in this organization");
+        }
+
+        Optional<Role> roleOpt = roleRepository.findById(UUID.fromString(roleId));
+        if (!roleOpt.isPresent()) {
+            throw new ResourceNotFoundException("Invalid role ID");
+        }
+
+        Role role = roleOpt.get();
+        Set<Permission> permissions = new HashSet<>();
+        for (String permissionId : permissionIds) {
+            Permission permission = permissionRepository.findById(permissionId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Permission not found: " + permissionId));
+            permissions.add(permission);
+        }
+        role.setPermissions(List.copyOf(permissions));
+        return roleRepository.save(role);
+    }
 }
+
+
+
+
 
 
 

@@ -1,7 +1,9 @@
 package hng_java_boilerplate.organisation.controller;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationDTO;
+import hng_java_boilerplate.organisation.dto.CreateRoleDTO;
 import hng_java_boilerplate.organisation.dto.UpdateOrganisationDTO;
 import hng_java_boilerplate.organisation.entity.Organisation;
+import hng_java_boilerplate.organisation.entity.Role;
 import hng_java_boilerplate.organisation.exception.ResourceNotFoundException;
 import hng_java_boilerplate.organisation.exception.UnauthorizedException;
 import hng_java_boilerplate.organisation.response.ResponseHandler;
@@ -124,7 +126,54 @@ public class OrganisationController {
             return ResponseHandler.generateErrorResponse("Failed to accept invitation", "Invalid invitation token", HttpStatus.BAD_REQUEST);
         }
     }
+    @PostMapping("/organisations/{orgId}/roles")
+    public ResponseEntity<?> createRoleInOrganisation(@PathVariable String orgId, @Valid @RequestBody CreateRoleDTO createRoleDTO, Authentication authentication) {
+        try {
+            User owner = (User) authentication.getPrincipal();
+            Role newRole = organisationServices.createRoleInOrganisation(orgId, createRoleDTO, owner);
+
+            return ResponseHandler.generateResponse("success", "role created successfully", newRole, HttpStatus.CREATED);
+        } catch (ResourceNotFoundException e) {
+            return ResponseHandler.generateErrorResponse("Failed to create role in organization", e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (UnauthorizedException e) {
+            return ResponseHandler.generateErrorResponse("Failed to create role in organization", e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return ResponseHandler.generateErrorResponse("Failed to create role in organization", "Invalid organization ID format", HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/organisations/{orgId}/roles")
+    public ResponseEntity<?> getAllRolesInOrganisation(@PathVariable String orgId, Authentication authentication) {
+        try {
+            User requester = (User) authentication.getPrincipal();
+            List<Role> roles = organisationServices.getAllRolesInOrganisation(orgId, requester);
+
+            return ResponseHandler.generateResponse("success", "roles retrieved successfully", roles, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return ResponseHandler.generateErrorResponse("Failed to retrieve roles", e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (UnauthorizedException e) {
+            return ResponseHandler.generateErrorResponse("Failed to retrieve roles", e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return ResponseHandler.generateErrorResponse("Failed to retrieve roles", "Invalid organization ID format", HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/organisations/{orgId}/roles/{roleId}")
+    public ResponseEntity<?> getRoleDetails(@PathVariable String orgId, @PathVariable String roleId, Authentication authentication) {
+        try {
+            User owner = (User) authentication.getPrincipal();
+            Role role = organisationServices.getRoleDetails(orgId, roleId, owner);
+
+            return ResponseHandler.generateResponse("success", "role details retrieved successfully", role, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return ResponseHandler.generateErrorResponse("Failed to retrieve role details", e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (UnauthorizedException e) {
+            return ResponseHandler.generateErrorResponse("Failed to retrieve role details", e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return ResponseHandler.generateErrorResponse("Failed to retrieve role details", "Invalid organization or role ID format", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
+
+
 
 
 
