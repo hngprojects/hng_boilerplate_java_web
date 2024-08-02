@@ -38,7 +38,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
      private final InvitationRepository invitationRepository;
      private final RoleRepository roleRepository;
      private final PermissionRepository permissionRepository;
-
+    //secre
     @Value("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
     private String secretKey;
 
