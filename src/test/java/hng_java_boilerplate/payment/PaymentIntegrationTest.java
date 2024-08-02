@@ -75,7 +75,7 @@ public class PaymentIntegrationTest {
         PaymentInitializationResponse initiationResponse = new PaymentInitializationResponse("200", "Payment sccessflly initiated", new HashMap<>());
 
         PaymentRequest request = new PaymentRequest();
-        request.setAmount(1000);
+        request.setAmount("1000");
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + paystackSecretKey);
@@ -83,7 +83,7 @@ public class PaymentIntegrationTest {
 
         Map<String, Object> requestPayload = new HashMap<>();
         requestPayload.put("email", user.getEmail());
-        requestPayload.put("amount", request.getAmount() * 100);
+        requestPayload.put("amount", 1000 * 100);
         requestPayload.put("channels", Arrays.asList("card", "bank", "ussd", "qr", "bank_transfer"));
 
         ObjectMapper objectMapper = new ObjectMapper();
