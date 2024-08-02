@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailConsumerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailConsumerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailProducerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailProducerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/entity/EmailMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/entity/EmailMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/blogCategory/e2e_test/CategoryBlogControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/blogCategory/e2e_test/CategoryBlogControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,11 +53,12 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\USER\Desktop\hng_boilerplate_java_web_2\src\main\resources" />
+      <recent name="C:\Users\USER\Desktop\hng_boilerplate_java_web_2\src\test\java\hng_java_boilerplate" />
       <recent name="C:\Users\USER\Desktop\hng_boilerplate_java_web_2\src\main\resources\db\migration" />
       <recent name="C:\Users\USER\Desktop\hng_boilerplate_java_web_2\src\main\java\hng_java_boilerplate" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.CategoryBlogControllerTest.testCreateBlogCategorySuccess">
     <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
       <module name="hng-java-boilerplate" />
@@ -72,6 +68,38 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CategoryBlogControllerTest.testCreateBlogCategory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.blogCategory.e2e_test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.blogCategory.e2e_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.blogCategory.e2e_test.CategoryBlogControllerTest" />
+      <option name="METHOD_NAME" value="testCreateBlogCategory" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CategoryBlogControllerTest.testCreateBlogCategorySuccess" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.blogCategory.e2e_test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.blogCategory.e2e_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.blogCategory.e2e_test.CategoryBlogControllerTest" />
+      <option name="METHOD_NAME" value="testCreateBlogCategorySuccess" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -106,44 +134,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SmsControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hng-java-boilerplate" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.sms.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.sms" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.sms.SmsControllerTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="WaitlistControllerTest.createWaitlist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hng-java-boilerplate" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.waitlist.controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.waitlist.controller" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.waitlist.controller.WaitlistControllerTest" />
-      <option name="METHOD_NAME" value="createWaitlist" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.CategoryBlogControllerTest.testCreateBlogCategorySuccess" />
+        <item itemvalue="JUnit.CategoryBlogControllerTest.testCreateBlogCategory" />
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
         <item itemvalue="JUnit.NotificationControllerTest" />
         <item itemvalue="Application.Program" />
-        <item itemvalue="JUnit.SmsControllerTest" />
-        <item itemvalue="JUnit.WaitlistControllerTest.createWaitlist" />
       </list>
     </recent_temporary>
   </component>
