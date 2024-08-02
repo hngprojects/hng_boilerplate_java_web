@@ -2,11 +2,9 @@ package hng_java_boilerplate.organisation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hng_java_boilerplate.user.entity.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -15,7 +13,7 @@ import org.hibernate.annotations.ParamDef;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
+@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

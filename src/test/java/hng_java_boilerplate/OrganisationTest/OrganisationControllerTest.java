@@ -1,110 +1,102 @@
 package hng_java_boilerplate.OrganisationTest;
 
+import hng_java_boilerplate.organisation.controller.OrganisationController;
+import hng_java_boilerplate.organisation.dto.CreateOrganisationDTO;
 import hng_java_boilerplate.organisation.entity.Organisation;
-import hng_java_boilerplate.organisation.service.OrganisationService;
+import hng_java_boilerplate.organisation.service.OrganisationServices;
 import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Optional;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(hng_java_boilerplate.organisation.controller.OrganisationController.class)
-public class OrganisationControllerTest {
+@WebMvcTest(OrganisationController.class)
+class OrganisationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private OrganisationService organisationService;
+    private OrganisationServices organisationServices;
 
-    @MockBean
-    private UserServiceImpl userService;
+    private User mockUser;
+
+    @BeforeEach
+    void setUp() {
+        mockUser = new User();
+        mockUser.setId(UUID.randomUUID().toString());
+        mockUser.setName("testUser");
+    }
 
     @Test
-    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
-    public void deleteOrganisation_ValidRequest_NoContent() throws Exception {
+    @WithMockUser
+    void createOrganisation_Success() throws Exception {
+        CreateOrganisationDTO dto = new CreateOrganisationDTO();
+        dto.setName("Test Org");
+        dto.setDescription("Test Description");
+        dto.setEmail("test@example.com");
+        dto.setIndustry("Test Industry");
+        dto.setType("Test Type");
+        dto.setCountry("Test Country");
+        dto.setAddress("Test Address");
+        dto.setState("Test State");
+
         Organisation org = new Organisation();
-        org.setId("org123");
-        User user = new User();
-        user.setEmail("jaminel@example.com");
+        org.setName(dto.getName());
+        org.setDescription(dto.getDescription());
+        org.setEmail(dto.getEmail());
+        org.setIndustry(dto.getIndustry());
+        org.setType(dto.getType());
+        org.setCountry(dto.getCountry());
+        org.setAddress(dto.getAddress());
+        org.setState(dto.getState());
+        org.setOwner(mockUser);
 
+        Mockito.when(organisationServices.createOrganisation(Mockito.any(CreateOrganisationDTO.class), Mockito.any(User.class))).thenReturn(org);
 
-        Mockito.when(userService.getLoggedInUser()).thenReturn(user);
-        Mockito.when(organisationService.findOrganisationById("org123")).thenReturn(Optional.of(org));
-        Mockito.doNothing().when(organisationService).softDeleteOrganisation("org123");
-
-        mockMvc.perform(delete("/api/v1/organizations/org123"))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/organisations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"Test Org\", \"description\": \"Test Description\", \"email\": \"test@example.com\", \"industry\": \"Test Industry\", \"type\": \"Test Type\", \"country\": \"Test Country\", \"address\": \"Test Address\", \"state\": \"Test State\"}")
+                )
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.message").value("organisation created successfully"))
+                .andExpect(jsonPath("$.data.name").value("Test Org"));
     }
 
     @Test
-    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
-    public void deleteOrganisation_InvalidOrgIdFormat_BadRequest() throws Exception {
-        mockMvc.perform(delete("/api/v1/organizations/invalid-id-format"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Failed to delete organization"))
-                .andExpect(jsonPath("$.error").value("Invalid organization ID format"))
-                .andExpect(jsonPath("$.status_code").value(400));
+    @WithMockUser
+    void createOrganisation_ValidationError() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/organisations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"\", \"description\": \"\", \"email\": \"invalid-email\", \"industry\": \"\", \"type\": \"\", \"country\": \"\", \"address\": \"\", \"state\": \"\"}")
+                )
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors").isArray());
     }
 
     @Test
-    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
-    public void deleteOrganisation_NonExistentOrgId_NotFound() throws Exception {
-
-        Mockito.when(organisationService.findOrganisationById("nonexistent-id")).thenReturn(Optional.empty());
-
-        mockMvc.perform(delete("/api/v1/organizations/nonexistent-id"))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Failed to delete organization"))
-                .andExpect(jsonPath("$.error").value("Invalid organization ID"))
-                .andExpect(jsonPath("$.status_code").value(404));
-    }
-
-    @Test
-    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
-    public void deleteOrganisation_UserNotAuthorized_Unauthorized() throws Exception {
-        Organisation org = new Organisation();
-        org.setId("org123");
-        User user = new User();
-        user.setEmail("user@example.com");
-
-
-        Mockito.when(userService.getLoggedInUser()).thenReturn(user);
-        Mockito.when(organisationService.findOrganisationById("org123")).thenReturn(Optional.of(org));
-
-        mockMvc.perform(delete("/api/v1/organizations/org123"))
+    void createOrganisation_Unauthenticated() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/organisations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"Test Org\", \"description\": \"Test Description\", \"email\": \"test@example.com\", \"industry\": \"Test Industry\", \"type\": \"Test Type\", \"country\": \"Test Country\", \"address\": \"Test Address\", \"state\": \"Test State\"}")
+                )
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("Failed to delete organization"))
-                .andExpect(jsonPath("$.error").value("User not authorized to delete this organization"))
-                .andExpect(jsonPath("$.status_code").value(401));
+                .andExpect(jsonPath("$.status").value("Unauthorized"))
+                .andExpect(jsonPath("$.message").value("User not authenticated"));
     }
-//Should be here
-    @Test
-    @WithMockUser(username = "jaminel@example.com", roles = {"USER"})
-    public void deleteOrganisation_OwnerCheck_Failure() throws Exception {
-        Organisation org = new Organisation();
-        org.setId("org123");
-        User user = new User();
-        user.setEmail("jaminel@example.com");
 
 
-        Mockito.when(userService.getLoggedInUser()).thenReturn(user);
-        Mockito.when(organisationService.findOrganisationById("org123")).thenReturn(Optional.of(org));
-
-        mockMvc.perform(delete("/api/v1/organizations/org123"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("Failed to delete organization"))
-                .andExpect(jsonPath("$.error").value("User not authorized to delete this organization"))
-                .andExpect(jsonPath("$.status_code").value(401));
-    }
 }
