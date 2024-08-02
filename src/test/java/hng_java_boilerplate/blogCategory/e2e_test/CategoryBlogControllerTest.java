@@ -27,13 +27,13 @@ public class CategoryBlogControllerTest {
     public void testCreateBlogCategory() throws Exception {
 
         CreateBlogCategoryRequestDTO requestDTO = new CreateBlogCategoryRequestDTO();
-        requestDTO.setName("dryo800055o Category");
+        requestDTO.setName("dryyyyyy Category");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/create/blog-categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name.name").value("dryo800055o Category"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name.name").value("dryyyyyy Category"));
     }
 }
