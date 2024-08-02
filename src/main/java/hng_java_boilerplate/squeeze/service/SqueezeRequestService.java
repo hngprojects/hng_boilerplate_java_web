@@ -6,6 +6,7 @@ import hng_java_boilerplate.squeeze.repository.SqueezeRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -41,5 +42,9 @@ public class SqueezeRequestService {
 
         repository.save(existingRequest);
         return existingRequest;
+    }
+
+    public List<SqueezeRequest> getAllSqueezeRequests() {
+        return repository.findAll();
     }
 }
