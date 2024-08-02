@@ -1,7 +1,12 @@
 package hng_java_boilerplate.notification.controllers;
 
+import hng_java_boilerplate.notification.dto.request.MarkRead;
+import hng_java_boilerplate.notification.dto.request.NotificationRequest;
+import hng_java_boilerplate.notification.dto.response.NotificationDtoRes;
+import hng_java_boilerplate.notification.dto.response.NotificationResponse;
 import hng_java_boilerplate.notification.models.Notification;
 import hng_java_boilerplate.notification.services.NotificationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,64 +22,24 @@ public class NotificationController {
     private final NotificationService service;
 
     @GetMapping
-    public ResponseEntity<?> getAllNotifications() {
-        List<Notification> notifications = service.getAllNotifications();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Notifications retrieved successfully");
-        response.put("status_code", 200);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("total_notification_count", notifications.size());
-        data.put("total_unread_notification_count", service.getTotalUnreadNotificationCount());
-        data.put("notifications", notifications);
-
-        response.put("data", data);
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<NotificationResponse> getAllNotifications() {
+        return ResponseEntity.ok(service.getAllNotifications());
     }
 
+
     @PostMapping
-    public ResponseEntity<?> createNotification(@RequestBody Map<String, String> request) {
-        String message = request.get("message");
-
-        Notification notification = service.createNotification(message);
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Notification created successfully");
-        response.put("status_code", 201);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("notifications", Collections.singletonList(notification));
-        response.put("data", data);
-
-        return ResponseEntity.status(201).body(response);
+    public ResponseEntity<NotificationResponse> createNotification(@RequestBody @Valid NotificationRequest request) {
+        return ResponseEntity.status(201).body(service.createNotification(request.getMessage()));
     }
 
 
     @PatchMapping("/{notificationId}")
-    public ResponseEntity<?> markAsRead(@PathVariable UUID notificationId) {
-        Notification notification = service.markAsRead(notificationId);
-        if (notification == null) {
-            return ResponseEntity.status(404).body("Notification not found");
-        }
-        return ResponseEntity.ok(notification);
+    public ResponseEntity<NotificationDtoRes> markAsRead(@PathVariable UUID notificationId, @RequestBody @Valid MarkRead isRead) {
+        return ResponseEntity.ok(service.markAsRead(notificationId, isRead));
     }
 
     @DeleteMapping
-    public ResponseEntity<?> markAllAsRead() {
-        List<Notification> notifications = service.markAllAsRead();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Notifications cleared successfully");
-        response.put("status_code", 200);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("notifications", new ArrayList<>()); // Empty list as per the response format
-        response.put("data", data);
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<NotificationResponse> markAllAsRead() {
+        return ResponseEntity.ok(service.markAllAsRead());
     }
 }

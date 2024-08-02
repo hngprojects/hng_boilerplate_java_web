@@ -1,51 +1,55 @@
 package hng_java_boilerplate.notification;
 
-// other imports...
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.notification.controllers.NotificationController;
+import hng_java_boilerplate.notification.dto.request.MarkRead;
+import hng_java_boilerplate.notification.dto.response.NotificationData;
+import hng_java_boilerplate.notification.dto.response.NotificationDto;
+import hng_java_boilerplate.notification.dto.response.NotificationDtoRes;
+import hng_java_boilerplate.notification.dto.response.NotificationResponse;
 import hng_java_boilerplate.notification.models.Notification;
 import hng_java_boilerplate.notification.services.NotificationService;
 import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import java.util.*;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@WebMvcTest(NotificationController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class NotificationControllerTest {
 
-    @Mock
+    @MockBean
     private NotificationService notificationService;
 
-    @Mock
+    @MockBean
     private UserService userService;
-
     @InjectMocks
     private NotificationController notificationController;
     @MockBean
     private ProductErrorHandler productErrorHandler;
-
-
+    @MockBean
+    private JwtUtils jwtUtils;
+    @Autowired
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(notificationController).build();
-
         // Set up mock UserService behavior
         String mockUserId = "mock-user-id";
         User mockUser = new User();
@@ -54,14 +58,30 @@ public class NotificationControllerTest {
     }
 
     @Test
-    public void testGetAllNotifications() throws Exception {
-        List<Notification> notifications = new ArrayList<>();
-        Notification notification = new Notification();
-        notification.setMessage("Test message");
-        notifications.add(notification);
+    void shouldCreateMockMvc() {
+        assertThat(mockMvc).isNotNull();
+    }
 
-        when(notificationService.getAllNotifications()).thenReturn(notifications);
-        when(notificationService.getTotalUnreadNotificationCount()).thenReturn(1);
+    @Test
+    public void testGetAllNotifications() throws Exception {
+        NotificationDto dto = NotificationDto.builder()
+                .message("Test")
+                .build();
+
+        NotificationData data = NotificationData.builder()
+                .notifications(List.of(dto))
+                .total_notification_count(1)
+                .total_unread_notification_count(1)
+                .build();
+
+        NotificationResponse response = NotificationResponse.builder()
+                .status("success")
+                .message("Notifications retrieved successfully")
+                .status_code(200)
+                .data(data)
+                .build();
+
+        when(notificationService.getAllNotifications()).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/notifications"))
                 .andExpect(status().isOk())
@@ -69,16 +89,28 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.message").value("Notifications retrieved successfully"))
                 .andExpect(jsonPath("$.data.total_notification_count").value(1))
                 .andExpect(jsonPath("$.data.total_unread_notification_count").value(1))
-                .andExpect(jsonPath("$.data.notifications[0].message").value("Test message"));
+                .andExpect(jsonPath("$.data.notifications[0].message").value("Test"));
     }
+
 
     @Test
     public void testCreateNotification() throws Exception {
-        Notification notification = new Notification();
-        notification.setMessage("New message");
-        notification.setUserId("mock-user-id");
+        NotificationDto dto = NotificationDto.builder()
+                .message("new message")
+                .notification_id(UUID.randomUUID())
+                .build();
 
-        when(notificationService.createNotification(anyString())).thenReturn(notification);
+        NotificationData data = NotificationData.builder()
+                .notifications(List.of(dto)).build();
+
+        NotificationResponse response = NotificationResponse.builder()
+                .status("success")
+                .message("Notification created successfully")
+                .status_code(201)
+                .data(data)
+                .build();
+
+        when(notificationService.createNotification(anyString())).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/notifications")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -86,37 +118,52 @@ public class NotificationControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status").value("success"))
                 .andExpect(jsonPath("$.message").value("Notification created successfully"))
-                .andExpect(jsonPath("$.data.notifications[0].message").value("New message"));
+                .andExpect(jsonPath("$.data.notifications[0].message").value("new message"))
+                .andExpect(jsonPath("$.data.notifications[0].notification_id").value(dto.getNotification_id().toString()));
     }
 
     @Test
     public void testMarkAsRead() throws Exception {
         UUID notificationId = UUID.randomUUID();
-        Notification notification = new Notification();
-        notification.setNotificationId(notificationId);
-        notification.setIsRead(true);
+        NotificationDto dto = NotificationDto.builder()
+                .message("Test message")
+                .build();
 
-        when(notificationService.markAsRead(notificationId)).thenReturn(notification);
+        NotificationDtoRes response = NotificationDtoRes.builder()
+                .message("success")
+                .status_code(200)
+                .data(dto)
+                .build();
 
-        mockMvc.perform(patch("/api/v1/notifications/{notificationId}", notificationId.toString()))
+        when(notificationService.markAsRead(eq(notificationId), any(MarkRead.class))).thenReturn(response);
+
+        mockMvc.perform(patch("/api/v1/notifications/{notificationId}", notificationId.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"is_read\":true}")) // Ensure JSON body matches `MarkRead`
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.notificationId").value(notificationId.toString()))
-                .andExpect(jsonPath("$.isRead").value(true));
+                .andExpect(jsonPath("$.data.message").value("Test message"))
+                .andExpect(jsonPath("$.message").value("success"));
     }
 
     @Test
     public void testMarkAllAsRead() throws Exception {
-        List<Notification> notifications = new ArrayList<>();
-        Notification notification = new Notification();
-        notification.setIsRead(true);
-        notifications.add(notification);
+        NotificationDto dto = NotificationDto.builder().build();
 
-        when(notificationService.markAllAsRead()).thenReturn(notifications);
+        NotificationData data = NotificationData.builder()
+                .notifications(List.of(dto)).build();
+
+        NotificationResponse response = NotificationResponse.builder()
+                .message("Notification cleared successfully")
+                .status("success")
+                .status_code(200)
+                .data(data)
+                .build();
+
+        when(notificationService.markAllAsRead()).thenReturn(response);
 
         mockMvc.perform(delete("/api/v1/notifications"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("success"))
-                .andExpect(jsonPath("$.message").value("Notifications cleared successfully"))
-                .andExpect(jsonPath("$.data.notifications").isEmpty());
+                .andExpect(jsonPath("$.message").value("Notification cleared successfully"));
     }
 }
