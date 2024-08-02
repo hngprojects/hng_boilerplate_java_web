@@ -1,8 +1,10 @@
 package hng_java_boilerplate.exception;
 
+import hng_java_boilerplate.blogCategory.exception.CategoryAlreadyExistsException;
 import hng_java_boilerplate.email.exception.EmailTemplateExists;
 import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
+import hng_java_boilerplate.newsletter.exception.EmailSubscriptionAlreadyExistException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
@@ -138,4 +140,17 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse("Unauthorized", "Unauthorized. Please log in.", 401);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
+
+    @ExceptionHandler(EmailSubscriptionAlreadyExistException.class)
+    public ResponseEntity<ErrorResponse> handleEmailSubscriptionAlreadyExistException(EmailSubscriptionAlreadyExistException ex) {
+        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Subscription Already Exist", HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Category Already Created", HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
 }
