@@ -1,6 +1,6 @@
 package hng_java_boilerplate.organisation.service;
 
-<<<<<<< HEAD
+
 import hng_java_boilerplate.organisation.common.PageResponse;
 
 import hng_java_boilerplate.organisation.dto.*;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-=======
+
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.dto.DataDto;
@@ -27,19 +27,19 @@ import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-=======
+
 import java.time.LocalDateTime;
 import java.util.List;
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
+
 
 @Service
 @RequiredArgsConstructor
@@ -47,13 +47,10 @@ public class OrganisationService {
     private final OrganisationRepository organisationRepository;
     private final UserRepository userRepository;
 
-<<<<<<< HEAD
 
 
 
 
-}
-=======
     @Transactional
     public CreateOrganisationResponseDto create(
             CreateOrganisationRequestDto orgRequest,
@@ -112,4 +109,4 @@ public class OrganisationService {
                 .build();
     }
 }
->>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
+
