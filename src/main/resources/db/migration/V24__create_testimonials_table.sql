@@ -1,5 +1,5 @@
 CREATE TABLE testimonials (
-    id BIGSERIAL PRIMARY KEY,
+    id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
