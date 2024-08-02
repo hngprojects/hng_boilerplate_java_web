@@ -19,13 +19,6 @@ public class Invitation {
     @Column(nullable = false, unique = true)
     private String token;
 
-    public Invitation(Long id, String token, Organisation organisation, User invitedUser) {
-        this.id = id;
-        this.token = token;
-        this.organisation = organisation;
-        this.invitedUser = invitedUser;
-    }
-
     @ManyToOne
     @JoinColumn(name = "organisation_id", nullable = false)
     private Organisation organisation;
@@ -33,7 +26,6 @@ public class Invitation {
     @ManyToOne
     @JoinColumn(name = "invited_user_id", nullable = false)
     private User invitedUser;
-
 
 
 }

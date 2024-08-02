@@ -17,7 +17,7 @@ public class CreateOrganisationDTO {
     private String description;
 
     @Email(message = "Email should be valid")
-    @NotBlank(message = "Email can no be blank")
+    @NotBlank(message = "Email can not be blank")
     private String email;
 
     @NotBlank(message = "Industry is mandatory")
@@ -35,14 +35,5 @@ public class CreateOrganisationDTO {
     @NotBlank(message = "State is mandatory")
     private String state;
 
-    public CreateOrganisationDTO(String name, String description, String email, String industry, String type, String country, String address, String state) {
-        this.name = name;
-        this.description = description;
-        this.email = email;
-        this.industry = industry;
-        this.type = type;
-        this.country = country;
-        this.address = address;
-        this.state = state;
-    }
+
 }

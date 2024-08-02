@@ -1,10 +1,7 @@
 package hng_java_boilerplate.organisation.dto;
 
-
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,9 +30,6 @@ public class UpdateOrganisationDTO {
     private String address;
 
     private String state;
-
-
-
 
     @Override
     public String toString() {

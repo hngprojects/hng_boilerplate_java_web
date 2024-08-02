@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
-//Role**
-@NoArgsConstructor
+
 @Data
 @RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -37,11 +37,4 @@ public class Role {
     )
     private List<Permission> permissions;
 
-    public Role(UUID id, String name, String description, Organisation organisation, List<Permission> permissions) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.organisation = organisation;
-        this.permissions = permissions;
-    }
 }
