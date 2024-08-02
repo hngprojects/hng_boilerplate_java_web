@@ -18,7 +18,6 @@ public class CategoryBlogController {
 
     private final CreateBlogCategoryService createBlogCategoryService;
 
-    @Autowired
     public CategoryBlogController(CreateBlogCategoryService createBlogCategoryService) {
         this.createBlogCategoryService = createBlogCategoryService;
     }
