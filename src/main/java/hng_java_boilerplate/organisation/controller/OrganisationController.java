@@ -82,7 +82,7 @@ public class OrganisationController {
             return ResponseHandler.generateErrorResponse("Failed to remove user from organization", "Invalid organization or user ID format", HttpStatus.BAD_REQUEST);
         }
     }
-
+   //Should conflict
     @GetMapping("/organisations/{orgId}")
     public ResponseEntity<?> getOrganisationById(@PathVariable String orgId) {
         try {
