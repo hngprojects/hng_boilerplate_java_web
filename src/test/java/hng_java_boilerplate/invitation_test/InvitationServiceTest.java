@@ -53,7 +53,7 @@ public class InvitationServiceTest {
 
 
     @Test
-    public void testAcceptUserIntoOrganization_ValidInvitation() {
+    public void testAcceptUserIntoOrganization_ValidInvitation() throws Exception {
         User loggedInUser = new User();
         loggedInUser.setId("user123");
         loggedInUser.setOrganisations(new ArrayList<>());
@@ -141,7 +141,7 @@ public class InvitationServiceTest {
         InvitationLink invitationLink = new InvitationLink();
         invitationLink.setInvitationLink("http://api/hello?token=valid-token");
 
-        Exception exception = assertThrows(RuntimeException.class, () -> {
+        Exception exception = assertThrows(Exception.class, () -> {
             invitationService.acceptUserIntoOrganization(invitationLink);
         });
 
