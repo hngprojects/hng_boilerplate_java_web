@@ -1,6 +1,8 @@
 package hng_java_boilerplate.exception;
 
 import hng_java_boilerplate.blogCategory.exception.CategoryAlreadyExistsException;
+import hng_java_boilerplate.email.exception.EmailTemplateExists;
+import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.newsletter.exception.EmailSubscriptionAlreadyExistException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
@@ -71,6 +73,12 @@ public class GlobalExceptionHandler {
         return new CustomError(400, ex.getMessage());
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public CustomError handleNotFound(NotFoundException ex) {
+        return new CustomError(404, ex.getMessage());
+    }
+
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ResponseMessageDto> handleDuplicateEmailException(DuplicateEmailException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.CONFLICT.value()));
@@ -126,4 +134,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(EmailTemplateNotFound.class)
+    public ResponseEntity<?> emailTemplateNotFoundException(ResourceNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("This email template does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EmailTemplateExists.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ResponseMessageDto> handleDuplicateEmaiTemplateException(EmailTemplateExists ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.CONFLICT.value()));
+    }
 }

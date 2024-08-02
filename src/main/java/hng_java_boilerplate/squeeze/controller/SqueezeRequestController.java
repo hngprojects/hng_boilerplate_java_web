@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -55,6 +56,12 @@ public class SqueezeRequestController {
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseMessageDto(e.getMessage(), HttpStatus.FORBIDDEN.value()));
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllSqueezeRequests() {
+        List<SqueezeRequest> squeezeRequests = service.getAllSqueezeRequests();
+        return ResponseEntity.ok().body(squeezeRequests);
     }
 
 }
