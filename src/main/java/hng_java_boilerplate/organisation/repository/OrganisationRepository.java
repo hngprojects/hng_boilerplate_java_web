@@ -7,4 +7,8 @@ import java.util.Optional;
 
 public interface OrganisationRepository extends JpaRepository<Organisation, String> {
     Optional<Organisation> findByName(String name);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8dc808a6764e85aef90f38542703156ec487c73d
