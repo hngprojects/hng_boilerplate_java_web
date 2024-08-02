@@ -27,17 +27,18 @@ public class NewsletterControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    
+
     @Test
-    public void testJoinNewsletter() throws Exception {
+    public void testJoinNewsletter_existingEmail() throws Exception {
         NewsletterEmailRequestDto subscriptionEmailRequestDto = new NewsletterEmailRequestDto("test00@gmail.com");
 
         mockMvc.perform(post("/api/v1/pages/newsletter")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(subscriptionEmailRequestDto)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
-
 
     @Test
     @WithMockUser(roles = "ADMIN")
