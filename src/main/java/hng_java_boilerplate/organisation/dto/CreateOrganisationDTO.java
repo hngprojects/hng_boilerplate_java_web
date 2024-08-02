@@ -3,8 +3,12 @@ package hng_java_boilerplate.organisation.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class CreateOrganisationDTO {
     @NotBlank(message = "Name is mandatory")
     private String name;
@@ -30,4 +34,15 @@ public class CreateOrganisationDTO {
 
     @NotBlank(message = "State is mandatory")
     private String state;
+
+    public CreateOrganisationDTO(String name, String description, String email, String industry, String type, String country, String address, String state) {
+        this.name = name;
+        this.description = description;
+        this.email = email;
+        this.industry = industry;
+        this.type = type;
+        this.country = country;
+        this.address = address;
+        this.state = state;
+    }
 }

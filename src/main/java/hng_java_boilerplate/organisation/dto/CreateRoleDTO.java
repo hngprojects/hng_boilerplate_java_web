@@ -15,5 +15,8 @@ public class CreateRoleDTO {
 
     private String description;
 
-
+    public CreateRoleDTO(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

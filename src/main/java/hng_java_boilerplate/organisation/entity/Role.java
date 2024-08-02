@@ -36,4 +36,12 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     private List<Permission> permissions;
+
+    public Role(UUID id, String name, String description, Organisation organisation, List<Permission> permissions) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.organisation = organisation;
+        this.permissions = permissions;
+    }
 }
