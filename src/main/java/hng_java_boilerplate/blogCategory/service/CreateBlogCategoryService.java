@@ -6,7 +6,6 @@ import hng_java_boilerplate.blogCategory.dto.CreateBlogCategoryResponseDTO;
 import hng_java_boilerplate.blogCategory.entity.Category;
 import hng_java_boilerplate.blogCategory.exception.CategoryAlreadyExistsException;
 import hng_java_boilerplate.blogCategory.repository.CreateBlogCategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,7 +15,6 @@ public class CreateBlogCategoryService {
 
     private final CreateBlogCategoryRepository categoryRepository;
 
-    @Autowired
     public CreateBlogCategoryService(CreateBlogCategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
