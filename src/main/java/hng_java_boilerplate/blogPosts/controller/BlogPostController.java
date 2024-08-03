@@ -47,7 +47,7 @@ public class BlogPostController {
 
     @Secured("ROLE_USER")
     @PostMapping("/createNewPost")
-    public String createNewPost(@Valid @RequestBody @ModelAttribute BlogPost post, BindingResult result, SessionStatus sessionStatus) {
+    public String createNewPost(@Valid @ModelAttribute BlogPost post, BindingResult result, SessionStatus sessionStatus) {
         if (result.hasErrors()) {
             System.err.println("Post not validated");
             return "postForm";
