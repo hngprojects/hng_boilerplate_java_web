@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,13 +13,11 @@ import java.util.UUID;
 @Entity
 @Table(name = "roles")
 public class Role {
-
     @Id
     private String id;
 
     @NotBlank
     private String name;
-
     private String description;
 
     @ManyToOne
@@ -34,6 +31,7 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     private List<Permission> permissions;
+
     @PrePersist
     public void prePersist() {
         if (this.id == null) {

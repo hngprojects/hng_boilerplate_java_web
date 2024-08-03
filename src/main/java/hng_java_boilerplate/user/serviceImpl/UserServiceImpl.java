@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .stream()
                 .map((org) -> GetUserDto.OrganisationDto
                         .builder()
-                        .org_id(org.getId())
+                        .org_id(String.valueOf(org.getId()))
                         .name(org.getName())
                         .description(org.getDescription())
                         .build()).toList();

@@ -4,10 +4,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder
 public record CreateOrganisationRequestDto (
         @NotBlank(message = "Organisation Name is required")
-        String name,
+       String name,
 
         @NotBlank(message = "Organisation Description is required")
         String description,

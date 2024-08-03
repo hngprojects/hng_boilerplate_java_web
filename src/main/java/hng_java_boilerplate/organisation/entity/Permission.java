@@ -2,14 +2,16 @@ package hng_java_boilerplate.organisation.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
 
-@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Table(name = "permissions")
 public class Permission {
     @Id
@@ -27,6 +29,4 @@ public class Permission {
             this.id = UUID.randomUUID().toString();
         }
     }
-
-
 }

@@ -4,7 +4,6 @@ import hng_java_boilerplate.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
@@ -12,7 +11,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 public class Invitation {
-
     @Id
     private String id;
 

@@ -1,6 +1,5 @@
 package hng_java_boilerplate.organisation.serviceImpl;
 
-
 import hng_java_boilerplate.organisation.dto.CreateOrganisationDTO;
 import hng_java_boilerplate.organisation.dto.CreateRoleDTO;
 import hng_java_boilerplate.organisation.dto.UpdateOrganisationDTO;
@@ -18,7 +17,6 @@ import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.organisation.entity.Role;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.waitlist.service.EmailService;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,25 +31,23 @@ public class OrganisationServiceImpl implements OrganisationServices {
 
     private final OrganisationRepository organisationRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final InvitationRepository invitationRepository;
+    private final RoleRepository roleRepository;
+    private final PermissionRepository permissionRepository;
 
-     private final EmailService emailService;
-     private final InvitationRepository invitationRepository;
-     private final RoleRepository roleRepository;
-     private final PermissionRepository permissionRepository;
-    //secre
     @Value("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
     private String secretKey;
 
     public OrganisationServiceImpl(OrganisationRepository organisationRepository, UserRepository userRepository,
-                                   EmailService emailService,
-                                   InvitationRepository invitationRepository,
-    RoleRepository roleRepository, PermissionRepository permissionRepository) {
+                                   EmailService emailService, InvitationRepository invitationRepository,
+                                   RoleRepository roleRepository, PermissionRepository permissionRepository) {
         this.organisationRepository = organisationRepository;
-        this.userRepository= userRepository;
-        this.emailService=emailService;
-        this.invitationRepository= invitationRepository;
-        this.roleRepository=roleRepository;
-        this.permissionRepository= permissionRepository;
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+        this.invitationRepository = invitationRepository;
+        this.roleRepository = roleRepository;
+        this.permissionRepository = permissionRepository;
     }
 
     @Override
@@ -72,7 +68,6 @@ public class OrganisationServiceImpl implements OrganisationServices {
         return organisationRepository.save(organisation);
     }
 
-
     @Override
     public boolean deleteOrganisation(String orgId, User owner) {
         Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
@@ -89,6 +84,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new ResourceNotFoundException("Invalid organization ID");
         }
     }
+
     @Override
     public boolean removeUserFromOrganisation(String orgId, String userId, User owner) {
         Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
@@ -115,6 +111,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new ResourceNotFoundException("Invalid organization ID");
         }
     }
+
     @Override
     public Organisation updateOrganisation(String orgId, UpdateOrganisationDTO dto, User owner) {
         Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
@@ -129,7 +126,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
                 organisation.setCountry(dto.getCountry());
                 organisation.setAddress(dto.getAddress());
                 organisation.setState(dto.getState());
-                organisation.setUpdatedAt(LocalDateTime.now()); // Update the updatedAt field
+                organisation.setUpdatedAt(LocalDateTime.now());
 
                 return organisationRepository.save(organisation);
             } else {
@@ -145,7 +142,6 @@ public class OrganisationServiceImpl implements OrganisationServices {
         return organisationRepository.findById(orgId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization not found with ID: " + orgId));
     }
-
 
     @Override
     public List<User> getUsersInOrganisation(String orgId, User requester) {
@@ -178,6 +174,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new ResourceNotFoundException("Invalid organization ID");
         }
     }
+
     private String generateInviteLink(String orgId, String email) {
         long timestamp = new Date().getTime();
         String data = orgId + email + timestamp + secretKey;
@@ -195,6 +192,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new RuntimeException("Error generating hash", e);
         }
     }
+
     @Override
     public Organisation acceptInvitation(String token, User user) {
         Optional<Invitation> invitationOpt = invitationRepository.findByToken(token);
@@ -232,6 +230,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new ResourceNotFoundException("Invalid organization ID");
         }
     }
+
     @Override
     public List<Role> getAllRolesInOrganisation(String orgId, User requester) {
         Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
@@ -246,6 +245,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new ResourceNotFoundException("Invalid organization ID");
         }
     }
+
     @Override
     public Role getRoleDetails(String orgId, String roleId, User owner) {
         Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
@@ -265,6 +265,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new ResourceNotFoundException("Invalid organization ID");
         }
     }
+
     @Override
     public Role updateRoleInOrganisation(String orgId, String roleId, Role updatedRoleData, User owner) {
         Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
@@ -287,6 +288,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new ResourceNotFoundException("Invalid organization ID");
         }
     }
+
     @Override
     public Role updateRolePermissions(String orgId, String roleId, Set<String> permissionIds, User owner) {
         Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
@@ -315,12 +317,3 @@ public class OrganisationServiceImpl implements OrganisationServices {
         return roleRepository.save(role);
     }
 }
-
-
-
-
-
-
-
-
-

@@ -7,6 +7,4 @@ import java.util.Optional;
 
 public interface OrganisationRepository extends JpaRepository<Organisation, String> {
     Optional<Organisation> findByName(String name);
-
 }
-
