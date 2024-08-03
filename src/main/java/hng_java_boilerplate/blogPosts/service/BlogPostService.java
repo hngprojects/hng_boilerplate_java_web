@@ -8,15 +8,13 @@ import java.util.Optional;
 @Service
 public interface BlogPostService {
 
-    Optional<BlogPost> getById(String blog_id);
+    Optional<BlogPost> getById(String blogId);
 
     Collection<BlogPost> getAll();
 
     Optional<BlogPost> latestPost();
 
     BlogPost save(BlogPost post);
-
-    BlogPost  updateById(String blog_id, BlogPost post);
 
     void delete(BlogPost post);
 

@@ -11,12 +11,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BlogPostServiceImpl implements BlogPostService{
+public class BlogPostServiceImpl implements BlogPostService {
     private final BlogPostRepository blogPostRepository;
 
     @Override
-    public Optional<BlogPost> getById(String blog_id) {
-        return blogPostRepository.findPostById(blog_id);
+    public Optional<BlogPost> getById(String blogId) {
+        return blogPostRepository.findByBlogId(blogId)
+                .or(() -> Optional.empty());
     }
 
     @Override
@@ -35,23 +36,11 @@ public class BlogPostServiceImpl implements BlogPostService{
     }
 
     @Override
-    public BlogPost updateById(String blog_id, BlogPost post) {
-        Optional<BlogPost> existingBlogPostOptional = blogPostRepository.findPostById(blog_id);
-        if(existingBlogPostOptional.isPresent()){
-            BlogPost existingPost = existingBlogPostOptional.get();
-            existingPost.setTitle(post.getTitle());
-            existingPost.setContent(post.getContent());
-            return blogPostRepository.saveAndFlush(post);
-        }else{
-            throw new EntityNotFoundException("The user with id" + blog_id + "not found");
+    public void delete(BlogPost post) {
+        if (blogPostRepository.existsById(post.getBlogId())) {
+            blogPostRepository.delete(post);
+        } else {
+            throw new EntityNotFoundException("Blog post not found");
         }
     }
-
-    @Override
-    public void delete(BlogPost post) {
-        blogPostRepository.delete(post);
-
-    }
-
-
 }

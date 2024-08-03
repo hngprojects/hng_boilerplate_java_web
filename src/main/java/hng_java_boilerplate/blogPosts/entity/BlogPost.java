@@ -21,30 +21,23 @@ import java.util.List;
 @AllArgsConstructor
 public class BlogPost {
 
-    private String id;
-   @UuidGenerator
+    @Id
+    @UuidGenerator
     @Column(name = "blog_id", nullable = false)
-    private String blog_id;
+    private String blogId;
     @NotEmpty(message = "Enter your title")
     @Column(name = "title", nullable = false)
     private String title;
     @NotEmpty(message = "Write your content")
     @Column(name = "content", nullable = false, columnDefinition = "Text")
-      private String content;
+    private String content;
     @NotEmpty(message = "Add image link")
     @Column(name = "image_url", nullable = false)
     private List<String> imageUrls;
     @Column(name = "tag")
     private List<String> tags;
-@NotNull
-@ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private BlogSuperAdminUser author;
-   @CreationTimestamp
-   @Temporal(TemporalType.TIMESTAMP)
-   @Column(name = "creation_date", nullable = false, updatable = false)
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-@OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-   private Collection<Comment> comments;
 }

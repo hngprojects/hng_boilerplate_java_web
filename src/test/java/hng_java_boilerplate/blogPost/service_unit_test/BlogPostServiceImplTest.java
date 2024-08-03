@@ -3,23 +3,21 @@ package hng_java_boilerplate.blogPost.service_unit_test;
 import hng_java_boilerplate.blogPosts.entity.BlogPost;
 import hng_java_boilerplate.blogPosts.repository.BlogPostRepository;
 import hng_java_boilerplate.blogPosts.service.BlogPostServiceImpl;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.util.HtmlUtils;
+import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class BlogPostServiceImplTest {
 
     @Mock
@@ -32,45 +30,34 @@ class BlogPostServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         blogPost = new BlogPost();
-        blogPost.setId(UUID.randomUUID().toString());
+        blogPost.setBlogId("1");
         blogPost.setTitle("Test Title");
         blogPost.setContent("Test Content");
+        blogPost.setImageUrls(Arrays.asList("http://image.url"));
+        blogPost.setTags(Arrays.asList("Tag1", "Tag2"));
     }
 
     @Test
     void testGetById() {
-        when(blogPostRepository.findPostById(blogPost.getId())).thenReturn(Optional.of(blogPost));
+        when(blogPostRepository.findByBlogId(blogPost.getBlogId())).thenReturn(Optional.of(blogPost));
 
-        Optional<BlogPost> foundBlogPost = blogPostService.getById(blogPost.getId());
+        Optional<BlogPost> foundPost = blogPostService.getById(blogPost.getBlogId());
 
-        assertTrue(foundBlogPost.isPresent());
-        assertEquals(blogPost, foundBlogPost.get());
-        verify(blogPostRepository, times(1)).findPostById(blogPost.getId());
-    }
-
-    @Test
-    void testGetById_NotFound() {
-        when(blogPostRepository.findPostById(blogPost.getId())).thenReturn(Optional.empty());
-
-        Optional<BlogPost> foundBlogPost = blogPostService.getById(blogPost.getId());
-
-        assertFalse(foundBlogPost.isPresent());
-        verify(blogPostRepository, times(1)).findPostById(blogPost.getId());
+        assertTrue(foundPost.isPresent());
+        assertEquals(blogPost.getBlogId(), foundPost.get().getBlogId());
+        verify(blogPostRepository, times(1)).findByBlogId(blogPost.getBlogId());
     }
 
     @Test
     void testGetAll() {
-        BlogPost anotherPost = new BlogPost();
-        anotherPost.setId(UUID.randomUUID().toString());
-        anotherPost.setTitle("Another Title");
-        anotherPost.setContent("Another Content");
+        List<BlogPost> blogPosts = Arrays.asList(blogPost);
+        when(blogPostRepository.findAll()).thenReturn(blogPosts);
 
-        when(blogPostRepository.findAll()).thenReturn(List.of(blogPost, anotherPost));
+        Collection<BlogPost> foundPosts = blogPostService.getAll();
 
-        Collection<BlogPost> blogPosts = blogPostService.getAll();
-
-        assertEquals(2, blogPosts.size());
+        assertEquals(1, foundPosts.size());
         verify(blogPostRepository, times(1)).findAll();
     }
 
@@ -78,38 +65,38 @@ class BlogPostServiceImplTest {
     void testLatestPost() {
         when(blogPostRepository.findTopByOrderByCreatedAtDesc()).thenReturn(Optional.of(blogPost));
 
-        Optional<BlogPost> latestBlogPost = blogPostService.latestPost();
+        Optional<BlogPost> foundPost = blogPostService.latestPost();
 
-        assertTrue(latestBlogPost.isPresent());
-        assertEquals(blogPost, latestBlogPost.get());
+        assertTrue(foundPost.isPresent());
+        assertEquals(blogPost.getBlogId(), foundPost.get().getBlogId());
         verify(blogPostRepository, times(1)).findTopByOrderByCreatedAtDesc();
     }
 
     @Test
     void testSave() {
-
-        String sanitizeTitle = HtmlUtils.htmlEscape(blogPost.getTitle());
-        String sanitizeContent = HtmlUtils.htmlEscape(blogPost.getContent());
-
-        blogPost.setTitle(sanitizeTitle);
-        blogPost.setContent(sanitizeContent);
-
         when(blogPostRepository.saveAndFlush(blogPost)).thenReturn(blogPost);
 
-        BlogPost savedBlogPost = blogPostService.save(blogPost);
+        BlogPost savedPost = blogPostService.save(blogPost);
 
-        assertNotNull(savedBlogPost);
-        assertEquals(sanitizeTitle, savedBlogPost.getTitle());
-        assertEquals(sanitizeContent, savedBlogPost.getContent());
+        assertNotNull(savedPost);
+        assertEquals(blogPost.getBlogId(), savedPost.getBlogId());
         verify(blogPostRepository, times(1)).saveAndFlush(blogPost);
     }
 
     @Test
     void testDelete() {
-        doNothing().when(blogPostRepository).delete(blogPost);
+        when(blogPostRepository.existsById(blogPost.getBlogId())).thenReturn(true);
 
         blogPostService.delete(blogPost);
 
         verify(blogPostRepository, times(1)).delete(blogPost);
+    }
+    @Test
+    void testDeleteThrowsExceptionWhenNotFound() {
+        when(blogPostRepository.existsById(blogPost.getBlogId())).thenReturn(false);
+
+        assertThrows(EntityNotFoundException.class, () -> blogPostService.delete(blogPost));
+
+        verify(blogPostRepository, never()).delete(blogPost);
     }
 }

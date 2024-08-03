@@ -10,7 +10,8 @@ import java.util.Optional;
 @Repository
 public interface BlogPostRepository extends JpaRepository<BlogPost, String> {
 
-    Optional<BlogPost> findPostById(String blog_id);
+    Optional<BlogPost> findByBlogId(String blogId);
+
 
     Optional<BlogPost> findTopByOrderByCreatedAtDesc();
 
