@@ -77,5 +77,14 @@ runs:
         spring.security.oauth2.client.registration.google.client-id=${GOOGLE_ID}
         spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_SECRET}
 
+        ## Payment Configuration
+        paystack.secret.key=${PAYSTACK_SECRET}
+        flutterwave.secret.key=${FTWAVE_SECRET}
+        
+        #Image manager
+        UrlEndpoint=https://ik.imagekit.io/unxzhzeq0/api-java-boilerplate-hng-tech
+        PrivateKey=${IMAGE_PRIVATE_KEY}
+        PublicKey=${IMAGE_PUBLIC_KEY}
+
         EOF
       shell: bash
