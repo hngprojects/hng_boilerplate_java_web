@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface RoleRepository extends JpaRepository<Role, UUID> {
+public interface RoleRepository extends JpaRepository<Role, String> {
     List<Role> findByOrganisationId(String orgId);
 
     Optional<Role> findByIdAndOrganisationId(String roleId, String organisationId);

@@ -6,14 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @Entity
 public class Invitation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(nullable = false, unique = true)
     private String token;
@@ -26,5 +27,10 @@ public class Invitation {
     @JoinColumn(name = "invited_user_id", nullable = false)
     private User invitedUser;
 
-
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID().toString();
+        }
+    }
 }

@@ -299,7 +299,7 @@ public class OrganisationServiceImpl implements OrganisationServices {
             throw new UnauthorizedException("User not authorized to update roles in this organization");
         }
 
-        Optional<Role> roleOpt = roleRepository.findById(UUID.fromString(roleId));
+        Optional<Role> roleOpt = roleRepository.findById(roleId);
         if (!roleOpt.isPresent()) {
             throw new ResourceNotFoundException("Invalid role ID");
         }

@@ -16,8 +16,7 @@ import java.util.UUID;
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private String id;
 
     @NotBlank
     private String name;
@@ -35,5 +34,10 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
     private List<Permission> permissions;
-
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID().toString();
+        }
+    }
 }
