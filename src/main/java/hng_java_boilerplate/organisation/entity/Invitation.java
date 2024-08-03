@@ -10,6 +10,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name ="invitations")
 public class Invitation {
     @Id
     private String id;
