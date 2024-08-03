@@ -145,18 +145,20 @@ public class OrganisationServiceImpl implements OrganisationServices {
 
     @Override
     public List<User> getUsersInOrganisation(String orgId, User requester) {
-        Optional<Organisation> organisationOpt = organisationRepository.findById(orgId);
-        if (organisationOpt.isPresent()) {
-            Organisation organisation = organisationOpt.get();
-            if (organisation.getOwner().equals(requester) || organisation.getUsers().contains(requester)) {
-                return organisation.getUsers();
-            } else {
-                throw new UnauthorizedException("User not authorized to view users in this organization");
-            }
+        if (requester == null) {
+            throw new UnauthorizedException("Requesting user cannot be null");
+        }
+
+        Organisation organisation = organisationRepository.findById(orgId)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with ID: " + orgId));
+
+        if (organisation.getOwner().equals(requester) || organisation.getUsers().contains(requester)) {
+            return organisation.getUsers();
         } else {
-            throw new ResourceNotFoundException("Organization not found with ID: " + orgId);
+            throw new UnauthorizedException("User not authorized to view users in this organization");
         }
     }
+
 
     @Override
     public boolean sendInviteToUser(String orgId, String email, User owner) {
