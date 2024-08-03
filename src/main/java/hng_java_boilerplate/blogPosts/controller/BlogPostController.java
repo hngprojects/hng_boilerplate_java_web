@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.util.HtmlUtils;
 
 import java.security.Principal;
 import java.util.Optional;
@@ -51,6 +52,11 @@ public class BlogPostController {
             System.err.println("Post not validated");
             return "postForm";
         }
+        String sanitizedTitle = HtmlUtils.htmlEscape(post.getTitle());
+        String sanitizedContent = HtmlUtils.htmlEscape(post.getContent());
+        post.setTitle(sanitizedTitle);
+        post.setContent(sanitizedContent);
+
         this.blogPostService.save(post);
         System.err.println("SAVE post:" + post);
         sessionStatus.setComplete();

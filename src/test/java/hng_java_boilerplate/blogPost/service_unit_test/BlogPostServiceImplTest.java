@@ -3,13 +3,13 @@ package hng_java_boilerplate.blogPost.service_unit_test;
 import hng_java_boilerplate.blogPosts.entity.BlogPost;
 import hng_java_boilerplate.blogPosts.repository.BlogPostRepository;
 import hng_java_boilerplate.blogPosts.service.BlogPostServiceImpl;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -87,12 +87,20 @@ class BlogPostServiceImplTest {
 
     @Test
     void testSave() {
+
+        String sanitizeTitle = HtmlUtils.htmlEscape(blogPost.getTitle());
+        String sanitizeContent = HtmlUtils.htmlEscape(blogPost.getContent());
+
+        blogPost.setTitle(sanitizeTitle);
+        blogPost.setContent(sanitizeContent);
+
         when(blogPostRepository.saveAndFlush(blogPost)).thenReturn(blogPost);
 
         BlogPost savedBlogPost = blogPostService.save(blogPost);
 
         assertNotNull(savedBlogPost);
-        assertEquals(blogPost, savedBlogPost);
+        assertEquals(sanitizeTitle, savedBlogPost.getTitle());
+        assertEquals(sanitizeContent, savedBlogPost.getContent());
         verify(blogPostRepository, times(1)).saveAndFlush(blogPost);
     }
 
