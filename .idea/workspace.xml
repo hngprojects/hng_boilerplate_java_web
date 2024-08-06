@@ -5,13 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/InvalidPageNumberException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/JavaMailConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/crudOperations/UserServiceE2ETest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/serviceImpl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/serviceImpl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V26__alter_user_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V27__alter_user_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/crudOperations/CrudOperationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/crudOperations/CrudOperationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/controller/OrganisationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/controller/OrganisationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/enums/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/enums/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/crudOperations/CrudOperationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/crudOperations/UserServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,7 +95,7 @@
       <command value="mvn install" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.CrudOperationTest">
+  <component name="RunManager" selected="JUnit.UserServiceTest">
     <configuration default="true" type="AZURE_FUNCTION_SUPPORT" factoryName="Run Functions">
       <option name="appName" />
       <option name="appServicePlanName" />
@@ -126,12 +126,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="V1__init_database.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
-      <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V1__init_database.sql" />
-      <script-mode>FILE</script-mode>
-      <method v="2" />
-    </configuration>
-    <configuration name="CrudOperationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UserServiceE2ETest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
@@ -140,13 +135,13 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="hng_java_boilerplate.user.crudOperations" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.user.crudOperations.CrudOperationTest" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.user.crudOperations.UserServiceE2ETest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CrudOperationTest.getAllUsers_shouldReturnPaginatedUsers_whenUsersExist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UserServiceE2ETest.getAllUsers_WithRightAuthorityShouldReturnSuccessful" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
@@ -155,14 +150,14 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="hng_java_boilerplate.user.crudOperations" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.user.crudOperations.CrudOperationTest" />
-      <option name="METHOD_NAME" value="getAllUsers_shouldReturnPaginatedUsers_whenUsersExist" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.user.crudOperations.UserServiceE2ETest" />
+      <option name="METHOD_NAME" value="getAllUsers_WithRightAuthorityShouldReturnSuccessful" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CrudOperationTest.getAllUsers_shouldThrowException_whenInvalidPageRequested" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UserServiceE2ETest.getAllUsers_shouldHandleInvalidPageNumber" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
@@ -171,23 +166,39 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="hng_java_boilerplate.user.crudOperations" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.user.crudOperations.CrudOperationTest" />
-      <option name="METHOD_NAME" value="getAllUsers_shouldThrowException_whenInvalidPageRequested" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.user.crudOperations.UserServiceE2ETest" />
+      <option name="METHOD_NAME" value="getAllUsers_shouldHandleInvalidPageNumber" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProductSearchTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UserServiceRestAssuredE2ETest.getAllUsers_shouldReturn200_whenUserIsAdmin" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.product_test.unit_test.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.user.crudOperations.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.product_test.unit_test" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.product_test.unit_test.ProductSearchTest" />
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.user.crudOperations" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.user.crudOperations.UserServiceRestAssuredE2ETest" />
+      <option name="METHOD_NAME" value="getAllUsers_shouldReturn200_whenUserIsAdmin" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.user.crudOperations.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.user.crudOperations" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.user.crudOperations.UserServiceTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -202,11 +213,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.CrudOperationTest" />
-        <item itemvalue="JUnit.CrudOperationTest.getAllUsers_shouldThrowException_whenInvalidPageRequested" />
-        <item itemvalue="JUnit.CrudOperationTest.getAllUsers_shouldReturnPaginatedUsers_whenUsersExist" />
-        <item itemvalue="Database Script.V1__init_database.sql" />
-        <item itemvalue="JUnit.ProductSearchTest" />
+        <item itemvalue="JUnit.UserServiceTest" />
+        <item itemvalue="JUnit.UserServiceE2ETest" />
+        <item itemvalue="JUnit.UserServiceRestAssuredE2ETest.getAllUsers_shouldReturn200_whenUserIsAdmin" />
+        <item itemvalue="JUnit.UserServiceE2ETest.getAllUsers_WithRightAuthorityShouldReturnSuccessful" />
+        <item itemvalue="JUnit.UserServiceE2ETest.getAllUsers_shouldHandleInvalidPageNumber" />
       </list>
     </recent_temporary>
   </component>
