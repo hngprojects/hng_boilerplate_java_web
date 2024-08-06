@@ -33,6 +33,16 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+
+    @Column(name = "phone")
+    private String phoneNumber;
+
+    @Column(name = "status")
+    private String status;
+
+
+    private boolean isActive;
+
     @Column(nullable = false)
     private String password;
 

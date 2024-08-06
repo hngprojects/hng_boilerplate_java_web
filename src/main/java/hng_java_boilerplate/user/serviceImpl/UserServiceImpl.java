@@ -1,6 +1,9 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.organisation.Utils;
+import hng_java_boilerplate.organisation.dto.responses.MembersResponse;
+import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -17,6 +20,9 @@ import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.DisabledException;
@@ -28,8 +34,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -167,4 +175,41 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         return userDto;
     }
+
+
+    @Override
+    public List<MembersResponse> getAllUsers(Authentication authentication, int page) {
+        List<MembersResponse> users = new ArrayList<>();
+        if (getLoggedInUser() != null) {
+            List<User> allUser = userRepository.findAll();
+
+            Pageable pageable = Utils.buildPageRequest(page, 0);
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), allUser.size());
+            Page<User> paginatedMembers = new PageImpl<>(allUser.subList(start, end), pageable, allUser.size());
+
+            users = paginatedMembers.stream().map(member -> MembersResponse.builder()
+                            .fullName(member.getName())
+                            .email(member.getEmail())
+                            .phone(member.getPhoneNumber() != null ? member.getPhoneNumber() : null)
+                            .createdAt(member.getCreatedAt().toString())
+                            .status(member.getStatus())
+                            .build())
+                    .collect(Collectors.toList());
+        }
+        return users;
+    }
+
+    public void softDeleteUser(String userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setActive(false);
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("User not found with id: " + userId);
+        }
+    }
+
+
 }
