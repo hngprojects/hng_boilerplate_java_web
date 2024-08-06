@@ -27,6 +27,9 @@ public class RabbitMQConfig {
         return new Jackson2JsonMessageConverter();
     }
 
+    @Value("${rabbitmq.queue.concat}")
+    private String videoConcat;
+
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter converter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
@@ -35,9 +38,13 @@ public class RabbitMQConfig {
     }
 
     @Bean
+
     public org.springframework.amqp.core.Queue queue(){
         return new Queue(QUEUE_NAME);
     }
+
+
+    public Queue videoConcatQueue(){return new Queue(videoConcat, true);}
 
 
     public Queue videoConcatQueue(){return new Queue(videoConcat, true);}
