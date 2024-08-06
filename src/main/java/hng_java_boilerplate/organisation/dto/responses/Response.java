@@ -13,10 +13,9 @@ import java.util.List;
 @Getter
 public class Response<T> {
 
-    private boolean status;
+    private String status;
     private String message;
     private T data;
-    private T pagination;
 
 
 

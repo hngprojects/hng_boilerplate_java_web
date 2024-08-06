@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +26,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserWithDetails(userId));
     }
 
-    @GetMapping(value = "/members", produces = "application/json")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping(value = "members", produces = "application/json")
     public ResponseEntity<?> getAllMembers(@RequestParam int page, Authentication authentication) {
-        List<MembersResponse> members = userService.getAllUsers(authentication, page);
-        var res = Response.builder().message("good").status(true).data(members).build();
+        List<MembersResponse> members = userService.getAllUsers(page, authentication);
+        Response<?> res = Response.builder().message("Users List Successfully Fetched").status("200").data(members).build();
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 

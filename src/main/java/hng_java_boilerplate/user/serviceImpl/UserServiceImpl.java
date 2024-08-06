@@ -178,9 +178,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 
     @Override
-    public List<MembersResponse> getAllUsers(Authentication authentication, int page) {
+    public List<MembersResponse> getAllUsers(int page, Authentication authentication) {
         List<MembersResponse> users = new ArrayList<>();
-        if (getLoggedInUser() != null) {
+        User user  = (User) authentication.getPrincipal();
+        if (user != null) {
             List<User> allUser = userRepository.findAll();
 
             Pageable pageable = Utils.buildPageRequest(page, 0);

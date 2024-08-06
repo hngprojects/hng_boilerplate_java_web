@@ -16,7 +16,7 @@ public interface UserService {
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
     User getLoggedInUser();
 
-    List<MembersResponse> getAllUsers(Authentication authentication, int page);
+    List<MembersResponse> getAllUsers(int page, Authentication authentication);
 
     ResponseEntity<ApiResponse> loginUser(LoginDto loginDto);
 }
