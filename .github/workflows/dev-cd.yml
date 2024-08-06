@@ -32,6 +32,12 @@ jobs:
           SSH_USERNAME: ${{ secrets.DEV_SSH_USERNAME }}
           SSH_PASSWORD: ${{ secrets.DEV_SSH_PASSWORD }}
   
+      - name: Report Deployment Metrics to DORA Exporter
+        run: |
+          curl -X POST -d '{"deployment_id": "${{ github.run_id }}", "status": "success", "environment": "dev", "deployment_time": "$(date --utc +%Y-%m-%dT%H:%M:%SZ)"}' http://91.229.239.213:8090/metrics
+        env:
+          DORA_EXPORTER_URL: ${{ secrets.DORA_EXPORTER_URL }}
+
   on-failure:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion=='failure' }}
