@@ -3,8 +3,12 @@ package hng_java_boilerplate.product_test.unit_test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+
+import hng_java_boilerplate.product.controller.ProductController;
 import hng_java_boilerplate.product.dto.ErrorDTO;
+import hng_java_boilerplate.product.exceptions.RecordNotFoundException;
 import hng_java_boilerplate.product.exceptions.ValidationError;
+import hng_java_boilerplate.product.utils.GeneralResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,6 +35,9 @@ public class ProductSearchTest {
 
     @InjectMocks
     private ProductServiceImpl productService;
+
+    @Mock
+    private ProductController productController;
 
     @BeforeEach
     public void setUp() {
@@ -94,6 +103,32 @@ public class ProductSearchTest {
 
         // Assert
         assertEquals(emptyPage, result);
+    }
+
+    @Test
+    public void testGetProductById_Success(){
+
+        String productId = "productId";
+        Product product = new Product();
+
+        when(productService.getProductById(productId)).thenReturn(product);
+        ResponseEntity<GeneralResponse<Product>> response = productController.getProduct(productId);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(product, response.getBody().getInfo());
+
+    }
+
+    @Test
+    public void testGetProductById_NotFound() {
+
+        String productId = "productId";
+        when(productService.getProductById(productId)).thenReturn(null);
+
+        // Catch the expected exception
+        RecordNotFoundException thrown = assertThrows(RecordNotFoundException.class, () -> productController.getProduct(productId));
+
+        // Optional: Verify the exception message (if applicable)
+        // assertEquals("Product not found with id: productId", thrown.getMessage());
     }
 }
 
