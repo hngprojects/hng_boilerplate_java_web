@@ -23,7 +23,11 @@ public class OrganisationService {
     private final UserRepository userRepository;
 
     @Transactional
-    public CreateOrganisationResponseDto create(CreateOrganisationRequestDto orgRequest, Authentication activeUser) {
+    public CreateOrganisationResponseDto create(
+            CreateOrganisationRequestDto orgRequest,
+            Authentication activeUser
+    ) {
+
         if (organisationRepository.findByName(orgRequest.name()).isPresent()) {
             throw new OrganisationNameAlreadyExistsException(
                     "Sorry, an Organisation with NAME::" + orgRequest.name() + " already exists"
