@@ -37,6 +37,9 @@ public class ProductSearchTest {
     private ProductServiceImpl productService;
 
     @Mock
+    private ProductServiceImpl service;
+
+    @InjectMocks
     private ProductController productController;
 
     @BeforeEach
@@ -111,24 +114,18 @@ public class ProductSearchTest {
         String productId = "productId";
         Product product = new Product();
 
-        when(productService.getProductById(productId)).thenReturn(product);
+        when(service.getProductById(productId)).thenReturn(product);
         ResponseEntity<GeneralResponse<Product>> response = productController.getProduct(productId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(product, response.getBody().getInfo());
-
     }
 
     @Test
     public void testGetProductById_NotFound() {
 
         String productId = "productId";
-        when(productService.getProductById(productId)).thenReturn(null);
-
-        // Catch the expected exception
-        RecordNotFoundException thrown = assertThrows(RecordNotFoundException.class, () -> productController.getProduct(productId));
-
-        // Optional: Verify the exception message (if applicable)
-        // assertEquals("Product not found with id: productId", thrown.getMessage());
+        when(service.getProductById(productId)).thenThrow(RecordNotFoundException.class);
+        assertThrows(RecordNotFoundException.class, () -> productController.getProduct(productId));
     }
 }
 
