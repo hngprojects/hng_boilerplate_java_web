@@ -200,16 +200,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return users;
     }
 
-    public void softDeleteUser(String userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setActive(false);
-            userRepository.save(user);
-        } else {
-            throw new RuntimeException("User not found with id: " + userId);
-        }
-    }
 
 
 }

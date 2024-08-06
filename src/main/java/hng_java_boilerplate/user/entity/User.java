@@ -38,10 +38,11 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     @Column(name = "status")
-    private String status;
+    private String status = "Active";
 
 
-    private boolean isActive;
+    @Column(name = "is_active")
+    private boolean isActive = true;
 
     @Column(nullable = false)
     private String password;

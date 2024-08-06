@@ -5,16 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/JavaMailConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/Utils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/dto/responses/MembersResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/dto/responses/Response.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/org/BoilerplateOrganisationService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/org/OrganizationServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/organisation/service/OrgServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/controller/OrganisationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/controller/OrganisationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/service/OrganisationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/service/OrganisationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/serviceImpl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/serviceImpl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V25__alter_ser_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V25__alter_ser_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/organisation/service/OrgServiceTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,6 +71,12 @@
     ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ADMIN\IdeaProjects\hng_boilerplate_java_web\src\main\resources\db\migration" />
+      <recent name="C:\Users\ADMIN\IdeaProjects\hng_boilerplate_java_web\src\main\java\hng_java_boilerplate\user\serviceImpl" />
+    </key>
+  </component>
   <component name="RunManager" selected="Spring Boot.Program">
     <configuration default="true" type="AZURE_FUNCTION_SUPPORT" factoryName="Run Functions">
       <option name="appName" />
@@ -206,22 +207,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1721380209697</updated>
-      <workItem from="1722931325741" duration="6099000" />
+      <workItem from="1722931325741" duration="14327000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java</url>
-          <line>97</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
