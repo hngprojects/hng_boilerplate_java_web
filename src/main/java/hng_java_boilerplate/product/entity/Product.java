@@ -22,8 +22,13 @@ public class Product {
     private String description;
     private String category;
     private double price;
+
     @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "is_available")
+    private boolean isAvailable;
+
 
     @ManyToOne
     @JsonIgnore

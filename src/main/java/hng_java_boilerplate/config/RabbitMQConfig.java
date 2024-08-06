@@ -23,8 +23,8 @@ public class RabbitMQConfig {
         return new Jackson2JsonMessageConverter();
     }
 
-    @Value("${rabbitmq.queue.concat}")
-    private String videoConcat;
+//    @Value("${rabbitmq.queue.concat}")
+//    private String videoConcat;
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter converter) {
@@ -50,6 +50,6 @@ public class RabbitMQConfig {
     }
 
 
-    public Queue videoConcatQueue(){return new Queue(videoConcat, true);}
+//    public Queue videoConcatQueue(){return new Queue(videoConcat, true);}
 
 }
