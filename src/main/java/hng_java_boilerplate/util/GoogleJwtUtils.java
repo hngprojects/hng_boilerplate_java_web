@@ -24,13 +24,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Collections;
 import java.util.function.Function;
 
 @Component
 public class GoogleJwtUtils {
+    @Value("${spring.security.oauth2.client.registration.google.client-id:}")
+    private String googleClientId;
+
+    @Value("${spring.security.oauth2.client.registration.google.client-secret:}")
+    private String googleClientSecret;
 
     private UserRepository userRepository;
     private UserServiceImpl userService;
@@ -47,14 +54,15 @@ public class GoogleJwtUtils {
         this.profileRepository = profileRepository;
     }
 
-
-
     private final Function<OAuthDto, OAuthResponse> getUserFromIdToken = (oAuthDto) -> {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = new GsonFactory();
 
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                .build();
+        GoogleIdTokenVerifier.Builder verifierBuilder = new GoogleIdTokenVerifier.Builder(transport, jsonFactory);
+        if (googleClientId != null && !googleClientId.isEmpty()) {
+            verifierBuilder.setAudience(Collections.singletonList(googleClientId));
+        }
+        GoogleIdTokenVerifier verifier = verifierBuilder.build();
 
         GoogleIdToken token = null;
         try {
@@ -62,6 +70,21 @@ public class GoogleJwtUtils {
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
+
+
+//    private final Function<OAuthDto, OAuthResponse> getUserFromIdToken = (oAuthDto) -> {
+//        HttpTransport transport = new NetHttpTransport();
+//        JsonFactory jsonFactory = new GsonFactory();
+//
+//        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+//                .build();
+//
+//        GoogleIdToken token = null;
+//        try {
+//            token = verifier.verify(oAuthDto.getIdToken());
+//        } catch (GeneralSecurityException | IOException e) {
+//            throw new RuntimeException(e);
+//        }
         if (token != null) {
             Payload payload = token.getPayload();
             String email = payload.getEmail();
