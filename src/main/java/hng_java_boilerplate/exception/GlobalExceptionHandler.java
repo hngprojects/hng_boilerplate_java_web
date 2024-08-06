@@ -7,10 +7,7 @@ import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
-import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
-import hng_java_boilerplate.user.exception.InvalidRequestException;
-import hng_java_boilerplate.user.exception.UserNotFoundException;
-import hng_java_boilerplate.user.exception.UsernameNotFoundException;
+import hng_java_boilerplate.user.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
@@ -138,4 +135,11 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse("Unauthorized", "Unauthorized. Please log in.", 401);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
+
+    @ExceptionHandler(InvalidPageNumberException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPageNumberException(InvalidPageNumberException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "BAD_REQUEST", 400);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
 }

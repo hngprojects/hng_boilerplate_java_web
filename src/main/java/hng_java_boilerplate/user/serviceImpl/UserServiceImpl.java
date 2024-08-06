@@ -1,9 +1,8 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.exception.BadRequestException;
-import hng_java_boilerplate.organisation.Utils;
+import hng_java_boilerplate.user.Utils;
 import hng_java_boilerplate.organisation.dto.responses.MembersResponse;
-import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -13,7 +12,7 @@ import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
-import hng_java_boilerplate.user.exception.InvalidRequestException;
+import hng_java_boilerplate.user.exception.InvalidPageNumberException;
 import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
@@ -38,6 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static hng_java_boilerplate.user.Utils.getPaginatedUsers;
+import static hng_java_boilerplate.user.Utils.validatePageNumber;
 
 @Service
 @RequiredArgsConstructor
@@ -183,23 +185,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user  = (User) authentication.getPrincipal();
         if (user != null) {
             List<User> allUser = userRepository.findAll();
-
-            Pageable pageable = Utils.buildPageRequest(page, 0);
-            int start = (int) pageable.getOffset();
-            int end = Math.min((start + pageable.getPageSize()), allUser.size());
-            Page<User> paginatedMembers = new PageImpl<>(allUser.subList(start, end), pageable, allUser.size());
-
-            users = paginatedMembers.stream().map(member -> MembersResponse.builder()
-                            .fullName(member.getName())
-                            .email(member.getEmail())
-                            .phone(member.getPhoneNumber() != null ? member.getPhoneNumber() : null)
-                            .createdAt(member.getCreatedAt().toString())
-                            .status(member.getStatus())
-                            .build())
-                    .collect(Collectors.toList());
+            validatePageNumber(page, allUser);
+            Page<User> paginatedMembers = getPaginatedUsers(page, allUser);
+            users = paginatedMembers.stream().map(member -> MembersResponse.builder().fullName(member.getName()).email(member.getEmail())
+                            .phone(member.getPhoneNumber() != null ? member.getPhoneNumber() : null).createdAt(member.getCreatedAt().toString())
+                            .status(member.getStatus()).build()).collect(Collectors.toList());
         }
         return users;
     }
+
 
 
 

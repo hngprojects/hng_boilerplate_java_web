@@ -1,10 +1,9 @@
 package hng_java_boilerplate.user.crudOperations;
 
-import hng_java_boilerplate.organisation.Utils;
 import hng_java_boilerplate.organisation.dto.responses.MembersResponse;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.exception.InvalidPageNumberException;
 import hng_java_boilerplate.user.repository.UserRepository;
-import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,18 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,6 +65,21 @@ public class CrudOperationTest {
         assertEquals("active", users.get(0).getStatus());
 
         verify(userRepository, times(1)).findAll();
+    }
+
+    @Test
+    void getAllUsers_shouldThrowException_whenInvalidPageRequested() {
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
+        when(userRepository.findAll()).thenReturn(userList);
+        when(authentication.getPrincipal()).thenReturn(user);
+
+        InvalidPageNumberException exception = assertThrows(
+                InvalidPageNumberException.class,
+                () -> userService.getAllUsers(2, authentication)
+        );
+
+        assertEquals("Invalid page number requested: 2", exception.getMessage());
     }
 }
 
