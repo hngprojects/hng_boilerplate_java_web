@@ -79,6 +79,8 @@ public class WebSecurityConfig {
                                         "/v3/api-docs",
                                         "/api/v1/products/search",
                                         "/swagger-ui/index.html",
+                                        "api/v1/videos/merge",
+                                        "api/v1/videos/{jobId}",
                                         "/swagger-resources/**",
                                         "/webjars/**","/metrics",
                                         "/swagger-ui/**",
