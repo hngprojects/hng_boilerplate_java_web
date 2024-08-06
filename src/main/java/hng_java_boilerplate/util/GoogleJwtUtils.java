@@ -33,7 +33,7 @@ import java.util.function.Function;
 
 @Component
 public class GoogleJwtUtils {
-    @Value("${spring.security.oauth2.client.registration.google.client-id:}")
+    @Value("${spring.security.oauth2.client.registration.google.client-id:526917658285-at8mgamlu8r3qipdf6emf0b5qnkc80vu.apps.googleusercontent.com}")
     private String googleClientId;
 
     @Value("${spring.security.oauth2.client.registration.google.client-secret:}")
