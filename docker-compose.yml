@@ -31,7 +31,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=app
     volumes:
-      - ./init-db.sh:/docker-entrypoint-initdb.db/init-db.sh
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
       - postgresdataa:/var/lib/postgresql/data
     ports:
       - "5432:5432"
@@ -69,6 +69,6 @@ services:
 networks:
   backend-net:
     driver: bridge
-    
+
 volumes:
-    postgresdataa:
+  postgresdataa:
