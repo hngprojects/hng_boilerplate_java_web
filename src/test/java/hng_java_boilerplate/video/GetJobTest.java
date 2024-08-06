@@ -36,7 +36,7 @@ public class GetJobTest {
     @Test
     public void testGetJobSuccess() {
 
-        UUID jobId = UUID.randomUUID();
+        String jobId = UUID.randomUUID().toString();
         VideoSuite mockJob = new VideoSuite();
         when(videoRepository.findById(jobId)).thenReturn(Optional.of(mockJob));
 
@@ -50,7 +50,7 @@ public class GetJobTest {
 
     @Test
     public void testGetJobNotFound() {
-        UUID jobId = UUID.randomUUID();
+        String jobId = UUID.randomUUID().toString();
         when(videoRepository.findById(jobId)).thenReturn(Optional.empty());
 
         assertThrows(JobNotFound.class, () -> videoService.getJob(jobId.toString()));

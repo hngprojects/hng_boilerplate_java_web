@@ -42,11 +42,11 @@ public class VideoUtils {
         }
     }
 
-    public static UUID generateUuid(){
-        return UUID.randomUUID();
+    public static String generateUuid(){
+        return UUID.randomUUID().toString();
     }
 
-    public static VideoSuite videoSuite(UUID jobId, String status,
+    public static VideoSuite videoSuite(String jobId, String status,
                                         String outputVideoUrl, String jobType, String message){
         VideoSuite videoSuite = new VideoSuite();
 

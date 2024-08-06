@@ -17,9 +17,8 @@ import java.util.UUID;
 @Data
 public class VideoSuite {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "job_id", updatable = false, nullable = false)
-    private UUID jobId;
+    private String jobId;
 
     @Column(name = "status", nullable = false)
     private String status;

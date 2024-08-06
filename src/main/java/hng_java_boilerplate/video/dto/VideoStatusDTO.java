@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 public class VideoStatusDTO {
 
-    private UUID jobId;
+    private String jobId;
     private String status;
     private String message;
     private String outputVideoUrl;
