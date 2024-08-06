@@ -36,7 +36,7 @@ public class VideoServiceImpl implements VideoService{
         VideoPathDTO videoPathDTO = new VideoPathDTO();
         VideoStatusDTO videoStatusDTO = new VideoStatusDTO();
         VideoSuite videoSuite;
-        UUID jobId = VideoUtils.generateUuid();
+        String jobId = VideoUtils.generateUuid();
 
         videoPathDTO.setJobId(jobId);
         int count = 1;
