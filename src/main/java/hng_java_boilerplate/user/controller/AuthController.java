@@ -39,6 +39,9 @@ public class AuthController {
             return ResponseEntity.ok(googleJwtUtils.googleOauthUserJWT(payload));
         } catch (UnAuthorizedUserException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (IllegalArgumentException e) {
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST.value(), "Invalid IdToken", null), HttpStatus.BAD_REQUEST);
         }
     }
 }
+
