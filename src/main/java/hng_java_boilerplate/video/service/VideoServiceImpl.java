@@ -60,7 +60,7 @@ public class VideoServiceImpl implements VideoService{
     @Override
     public VideoResponseDTO<VideoStatusDTO> getJob(String id) {
 
-        VideoSuite job = videoRepository.findById(UUID.fromString(id))
+        VideoSuite job = videoRepository.findById(id)
                 .orElseThrow(() -> new JobNotFound("Job doesn't exist"));
 
         return VideoUtils.response("Found", HttpStatus.OK.value(), true,
