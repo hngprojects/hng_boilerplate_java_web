@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Component
 public class VideoMessageDTO {
     private String message;
     private int statusCode;
