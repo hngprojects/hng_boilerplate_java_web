@@ -70,21 +70,6 @@ public class GoogleJwtUtils {
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
-
-
-//    private final Function<OAuthDto, OAuthResponse> getUserFromIdToken = (oAuthDto) -> {
-//        HttpTransport transport = new NetHttpTransport();
-//        JsonFactory jsonFactory = new GsonFactory();
-//
-//        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-//                .build();
-//
-//        GoogleIdToken token = null;
-//        try {
-//            token = verifier.verify(oAuthDto.getIdToken());
-//        } catch (GeneralSecurityException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
         if (token != null) {
             Payload payload = token.getPayload();
             String email = payload.getEmail();
