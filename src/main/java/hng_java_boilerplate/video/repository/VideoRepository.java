@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface VideoRepository extends JpaRepository<VideoSuite, UUID> {
+public interface VideoRepository extends JpaRepository<VideoSuite,String> {
 
 }
