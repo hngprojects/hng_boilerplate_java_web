@@ -5,18 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserResponse {
-    private String id;
+public class OAuthResponse {
     private String first_name;
     private String last_name;
     private String email;
-    private String role;
-    private String imr_url;
-    private LocalDateTime created_at;
+    private String password;
+    private String img_url;
+    private boolean is_active;
 }
