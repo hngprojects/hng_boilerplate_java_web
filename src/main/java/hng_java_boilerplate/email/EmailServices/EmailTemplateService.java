@@ -11,7 +11,9 @@ import hng_java_boilerplate.email.repository.EmailTemplateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,11 +26,12 @@ public class EmailTemplateService {
         if (repository.existsByTitle(body.title())) {
             throw new EmailTemplateExists("Email template already exists");
         }
-
+        String template = HtmlUtils.htmlEscape(body.template());
         EmailTemplate emailTemplate = EmailTemplate.builder()
                 .title(body.title())
-                .template(body.template())
+                .template(template)
                 .status(EmailTemplateStatus.ONLINE)
+                .type(body.type())
                 .build();
         repository.save(emailTemplate);
         return ResponseEntity.status(201).body(new EmailTemplateResponse("Email template created successfully", 201, emailTemplate));
@@ -56,12 +59,16 @@ public class EmailTemplateService {
         if (emailTemplate.isEmpty()) {
             throw new EmailTemplateNotFound("Email template not found");
         }
-
+        String content = HtmlUtils.htmlEscape(emailTemplateUpdate.content());
         EmailTemplate template  = emailTemplate.get();
         template.setTitle(emailTemplateUpdate.name());
-        template.setTemplate(emailTemplateUpdate.content());
+        template.setTemplate(content);
         repository.save(template);
 
         return ResponseEntity.status(200).body(new EmailTemplateResponse("Email updated successfully", 200, template));
+    }
+
+    public ResponseEntity<List<EmailTemplate>> getAll() {
+        return ResponseEntity.status(200).body(repository.findAll());
     }
 }
