@@ -13,7 +13,7 @@ import java.util.UUID;
 @Data
 public class VideoPathDTO {
 
-    private UUID jobId;
+    private String jobId;
     private Map<String, byte[]> video;
 
     public void addVideo(String key, byte[] value){
