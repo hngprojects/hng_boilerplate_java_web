@@ -75,8 +75,7 @@ public class InvitationServiceTest {
         when(invitationRepository.save(any(Invitation.class))).thenReturn(invitation);
         when(userRepository.save(any(User.class))).thenReturn(loggedInUser);
 
-        InvitationLink invitationLink = new InvitationLink();
-        invitationLink.setInvitationLink("http://api/hello?token=valid-token");
+       String invitationLink ="http://api/hello?token=valid-token";
 
         ResponseEntity<?> response = invitationService.acceptUserIntoOrganization(invitationLink);
 
@@ -107,8 +106,7 @@ public class InvitationServiceTest {
         when(userService.getLoggedInUser()).thenReturn(loggedInUser);
         when(invitationRepository.findByToken("expired-token")).thenReturn(Optional.of(invitation));
 
-        InvitationLink invitationLink = new InvitationLink();
-        invitationLink.setInvitationLink("http://api/hello?token=expired-token");
+       String invitationLink = "http://api/hello?token=expired-token";
 
         Exception exception = assertThrows(InvitationValidationException.class, () -> {
             invitationService.acceptUserIntoOrganization(invitationLink);
@@ -138,8 +136,7 @@ public class InvitationServiceTest {
         when(userService.getLoggedInUser()).thenReturn(loggedInUser);
         when(invitationRepository.findByToken("valid-token")).thenReturn(Optional.of(invitation));
 
-        InvitationLink invitationLink = new InvitationLink();
-        invitationLink.setInvitationLink("http://api/hello?token=valid-token");
+       String invitationLink = "http://api/hello?token=valid-token";
 
         Exception exception = assertThrows(Exception.class, () -> {
             invitationService.acceptUserIntoOrganization(invitationLink);

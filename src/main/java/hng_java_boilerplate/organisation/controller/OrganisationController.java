@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,11 +49,11 @@ public class OrganisationController {
         return new ResponseEntity<>(invitationService.createSingleInvite(singleInviteDto).getBody(), HttpStatus.OK);
     }
 
-    @PostMapping("/accept")
-    public ResponseEntity<?> acceptToOrganisation(@RequestBody InvitationLink invitationLink) throws Exception {
-        if (invitationLink == null || invitationLink.getInvitationLink() == " "){
+    @GetMapping("/invite/accept")
+    public ResponseEntity<?> acceptToOrganisation(@RequestParam("token") String token ) throws Exception {
+        if (token == null){
             throw new RuntimeException("Request Body cannot be empty");
         }
-        return new ResponseEntity<>(invitationService.acceptUserIntoOrganization(invitationLink).getBody(),HttpStatus.OK);
+        return new ResponseEntity<>(invitationService.acceptUserIntoOrganization(token).getBody(),HttpStatus.OK);
     }
 }

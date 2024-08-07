@@ -80,7 +80,7 @@ public class InvitationService {
         SendInviteResponseDto sendInviteResponseDto = new SendInviteResponseDto();
         String invitationLink = null;
 
-        List<MembershipInviteDto> invitations = sendInviteResponseDto.getInvitations();
+        List<MembershipInviteDto> invitations = new ArrayList<>();
         List<String> emails = createInvitationRequest.getEmail();
         String organisation_id = createInvitationRequest.getOrganisation_id();
         Organisation organisationDetails = organisationService.getOrganisationDetails(organisation_id);
@@ -97,7 +97,7 @@ public class InvitationService {
                     LocalDateTime.now().plusDays(2)));
             invitationTable.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
             invitationTable.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
-            invitationLink = "http://invite/accept?token=" +invitationTable.getToken() ;
+            invitationLink = "http://localhost:8080/invite/accept?token=" +invitationTable.getToken() ;
 
             emailMessage.setTo(email);
             emailMessage.setSubject("Invitation Link to Organisation");
@@ -117,24 +117,23 @@ public class InvitationService {
         return new ResponseEntity<>(sendInviteResponseDto, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> acceptUserIntoOrganization(InvitationLink invitationLink) throws Exception {
+    @Transactional
+    public ResponseEntity<?> acceptUserIntoOrganization(String token) throws Exception {
         User loggedInUser = userService.getLoggedInUser();
         InviteErrorResponse inviteErrorResponse = new InviteErrorResponse();
         List<String> error = new ArrayList<>();
-        String invitationToken = null;
+        String invitationToken = token;
 
-        Pattern pattern = Pattern.compile("token=([\\w-]+)");
-        Matcher matcher = pattern.matcher(invitationLink.getInvitationLink());
+//        Pattern pattern = Pattern.compile("token=([\\w-]+)");
+//        Matcher matcher = pattern.matcher(invitationLink.getInvitationLink());
 
-        if (matcher.find()){
-            invitationToken = matcher.group(1);
-        }else {
+        if (invitationToken == null || invitationToken == " "){
             error.add("Invalid link format");
             inviteErrorResponse.setMessage("Invalid or expired invitation link");
             inviteErrorResponse.setError(error);
             inviteErrorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             throw new InvitationValidationException(
-                   inviteErrorResponse.getMessage(),
+                    inviteErrorResponse.getMessage(),
                     inviteErrorResponse.getError(),
                     inviteErrorResponse.getStatus()
             );
