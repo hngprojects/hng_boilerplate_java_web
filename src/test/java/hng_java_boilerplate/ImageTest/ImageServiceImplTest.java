@@ -85,6 +85,7 @@ class ImageServiceImplTest {
 
         assertThrows(RuntimeException.class, () -> imageService.retrieveImage(imageId, null, null));
     }
-    //test for both endpoints
+    //retrieve
+
 
 }
