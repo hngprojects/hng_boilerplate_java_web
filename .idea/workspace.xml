@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V20__alter_profile_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V21__alter_profile_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/product/exceptions/ProductNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/product/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/product/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/product/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/product/service/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/product/service/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/product/service/ProductServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +32,7 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -44,37 +46,78 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.GetAllProductTest.testGetAllProducts_InternalServerError.executor": "Run",
+    "JUnit.GetAllProductTest.testGetAllProducts_NoContent.executor": "Run",
+    "JUnit.GetAllProductTest.testGetAllProducts_ProductNotFoundException.executor": "Run",
+    "JUnit.GetAllProductTest.testGetAllProducts_Success.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feat/update-user-profile",
+    "git-widget-placeholder": "feat/get-all-products",
+    "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/User/Desktop/sabiBank"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.NotificationSettingsControllerTest">
-    <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
+  <component name="RunManager" selected="JUnit.GetAllProductTest.testGetAllProducts_InternalServerError">
+    <configuration name="GetAllProductTest.testGetAllProducts_InternalServerError" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.product_test.unit_test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.product_test.unit_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.product_test.unit_test.GetAllProductTest" />
+      <option name="METHOD_NAME" value="testGetAllProducts_InternalServerError" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NotificationControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="GetAllProductTest.testGetAllProducts_NoContent" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.notification.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.product_test.unit_test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationControllerTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.product_test.unit_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.product_test.unit_test.GetAllProductTest" />
+      <option name="METHOD_NAME" value="testGetAllProducts_NoContent" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GetAllProductTest.testGetAllProducts_ProductNotFoundException" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.product_test.unit_test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.product_test.unit_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.product_test.unit_test.GetAllProductTest" />
+      <option name="METHOD_NAME" value="testGetAllProducts_ProductNotFoundException" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GetAllProductTest.testGetAllProducts_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.product_test.unit_test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.product_test.unit_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.product_test.unit_test.GetAllProductTest" />
+      <option name="METHOD_NAME" value="testGetAllProducts_Success" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -94,44 +137,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SmsControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hng-java-boilerplate" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.sms.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.sms" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.sms.SmsControllerTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="WaitlistControllerTest.createWaitlist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hng-java-boilerplate" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.waitlist.controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.waitlist.controller" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.waitlist.controller.WaitlistControllerTest" />
-      <option name="METHOD_NAME" value="createWaitlist" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.GetAllProductTest.testGetAllProducts_InternalServerError" />
+        <item itemvalue="JUnit.GetAllProductTest.testGetAllProducts_ProductNotFoundException" />
+        <item itemvalue="JUnit.GetAllProductTest.testGetAllProducts_NoContent" />
+        <item itemvalue="JUnit.GetAllProductTest.testGetAllProducts_Success" />
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
-        <item itemvalue="JUnit.NotificationControllerTest" />
-        <item itemvalue="Application.Program" />
-        <item itemvalue="JUnit.SmsControllerTest" />
-        <item itemvalue="JUnit.WaitlistControllerTest.createWaitlist" />
       </list>
     </recent_temporary>
   </component>
