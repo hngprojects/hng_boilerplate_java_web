@@ -5,12 +5,16 @@ import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.dto.VideoUploadDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
 import hng_java_boilerplate.video.service.VideoService;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -72,4 +76,33 @@ public class VideoUtils {
         responseDTO.setData(statusDTO);
         return responseDTO;
     }
+
+    public static String SaveVideoToFile(String name, byte[] videoByte)throws IOException{
+        String filename = generateFileName();
+        File videoFile = new File(UPLOAD_DIR + File.separator + filename);
+
+        try (FileOutputStream fos = new FileOutputStream(videoFile)) {
+            fos.write(videoByte);
+        }
+        return filename;
+    }
+
+    public static ByteArrayResource byteArrayResource(String filename) throws IOException {
+        File file = new File(UPLOAD_DIR + File.separator + sanitizeFileName(filename));
+
+        if (!file.exists()) {
+            throw new FileDoesNotExist("File not found");
+        }
+        byte[] videoByte = Files.readAllBytes(file.toPath());
+        return new ByteArrayResource(videoByte);
+    }
+
+    private static String generateFileName() {
+        return "video_" + VideoUtils.generateUuid();
+    }
+
+    public static String sanitizeFileName(String filename) {
+        return filename.replaceAll("[^a-zA-Z0-9.-]", "_");
+    }
+
 }
