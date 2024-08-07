@@ -1,4 +1,4 @@
-package hng_java_boilerplate.user.signup_unit_test;
+package hng_java_boilerplate.user.admin_signup_unit_test;
 
 import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -72,7 +72,7 @@ class UserServiceImplTest {
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(new User()));
         when(jwtUtils.createJwt.apply(any(User.class))).thenReturn("someToken");
 
-        ResponseEntity<ApiResponse> responseEntity = userService.registerUser(signupDto);
+        ResponseEntity<ApiResponse> responseEntity = userService.registerAdmin(signupDto);
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -80,7 +80,7 @@ class UserServiceImplTest {
         ApiResponse response = responseEntity.getBody();
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
-        assertEquals("Registration Successful!", response.getMessage());
+        assertEquals("Admin Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
         assertNotNull(data);
@@ -96,10 +96,8 @@ class UserServiceImplTest {
     @Test
     void testRegisterUser_EmailAlreadyExists() {
         SignupDto signupDto = new SignupDto("John", "Doe", "john.doe@example.com", "password123");
-
         when(userRepository.existsByEmail(signupDto.getEmail())).thenReturn(true);
-
-        assertThrows(EmailAlreadyExistsException.class, () -> userService.registerUser(signupDto));
+        assertThrows(EmailAlreadyExistsException.class, () -> userService.registerAdmin(signupDto));
     }
 
 
@@ -119,7 +117,7 @@ class UserServiceImplTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.registerUser(signupDto));
+        assertThrows(UserNotFoundException.class, () -> userService.registerAdmin(signupDto));
     }
 
     @Test
@@ -131,7 +129,7 @@ class UserServiceImplTest {
         user.setName(signupDto.getFirstName() + " " + signupDto.getLastName());
         user.setEmail(signupDto.getEmail());
         user.setPassword("encodedPassword");
-        user.setUserRole(Role.ROLE_USER);
+        user.setUserRole(Role.ROLE_ADMIN);
         user.setCreatedAt(LocalDateTime.now());
 
         when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.empty());
@@ -141,13 +139,13 @@ class UserServiceImplTest {
 
         String token = "someToken";
         when(jwtUtils.createJwt.apply(any(UserDetails.class))).thenReturn(token);
-        ResponseEntity<ApiResponse> responseEntity = userService.registerUser(signupDto);
+        ResponseEntity<ApiResponse> responseEntity = userService.registerAdmin(signupDto);
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         ApiResponse response = responseEntity.getBody();
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
-        assertEquals("Registration Successful!", response.getMessage());
+        assertEquals("Admin Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
         assertNotNull(data);

@@ -35,6 +35,11 @@ public class AuthController {
         return userService.loginUser(loginDto);
     }
 
+    @PostMapping("/admin-register")
+    public ResponseEntity<?> adminRegister(@Valid @RequestBody SignupDto signupDto){
+        return userService.registerAdmin(signupDto);
+    }
+
     @PostMapping("/facebook")
     public ResponseEntity<ApiResponse> handleFacebookAuth(@RequestBody OAuthDto payload) {
         try {

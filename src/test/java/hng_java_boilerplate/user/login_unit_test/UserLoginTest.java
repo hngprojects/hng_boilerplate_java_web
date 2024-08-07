@@ -1,11 +1,13 @@
 package hng_java_boilerplate.user.login_unit_test;
 
 import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.exception.InvalidRequestException;
 import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
@@ -39,6 +41,9 @@ class UserLoginTest {
     private UserRepository userRepository;
 
     @Mock
+    private ProfileRepository profileRepository;
+
+    @Mock
     private JwtUtils jwtUtils;
 
     @Mock
@@ -50,7 +55,7 @@ class UserLoginTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(passwordEncoder, userRepository, jwtUtils);
+        userService = new UserServiceImpl(passwordEncoder, userRepository, jwtUtils, profileRepository);
         jwtUtils.createJwt = mock(Function.class);
     }
 
@@ -60,17 +65,17 @@ class UserLoginTest {
         loginDto.setEmail("testuser@example.com");
         loginDto.setPassword("ValidPassword1");
 
+
         User mockUser = new User();
         mockUser.setId("user123");
         mockUser.setName("John Doe");
         mockUser.setEmail("testuser@example.com");
         mockUser.setCreatedAt(LocalDateTime.now());
+        mockUser.setUserRole(Role.ROLE_USER);
 
         when(userRepository.findByEmail(loginDto.getEmail())).thenReturn(Optional.of(mockUser));
         when(passwordEncoder.matches(loginDto.getPassword(), mockUser.getPassword())).thenReturn(true);
-
         ResponseEntity<ApiResponse> responseEntity = userService.loginUser(loginDto);
-
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 

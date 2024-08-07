@@ -116,7 +116,7 @@ public class GoogleJwtUtils {
         userResponse.setLast_name(authDto.getLast_name());
         userResponse.setEmail(user.getEmail());
         userResponse.setRole(user.getUserRole().name());
-        userResponse.setImr_url(authDto.getImg_url());
+        userResponse.setAvatar_url(authDto.getImg_url());
         userResponse.setCreated_at(user.getCreatedAt());
         return userResponse;
     }

@@ -110,7 +110,7 @@ public class FacebookJwtUtilsTest {
                 .last_name(authDto.getLast_name())
                 .email(savedUser.getEmail())
                 .role(savedUser.getUserRole().name())
-                .imr_url(authDto.getImg_url())
+                .avatar_url(authDto.getImg_url())
                 .created_at(savedUser.getCreatedAt())
                 .build();
 
@@ -118,7 +118,7 @@ public class FacebookJwtUtilsTest {
         ApiResponse response = new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data);
 
         assertNotNull(response);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.OK.value(), response.getStatus_code());
         assertEquals("Login Successful!", response.getMessage());
         ResponseData responseData = (ResponseData) response.getData();
         assertEquals("jwt-token", responseData.getToken());

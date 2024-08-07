@@ -13,6 +13,6 @@ public interface UserService {
     GetUserDto getUserWithDetails(String userId);
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
     User getLoggedInUser();
-
     ResponseEntity<ApiResponse> loginUser(LoginDto loginDto);
+    ResponseEntity<ApiResponse> registerAdmin(SignupDto signupDto);
 }

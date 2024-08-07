@@ -1,6 +1,8 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.profile.entity.Profile;
+import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
+    private final ProfileRepository profileRepository;
 
 
     @Override
@@ -55,41 +58,55 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public ResponseEntity<ApiResponse> registerUser(SignupDto signupDto) {
         validateEmail(signupDto.getEmail());
-
         User user = new User();
         user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
         user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
-
+        Profile profile = populateProfile(user);
+        user.setProfile(profile);
         User savedUser = userRepository.save(user);
-
         Optional<User> createdUserCheck = userRepository.findByEmail(user.getEmail());
         if (createdUserCheck.isEmpty()) {
             throw new UserNotFoundException("Registration Unsuccessful");
         }
-
         String token = jwtUtils.createJwt.apply(loadUserByUsername(savedUser.getEmail()));
-
         UserResponse userResponse = getUserResponse(savedUser);
         ResponseData data = new ResponseData(token, userResponse);
         return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED.value(), "Registration Successful!", data), HttpStatus.CREATED);
     }
 
     @Override
+    public ResponseEntity<ApiResponse> registerAdmin(SignupDto signupDto) {
+        validateEmail(signupDto.getEmail());
+        User user = new User();
+        user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
+        user.setUserRole(Role.ROLE_ADMIN);
+        user.setEmail(signupDto.getEmail());
+        user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+        Profile profile = populateProfile(user);
+        user.setProfile(profile);
+        User savedUser = userRepository.save(user);
+        Optional<User> createdUserCheck = userRepository.findByEmail(user.getEmail());
+        if (createdUserCheck.isEmpty()) {
+            throw new UserNotFoundException("Registration Unsuccessful");
+        }
+        String token = jwtUtils.createJwt.apply(loadUserByUsername(savedUser.getEmail()));
+        UserResponse userResponse = getUserResponse(savedUser);
+        ResponseData data = new ResponseData(token, userResponse);
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED.value(), "Admin Registration Successful!", data), HttpStatus.CREATED);
+    }
+
+    @Override
     public ResponseEntity<ApiResponse> loginUser(LoginDto loginDto) {
         UserDetails userDetails = loadUserByUsername(loginDto.getEmail());
         User user = (User) userDetails;
-
         boolean isValidPassword =
                 passwordEncoder.matches(loginDto.getPassword(), userDetails.getPassword());
-
         if (!isValidPassword) {
             throw new BadRequestException("Invalid email or password");
         }
-
         String token = jwtUtils.createJwt.apply(userDetails);
-
         UserResponse userResponse = getUserResponse(user);
         ResponseData data = new ResponseData(token, userResponse);
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
@@ -106,8 +123,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userResponse.setFirst_name(firstName);
         userResponse.setLast_name(lastName);
         userResponse.setEmail(user.getEmail());
+        userResponse.setRole(user.getUserRole().name());
         userResponse.setCreated_at(user.getCreatedAt());
         return userResponse;
+    }
+
+    private Profile populateProfile(User user){
+        String[] nameParts = user.getName().split(" ", 2);
+        String firstName = nameParts.length > 0 ? nameParts[0] : "";
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+        Profile profile = new Profile();
+        profile.setFirstName(firstName);
+        profile.setLastName(lastName);
+        profile.setUser(user);
+        return profileRepository.save(profile);
     }
 
     private void validateEmail(String email) {
