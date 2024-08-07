@@ -7,6 +7,7 @@ import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.exception.UnAuthorizedUserException;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.FacebookJwtUtils;
+import hng_java_boilerplate.util.GoogleJwtUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class AuthController {
 
     private final UserService userService;
     private final FacebookJwtUtils facebookJwtUtils;
+    private final GoogleJwtUtils googleJwtUtils;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody SignupDto signupDto){
@@ -38,6 +40,15 @@ public class AuthController {
         try {
             ApiResponse savedPayload = facebookJwtUtils.facebookOauthUserJWT(payload);
             return new ResponseEntity<>(savedPayload, HttpStatus.CREATED);
+        } catch (UnAuthorizedUserException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<ApiResponse> handleGoogleAuth(@RequestBody OAuthDto payload) {
+        try {
+            return ResponseEntity.ok(googleJwtUtils.googleOauthUserJWT(payload));
         } catch (UnAuthorizedUserException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
