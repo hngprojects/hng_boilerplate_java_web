@@ -5,58 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/dto/request/OAuthDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/dto/response/OAuthResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/FacebookOAuthException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/UnAuthorizedUserException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/util/FacebookJwtUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/util/GoogleJwtUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/controller/VideoController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/dto/VideoMessageDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/dto/VideoPathDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/dto/VideoResponseDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/dto/VideoStatusDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/dto/VideoUploadDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/entity/VideoSuite.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/errorhandler/VideoErrorHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/exceptions/JobCreationError.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/exceptions/JobNotFound.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/repository/VideoRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/service/VideoService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/service/VideoServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/service/VideoServicePublisher.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/utils/VideoMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/utils/VideoUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/videoEnums/VideoJobType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/videoEnums/VideoMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/video/videoEnums/VideoStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V25__Video_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V26__update_email_template_table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/utils/FacebookJwtUtilsTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/utils/GoogleJwtUtilsTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/video/ConcatVideoTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/video/GetJobTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailTemplateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailTemplateService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/controller/EmailTemplateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/controller/EmailTemplateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/dto/EmailTemplateRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/dto/EmailTemplateRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/entity/EmailTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/entity/EmailTemplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/entity/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/entity/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/documentation/User.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/documentation/User.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/dto/request/SignupDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/dto/request/SignupDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/dto/response/ApiResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/dto/response/ApiResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/dto/response/UserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/dto/response/UserResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/EmailAlreadyExistsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/EmailAlreadyExistsException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/InvalidRequestException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/InvalidRequestException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/UserNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/UserNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/UsernameNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/exception/UsernameNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/serviceImpl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/user/serviceImpl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/signup_unit_test/UserServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/signup_unit_test/UserServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/activitylog/controller/ActivityLogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/activitylog/controller/ActivityLogController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/activitylog/service/ActivityLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/activitylog/service/ActivityLogService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +47,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Merging featactivity-log-api",
+    "git-widget-placeholder": "Rebasing featactivity-log-api",
     "last_opened_file_path": "C:/Users/User/Desktop/sabiBank"
   }
 }]]></component>

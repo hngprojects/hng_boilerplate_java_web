@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ActivityLogService {
     private final ActivityLogRepository activityLogRepository;
 
-    @Autowired
+
     public ActivityLogService(ActivityLogRepository activityLogRepository) {
         this.activityLogRepository = activityLogRepository;
     }

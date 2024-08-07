@@ -35,7 +35,6 @@ public class ActivityLogController {
             @PathVariable("userId") String userId,
             Authentication authentication) {
         try {
-            // Validate Strings
             if (orgId == null || orgId.isEmpty() || userId == null || userId.isEmpty()) {
                 return new ResponseEntity<>(new ErrorResponseDto(400, "Invalid orgId or userId", "Bad Request"), HttpStatus.BAD_REQUEST);
             }

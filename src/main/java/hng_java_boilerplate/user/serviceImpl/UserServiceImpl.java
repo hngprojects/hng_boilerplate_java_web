@@ -93,25 +93,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         ResponseData data = new ResponseData(token, userResponse);
 
         // Log activity
-        GetUserDto userDto = userRepository.findById(user.getId())
-                .map(u -> GetUserDto.builder()
-                        .id(u.getId())
-                        .name(u.getName())
-                        .email(u.getEmail())
-                        .organisations(Optional.ofNullable(u.getOrganisations())
-                                .orElseGet(List::of)
-                                .stream()
-                                .map(o -> GetUserDto.OrganisationDto.builder()
-                                        .org_id(o.getId())
-                                        .name(o.getName())
-                                        .description(o.getDescription())
-                                        .build()).toList())
-                        .build())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-
+        GetUserDto userDto = convertUserToGetUserDto(user);
         String organisationId = userDto.getOrganisations().isEmpty() ? null : userDto.getOrganisations().get(0).getOrg_id();
         activityLogService.logActivity(organisationId, user.getId(), "User logged in");
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
+    }
+
+    private GetUserDto convertUserToGetUserDto(User user) {
+        return GetUserDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .organisations(Optional.ofNullable(user.getOrganisations())
+                        .orElseGet(List::of)
+                        .stream()
+                        .map(o -> GetUserDto.OrganisationDto.builder()
+                                .org_id(o.getId())
+                                .name(o.getName())
+                                .description(o.getDescription())
+                                .build())
+                        .toList())
+                .build();
     }
 
 
