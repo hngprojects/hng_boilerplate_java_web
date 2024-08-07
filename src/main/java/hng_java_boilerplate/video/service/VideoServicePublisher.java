@@ -17,7 +17,7 @@ public class VideoServicePublisher {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.queue.concat}")
+//    @Value("${rabbitmq.queue.concat}")
     private String videoConcat;
     private static final Logger logger = LoggerFactory.getLogger(VideoServicePublisher.class);
     public boolean sendVideoConcat(VideoPathDTO videoPathDTO){
