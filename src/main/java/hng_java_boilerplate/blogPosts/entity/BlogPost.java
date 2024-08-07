@@ -1,17 +1,15 @@
 package hng_java_boilerplate.blogPosts.entity;
 
+import hng_java_boilerplate.comment.entity.Comment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -40,4 +38,8 @@ public class BlogPost {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany
+    @JoinColumn()
+    private List<Comment> comment;
 }

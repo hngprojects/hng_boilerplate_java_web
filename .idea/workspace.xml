@@ -5,8 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/controller/CommentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/dto/CommentDataDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/dto/RequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/dto/ResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/entity/Comment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/repository/CommentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/service/CommentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/v26__comment_db.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/comment_unit_test/CommentServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/blogPosts/controller/BlogPostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/blogPosts/controller/BlogPostController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/blogPosts/entity/BlogPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/blogPosts/entity/BlogPost.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailProducerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailProducerService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,13 +67,13 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.Program">
+  <component name="RunManager" selected="JUnit.CommentServiceTest.createComment_ShouldReturnSavedComment">
     <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.comment_unit_test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -101,22 +113,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BlogPostServiceImplTest.testLatestPost" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hng-java-boilerplate" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.blogPost.service_unit_test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.blogPost.service_unit_test" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.blogPost.service_unit_test.BlogPostServiceImplTest" />
-      <option name="METHOD_NAME" value="testLatestPost" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="BlogPostServiceImplTest.testSave" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
@@ -133,20 +129,36 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="CommentServiceTest.createComment_ShouldReturnSavedComment" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="hng-java-boilerplate" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="hng_java_boilerplate.comment_unit_test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.comment_unit_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.comment_unit_test.CommentServiceTest" />
+      <option name="METHOD_NAME" value="createComment_ShouldReturnSavedComment" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.Program" />
+      <item itemvalue="JUnit.CommentServiceTest.createComment_ShouldReturnSavedComment" />
       <item itemvalue="JUnit.BlogPostServiceImplTest.testDelete" />
       <item itemvalue="JUnit.BlogPostServiceImplTest.testDeleteThrowsExceptionWhenNotFound" />
-      <item itemvalue="JUnit.BlogPostServiceImplTest.testLatestPost" />
       <item itemvalue="JUnit.BlogPostServiceImplTest.testSave" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.CommentServiceTest.createComment_ShouldReturnSavedComment" />
         <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.BlogPostServiceImplTest.testDeleteThrowsExceptionWhenNotFound" />
         <item itemvalue="JUnit.BlogPostServiceImplTest.testDelete" />
         <item itemvalue="JUnit.BlogPostServiceImplTest.testSave" />
-        <item itemvalue="JUnit.BlogPostServiceImplTest.testLatestPost" />
       </list>
     </recent_temporary>
   </component>
@@ -177,7 +189,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java</url>
-          <line>97</line>
+          <line>104</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

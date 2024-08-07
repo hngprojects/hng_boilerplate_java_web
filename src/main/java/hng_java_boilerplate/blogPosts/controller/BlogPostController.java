@@ -17,22 +17,21 @@ import java.util.Optional;
 public class BlogPostController {
     private final BlogPostService blogPostService;
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/{blog_id}")
-    public ResponseEntity<BlogPost> getById(@PathVariable String blogId) {
+    @GetMapping("/getBlogPost/{blog_id}")
+    public ResponseEntity<BlogPost> getById(@PathVariable("blog_id") String blogId) {
         Optional<BlogPost> blogPost = blogPostService.getById(blogId);
         return blogPost.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping
+
+    @GetMapping("/allBlogPosts")
     public ResponseEntity<Collection<BlogPost>> getAll() {
         Collection<BlogPost> blogPosts = blogPostService.getAll();
         return ResponseEntity.ok(blogPosts);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+
     @GetMapping("/latest")
     public ResponseEntity<BlogPost> getLatestPost() {
         Optional<BlogPost> latestPost = blogPostService.latestPost();
@@ -40,16 +39,16 @@ public class BlogPostController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @PostMapping("/createBlogPost")
     public ResponseEntity<BlogPost> createBlogPost(@RequestBody BlogPost blogPost) {
         BlogPost savedPost = blogPostService.save(blogPost);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPost);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @DeleteMapping("/{blog_id}")
-    public ResponseEntity<Void> deleteBlogPost(@PathVariable String blogId) {
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    @DeleteMapping("/deleteBlogPost/{blog_id}")
+    public ResponseEntity<Void> deleteBlogPost(@PathVariable("blog_id") String blogId) {
         Optional<BlogPost> blogPost = blogPostService.getById(blogId);
         if (blogPost.isPresent()) {
             blogPostService.delete(blogPost.get());

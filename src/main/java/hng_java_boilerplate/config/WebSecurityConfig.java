@@ -86,9 +86,16 @@ public class WebSecurityConfig {
                                         "/api/v1/waitlist",
                                         "/api/v1/faqs",
                                         "/api/v1/contacts",
-                                        "/api/v1/squeeze/"
+                                        "/api/v1/squeeze/",
+                                        "/api/v1/blogs/getBlogPost/{blog_id}",
+                                        "/api/v1/blogs/allBlogPosts",
+                                        "/api/v1/blogs/latest",
+                                        "api/v1/comments/add"
+
                                 ).permitAll()
-                                .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
+                                .requestMatchers("/api/v1/auth/logout").authenticated()
+                                .requestMatchers("/api/v1/blogs/createBlogPost",
+                                        "/api/v1/blogs/deleteBlogPost/{blog_id}").hasAnyAuthority("ROLE_ADMIN"))
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)
