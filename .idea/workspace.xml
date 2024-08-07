@@ -5,21 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/controller/CommentController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/dto/CommentDataDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/dto/RequestDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/dto/ResponseDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/entity/Comment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/repository/CommentRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/service/CommentService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/v26__comment_db.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/comment_unit_test/CommentServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/blogPosts/controller/BlogPostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/blogPosts/controller/BlogPostController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/blogPosts/entity/BlogPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/blogPosts/entity/BlogPost.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/RabbitMQConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailProducerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/email/EmailServices/EmailProducerService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
