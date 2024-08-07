@@ -44,13 +44,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void deleteProduct(String productId, Principal principal) {
-        var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        String userId = user.getId();
-
-        if (userId == null || userId.isEmpty()) {
-            throw new AuthenticationFailedException("Login or Register to perform this operation");
-        }
+    public void deleteProduct(String productId) {
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RecordNotFoundException("Product not found"));

@@ -81,10 +81,10 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<GeneralResponse<Product>> deleteProduct(@PathVariable String productId, Principal principal) {
+    public ResponseEntity<GeneralResponse<Product>> deleteProduct(@PathVariable String productId) {
         GeneralResponse<Product> generalResponseEntity = new GeneralResponse<>();
         try {
-            productService.deleteProduct(productId, principal);
+            productService.deleteProduct(productId);
             generalResponseEntity.setMessage("Product deleted successfully");
             return ResponseEntity.ok(generalResponseEntity);
         } catch (RecordNotFoundException | AuthenticationFailedException ex) {

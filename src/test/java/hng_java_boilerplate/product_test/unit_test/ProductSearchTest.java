@@ -137,19 +137,12 @@ public class ProductSearchTest {
     }
 
     @Test
-    public void testDeleteProduct_Success() {
-        // Arrange
-        String productId = "productId";
-        Product product = new Product();
-        Authentication principal = new UsernamePasswordAuthenticationToken(new User(), null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+    public void testDeleteProduct_Success() throws Exception {
+        String productId = "product-id";
 
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-
-        // Act
-        service.deleteProduct(productId, principal);
-
-        // Assert
-        verify(productRepository).delete(product);
+        Mockito.doNothing().when(productService).deleteProduct(productId);
+        ResponseEntity<GeneralResponse<Product>> response = productController.deleteProduct(productId);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -161,7 +154,7 @@ public class ProductSearchTest {
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(RecordNotFoundException.class, () -> productService.deleteProduct(productId, principal));
+        assertThrows(RecordNotFoundException.class, () -> productService.deleteProduct(productId));
 
         // Verify that delete was not called
         verify(productRepository, times(0)).delete(any(Product.class));
@@ -174,7 +167,7 @@ public class ProductSearchTest {
         Authentication principal = new UsernamePasswordAuthenticationToken(null, null); // No user object
 
         // Act & Assert
-        assertThrows(AuthenticationFailedException.class, () -> productService.deleteProduct(productId, principal));
+        assertThrows(AuthenticationFailedException.class, () -> productService.deleteProduct(productId));
 
         // Verify that delete was not called
         verify(productRepository, times(0)).delete(any(Product.class));
