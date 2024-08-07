@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ActivityLogController {
     private final ActivityLogService activityLogService;
 
-    @Autowired
+
     public ActivityLogController(ActivityLogService activityLogService) {
         this.activityLogService = activityLogService;
     }
