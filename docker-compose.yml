@@ -69,6 +69,6 @@ services:
 networks:
   backend-net:
     driver: bridge
-
+    
 volumes:
-  postgresdataa:
+    postgresdataa:

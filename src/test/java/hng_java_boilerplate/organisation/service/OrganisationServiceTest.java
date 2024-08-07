@@ -68,7 +68,10 @@ class OrganisationServiceTest {
     void create_shouldThrowOrganisationNameAlreadyExistsException_whenOrganisationWithNameAlreadyExists() {
         when(organisationRepository.findByName(orgRequest.name())).thenReturn(Optional.of(new Organisation()));
 
-        OrganisationNameAlreadyExistsException exception = assertThrows(OrganisationNameAlreadyExistsException.class, () -> organisationService.create(orgRequest, activeUser));
+        OrganisationNameAlreadyExistsException exception = assertThrows(
+                OrganisationNameAlreadyExistsException.class,
+                () -> organisationService.create(orgRequest, activeUser)
+        );
 
         assertEquals("Sorry, an Organisation with NAME::vpay already exists", exception.getMessage());
         verify(organisationRepository, times(1)).findByName(orgRequest.name());
