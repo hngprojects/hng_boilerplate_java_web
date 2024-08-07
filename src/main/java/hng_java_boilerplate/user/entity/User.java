@@ -43,6 +43,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
 
+    @Column(name = "secret_key")
+    private String secretKey;
 
     @ManyToMany
     @JoinTable(
