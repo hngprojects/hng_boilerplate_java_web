@@ -10,10 +10,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.OAuthDto;
-import hng_java_boilerplate.user.dto.response.ApiResponse;
-import hng_java_boilerplate.user.dto.response.OAuthResponse;
-import hng_java_boilerplate.user.dto.response.ResponseData;
-import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.repository.UserRepository;
@@ -74,6 +71,7 @@ public class GoogleJwtUtils {
                     .email(email)
                     .first_name(givenName)
                     .last_name(familyName)
+                    .access_token(oAuthDto.getAccessToken())
                     .password("GOOGLELOGIN1")
                     .img_url(pictureUrl)
                     .is_active(emailVerified)
@@ -82,14 +80,11 @@ public class GoogleJwtUtils {
         return null;
     };
 
-    public Function<OAuthResponse, ResponseData> saveOauthUser = userDto -> {
+    public Function<OAuthResponse, OAuthUserResponse> saveOauthUser = userDto -> {
         if (userRepository.existsByEmail(userDto.getEmail())){
             UserDetails userDetails = userService.loadUserByUsername(userDto.getEmail());
 
-            String token = utils.createJwt.apply(userDetails);
-
-            UserResponse userResponse = userService.getUserResponse((User)userDetails);
-            return new ResponseData(token, userResponse);
+             return getAuthUserResponse(userDto ,(User)userDetails);
         }
         else{
             User user = new User();
@@ -104,21 +99,19 @@ public class GoogleJwtUtils {
             user.setProfile(profile);
             User savedUser = userRepository.save(user);
 
-            UserResponse userResponse = getAuthResponse(userDto, savedUser);
-            return new ResponseData(utils.createJwt.apply(userService.loadUserByUsername(user.getUsername())), userResponse);
+            return getAuthUserResponse(userDto, savedUser);
         }
     };
 
-    public UserResponse getAuthResponse(OAuthResponse authDto, User user){
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId(user.getId());
-        userResponse.setFirst_name(authDto.getFirst_name());
-        userResponse.setLast_name(authDto.getLast_name());
-        userResponse.setEmail(user.getEmail());
-        userResponse.setRole(user.getUserRole().name());
-        userResponse.setImr_url(authDto.getImg_url());
-        userResponse.setCreated_at(user.getCreatedAt());
-        return userResponse;
+    public OAuthUserResponse getAuthUserResponse(OAuthResponse authDto, User user){
+        OAuthUserResponse oAuthUserResponse = new OAuthUserResponse();
+        oAuthUserResponse.setId(user.getId());
+        oAuthUserResponse.setEmail(user.getEmail());
+        oAuthUserResponse.setFirst_name(authDto.getFirst_name());
+        oAuthUserResponse.setLast_name(authDto.getLast_name());
+        oAuthUserResponse.setFullname(authDto.getFirst_name() + " " + authDto.getLast_name());
+        oAuthUserResponse.setRole(user.getUserRole().name());
+        return oAuthUserResponse;
     }
 
     private Profile populateProfile(OAuthResponse user){
@@ -130,9 +123,9 @@ public class GoogleJwtUtils {
         return profileRepository.save(profile);
     }
 
-    public ApiResponse googleOauthUserJWT(OAuthDto oAuthDto){
+    public OAuthBaseResponse googleOauthUserJWT(OAuthDto oAuthDto){
         OAuthResponse user =  getUserFromIdToken.apply(oAuthDto);
-        ResponseData data = saveOauthUser.apply(user);
-        return new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data);
+        OAuthUserResponse data = saveOauthUser.apply(user);
+        return new OAuthBaseResponse(HttpStatus.OK.value(), "User Created Successful!", user.getAccess_token(), data);
     }
 }
