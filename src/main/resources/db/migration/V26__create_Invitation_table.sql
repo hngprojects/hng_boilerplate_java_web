@@ -25,3 +25,12 @@ CREATE TABLE role_permissions (
                                   CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles (id),
                                   CONSTRAINT fk_permission FOREIGN KEY (permission_id) REFERENCES permissions (id)
 );
+
+CREATE TABLE image (
+                       id VARCHAR(36) PRIMARY KEY,
+                       name VARCHAR(255),
+                       type VARCHAR(255),
+                       size BIGINT,
+                       path VARCHAR(255)
+);
+
