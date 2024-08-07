@@ -15,9 +15,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/images")
 public class ImageController {
+    private final ImageService imageService;
+    public ImageController(ImageService imageService) {
+        this.imageService = imageService;
+    }
 
-    @Autowired
-    private ImageService imageService;
+
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile image) {

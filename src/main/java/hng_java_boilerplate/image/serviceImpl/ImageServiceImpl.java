@@ -17,8 +17,12 @@ import java.util.UUID;
 @Service
 public class ImageServiceImpl implements ImageService {
 
-    @Autowired
-    private ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
+    public ImageServiceImpl(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
+    }
+
+
 
     private final String storagePath = "/path/image/storage/";
     private final String processedPath = "/path/image/processed/";
@@ -59,4 +63,5 @@ public class ImageServiceImpl implements ImageService {
             throw new RuntimeException("Image not found");
         }
     }
+    //check
 }
