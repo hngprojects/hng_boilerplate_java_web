@@ -16,7 +16,6 @@ import hng_java_boilerplate.user.exception.FacebookOAuthException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-@ConditionalOnProperty(name = "spring.security.oauth2.client.registration.facebook.client-id", havingValue = "default", matchIfMissing = true)
 public class FacebookJwtUtils {
 
     private UserRepository userRepository;
@@ -46,19 +44,15 @@ public class FacebookJwtUtils {
 
 
     private final Function<String, OAuthResponse> getUserFromFacebookToken = (accessToken) -> {
-        if (accessToken == null || accessToken.isEmpty()) {
-            throw new RuntimeException("Access token is missing");
-        }
-
         FacebookClient facebookClient = new DefaultFacebookClient(accessToken, Version.LATEST);
-        com.restfb.types.User user;
+
+        com.restfb.types.User user = null;
         try {
             user = facebookClient.fetchObject("me", com.restfb.types.User.class,
                     com.restfb.Parameter.with("fields", "id,email,first_name,last_name,picture"));
         } catch (FacebookOAuthException e) {
             throw new RuntimeException(e);
         }
-
 
         if (user != null) {
             String providerAccountId = user.getId();
