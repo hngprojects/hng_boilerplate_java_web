@@ -24,7 +24,7 @@ public class EmailConsumerService {
 
     @RabbitListener(queues = "${rabbitmq.queue.email}")
     public void receiveMessage(EmailMessage emailMessage) throws MessagingException {
-        log.info("Consmer received the message well");
+        log.info("Consumer received the message well");
         javaMailService.sendMail(emailMessage.getTo(), emailMessage.getSubject(), emailMessage.getText());
         log.info("Notification delivered");
     }

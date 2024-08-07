@@ -1,13 +1,10 @@
 package hng_java_boilerplate.user.serviceImpl;
 
-import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.exception.BadRequestException;
-import hng_java_boilerplate.user.dto.request.ForgotPasswordRequest;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
-import hng_java_boilerplate.user.dto.response.ForgotPasswordResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
@@ -17,9 +14,7 @@ import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
-import hng_java_boilerplate.user.utils.UserUtils;
 import hng_java_boilerplate.util.JwtUtils;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +27,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static hng_java_boilerplate.user.templates.ResetPasswordEmailTemplate.buildEmail;
-import static hng_java_boilerplate.user.utils.UserUtils.PASSWORD_RESET;
-import static hng_java_boilerplate.user.utils.UserUtils.validateEmailNotEmpty;
 
 @Service
 @RequiredArgsConstructor
@@ -47,9 +38,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
-
-    private final EmailProducerService producer;
-    private final UserUtils utils;
 
 
 
@@ -109,17 +97,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     }
 
-    @Override
-    public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request) throws MessagingException {
-        validateEmailNotEmpty(request.getEmail());
-        Optional<User> user = userRepository.findByEmail(request.getEmail());
-        if (user.isEmpty()) {
-            return new ForgotPasswordResponse("404", "Email does not exist", new HashMap<>());
-        }
-        String resetLink = utils.generateResetLink(request.getEmail());
-        producer.sendEmailMessage(request.getEmail(), PASSWORD_RESET, buildEmail(user.get().getName(), resetLink));
-        return new ForgotPasswordResponse("200", "Password reset email sent successfully", new HashMap<>());
-    }
 
     private UserResponse getUserResponse(User user){
         String[] nameParts = user.getName().split(" ", 2);

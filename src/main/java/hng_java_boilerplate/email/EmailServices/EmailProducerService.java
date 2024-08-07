@@ -28,7 +28,7 @@ public class EmailProducerService {
         log.info("Notification sent to Queue");
         EmailMessage emailMessage = new EmailMessage(to, subject, text);
         rabbitTemplate.convertAndSend(exchange, routingKey, emailMessage);
-        log.info("Proceeding to the Consmer");
+        log.info("Proceeding to the Consumer");
     }
 
 }
