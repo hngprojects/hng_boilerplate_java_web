@@ -23,4 +23,11 @@ public class GlobalExceptionHandler {
         responseEntity.setMessage(exception.getMessage());
         return new ResponseEntity<>(responseEntity, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(AuthenticationFailedException.class)
+    public ResponseEntity<GeneralResponse<String>> authFailed(AuthenticationFailedException exception){
+        GeneralResponse<String> responseEntity = new GeneralResponse<>();
+        responseEntity.setMessage(exception.getMessage());
+        return new ResponseEntity<>(responseEntity, HttpStatus.UNAUTHORIZED);
+    }
 }

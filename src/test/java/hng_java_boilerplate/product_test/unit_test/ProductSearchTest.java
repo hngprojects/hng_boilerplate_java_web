@@ -6,13 +6,16 @@ import static org.mockito.Mockito.*;
 
 import hng_java_boilerplate.product.controller.ProductController;
 import hng_java_boilerplate.product.dto.ErrorDTO;
+import hng_java_boilerplate.product.exceptions.AuthenticationFailedException;
 import hng_java_boilerplate.product.exceptions.RecordNotFoundException;
 import hng_java_boilerplate.product.exceptions.ValidationError;
 import hng_java_boilerplate.product.utils.GeneralResponse;
+import hng_java_boilerplate.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import hng_java_boilerplate.product.service.ProductServiceImpl;
 import hng_java_boilerplate.product.repository.ProductRepository;
@@ -23,10 +26,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductSearchTest {
 
@@ -127,5 +135,50 @@ public class ProductSearchTest {
         when(service.getProductById(productId)).thenThrow(RecordNotFoundException.class);
         assertThrows(RecordNotFoundException.class, () -> productController.getProduct(productId));
     }
+
+    @Test
+    public void testDeleteProduct_Success() {
+        // Arrange
+        String productId = "productId";
+        Product product = new Product();
+        Authentication principal = new UsernamePasswordAuthenticationToken(new User(), null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Act
+        service.deleteProduct(productId, principal);
+
+        // Assert
+        verify(productRepository).delete(product);
+    }
+
+    @Test
+    public void testDeleteProduct_NotFound() {
+        // Arrange
+        String productId = "productId";
+        Authentication principal = new UsernamePasswordAuthenticationToken(new User(), null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(RecordNotFoundException.class, () -> productService.deleteProduct(productId, principal));
+
+        // Verify that delete was not called
+        verify(productRepository, times(0)).delete(any(Product.class));
+    }
+
+    @Test
+    public void testDeleteProduct_NotAuthenticated() {
+        // Arrange
+        String productId = "productId";
+        Authentication principal = new UsernamePasswordAuthenticationToken(null, null); // No user object
+
+        // Act & Assert
+        assertThrows(AuthenticationFailedException.class, () -> productService.deleteProduct(productId, principal));
+
+        // Verify that delete was not called
+        verify(productRepository, times(0)).delete(any(Product.class));
+    }
+
 }
 

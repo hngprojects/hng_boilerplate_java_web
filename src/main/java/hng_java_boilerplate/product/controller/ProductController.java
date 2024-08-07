@@ -2,6 +2,7 @@ package hng_java_boilerplate.product.controller;
 
 import hng_java_boilerplate.product.dto.ProductSearchDTO;
 import hng_java_boilerplate.product.entity.Product;
+import hng_java_boilerplate.product.exceptions.AuthenticationFailedException;
 import hng_java_boilerplate.product.exceptions.RecordNotFoundException;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -75,6 +77,20 @@ public class ProductController {
             throw ex;
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<GeneralResponse<Product>> deleteProduct(@PathVariable String productId, Principal principal) {
+        GeneralResponse<Product> generalResponseEntity = new GeneralResponse<>();
+        try {
+            productService.deleteProduct(productId, principal);
+            generalResponseEntity.setMessage("Product deleted successfully");
+            return ResponseEntity.ok(generalResponseEntity);
+        } catch (RecordNotFoundException | AuthenticationFailedException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

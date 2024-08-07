@@ -4,6 +4,7 @@ import hng_java_boilerplate.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface ProductService {
@@ -13,4 +14,7 @@ public interface ProductService {
 
     // Get Product By Id
     public Product getProductById(String productId);
+
+    // Delete Product
+    public void deleteProduct(String productId, Principal principal);
 }
