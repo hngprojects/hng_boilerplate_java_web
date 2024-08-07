@@ -114,7 +114,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
     }
 
-    private UserResponse getUserResponse(User user) {
+
+    public UserResponse getUserResponse(User user) {
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
         String lastName = nameParts.length > 1 ? nameParts[1] : "";

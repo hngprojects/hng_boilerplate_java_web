@@ -74,7 +74,7 @@ class UserServiceImplTest {
 
         ApiResponse response = responseEntity.getBody();
         assertNotNull(response);
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
@@ -128,10 +128,10 @@ class UserServiceImplTest {
         user.setPassword("encodedPassword");
         user.setCreatedAt(LocalDateTime.now());
 
-        when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.empty()); // Simulate email not taken
+        when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(signupDto.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user); // Simulate saving user
-        when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.of(user)); // Simulate user retrieval after saving
+        when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.of(user));
 
         String token = "someToken";
         when(jwtUtils.createJwt.apply(any(UserDetails.class))).thenReturn(token);
@@ -143,7 +143,7 @@ class UserServiceImplTest {
 
         ApiResponse response = responseEntity.getBody();
         assertNotNull(response);
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
