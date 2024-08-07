@@ -30,8 +30,8 @@ public class UserController {
     @GetMapping(value = "members", produces = "application/json")
     public ResponseEntity<?> getAllMembers(@RequestParam int page, Authentication authentication) {
         List<MembersResponse> members = userService.getAllUsers(page, authentication);
-        Response<?> res = Response.builder().message("Users List Successfully Fetched").status("200").data(members).build();
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+        Response<?> response = Response.builder().message("Users List Successfully Fetched").status("200").data(members).build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
