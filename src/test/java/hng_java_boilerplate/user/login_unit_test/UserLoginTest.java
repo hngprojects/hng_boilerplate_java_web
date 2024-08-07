@@ -1,5 +1,6 @@
 package hng_java_boilerplate.user.login_unit_test;
 
+import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
@@ -11,6 +12,7 @@ import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
+import hng_java_boilerplate.user.utils.UserUtils;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +44,12 @@ class UserLoginTest {
     private JwtUtils jwtUtils;
 
     @Mock
+    private EmailProducerService emailProducerService;
+
+    @Mock
+    private UserUtils userUtils;
+
+    @Mock
     private User user;
 
     @InjectMocks
@@ -50,7 +58,7 @@ class UserLoginTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(passwordEncoder, userRepository, jwtUtils);
+        userService = new UserServiceImpl(passwordEncoder, userRepository, jwtUtils, emailProducerService, userUtils);
         jwtUtils.createJwt = mock(Function.class);
     }
 

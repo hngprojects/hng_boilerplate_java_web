@@ -10,10 +10,10 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailMessage implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class EmailMessage {
 
     private String to;
     private String subject;
     private String text;
+
 }

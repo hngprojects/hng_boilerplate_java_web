@@ -88,7 +88,8 @@ public class WebSecurityConfig {
                                         "/api/v1/waitlist",
                                         "/api/v1/faqs",
                                         "/api/v1/contacts",
-                                        "/api/v1/squeeze/"
+                                        "/api/v1/squeeze/",
+                                        "/api/v1/users/forgot-password"
                                 ).permitAll()
                                 .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
                 .logout(logout -> logout
