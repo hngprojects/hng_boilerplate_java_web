@@ -1,7 +1,9 @@
 package hng_java_boilerplate.product.controller;
 
+import hng_java_boilerplate.product.dto.ErrorDTO;
 import hng_java_boilerplate.product.dto.ProductSearchDTO;
 import hng_java_boilerplate.product.entity.Product;
+import hng_java_boilerplate.product.exceptions.ProductNotFoundException;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,5 +64,37 @@ public class ProductController {
         productSearchDTO.setPage(products.getNumber());
         productSearchDTO.setSuccess(true);
         return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/")
+    public  ResponseEntity<?> getAllProducts(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "10") int limit){
+        try{
+            Page<Product> products;
+            products = productService.getAllProducts(PageRequest.of(page,limit));
+            ProductSearchDTO productSearchDTO = new ProductSearchDTO();
+            if (products.isEmpty()){
+                productSearchDTO.setStatus_code(HttpStatus.NO_CONTENT.value());
+                productSearchDTO.setProducts(ProductMapper.INSTANCE.toDTOList(products).getContent());
+                productSearchDTO.setSuccess(true);
+                productSearchDTO.setTotal(products.getTotalPages());
+                productSearchDTO.setLimit(products.getSize());
+                productSearchDTO.setPage(products.getNumber());
+                return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
+            }
+
+            productSearchDTO.setStatus_code(HttpStatus.OK.value());
+            productSearchDTO.setProducts(ProductMapper.INSTANCE.toDTOList(products).getContent());
+            productSearchDTO.setSuccess(true);
+            productSearchDTO.setTotal(products.getTotalPages());
+            productSearchDTO.setLimit(products.getSize());
+            productSearchDTO.setPage(products.getNumber());
+            return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
+        }catch (ProductNotFoundException e){
+            return new ResponseEntity<>(new ErrorDTO("Product not found", e.getMessage()), HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            return new ResponseEntity<>(new ErrorDTO("Internal Server error occurred", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
