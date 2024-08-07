@@ -4,19 +4,24 @@ on:
   push:
     branches: [dev, staging, main]
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: [dev, staging, main]
+
+# permissions:
+#   contents: read
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    #environment: PR-Validation
       
     services:
         postgres:  
           image: postgres:latest
           env:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: postgres
+            POSTGRES_USER: "admin"
+            POSTGRES_PASSWORD: "password123"
+            POSTGRES_DB: "postgres"
           ports:
             - 5432:5432
           options: >-
@@ -28,8 +33,8 @@ jobs:
         rabbitmq:
           image: rabbitmq:3-management
           env:
-            RABBITMQ_DEFAULT_USER: guest
-            RABBITMQ_DEFAULT_PASS: guest
+            RABBITMQ_DEFAULT_USER: "guest"
+            RABBITMQ_DEFAULT_PASS: "guest"
           ports:
             - 5672:5672
             - 15672:15672  # Management plugin port
@@ -40,8 +45,10 @@ jobs:
             --health-retries 5
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository base
         uses: actions/checkout@v3
+        # with:
+        #   ref: ${{ github.event.pull_request.base.sha }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -54,13 +61,14 @@ jobs:
       - name: Create .env file
         run: |
           echo "DB_CONNECTION_STRING=postgresql://localhost:5432/postgres" >> .env
-          echo "DB_USERNAME=postgres" >> .env
-          echo "DB_PASSWORD=password" >> .env
-          echo "RABBITMQ_HOST=localhost" >> .env
+          echo "DB_USERNAME=admin" >> .env
+          echo "DB_PASSWORD=password123" >> .env
           echo "RABBITMQ_PORT=5672" >> .env
           echo "RABBITMQ_USERNAME=guest" >> .env
           echo "RABBITMQ_PASSWORD=guest" >> .env
-          # echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          # echo "ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
+          # echo "AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
+          # echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
 
       - name: Create application.properties
         uses: ./.github/workflows/create-application-properties
@@ -70,9 +78,6 @@ jobs:
 
       - name: Build the application
         run: mvn clean install
-
-      - name: List target directory contents
-        run: ls -l target
 
       - name: Start Application
         run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &

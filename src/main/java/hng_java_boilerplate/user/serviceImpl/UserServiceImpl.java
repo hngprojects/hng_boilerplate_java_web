@@ -1,7 +1,8 @@
 package hng_java_boilerplate.user.serviceImpl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
+import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
@@ -11,11 +12,11 @@ import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
 import hng_java_boilerplate.user.exception.InvalidRequestException;
 import hng_java_boilerplate.user.exception.UserNotFoundException;
+import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.DisabledException;
@@ -23,15 +24,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.crypto.BadPaddingException;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -78,7 +76,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED.value(), "Registration Successful!", data), HttpStatus.CREATED);
     }
 
-    private UserResponse getUserResponse(User user){
+    @Override
+    public ResponseEntity<ApiResponse> loginUser(LoginDto loginDto) {
+        UserDetails userDetails = loadUserByUsername(loginDto.getEmail());
+        User user = (User) userDetails;
+
+        boolean isValidPassword =
+                passwordEncoder.matches(loginDto.getPassword(), userDetails.getPassword());
+
+        if (!isValidPassword) {
+            throw new BadRequestException("Invalid email or password");
+        }
+
+        String token = jwtUtils.createJwt.apply(userDetails);
+
+        UserResponse userResponse = getUserResponse(user);
+        ResponseData data = new ResponseData(token, userResponse);
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
+
+    }
+
+    public UserResponse getUserResponse(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
         String lastName = nameParts.length > 1 ? nameParts[1] : "";
@@ -105,11 +123,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
-    @Transactional
     @Override
-    public GetUserDto getUserWithDetails(String userId) throws BadPaddingException {
+    @Transactional
+    public GetUserDto getUserWithDetails(String userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(BadPaddingException::new);
+                .orElseThrow(() -> new UserNotFoundException("user not found with id"));
 
         GetUserDto userDto = GetUserDto
                 .builder()
@@ -148,7 +166,5 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userDto.setOrganisations(organisations);
 
         return userDto;
-    };
-
-
+    }
 }
