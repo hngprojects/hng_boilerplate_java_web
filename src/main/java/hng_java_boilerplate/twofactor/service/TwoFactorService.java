@@ -19,6 +19,10 @@ public class TwoFactorService {
 
     public ResponseEntity<TwoFactorResponse> enableTwoFactor() throws QrGenerationException {
         User user = userService.getLoggedInUser();
+        if (user.getTwoFactorEnabled()) {
+            return ResponseEntity.status(200).body(new TwoFactorResponse(200, "2FA already enabled", null));
+        }
+        user.setTwoFactorEnabled(true);
         String secretKey = totpService.generateSecretKey();
         user.setSecretKey(secretKey);
         userService.save(user);

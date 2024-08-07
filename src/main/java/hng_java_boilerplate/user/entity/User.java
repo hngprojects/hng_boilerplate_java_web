@@ -44,7 +44,10 @@ public class User implements UserDetails {
     private Profile profile;
 
     @Column(name = "secret_key")
+    @JsonIgnore
     private String secretKey;
+
+    private Boolean TwoFactorEnabled = false;
 
     @ManyToMany
     @JoinTable(
