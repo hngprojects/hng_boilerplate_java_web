@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OAuthResponse {
+public class OAuthUserResponse {
+    private String id;
+    private String email;
     private String first_name;
     private String last_name;
-    private String email;
-    private String password;
-    private String access_token;
-    private String img_url;
-    private boolean is_active;
+    private String fullname;
+    private String role;
 }

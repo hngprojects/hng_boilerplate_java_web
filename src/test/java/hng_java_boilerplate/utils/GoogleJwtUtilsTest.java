@@ -6,10 +6,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.OAuthDto;
-import hng_java_boilerplate.user.dto.response.ApiResponse;
-import hng_java_boilerplate.user.dto.response.OAuthResponse;
-import hng_java_boilerplate.user.dto.response.ResponseData;
-import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.repository.UserRepository;
@@ -93,13 +90,11 @@ public class GoogleJwtUtilsTest {
         savedUser.setId(userId);
         savedUser.setEmail("test@example.com");
         savedUser.setUserRole(Role.ROLE_USER);
-        savedUser.setCreatedAt(null); // Adjust based on actual implementation
+        savedUser.setCreatedAt(null);
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
-        // Mocking UserServiceImpl and JwtUtils
         UserDetails userDetails = mock(UserDetails.class);
         when(userService.loadUserByUsername(anyString())).thenReturn(userDetails);
-        when(jwtUtils.createJwt.apply(any(UserDetails.class))).thenReturn("jwt-token");
 
 
         OAuthResponse authDto =  OAuthResponse
@@ -109,28 +104,26 @@ public class GoogleJwtUtilsTest {
                 .last_name("Doe")
                 .password("GOOGLELOGIN1")
                 .img_url("http://example.com/picture")
+                .access_token("test-access-token")
                 .is_active(true)
                 .build();
 
-        UserResponse userResponse = UserResponse.builder()
+        OAuthUserResponse userResponse = OAuthUserResponse.builder()
                 .id(savedUser.getId())
                 .first_name(authDto.getFirst_name())
                 .last_name(authDto.getLast_name())
                 .email(savedUser.getEmail())
                 .role(savedUser.getUserRole().name())
-                .imr_url(authDto.getImg_url())
-                .created_at(savedUser.getCreatedAt())
                 .build();
 
-        ResponseData data = new ResponseData("jwt-token", userResponse);
-        ApiResponse response = new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data);
+
+        OAuthBaseResponse response = new OAuthBaseResponse(HttpStatus.OK.value(), "Login Successful!", authDto.getAccess_token(), userResponse);
 
 
         // Assert
         assertNotNull(response);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.OK.value(), response.getStatus_code());
         assertEquals("Login Successful!", response.getMessage());
-        ResponseData responseData = response.getData();
-        assertEquals("jwt-token", responseData.getToken());
+        assertEquals("test-access-token", response.getAccess_token());
     }
 }
