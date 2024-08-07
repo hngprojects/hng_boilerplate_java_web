@@ -47,6 +47,6 @@ public class RabbitMQConfig {
     public Queue videoConcatQueue(){return new Queue(videoConcat, true);}
 
 
-    public Queue videoConcatQueue(){return new Queue(videoConcat, true);}
+//    public Queue videoConcatQueue(){return new Queue(videoConcat, true);}
 
 }

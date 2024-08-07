@@ -15,4 +15,5 @@ public class ProductDTO {
     private String category;
     private double price;
     private String imageUrl;
+    private Boolean availabilityStatus;
 }
