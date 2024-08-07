@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0819718c-051b-4296-8ddb-4136bd5e82d7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/controller/OrganisationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/controller/OrganisationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/service/InvitationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/service/InvitationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/invitation_test/InvitationServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/invitation_test/InvitationServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,23 +40,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feat/update-user-profile&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/RLS/Desktop/JAVA/HNG internship/hng_boilerplate_java_web&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Program.executor": "Debug",
+    "JUnit.InvitationServiceTest.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "feat/update-user-profile",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/RLS/Desktop/JAVA/HNG internship/hng_boilerplate_java_web",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
-  <component name="RunManager" selected="Application.Program">
+}]]></component>
+  <component name="RunManager" selected="JUnit.InvitationServiceTest">
     <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
       <module name="hng-java-boilerplate" />
@@ -72,16 +76,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NotificationControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="InvitationServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.notification.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.invitation_test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationControllerTest" />
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.invitation_test" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.invitation_test.InvitationServiceTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -143,11 +147,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.InvitationServiceTest" />
         <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.WaitlistControllerTest.createWaitlist" />
         <item itemvalue="JUnit.SmsControllerTest" />
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
-        <item itemvalue="JUnit.NotificationControllerTest" />
       </list>
     </recent_temporary>
   </component>
@@ -168,6 +172,7 @@
       <option name="presentableId" value="Default" />
       <updated>1721380209697</updated>
       <workItem from="1723019665102" duration="382000" />
+      <workItem from="1723020078395" duration="1909000" />
     </task>
     <servers />
   </component>
@@ -342,6 +347,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/hng_java_boilerplate/organisation/service/InvitationService.java</url>
           <line>140</line>
           <option name="timeStamp" value="166" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/hng_java_boilerplate/invitation_test/InvitationServiceTest.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="167" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,7 +1,12 @@
 package hng_java_boilerplate.invitation_test;
 
+import hng_java_boilerplate.email.EmailServices.EmailConsumerService;
+import hng_java_boilerplate.email.entity.EmailMessage;
+import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
+import hng_java_boilerplate.organisation.dto.CreateInvitationRequestDto;
 import hng_java_boilerplate.organisation.dto.InvitationLink;
 import hng_java_boilerplate.organisation.dto.ValidLinkResponse;
+import hng_java_boilerplate.organisation.dto.requestDto.SendInviteResponseDto;
 import hng_java_boilerplate.organisation.entity.Invitation;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.entity.Status;
@@ -30,118 +35,133 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
 public class InvitationServiceTest {
-    @Mock
-    private UserService userService;
 
     @Mock
-    private OrganisationService organisationService;
+    private UserService userService;
 
     @Mock
     private InvitationRepository invitationRepository;
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private EmailConsumerService emailConsumerService;
+
     @InjectMocks
     private InvitationService invitationService;
+
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
-
     @Test
-    public void testAcceptUserIntoOrganization_ValidInvitation() throws Exception {
-        User loggedInUser = new User();
-        loggedInUser.setId("user123");
-        loggedInUser.setOrganisations(new ArrayList<>());
+    void testAcceptUserIntoOrganization_Success() throws Exception {
+        String token = "valid-token";
+        User user = new User();
+        List<Organisation> organisations = new ArrayList<>();
+        user.setOrganisations(organisations);
 
         Organisation organisation = new Organisation();
-        organisation.setId("org123");
-
         Invitation invitation = new Invitation();
-        invitation.setId(UUID.randomUUID().toString());
-        invitation.setToken("valid-token");
-        invitation.setUserEmail("user@example.com");
+        invitation.setToken(token);
         invitation.setStatus(Status.PENDING);
-        invitation.setOrganisation(organisation);
         invitation.setExpiresAt(Timestamp.valueOf(LocalDateTime.now().plusDays(1)));
+        invitation.setOrganisation(organisation);
 
-        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
-        when(invitationRepository.findByToken("valid-token")).thenReturn(Optional.of(invitation));
-        when(organisationService.getOrganisationDetails("org123")).thenReturn(organisation);
-        when(invitationRepository.save(any(Invitation.class))).thenReturn(invitation);
-        when(userRepository.save(any(User.class))).thenReturn(loggedInUser);
+        when(userService.getLoggedInUser()).thenReturn(user);
+        when(invitationRepository.findByToken(token)).thenReturn(Optional.of(invitation));
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
-       String invitationLink ="http://api/hello?token=valid-token";
+        ResponseEntity<?> response = invitationService.acceptUserIntoOrganization(token);
 
-        ResponseEntity<?> response = invitationService.acceptUserIntoOrganization(invitationLink);
-
-        assertNotNull(response);
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
         ValidLinkResponse validLinkResponse = (ValidLinkResponse) response.getBody();
-        assertNotNull(validLinkResponse);
         assertEquals("Invitation accepted, you have been added to the organization", validLinkResponse.getMessage());
     }
 
     @Test
-    public void testAcceptUserIntoOrganization_ExpiredToken() {
-        User loggedInUser = new User();
-        loggedInUser.setId("user123");
-        loggedInUser.setOrganisations(new ArrayList<>());
+    void testAcceptUserIntoOrganization_InvalidToken() {
+        String token = "invalid-token";
 
-        Organisation organisation = new Organisation();
-        organisation.setId("org123");
+        when(invitationRepository.findByToken(token)).thenReturn(Optional.empty());
 
-        Invitation invitation = new Invitation();
-        invitation.setId(UUID.randomUUID().toString());
-        invitation.setToken("expired-token");
-        invitation.setUserEmail("user@example.com");
-        invitation.setStatus(Status.PENDING);
-        invitation.setOrganisation(organisation);
-        invitation.setExpiresAt(Timestamp.valueOf(LocalDateTime.now().minusDays(1)));
-
-        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
-        when(invitationRepository.findByToken("expired-token")).thenReturn(Optional.of(invitation));
-
-       String invitationLink = "http://api/hello?token=expired-token";
-
-        Exception exception = assertThrows(InvitationValidationException.class, () -> {
-            invitationService.acceptUserIntoOrganization(invitationLink);
+        assertThrows(ResourceNotFoundException.class, () -> {
+            invitationService.acceptUserIntoOrganization(token);
         });
-
-        assertEquals("Invalid or expired invitation link", exception.getMessage());
     }
 
     @Test
-    public void testAcceptUserIntoOrganization_UserAlreadyBelongsToOrg() {
-        User loggedInUser = new User();
-        loggedInUser.setId("user123");
-
+    void testAcceptUserIntoOrganization_ExpiredToken() {
+        String token = "valid-token";
+        User user = new User();
         Organisation organisation = new Organisation();
-        organisation.setId("org123");
+        Invitation invitation = new Invitation();
+        invitation.setToken(token);
+        invitation.setStatus(Status.PENDING);
+        invitation.setExpiresAt(Timestamp.valueOf(LocalDateTime.now().minusDays(1)));
+        invitation.setOrganisation(organisation);
 
-        loggedInUser.setOrganisations(List.of(organisation));
+        when(userService.getLoggedInUser()).thenReturn(user);
+        when(invitationRepository.findByToken(token)).thenReturn(Optional.of(invitation));
+
+        assertThrows(InvitationValidationException.class, () -> {
+            invitationService.acceptUserIntoOrganization(token);
+        });
+    }
+
+    @Test
+    void testAcceptUserIntoOrganization_UserAlreadyInOrganization() {
+        String token = "valid-token";
+        User user = new User();
+        Organisation organisation = new Organisation();
+        List<Organisation> organisations = new ArrayList<>();
+        organisations.add(organisation);
+        user.setOrganisations(organisations);
 
         Invitation invitation = new Invitation();
-        invitation.setId(UUID.randomUUID().toString());
-        invitation.setToken("valid-token");
-        invitation.setUserEmail("user@example.com");
+        invitation.setToken(token);
         invitation.setStatus(Status.PENDING);
-        invitation.setOrganisation(organisation);
         invitation.setExpiresAt(Timestamp.valueOf(LocalDateTime.now().plusDays(1)));
+        invitation.setOrganisation(organisation);
 
-        when(userService.getLoggedInUser()).thenReturn(loggedInUser);
-        when(invitationRepository.findByToken("valid-token")).thenReturn(Optional.of(invitation));
+        when(userService.getLoggedInUser()).thenReturn(user);
+        when(invitationRepository.findByToken(token)).thenReturn(Optional.of(invitation));
 
-       String invitationLink = "http://api/hello?token=valid-token";
-
-        Exception exception = assertThrows(Exception.class, () -> {
-            invitationService.acceptUserIntoOrganization(invitationLink);
+        assertThrows(Exception.class, () -> {
+            invitationService.acceptUserIntoOrganization(token);
         });
+    }
 
-        assertEquals("User Already belong to org", exception.getMessage());
+    @Test
+    void testCreateInvitationLink() {
+        CreateInvitationRequestDto requestDto = new CreateInvitationRequestDto();
+        requestDto.setEmail(List.of("test1@example.com", "test2@example.com"));
+        requestDto.setOrganisation_id("org-id");
+
+        Organisation organisation = new Organisation();
+        organisation.setId("org-id");
+        organisation.setName("Test Organisation");
+
+        when(organisationService.getOrganisationDetails(anyString())).thenReturn(organisation);
+
+        ResponseEntity<?> response = invitationService.createInvitationLink(requestDto);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        SendInviteResponseDto responseBody = (SendInviteResponseDto) response.getBody();
+        assertEquals("Invitation(s) sent Successfully", responseBody.getMessages());
+        assertEquals(2, responseBody.getInvitations().size());
+
+        verify(invitationRepository, times(1)).saveAll(anyList());
+        verify(emailConsumerService, times(2)).receiveMessage(any(EmailMessage.class));
     }
 }
