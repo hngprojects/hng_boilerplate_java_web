@@ -25,6 +25,9 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "is_available")
+    private Boolean isAvailable;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)

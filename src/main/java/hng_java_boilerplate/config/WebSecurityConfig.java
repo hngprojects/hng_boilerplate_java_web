@@ -93,7 +93,7 @@ public class WebSecurityConfig {
                                 ).permitAll()
                                 .requestMatchers( "/api/v1/auth/logout", "/api/**").authenticated()
                                 .requestMatchers("/api/v1/create/blog-categories",
-                                        "/api/v1/pages/listOfNewslettersSubscribers").hasAnyAuthority("ROLE_ADMIN"))
+                                        "/api/v1/pages/listOfNewslettersSubscribers", "/api/v1/products/{product_id}").hasAnyAuthority("ROLE_ADMIN"))
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)

@@ -5,6 +5,7 @@ import hng_java_boilerplate.email.exception.EmailTemplateExists;
 import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
+import hng_java_boilerplate.product.errorhandler.ProductNotFoundException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
@@ -144,6 +145,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException ex) {
         ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Category Already Created", HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"An error occurred while trying to update product status", HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
 }
