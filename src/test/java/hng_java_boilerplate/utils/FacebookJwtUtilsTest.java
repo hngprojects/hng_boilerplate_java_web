@@ -62,7 +62,7 @@ public class FacebookJwtUtilsTest {
     @Test
     void testFacebookOauthUserJWT_successfulLogin() {
         OAuthDto oAuthDto = new OAuthDto();
-        oAuthDto.setAccessToken("test-access-token");
+        oAuthDto.setIdToken("test-access-token");
 
         com.restfb.types.User facebookUser = new com.restfb.types.User();
         facebookUser.setId("123456789");
