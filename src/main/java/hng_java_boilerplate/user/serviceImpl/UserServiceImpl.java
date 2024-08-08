@@ -1,5 +1,7 @@
 package hng_java_boilerplate.user.serviceImpl;
 
+import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
@@ -8,13 +10,17 @@ import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.enums.Role;
+import hng_java_boilerplate.user.exception.*;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
 import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
+import hng_java_boilerplate.user.repository.VerificationTokenRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +33,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +45,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final EmailServiceImpl emailService;
+
     private final ActivityLogService activityLogService;
 
     @Override
@@ -54,22 +65,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public ResponseEntity<ApiResponse> registerUser(SignupDto signupDto) {
         validateEmail(signupDto.getEmail());
-
         User user = new User();
         user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
         user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
-
         User savedUser = userRepository.save(user);
-
         Optional<User> createdUserCheck = userRepository.findByEmail(user.getEmail());
         if (createdUserCheck.isEmpty()) {
             throw new UserNotFoundException("Registration Unsuccessful");
         }
-
         String token = jwtUtils.createJwt.apply(loadUserByUsername(savedUser.getEmail()));
-
         UserResponse userResponse = getUserResponse(savedUser);
         ResponseData data = new ResponseData(token, userResponse);
         return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED.value(), "Registration Successful!", data), HttpStatus.CREATED);
@@ -88,7 +94,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
 
         String token = jwtUtils.createJwt.apply(userDetails);
-
         UserResponse userResponse = getUserResponse(user);
         ResponseData data = new ResponseData(token, userResponse);
 
@@ -123,8 +128,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.save(user);
     }
 
-    // GetUserResponse method that combines both branches
-    public UserResponse getUserResponse(User user) {
+    @Override
+    public void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request) {
+        User user = findUserByEmail(emailSenderDto.getEmail());
+        String token = emailService.generateToken();
+        saveVerificationTokenForUser(user, token);
+        emailService.sendVerificationEmail(user, request, token);
+    }
+
+    public void saveVerificationTokenForUser(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken(user, token);
+        verificationTokenRepository.save(verificationToken);
+    }
+
+    public UserResponse getUserResponse(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
         String lastName = nameParts.length > 1 ? nameParts[1] : "";
@@ -141,7 +158,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     // Validate email method to check if the email already exists
     private void validateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exist");
         }
     }
 
@@ -153,7 +170,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
-    // Get user with details
+    public User findUserByEmail(String username) {
+        return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User with email " + username + " not found"));
+    }
+
     @Override
     @Transactional
     public GetUserDto getUserWithDetails(String userId) {

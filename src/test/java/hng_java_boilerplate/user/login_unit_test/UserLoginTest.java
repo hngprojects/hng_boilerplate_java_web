@@ -10,6 +10,9 @@ import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
+import hng_java_boilerplate.user.repository.VerificationTokenRepository;
+import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +45,12 @@ class UserLoginTest {
 
     @Mock
     private JwtUtils jwtUtils;
+
+    @Mock
+    private EmailServiceImpl emailService;
+
+    @Mock
+    private VerificationTokenRepository verificationTokenRepository;
 
     @Mock
     private ActivityLogService activityLogService;
