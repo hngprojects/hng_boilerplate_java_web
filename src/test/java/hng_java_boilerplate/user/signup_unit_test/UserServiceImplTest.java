@@ -74,7 +74,7 @@ class UserServiceImplTest {
 
         ApiResponse response = responseEntity.getBody();
         assertNotNull(response);
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
@@ -143,7 +143,7 @@ class UserServiceImplTest {
 
         ApiResponse response = responseEntity.getBody();
         assertNotNull(response);
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
