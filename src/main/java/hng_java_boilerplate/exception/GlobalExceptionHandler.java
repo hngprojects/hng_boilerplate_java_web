@@ -154,8 +154,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"An error occurred while trying to update product status", HttpStatus.NOT_FOUND.value());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "An error occurred while trying to update product status", HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(QrGenerationException.class)
     public ResponseEntity<ErrorResponse> handleQrGenerationException(QrGenerationException ex) {
@@ -168,5 +169,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
 
     }
-  }
+
 }
