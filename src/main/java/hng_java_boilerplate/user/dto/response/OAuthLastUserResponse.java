@@ -1,14 +1,14 @@
 package hng_java_boilerplate.user.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiResponse {
-    private int status_code;
-    private String message;
-    private ResponseData data;
+@Builder
+public class OAuthLastUserResponse {
+    private UserOAuthDetails user;
 }
