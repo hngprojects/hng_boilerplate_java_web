@@ -7,6 +7,7 @@ import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundExceptio
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
+import hng_java_boilerplate.twofactor.exception.InvalidTotpException;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import hng_java_boilerplate.user.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -139,7 +140,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailTemplateExists.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ResponseMessageDto> handleDuplicateEmaiTemplateException(EmailTemplateExists ex) {
+    public ResponseEntity<ResponseMessageDto> handleDuplicateEmailTemplateException(EmailTemplateExists ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.CONFLICT.value()));
     }
 
@@ -153,5 +154,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleQrGenerationException(QrGenerationException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Server error", "Could not generate QR code", 500);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidTotpException.class)
+    public ResponseEntity<ResponseMessageDto> handleInvalidTotpException(InvalidTotpException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
     }
 }
