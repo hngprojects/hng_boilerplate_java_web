@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class GetAllProductTest {
+public class ProductServiceTest {
     @Mock
     private ProductService productService;
 
@@ -53,14 +53,13 @@ public class GetAllProductTest {
     }
     @Test
     public void testGetAllProducts_NoContent() {
-        // Arrange
         Page<Product> productPage = new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 10), 0);
         when(productService.getAllProducts(any(PageRequest.class))).thenReturn(productPage);
 
-        // Act
+
         ResponseEntity<?> response = productController.getAllProducts(0, 10);
 
-        // Assert
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ProductSearchDTO responseBody = (ProductSearchDTO) response.getBody();
         assertEquals(0, responseBody.getTotal());
@@ -72,13 +71,11 @@ public class GetAllProductTest {
 
     @Test
     public void testGetAllProducts_ProductNotFoundException() {
-        // Arrange
+
         when(productService.getAllProducts(any(PageRequest.class))).thenThrow(new ProductNotFoundException("Product not found"));
 
-        // Act
         ResponseEntity<?> response = productController.getAllProducts( 0, 10);
 
-        // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         ErrorDTO responseBody = (ErrorDTO) response.getBody();
         assertEquals("Product not found", responseBody.getMessage());
@@ -86,13 +83,11 @@ public class GetAllProductTest {
 
     @Test
     public void testGetAllProducts_InternalServerError() {
-        // Arrange
+
         when(productService.getAllProducts(any(PageRequest.class))).thenThrow(new RuntimeException("Internal Server Error"));
 
-        // Act
         ResponseEntity<?> response = productController.getAllProducts( 0, 10);
 
-        // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         ErrorDTO responseBody = (ErrorDTO) response.getBody();
         assertEquals("Internal Server Error", responseBody.getMessage());
