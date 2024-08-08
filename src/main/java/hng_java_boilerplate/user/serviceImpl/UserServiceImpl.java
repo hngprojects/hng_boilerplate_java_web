@@ -10,6 +10,7 @@ import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
+import hng_java_boilerplate.user.exception.InvalidRequestException;
 import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
@@ -30,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
-
 
 
     @Override
@@ -97,8 +96,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     }
 
-
-    private UserResponse getUserResponse(User user){
+    public UserResponse getUserResponse(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
         String lastName = nameParts.length > 1 ? nameParts[1] : "";
@@ -117,8 +115,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             throw new EmailAlreadyExistsException("Email already exist");
         }
     }
-
-
 
     @Override
     public User getLoggedInUser() {
@@ -171,7 +167,4 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         return userDto;
     }
-
-
-
 }

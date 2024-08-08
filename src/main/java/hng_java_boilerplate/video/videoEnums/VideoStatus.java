@@ -4,7 +4,8 @@ public enum VideoStatus {
     PENDING("Pending"),
     SUCCESS("Success"),
     PROCESSING("Processing"),
-    FAILED("Failed");
+    FAILED("Failed"),
+    SAVED("Saved");
     private final String status;
 
     VideoStatus(String status) {
