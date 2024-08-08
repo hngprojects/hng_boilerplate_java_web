@@ -1,5 +1,6 @@
 package hng_java_boilerplate.comment.entity;
 
+
 import hng_java_boilerplate.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

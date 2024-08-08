@@ -1,5 +1,6 @@
 package hng_java_boilerplate.comment.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
