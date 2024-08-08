@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="Fix: update my sql file">
+    <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,12 +21,6 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="PUSH_TAGS">
-      <GitPushTagMode>
-        <option name="argument" value="--follow-tags" />
-        <option name="title" value="Current Branch" />
-      </GitPushTagMode>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -43,7 +37,6 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2jSUrIbrkLUxAz03YXGPuCkvWnM" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -74,21 +67,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CommentServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hng-java-boilerplate" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.comment_unit_test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.comment_unit_test" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.comment_unit_test.CommentServiceTest" />
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -167,6 +145,7 @@
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
         <item itemvalue="JUnit.NotificationControllerTest" />
         <item itemvalue="JUnit.SmsControllerTest" />
+        <item itemvalue="JUnit.WaitlistControllerTest.createWaitlist" />
       </list>
     </recent_temporary>
   </component>
@@ -186,35 +165,6 @@
       <workItem from="1723061189571" duration="2748000" />
       <workItem from="1723064434707" duration="5018000" />
     </task>
-    <task id="LOCAL-00001" summary="Feat: Comment-Functionality-addComments">
-      <created>1723130190231</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1723130190231</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Fix: Adjusted my sql file">
-      <created>1723130843266</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1723130843266</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Fix: update my sql file">
-      <created>1723131379026</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1723131379026</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Fix: update my sql file">
-      <created>1723131684276</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1723131684276</updated>
-    </task>
-    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
