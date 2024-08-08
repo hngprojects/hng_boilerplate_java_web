@@ -3,7 +3,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.product.controller.ProductController;
-import hng_java_boilerplate.product.dto.ProductStatusRequestDto;
+import hng_java_boilerplate.product.dto.ProductUpdateRequestDto;
 import hng_java_boilerplate.product.repository.ProductRepository;
 import hng_java_boilerplate.product.service.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -53,8 +51,8 @@ public class ProductStatusTest {
     @Test
     void testUpdateProductStatus() throws Exception {
 
-        ProductStatusRequestDto invalidRequestDto = new ProductStatusRequestDto();
-        invalidRequestDto.setProductId("03202052-e1ad-4d2f-a56c-b5d0e99fe55a");
+        ProductUpdateRequestDto invalidRequestDto = new ProductUpdateRequestDto();
+        invalidRequestDto.setProduct_id("03202052-e1ad-4d2f-a56c-b5d0e99fe55a");
         invalidRequestDto.setName("Water");
         invalidRequestDto.setCategory("LIQUID");
         invalidRequestDto.setPrice(3.00);
@@ -71,8 +69,8 @@ public class ProductStatusTest {
     @Test
     public void testUpdateProductStatusWithInvalidRequest() throws Exception {
 
-        ProductStatusRequestDto invalidRequestDto = new ProductStatusRequestDto();
-        invalidRequestDto.setProductId(" ");
+        ProductUpdateRequestDto invalidRequestDto = new ProductUpdateRequestDto();
+        invalidRequestDto.setProduct_id(" ");
         invalidRequestDto.setName(" ");
         invalidRequestDto.setCategory("LIQUID");
         invalidRequestDto.setPrice(3.00);

@@ -25,13 +25,24 @@ public class Product {
     private String name;
     private String description;
     private String category;
-    private double price;
+    private Double price;
     @Column(name = "image_url")
     private String imageUrl;
 
 
     @Column(name = "current_stock")
     private int currentStock;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "current_stock")
+    private Integer currentStock;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

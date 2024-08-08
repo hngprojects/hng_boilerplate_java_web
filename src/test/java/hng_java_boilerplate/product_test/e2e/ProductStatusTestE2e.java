@@ -1,7 +1,7 @@
 package hng_java_boilerplate.product_test.e2e;
 
 import hng_java_boilerplate.product.controller.ProductController;
-import hng_java_boilerplate.product.dto.ProductStatusRequestDto;
+import hng_java_boilerplate.product.dto.ProductUpdateRequestDto;
 import hng_java_boilerplate.product.service.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,14 +42,14 @@ public class ProductStatusTestE2e {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void testUpdateProductStatus_Success() throws Exception {
-        ProductStatusRequestDto requestDto = new ProductStatusRequestDto();
-        requestDto.setProductId("123");
+        ProductUpdateRequestDto requestDto = new ProductUpdateRequestDto();
+        requestDto.setProduct_id("123");
         requestDto.setName("Product Name");
         requestDto.setDescription("Description");
         requestDto.setCategory("Category");
         requestDto.setPrice(20.00);
-        requestDto.setImageUrl("http://example.com/image.jpg");
-        requestDto.setAvailabilityStatus(true);
+        requestDto.setImage_Url("http://example.com/image.jpg");
+        requestDto.setAvailable(true);
 
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/products/123")
@@ -62,14 +62,14 @@ public class ProductStatusTestE2e {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void testUpdateProductStatus_Failure_InvalidRequest() throws Exception {
-        ProductStatusRequestDto requestDto = new ProductStatusRequestDto();
-        requestDto.setProductId("123");
+        ProductUpdateRequestDto requestDto = new ProductUpdateRequestDto();
+        requestDto.setProduct_id("123");
         requestDto.setName("Product Name");
         requestDto.setDescription("Description");
         requestDto.setCategory("Category");
         requestDto.setPrice(20.00);
-        requestDto.setImageUrl("http://example.com/image.jpg");
-        requestDto.setAvailabilityStatus(true);
+        requestDto.setImage_Url("http://example.com/image.jpg");
+        requestDto.setAvailable(true);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/products/123")
                         .contentType(MediaType.APPLICATION_JSON)
