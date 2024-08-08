@@ -5,8 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V25__alter_organisation_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V32__alter_organisation_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V26__create_Invitation_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V31__create_Invitation_table.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/controller/CommentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/dto/CommentDataDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/dto/RequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/dto/ResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/entity/Comment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/repository/CommentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/service/CommentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V31__comment_db.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/ImageTest/ImageServiceImplTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/comment_unit_test/CommentServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/image/controller/ImageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/image/controller/ImageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/image/serviceImpl/ImageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/image/serviceImpl/ImageServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/jobs/controller/JobListingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/jobs/controller/JobListingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/jobs/entity/JobListing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/jobs/entity/JobListing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/jobs/service/JobListingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/jobs/service/JobListingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/jobs/service/JobListingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/jobs/service/JobListingServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/controller/UserProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/controller/UserProfileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/repository/ProfileRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/repository/ProfileRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/service/ProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/service/ProfileService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/serviceImpl/ProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/serviceImpl/ProfileServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V26__create_Invitation_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V26__create_Invitation_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V29__create_job_listings_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V29__create_job_listings_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V31__create_Invitation_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V33__create_Invitation_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V5__alter_user_data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V5__alter_user_data.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V6__alter_user_password.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V6__alter_user_password.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/profile/serviceImpl/ProfileServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/profile/serviceImpl/ProfileServiceImplTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,11 +47,6 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="feat/image-retrieve" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -43,26 +63,27 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2jSUrIbrkLUxAz03YXGPuCkvWnM" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feat/organisation-allfeat&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Desktop/sabiBank&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;2e56b7c92f9d46da88e49f2303b88df0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Merging feat/organisation-allfeat",
+    "last_opened_file_path": "C:/Users/User/Desktop/sabiBank",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "spring.configuration.checksum": "2e56b7c92f9d46da88e49f2303b88df0",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Application.Program">
     <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
@@ -77,16 +98,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ActivityLogControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="NotificationControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.activitylog.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.notification.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.activitylog" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.activitylog.ActivityLogControllerTest" />
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationControllerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -107,32 +128,33 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="OrganisationServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SmsControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.organisation.service.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.sms.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.organisation.service" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.organisation.service.OrganisationServiceTest" />
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.sms" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.sms.SmsControllerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserLoginTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="WaitlistControllerTest.createWaitlist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.user.login_unit_test.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.waitlist.controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.user.login_unit_test" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.user.login_unit_test.UserLoginTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="hng_java_boilerplate.waitlist.controller" />
+      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.waitlist.controller.WaitlistControllerTest" />
+      <option name="METHOD_NAME" value="createWaitlist" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -148,6 +170,9 @@
       <list>
         <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
+        <item itemvalue="JUnit.NotificationControllerTest" />
+        <item itemvalue="JUnit.SmsControllerTest" />
+        <item itemvalue="JUnit.WaitlistControllerTest.createWaitlist" />
       </list>
     </recent_temporary>
   </component>
@@ -165,7 +190,7 @@
       <workItem from="1723044764828" duration="4603000" />
       <workItem from="1723060273839" duration="415000" />
       <workItem from="1723061189571" duration="2748000" />
-      <workItem from="1723064434707" duration="2807000" />
+      <workItem from="1723064434707" duration="5018000" />
     </task>
     <servers />
   </component>
@@ -177,7 +202,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/hng_java_boilerplate/config/WebSecurityConfig.java</url>
-          <line>99</line>
+          <line>97</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
