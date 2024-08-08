@@ -1,6 +1,7 @@
 package hng_java_boilerplate.profile.serviceImpl;
 
 import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.image.util.ImageProcessor;
 import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
 import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
 import hng_java_boilerplate.profile.dto.response.DeactivateUserResponse;
@@ -16,8 +17,11 @@ import hng_java_boilerplate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +29,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
-
+    private final String storagePath = "/path/image/storage/";
     @Override
     public DeactivateUserResponse deactivateUser(DeactivateUserRequest request) {
         User authUser = userService.getLoggedInUser();
@@ -80,4 +84,21 @@ public class ProfileServiceImpl implements ProfileService {
             throw new InternalServerErrorException("An unexpected error occurred");
         }
     }
+
+    @Override
+    public String uploadProfileImage(MultipartFile file, String userId) throws IOException {
+        String filename = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+        ImageProcessor.compressAndResizeImage(file, storagePath);
+
+        Profile profile = profileRepository.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException("Profile not found"));
+
+        profile.setAvatarUrl(storagePath + filename);
+        profileRepository.save(profile);
+
+        return filename;
+    }
 }
+
+
+
