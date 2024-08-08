@@ -6,10 +6,9 @@ import hng_java_boilerplate.jobs.service.JobListingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/jobs")
@@ -26,5 +25,19 @@ public class JobListingController {
         JobListing createdJobListing = jobListingService.createJobListing(jobListing);
         ApiResponse<JobListing> response = new ApiResponse<>("Job listing created successfully", HttpStatus.CREATED.value(), createdJobListing);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<JobListing>> getJobListingById(@PathVariable Long id) {
+        JobListing jobListing = jobListingService.getJobListingById(id);
+        ApiResponse<JobListing> response = new ApiResponse<>("Job listing retrieved successfully", 200, jobListing);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<JobListing>>> getAllJobListings() {
+        List<JobListing> jobListings = jobListingService.getAllJobListings();
+        ApiResponse<List<JobListing>> response = new ApiResponse<>("Job listings retrieved successfully", 200, jobListings);
+        return ResponseEntity.ok(response);
     }
 }
