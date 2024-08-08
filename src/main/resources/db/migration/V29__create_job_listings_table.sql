@@ -10,7 +10,8 @@ CREATE TABLE job_listings (
     salary VARCHAR(255) NOT NULL,
     job_type VARCHAR(255) NOT NULL,
     company_name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
 );
 END IF;
 END $$;
