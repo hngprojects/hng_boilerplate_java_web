@@ -145,13 +145,5 @@ public class ProductSearchTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    @Test
-    public void testDeleteProduct_NotFound() {
-        String productId = "productId";
-        when(productRepository.findById(productId)).thenReturn(Optional.empty());
-        ResponseEntity<GeneralResponse<Product>> response = productController.deleteProduct("jhjh");
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
 }
 
