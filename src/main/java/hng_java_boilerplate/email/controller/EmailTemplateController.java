@@ -5,11 +5,14 @@ import hng_java_boilerplate.email.EmailServices.EmailTemplateService;
 import hng_java_boilerplate.email.dto.EmailTemplateRequestDto;
 import hng_java_boilerplate.email.dto.EmailTemplateResponse;
 import hng_java_boilerplate.email.dto.EmailTemplateUpdate;
+import hng_java_boilerplate.email.entity.EmailTemplate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +30,10 @@ public class EmailTemplateController {
     @GetMapping("{name}")
     public ResponseEntity<EmailTemplateResponse> getEmailTemplate(@PathVariable String name) {
         return emailTemplateService.getTemplate(name);
+    }
+    @GetMapping
+    public ResponseEntity<List<EmailTemplate>> getAllEmailTemplates() {
+        return emailTemplateService.getAll();
     }
 
     @DeleteMapping("{template_id}")

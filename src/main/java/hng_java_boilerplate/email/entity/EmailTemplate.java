@@ -28,6 +28,9 @@ public class EmailTemplate {
     @Column(nullable = false)
     private String template;
 
+    @Column(nullable = false)
+    private String type;
+
     @Enumerated(EnumType.STRING)
     private EmailTemplateStatus status;
 
