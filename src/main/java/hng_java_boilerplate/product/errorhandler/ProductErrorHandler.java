@@ -1,6 +1,5 @@
 package hng_java_boilerplate.product.errorhandler;
 
-import hng_java_boilerplate.product.dto.ErrorDTO;
 import hng_java_boilerplate.product.dto.ProductErrorDTO;
 import hng_java_boilerplate.product.dto.ProductValidatorDTO;
 import hng_java_boilerplate.product.exceptions.ValidationError;

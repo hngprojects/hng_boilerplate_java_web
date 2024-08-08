@@ -87,7 +87,7 @@ public class ProductController {
             productService.deleteProduct(productId);
             generalResponseEntity.setMessage("Product deleted successfully");
             return ResponseEntity.ok(generalResponseEntity);
-        } catch (RecordNotFoundException | AuthenticationFailedException ex) {
+        } catch (RecordNotFoundException ex) {
             throw ex;
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
