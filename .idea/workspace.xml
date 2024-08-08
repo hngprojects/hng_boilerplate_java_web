@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/controller/UserProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/controller/UserProfileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/repository/ProfileRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/repository/ProfileRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/service/ProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/service/ProfileService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/serviceImpl/ProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/profile/serviceImpl/ProfileServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/ImageTest/ImageServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/ImageTest/ImageServiceImplTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/profile/serviceImpl/ProfileServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/profile/serviceImpl/ProfileServiceImplTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V25__alter_organisation_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V32__alter_organisation_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V26__create_Invitation_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V33__create_Invitation_table.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V5__alter_user_data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V5__alter_user_data.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V6__alter_user_password.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V6__alter_user_password.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +45,7 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2jSUrIbrkLUxAz03YXGPuCkvWnM" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -153,9 +151,6 @@
       <list>
         <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
-        <item itemvalue="JUnit.NotificationControllerTest" />
-        <item itemvalue="JUnit.SmsControllerTest" />
-        <item itemvalue="JUnit.WaitlistControllerTest.createWaitlist" />
       </list>
     </recent_temporary>
   </component>
