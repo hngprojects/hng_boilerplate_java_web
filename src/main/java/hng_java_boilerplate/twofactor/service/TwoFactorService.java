@@ -38,7 +38,7 @@ public class TwoFactorService {
     public ResponseEntity<TwoFactorResponse> verifyTotp(TotpRequest totp) {
         User user = userService.getLoggedInUser();
         String secretKey = user.getSecretKey();
-        if (secretKey == null && !user.getTwoFactorEnabled() ) {
+        if (secretKey == null || !user.getTwoFactorEnabled() ) {
             throw new InvalidTotpException("Invalid request");
         }
         boolean valid = totpService.verifyTotp(totp.totp(), secretKey);
