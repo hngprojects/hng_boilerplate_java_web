@@ -44,12 +44,6 @@ class UserLoginTest {
     private JwtUtils jwtUtils;
 
     @Mock
-    private EmailProducerService emailProducerService;
-
-    @Mock
-    private UserUtils userUtils;
-
-    @Mock
     private User user;
 
     @InjectMocks
@@ -58,7 +52,7 @@ class UserLoginTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(passwordEncoder, userRepository, jwtUtils, emailProducerService, userUtils);
+        userService = new UserServiceImpl(passwordEncoder, userRepository, jwtUtils);
         jwtUtils.createJwt = mock(Function.class);
     }
 
