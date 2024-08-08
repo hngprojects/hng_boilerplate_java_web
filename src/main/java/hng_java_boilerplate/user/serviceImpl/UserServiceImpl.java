@@ -5,6 +5,7 @@ import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
+import hng_java_boilerplate.user.dto.response.Response;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
@@ -28,8 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -129,6 +129,30 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    public Response<?> getUserById(String userId, Authentication authentication) {
+        String email = authentication.getName();
+
+        if (!userRepository.existsByEmail(email)) {
+            return Response.builder().status("401").message("Unauthorized").build();
+        }
+
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User foundUser = userOptional.get();
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("id", foundUser.getId());
+            data.put("fullname", foundUser.getName());
+            data.put("email", foundUser.getEmail());
+            data.put("role", foundUser.getUserRole().toString());
+            data.put("createdAt", foundUser.getCreatedAt() != null ? foundUser.getCreatedAt().toString() : "N/A");
+            return Response.builder().status("200").message("User data successfully fetched").data(data).build();
+        } else {
+            throw new UserNotFoundException("User not found with id: " + userId);
+        }
+    }
+
+
+    @Override
     @Transactional
     public GetUserDto getUserWithDetails(String userId) {
         User user = userRepository.findById(userId)
@@ -172,4 +196,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         return userDto;
     }
+
+
 }

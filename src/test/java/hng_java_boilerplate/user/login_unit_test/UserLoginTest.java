@@ -12,7 +12,7 @@ import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
-import hng_java_boilerplate.user.utils.UserUtils;
+//import hng_java_boilerplate.user .utils.UserUtils;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
