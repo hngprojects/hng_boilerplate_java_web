@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="Fix: Adjusted my sql file">
+    <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="Fix: update my sql file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V31__comment_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V31__comment_db.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/entity/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/comment/entity/Comment.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -171,7 +171,21 @@
       <option name="project" value="LOCAL" />
       <updated>1723130843266</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Fix: update my sql file">
+      <created>1723131379026</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1723131379026</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Fix: update my sql file">
+      <created>1723131684276</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1723131684276</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -188,7 +202,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Feat: Comment-Functionality-addComments" />
     <MESSAGE value="Fix: Adjusted my sql file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix: Adjusted my sql file" />
+    <MESSAGE value="Fix: update my sql file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix: update my sql file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
