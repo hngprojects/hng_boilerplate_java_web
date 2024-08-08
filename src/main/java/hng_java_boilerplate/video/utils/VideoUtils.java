@@ -1,26 +1,33 @@
 package hng_java_boilerplate.video.utils;
 
+import hng_java_boilerplate.video.dto.DownloadableDTO;
+import hng_java_boilerplate.video.dto.VideoCurrentStatusDTO;
 import hng_java_boilerplate.video.dto.VideoResponseDTO;
 import hng_java_boilerplate.video.dto.VideoStatusDTO;
-import hng_java_boilerplate.video.dto.VideoUploadDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
+import hng_java_boilerplate.video.exceptions.FileDoesNotExist;
 import hng_java_boilerplate.video.service.VideoService;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+
 public class VideoUtils {
 
 
-    public static String UPLOAD_DIR = "uploads/tempFolder";
+    public static String UPLOAD_DIR = "videoFiles";
     private static final Logger logger = LoggerFactory.getLogger(VideoService.class);
 
     public static String saveVideoTemp(MultipartFile file) {
@@ -47,14 +54,16 @@ public class VideoUtils {
     }
 
     public static VideoSuite videoSuite(String jobId, String status,
-                                        String outputVideoUrl, String jobType, String message){
+                                        String fileName, String jobType,
+                                        String message, String currentProcess){
         VideoSuite videoSuite = new VideoSuite();
 
         videoSuite.setJobId(jobId);
         videoSuite.setStatus(status);
-        videoSuite.setOutputVideoUrl(outputVideoUrl);
+        videoSuite.setFilename(fileName);
         videoSuite.setJobType(jobType);
         videoSuite.setMessage(message);
+        videoSuite.setCurrentProcess(currentProcess);
         return videoSuite;
     }
 
@@ -72,4 +81,57 @@ public class VideoUtils {
         responseDTO.setData(statusDTO);
         return responseDTO;
     }
+
+    public static VideoResponseDTO<VideoCurrentStatusDTO>currentStatus(String message, int statusCode,
+                                                                   boolean success, VideoCurrentStatusDTO statusDTO){
+
+        VideoResponseDTO<VideoCurrentStatusDTO> responseDTO = new VideoResponseDTO<>();
+        responseDTO.setMessage(message);
+        responseDTO.setSuccess(success);
+        responseDTO.setStatusCode(statusCode);
+        responseDTO.setData(statusDTO);
+        return responseDTO;
+    }
+
+    public static String SaveVideoToFile(byte[] videoByte)throws IOException{
+        try {
+            File dir = new File(UPLOAD_DIR);
+            if (!dir.exists()) {
+                boolean created = dir.mkdirs();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        String filename = generateFileName();
+        File videoFile = new File(UPLOAD_DIR + File.separator + filename);
+
+        try (FileOutputStream fos = new FileOutputStream(videoFile)) {
+            fos.write(videoByte);
+        }
+        return filename;
+    }
+
+    public static DownloadableDTO byteArrayResource(String filename) throws IOException {
+        File file = new File(UPLOAD_DIR + File.separator + sanitizeFileName(filename));
+        DownloadableDTO downloadDTO =new DownloadableDTO();
+
+        if (!file.exists()) {
+            throw new FileDoesNotExist("File not found");
+        }
+
+        byte[] videoByte = Files.readAllBytes(file.toPath());
+        downloadDTO.setVideoByteLength(videoByte.length);
+        downloadDTO.setResource(new ByteArrayResource(videoByte));
+        return downloadDTO;
+    }
+
+    private static String generateFileName() {
+        return "video_" + VideoUtils.generateUuid();
+    }
+
+    public static String sanitizeFileName(String filename) {
+        return filename.replaceAll("[^a-zA-Z0-9.-]", "_");
+    }
+
 }

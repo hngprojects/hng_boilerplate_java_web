@@ -1,9 +1,6 @@
 package hng_java_boilerplate.video.service;
 
-import hng_java_boilerplate.video.dto.VideoPathDTO;
-import hng_java_boilerplate.video.dto.VideoResponseDTO;
-import hng_java_boilerplate.video.dto.VideoStatusDTO;
-import hng_java_boilerplate.video.dto.VideoUploadDTO;
+import hng_java_boilerplate.video.dto.*;
 import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.exceptions.JobNotFound;
 import hng_java_boilerplate.video.utils.VideoMapper;
@@ -20,8 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -47,7 +44,8 @@ public class VideoServiceImpl implements VideoService{
 
         if(publisher.sendVideoConcat(videoPathDTO)){
            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
-                    VideoJobType.MERGE_VIDEO.toString(), VideoMessage.PROCESSING.toString());
+                    VideoJobType.MERGE_VIDEO.toString(), VideoMessage.PENDING.toString(),
+                   VideoStatus.PENDING.toString());
 
             return VideoUtils.response("Job created", HttpStatus.CREATED.value(), true,
                     VideoMapper.INSTANCE.toDTO(videoRepository.save(videoSuite)));
@@ -58,12 +56,23 @@ public class VideoServiceImpl implements VideoService{
     }
 
     @Override
-    public VideoResponseDTO<VideoStatusDTO> getJob(String id) {
-
+    public VideoSuite getJob(String id) {
         VideoSuite job = videoRepository.findById(id)
                 .orElseThrow(() -> new JobNotFound("Job doesn't exist"));
+        return job;
+    }
 
-        return VideoUtils.response("Found", HttpStatus.OK.value(), true,
-                    VideoMapper.INSTANCE.toDTO(videoRepository.save(job)));
+    @Override
+    public void addUpdateRecord(String id, String filename, int progress, String currentProcess) {
+        videoRepository.updateJob(id, filename, progress, currentProcess );
+    }
+
+    @Override
+    public DownloadableDTO downloadVideo(String jobId) throws IOException {
+        VideoSuite job = videoRepository.findById(jobId)
+                .orElseThrow(() -> new JobNotFound("Job doesn't exist"));
+        if(job.getFilename() == null)
+            throw new FileNotFoundException("This file is not ready for download");
+        return VideoUtils.byteArrayResource(job.getFilename());
     }
 }
