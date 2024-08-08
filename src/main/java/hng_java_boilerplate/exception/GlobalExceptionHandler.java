@@ -1,16 +1,15 @@
 package hng_java_boilerplate.exception;
 
+import dev.samstevens.totp.exceptions.QrGenerationException;
 import hng_java_boilerplate.email.exception.EmailTemplateExists;
 import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
+import hng_java_boilerplate.twofactor.exception.InvalidTotpException;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
-import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
-import hng_java_boilerplate.user.exception.InvalidRequestException;
-import hng_java_boilerplate.user.exception.UserNotFoundException;
-import hng_java_boilerplate.user.exception.UsernameNotFoundException;
+import hng_java_boilerplate.user.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
@@ -55,6 +54,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(FacebookOAuthException.class)
+    public ResponseEntity<ErrorResponse> handleFacebookOAuthException (FacebookOAuthException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),"Bad request", HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnAuthorizedUserException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedUserException(SignatureException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Unauthorized Access", ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
@@ -129,7 +140,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailTemplateExists.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ResponseMessageDto> handleDuplicateEmaiTemplateException(EmailTemplateExists ex) {
+    public ResponseEntity<ResponseMessageDto> handleDuplicateEmailTemplateException(EmailTemplateExists ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.CONFLICT.value()));
     }
 
@@ -137,5 +148,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Unauthorized", "Unauthorized. Please log in.", 401);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(QrGenerationException.class)
+    public ResponseEntity<ErrorResponse> handleQrGenerationException(QrGenerationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Server error", "Could not generate QR code", 500);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidTotpException.class)
+    public ResponseEntity<ResponseMessageDto> handleInvalidTotpException(InvalidTotpException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
     }
 }

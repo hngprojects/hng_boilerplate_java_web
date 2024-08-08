@@ -58,6 +58,8 @@ runs:
         spring.rabbitmq.username=${RABBITMQ_USERNAME}
         spring.rabbitmq.password=${RABBITMQ_PASSWORD}
         rabbitmq.queue.email=emailQueue
+        rabbitmq.queue.finishedConcat=finishedConcat
+        rabbitmq.queue.concat=videoConcat
         spring.rabbitmq.exchange.key=exchange_key
         spring.rabbitmq.routing.key=routing_key
 
@@ -77,5 +79,12 @@ runs:
         spring.security.oauth2.client.registration.google.client-id=${GOOGLE_ID}
         spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_SECRET}
 
+        #MultiPartfile config
+        spring.servlet.multipart.max-file-size=50MB
+        spring.servlet.multipart.max-request-size=50MB
+
+        ## Payment Configuration
+        paystack.secret.key=${PAYSTACK}
+        flutterwave.secret.key=${FlUTTERWAVE}
         EOF
       shell: bash
