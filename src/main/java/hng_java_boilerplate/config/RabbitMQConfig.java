@@ -11,8 +11,21 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.email}")
     private String emailQueueName;
 
+    @Value("${rabbitmq.queue.concat}")
+    private String videoConcat;
+
+    @Value("${rabbitmq.queue.finishedConcat}")
+    private String finishedConcatJob;
+
+
     @Bean
     public Queue emailQueue() {
         return new Queue(emailQueueName, true);
     }
+
+    @Bean
+    public Queue videoConcatQueue(){return new Queue(videoConcat, true);}
+
+    @Bean
+    public Queue finishedConcatQueue(){return new Queue(finishedConcatJob, true);}
 }

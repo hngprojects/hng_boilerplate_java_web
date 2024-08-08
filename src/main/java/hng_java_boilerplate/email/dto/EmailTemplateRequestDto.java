@@ -7,7 +7,10 @@ public record EmailTemplateRequestDto(
         String title,
 
         @NotBlank(message = "Template can not be blank")
-        String template
+        String template,
+
+        @NotBlank(message = "Type can not be blank")
+        String type
 
 ) {
 }
