@@ -24,13 +24,8 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue videoConcatQueue() {
-        return new Queue(videoConcat, true);
-    }
+    public Queue videoConcatQueue(){return new Queue(videoConcat, true);}
 
     @Bean
-    public Queue finishedConcatQueue() {
-        return new Queue(finishedConcatJob, true);
-
-    }
+    public Queue finishedConcatQueue(){return new Queue(finishedConcatJob, true);}
 }
