@@ -33,7 +33,7 @@ public class EmailServiceImpl {
     @Value("${spring.mail.host}")
     private String host;
 
-    @Value("${app.host.baseurl:http://localhost:3000/api/v1/auth}")
+    @Value("${app.host.baseurl:http://localhost:3000}")
     private String baseUrl;
 
     private final JavaMailSender javaMailSender;
