@@ -2,7 +2,7 @@ package hng_java_boilerplate.product.service;
 
 import hng_java_boilerplate.product.dto.ErrorDTO;
 import hng_java_boilerplate.product.dto.ProductInventoryDto;
-import hng_java_boilerplate.product.dto.ProductStatusResponseDto;
+import hng_java_boilerplate.product.dto.ProductUpdateResponseDto;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.errorhandler.ProductNotFoundException;
 import hng_java_boilerplate.product.exceptions.ValidationError;
@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.searchProducts(name, category, minPrice, maxPrice, pageable);
     }
 
-    public ProductStatusResponseDto availableProductStock(String productId) {
+    public ProductUpdateResponseDto availableProductStock(String productId) {
         Product product = productRepository.findById(productId).stream()
                 .filter(foundProduct -> foundProduct.getId().equals(productId))
                 .findFirst()
@@ -45,7 +45,7 @@ public class ProductServiceImpl implements ProductService{
         productInventoryDto.setCurrent_Stock(product.getCurrentStock());
         productInventoryDto.setLastUpdated_at(product.getUpdatedAt());
 
-        ProductStatusResponseDto productStatusResponseDto =new ProductStatusResponseDto();
+        ProductUpdateResponseDto productStatusResponseDto =new ProductUpdateResponseDto();
 
         productStatusResponseDto.setMessage("success");
         productStatusResponseDto.setStatus_code(HttpStatus.OK.value());

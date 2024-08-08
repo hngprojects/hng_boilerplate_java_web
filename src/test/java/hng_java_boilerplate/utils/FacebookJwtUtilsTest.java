@@ -62,7 +62,7 @@ public class FacebookJwtUtilsTest {
     @Test
     void testFacebookOauthUserJWT_successfulLogin() {
         OAuthDto oAuthDto = new OAuthDto();
-        oAuthDto.setAccessToken("test-access-token");
+        oAuthDto.setIdToken("test-access-token");
 
         com.restfb.types.User facebookUser = new com.restfb.types.User();
         facebookUser.setId("123456789");
@@ -118,7 +118,7 @@ public class FacebookJwtUtilsTest {
         ApiResponse response = new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data);
 
         assertNotNull(response);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.OK.value(), response.getStatus_code());
         assertEquals("Login Successful!", response.getMessage());
         ResponseData responseData = (ResponseData) response.getData();
         assertEquals("jwt-token", responseData.getToken());

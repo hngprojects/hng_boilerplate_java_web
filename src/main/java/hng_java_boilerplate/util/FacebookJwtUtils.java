@@ -125,7 +125,7 @@ public class FacebookJwtUtils {
     }
 
     public ApiResponse facebookOauthUserJWT(OAuthDto payload) {
-        OAuthResponse user =  getUserFromFacebookToken.apply(payload.getAccessToken());
+        OAuthResponse user =  getUserFromFacebookToken.apply(payload.getIdToken());
         ResponseData data = saveOauthUser.apply(user);
         return new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data);
     }

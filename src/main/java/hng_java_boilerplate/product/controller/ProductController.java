@@ -1,7 +1,7 @@
 package hng_java_boilerplate.product.controller;
 
 import hng_java_boilerplate.product.dto.ProductSearchDTO;
-import hng_java_boilerplate.product.dto.ProductStatusResponseDto;
+import hng_java_boilerplate.product.dto.ProductUpdateResponseDto;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
@@ -73,7 +73,7 @@ public class ProductController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
-        ProductStatusResponseDto productStatusResponseDto = productServiceImpl.availableProductStock(product_id);
+        ProductUpdateResponseDto productStatusResponseDto = productServiceImpl.availableProductStock(product_id);
 
         return ResponseEntity.ok(productStatusResponseDto);
     }

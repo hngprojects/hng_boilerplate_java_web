@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProductStatusResponseDto {
+public class ProductUpdateResponseDto {
 
    private String message;
    private int status_code;

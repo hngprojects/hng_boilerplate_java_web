@@ -31,17 +31,6 @@ public class Product {
 
 
     @Column(name = "current_stock")
-    private int currentStock;
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "current_stock")
     private Integer currentStock;
 
     @CreationTimestamp

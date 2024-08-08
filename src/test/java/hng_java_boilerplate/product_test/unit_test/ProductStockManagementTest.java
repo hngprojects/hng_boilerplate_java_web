@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.product.controller.ProductController;
-import hng_java_boilerplate.product.dto.ProductStatusResponseDto;
+import hng_java_boilerplate.product.dto.ProductUpdateResponseDto;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.errorhandler.ProductNotFoundException;
 import hng_java_boilerplate.product.repository.ProductRepository;
@@ -98,7 +98,7 @@ public class ProductStockManagementTest {
         when(productRepository.findById(any())).thenReturn(Optional.of(product));
 
 
-        ProductStatusResponseDto response = productService.availableProductStock(productId);
+        ProductUpdateResponseDto response = productService.availableProductStock(productId);
 
 
         assertEquals("success", response.getMessage());

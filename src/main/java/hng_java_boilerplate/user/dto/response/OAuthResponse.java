@@ -14,6 +14,7 @@ public class OAuthResponse {
     private String last_name;
     private String email;
     private String password;
+    private String access_token;
     private String img_url;
     private boolean is_active;
 }
