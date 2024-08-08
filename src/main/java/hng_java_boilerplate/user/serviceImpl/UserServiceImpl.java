@@ -96,6 +96,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     }
 
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
     public UserResponse getUserResponse(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";

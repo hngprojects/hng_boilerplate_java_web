@@ -1,5 +1,6 @@
 package hng_java_boilerplate.exception;
 
+import dev.samstevens.totp.exceptions.QrGenerationException;
 import hng_java_boilerplate.email.exception.EmailTemplateExists;
 import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
@@ -146,5 +147,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Unauthorized", "Unauthorized. Please log in.", 401);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(QrGenerationException.class)
+    public ResponseEntity<ErrorResponse> handleQrGenerationException(QrGenerationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Server error", "Could not generate QR code", 500);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }

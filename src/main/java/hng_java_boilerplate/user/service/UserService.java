@@ -7,6 +7,7 @@ import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.entity.User;
 import org.springframework.http.ResponseEntity;
 
+
 public interface UserService {
     GetUserDto getUserWithDetails(String userId);
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
@@ -14,4 +15,5 @@ public interface UserService {
 
     ResponseEntity<ApiResponse> loginUser(LoginDto loginDto);
 
+    User save(User user);
 }
