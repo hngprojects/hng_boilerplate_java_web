@@ -34,9 +34,7 @@ jobs:
   
       - name: Report Deployment Metrics to DORA Exporter
         run: |
-          curl -X POST -d '{"deployment_id": "${{ github.run_id }}", "status": "success", "environment": "dev", "deployment_time": "$(date --utc +%Y-%m-%dT%H:%M:%SZ)"}' http://91.229.239.213:8090/metrics
-        env:
-          DORA_EXPORTER_URL: ${{ secrets.DORA_EXPORTER_URL }}
+          curl -X POST -d '{"deployment_id": "${{ github.run_id }}", "status": "success", "environment": "dev", "deployment_time": "$(date --utc +%Y-%m-%dT%H:%M:%SZ)"}' ${{ secrets.DORA_EXPORTER_URL }}
 
   on-failure:
     runs-on: ubuntu-latest
