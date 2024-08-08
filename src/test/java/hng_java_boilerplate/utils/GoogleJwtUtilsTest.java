@@ -95,7 +95,7 @@ public class GoogleJwtUtilsTest {
 
         UserDetails userDetails = mock(UserDetails.class);
         when(userService.loadUserByUsername(anyString())).thenReturn(userDetails);
-
+        when(jwtUtils.createJwt.apply(any(UserDetails.class))).thenReturn("jwt-token");
 
         OAuthResponse authDto =  OAuthResponse
                 .builder()
@@ -104,26 +104,37 @@ public class GoogleJwtUtilsTest {
                 .last_name("Doe")
                 .password("GOOGLELOGIN1")
                 .img_url("http://example.com/picture")
-                .access_token("test-access-token")
                 .is_active(true)
                 .build();
 
         OAuthUserResponse userResponse = OAuthUserResponse.builder()
                 .id(savedUser.getId())
+                .email(savedUser.getEmail())
                 .first_name(authDto.getFirst_name())
                 .last_name(authDto.getLast_name())
-                .email(savedUser.getEmail())
+                .fullname(authDto.getFirst_name() + " " + authDto.getLast_name())
                 .role(savedUser.getUserRole().name())
+                .access_token("jwt-token")
                 .build();
 
+        UserOAuthDetails userOAuthDetails = UserOAuthDetails.builder()
+                .id(userResponse.getId())
+                .email(userResponse.getEmail())
+                .first_name(userResponse.getFirst_name())
+                .last_name(userResponse.getLast_name())
+                .fullname(userResponse.getFullname())
+                .role(userResponse.getRole())
+                .build();
 
-        OAuthBaseResponse response = new OAuthBaseResponse(HttpStatus.OK.value(), "Login Successful!", authDto.getAccess_token(), userResponse);
+        OAuthLastUserResponse oAuthLastUserResponse = OAuthLastUserResponse.builder()
+                .user(userOAuthDetails)
+                .build();
 
+        OAuthBaseResponse response = new OAuthBaseResponse(HttpStatus.OK.value(), "User Created Successful!", userResponse.getAccess_token(), oAuthLastUserResponse);
 
-        // Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK.value(), response.getStatus_code());
-        assertEquals("Login Successful!", response.getMessage());
-        assertEquals("test-access-token", response.getAccess_token());
+        assertEquals("User Created Successful!", response.getMessage());
+        assertEquals("jwt-token", response.getAccess_token());
     }
 }
