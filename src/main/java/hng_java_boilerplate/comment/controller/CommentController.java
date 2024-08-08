@@ -2,23 +2,26 @@ package hng_java_boilerplate.comment.controller;
 
 
 import hng_java_boilerplate.comment.dto.CommentDataDto;
+import hng_java_boilerplate.comment.dto.ErrorResponse;
 import hng_java_boilerplate.comment.dto.RequestDto;
 import hng_java_boilerplate.comment.dto.ResponseDto;
 import hng_java_boilerplate.comment.entity.Comment;
 import hng_java_boilerplate.comment.service.CommentService;
+import hng_java_boilerplate.exception.NotFoundException;
+import hng_java_boilerplate.profile.exceptions.UnauthorizedException;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/comments")
@@ -49,5 +52,32 @@ public class CommentController {
 
     }
 
+    @DeleteMapping("/{commentId}")
+    @PreAuthorize("@CommentService.isUserAuthorizedToDeleteComment(#commentId, principal.username)")
+    public ResponseEntity<Object> deleteComment(@PathVariable String commentId, String userId) {
+        try {
+            commentService.softDeleteComment(commentId, userId);
+            Map<String, Object> response = new HashMap<>();
 
+            response.put("message", "Comment successfully deleted");
+            response.put("status_code", "204");
+
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        } catch (NotFoundException ex) {
+            ErrorResponse error = new ErrorResponse(
+                    "Comment not found",
+                    "Invalid commentId",
+                    HttpStatus.NOT_FOUND.value()
+            );
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        } catch (UnauthorizedException ex) {
+            ErrorResponse errorResponse = new ErrorResponse(
+                    "Unable to delete comment",
+                    "Unauthorized user",
+                    HttpStatus.UNAUTHORIZED.value()
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+        }
+
+    }
 }
