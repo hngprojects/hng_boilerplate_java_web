@@ -99,6 +99,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
     }
 
+    // Convert User to GetUserDto
     private GetUserDto convertUserToGetUserDto(User user) {
         return GetUserDto.builder()
                 .id(user.getId())
@@ -116,7 +117,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .build();
     }
 
+    // Save method for User entity
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
 
+    // GetUserResponse method that combines both branches
     public UserResponse getUserResponse(User user) {
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
@@ -131,12 +138,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userResponse;
     }
 
+    // Validate email method to check if the email already exists
     private void validateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new EmailAlreadyExistsException("Email already exists");
         }
     }
 
+    // Get the currently logged-in user
     @Override
     public User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -144,6 +153,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
+    // Get user with details
     @Override
     @Transactional
     public GetUserDto getUserWithDetails(String userId) {
