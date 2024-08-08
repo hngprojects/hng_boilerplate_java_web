@@ -1,8 +1,8 @@
 package hng_java_boilerplate.product.controller;
 
 import hng_java_boilerplate.product.dto.ProductSearchDTO;
-import hng_java_boilerplate.product.dto.ProductStatusRequestDto;
-import hng_java_boilerplate.product.dto.ProductStatusResponseDto;
+import hng_java_boilerplate.product.dto.ProductUpdateRequestDto;
+import hng_java_boilerplate.product.dto.ProductUpdateResponseDto;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
@@ -69,9 +69,9 @@ public class ProductController {
 
     @PatchMapping("/{product_id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<?> updateProductStatus(@Valid @RequestBody ProductStatusRequestDto productStatusRequestDto){
+    public ResponseEntity<?> updateProductStatus(@Valid @RequestBody ProductUpdateRequestDto productStatusRequestDto){
 
-        ProductStatusResponseDto productStatusResponseDto = productServiceImpl.updateProductStatus(productStatusRequestDto);
+        ProductUpdateResponseDto productStatusResponseDto = productServiceImpl.updateProductStatus(productStatusRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(productStatusResponseDto);
 
 
