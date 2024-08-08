@@ -1,6 +1,7 @@
 package hng_java_boilerplate.twofactor.controller;
 
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import hng_java_boilerplate.twofactor.dtos.EnableTwoFactorRequest;
 import hng_java_boilerplate.twofactor.dtos.TotpRequest;
 import hng_java_boilerplate.twofactor.dtos.TwoFactorResponse;
 import hng_java_boilerplate.twofactor.service.TwoFactorService;
@@ -19,7 +20,7 @@ public class TwoFactorController {
     private final TwoFactorService twoFactorService;
 
     @PostMapping("enable")
-    public ResponseEntity<TwoFactorResponse> enable2fa() throws QrGenerationException {
+    public ResponseEntity<TwoFactorResponse> enable2fa(@RequestBody EnableTwoFactorRequest request) throws QrGenerationException {
         return twoFactorService.enableTwoFactor();
     }
 
