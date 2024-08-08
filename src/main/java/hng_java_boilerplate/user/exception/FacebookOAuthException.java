@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Order(1)
-@ResponseStatus(code = HttpStatus.NOT_FOUND)
-public class UsernameNotFoundException extends RuntimeException{
-    public UsernameNotFoundException(String message) {
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class FacebookOAuthException extends RuntimeException{
+    public FacebookOAuthException(String message) {
         super(message);
     }
 }

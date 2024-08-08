@@ -15,9 +15,10 @@ public interface VideoMapper {
     @Mapping(source = "jobId", target = "jobId")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "jobType", target = "jobType")
-    @Mapping(source = "outputVideoUrl", target = "outputVideoUrl")
+    @Mapping(source = "filename", target = "filename")
     @Mapping(source = "message", target = "message")
     @Mapping(source = "progress", target = "progress")
+    @Mapping(source = "currentProcess", target = "currentProcess")
     VideoStatusDTO toDTO(VideoSuite videoSuite);
 
 
@@ -25,8 +26,9 @@ public interface VideoMapper {
     @Mapping(source = "jobId", target = "jobId")
     @Mapping(source = "status", target = "status")
     @Mapping(source = "jobType", target = "jobType")
-    @Mapping(source = "outputVideoUrl", target = "outputVideoUrl")
+    @Mapping(source = "filename", target = "filename")
     @Mapping(source = "message", target = "message")
     @Mapping(source = "progress", target = "progress")
+    @Mapping(source = "currentProcess", target = "currentProcess")
     VideoSuite toDTO(VideoStatusDTO statusDTO);
 }

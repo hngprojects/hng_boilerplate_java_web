@@ -26,13 +26,16 @@ public class VideoSuite {
     @Column(name = "job_type", nullable = false)
     private String jobType;
 
-    @Column(name = "output_video_url")
-    private String outputVideoUrl;
+    @Column(name = "filename")
+    private String filename;
 
     @Column(name = "message")
     private String message;
 
     @Column(name = "progress")
     private int progress;
+
+    @Column(name = "current_process")
+    private String currentProcess;
 }
 
