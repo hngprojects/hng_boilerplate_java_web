@@ -21,17 +21,6 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Slf4j
 public class EmailServiceImpl {
-    @Value("${spring.mail.username}")
-    private String fromEmail;
-
-    @Value("${spring.mail.port}")
-    private int port;
-
-    @Value("${spring.mail.password}")
-    private String password;
-
-    @Value("${spring.mail.host}")
-    private String host;
 
     @Value("${app.host.baseurl:http://localhost:3000}")
     private String baseUrl;
@@ -94,7 +83,6 @@ public class EmailServiceImpl {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom(fromEmail);
             helper.setTo(user.getEmail());
             helper.setSubject("Verification Token");
 
