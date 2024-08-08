@@ -1,23 +1,19 @@
 package hng_java_boilerplate.product.controller;
 
 import hng_java_boilerplate.product.dto.ProductSearchDTO;
+import hng_java_boilerplate.product.dto.ProductStatusResponseDto;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
+import hng_java_boilerplate.product.service.ProductServiceImpl;
+import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -25,8 +21,12 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    public ProductController(ProductService productService) {
+
+    private final ProductServiceImpl productServiceImpl;
+
+    public ProductController(ProductService productService, ProductServiceImpl productServiceImpl) {
         this.productService = productService;
+        this.productServiceImpl = productServiceImpl;
     }
 
     @GetMapping("/search")
@@ -62,5 +62,19 @@ public class ProductController {
         productSearchDTO.setPage(products.getNumber());
         productSearchDTO.setSuccess(true);
         return new ResponseEntity<>(productSearchDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/{product_id}/stock")
+    public ResponseEntity<?> availableProductStock( @PathVariable String product_id) {
+        if ((product_id == null) || product_id.trim().isEmpty()) {
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setStatus_code(HttpStatus.BAD_REQUEST.value());
+            errorResponse.setMessage("Bad Request: Product Id cannot be null ");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        ProductStatusResponseDto productStatusResponseDto = productServiceImpl.availableProductStock(product_id);
+
+        return ResponseEntity.ok(productStatusResponseDto);
     }
 }

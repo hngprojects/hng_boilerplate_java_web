@@ -20,7 +20,7 @@ public class EmailConsumerService {
         this.emailSender = emailSender;
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.email}")
+
     public void receiveMessage(EmailMessage emailMessage) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailMessage.getTo());
