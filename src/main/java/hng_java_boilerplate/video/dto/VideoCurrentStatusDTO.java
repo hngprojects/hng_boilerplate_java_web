@@ -4,18 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class VideoStatusDTO {
-
+public class VideoCurrentStatusDTO {
     private String jobId;
-    private String status;
-    private String message;
-    private String filename;
-    private String jobType;
+    private String current_process;
     private int progress;
-    private String currentProcess;
 }
