@@ -14,7 +14,8 @@ public class VideoStatusDTO {
     private String jobId;
     private String status;
     private String message;
-    private String outputVideoUrl;
+    private String filename;
     private String jobType;
     private int progress;
+    private String currentProcess;
 }
