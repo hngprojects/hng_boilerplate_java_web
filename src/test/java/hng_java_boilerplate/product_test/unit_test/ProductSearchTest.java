@@ -121,7 +121,7 @@ public class ProductSearchTest {
     }
 
     @Test
-    public void testGetProductById_NotFound() {
+    public void testGetProductById_NotFound(){
 
         String productId = "productId";
         when(service.getProductById(productId)).thenThrow(RecordNotFoundException.class);
