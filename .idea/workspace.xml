@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/aboutpage/AboutPageServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/aboutpage/dto/AboutPageContentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/aboutpage/dto/AboutPageContentDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__init_database.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__init_database.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V2__alter_products_table_schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V2__alter_products_table_schema.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,7 +52,7 @@
     "last_opened_file_path": "C:/Users/User/Desktop/sabiBank"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.AboutPageServiceTest">
+  <component name="RunManager" selected="Application.Program">
     <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
       <module name="hng-java-boilerplate" />
@@ -127,10 +128,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.AboutPageServiceTest" />
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
         <item itemvalue="JUnit.NotificationControllerTest" />
-        <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.SmsControllerTest" />
       </list>
     </recent_temporary>

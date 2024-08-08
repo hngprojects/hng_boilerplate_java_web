@@ -1,6 +1,8 @@
 package hng_java_boilerplate.aboutpage.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,7 @@ public class AboutPageContentDto {
     @NotBlank
     private String introduction;
 
-    @NotBlank
+    @NotNull
+    @JsonProperty("custom_sections")
     private Map<String, Object> customSections;
 }
