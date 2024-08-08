@@ -4,6 +4,7 @@ import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.OAuthDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
+import hng_java_boilerplate.user.dto.response.OAuthBaseResponse;
 import hng_java_boilerplate.user.exception.UnAuthorizedUserException;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.FacebookJwtUtils;
@@ -46,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/google")
-    public ResponseEntity<ApiResponse> handleGoogleAuth(@RequestBody OAuthDto payload) {
+    public ResponseEntity<OAuthBaseResponse> handleGoogleAuth(@RequestBody OAuthDto payload) {
         try {
             return ResponseEntity.ok(googleJwtUtils.googleOauthUserJWT(payload));
         } catch (UnAuthorizedUserException e) {
