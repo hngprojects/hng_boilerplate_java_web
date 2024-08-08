@@ -24,6 +24,16 @@ public class EmailServiceImpl {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
+    @Value("${spring.mail.port}")
+    private int port;
+
+    @Value("${spring.mail.password}")
+    private String password;
+
+    @Value("${spring.mail.host}")
+    private String host;
+
+
     private final JavaMailSender javaMailSender;
     private final EmailTemplateService emailTemplateService;
 
