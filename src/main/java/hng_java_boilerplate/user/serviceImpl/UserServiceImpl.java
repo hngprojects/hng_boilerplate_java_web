@@ -1,20 +1,24 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
 import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.exception.UsernameNotFoundException;
+import hng_java_boilerplate.user.repository.PasswordResetTokenRepository;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +43,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
     private final ActivityLogService activityLogService;
+    private final EmailServiceImpl emailService;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -97,6 +104,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         String organisationId = userDto.getOrganisations().isEmpty() ? null : userDto.getOrganisations().get(0).getOrg_id();
         activityLogService.logActivity(organisationId, user.getId(), "User logged in");
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
+    }
+
+    @Override
+    public void forgotPassword(EmailSenderDto emailSenderDto, HttpServletRequest request) {
+        User user = findUserByEmail(emailSenderDto.getEmail());
+        String token = UUID.randomUUID().toString();
+        createPasswordResetTokenForUser(user, token);
+        emailService.passwordResetTokenMail(user, request, token);
+    }
+
+    private void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken newlyCreatedPasswordResetToken = new PasswordResetToken(user, token);
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByUserId(user.getId());
+        if(passwordResetToken != null){
+            passwordResetTokenRepository.delete(passwordResetToken);
+        }
+        passwordResetTokenRepository.save(newlyCreatedPasswordResetToken);
+    }
+
+    public User findUserByEmail(String username) {
+        return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User with email " + username + " not found"));
     }
 
     // Convert User to GetUserDto

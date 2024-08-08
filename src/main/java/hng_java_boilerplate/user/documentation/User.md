@@ -259,3 +259,44 @@ vi. Click on the `Send` button.
     }
   }
 }
+```
+## **Forgot Password**
+
+### **Endpoint**
+
+- **URL**: `/api/v1/auth/forgot-password`
+- **Method**: `POST`
+- **Content-Type**: `application/json`
+
+### **Description**
+
+The feature to request for 6 digit OTP for forgot password implementation
+
+#### * Using Postman
+i. Open Postman.
+
+ii. Create a new POST request.
+
+iii. Enter the endpoint URL: http://localhost:8080/api/v1/auth/forgot-password.
+
+iv. Set the request body type to raw and select JSON from the dropdown.
+
+v. Paste the following JSON into the body:
+```
+{
+"email": "johndoe@example.com"
+}
+```
+vi. Click on the `Send` button.
+
+
+### **Responses**
+
+#### **Success Response**
+
+- **Status Code**: `200 OK`
+- **Content-Type**: `application/json`
+- **Response Body**:
+```json
+
+ "Forgot Password email sent successfully" 

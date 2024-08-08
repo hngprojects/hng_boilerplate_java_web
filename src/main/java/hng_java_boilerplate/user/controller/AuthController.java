@@ -1,5 +1,6 @@
 package hng_java_boilerplate.user.controller;
 
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.OAuthDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -10,6 +11,7 @@ import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.FacebookJwtUtils;
 import hng_java_boilerplate.util.GoogleJwtUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,5 +55,11 @@ public class AuthController {
         } catch (UnAuthorizedUserException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody EmailSenderDto passwordDto, HttpServletRequest request){
+        userService.forgotPassword(passwordDto, request);
+        return new ResponseEntity<>("Forgot password email sent successfully", HttpStatus.OK);
     }
 }
