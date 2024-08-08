@@ -27,12 +27,18 @@ public class Comment {
     @ManyToOne
     private User user;
 
+    @Column(nullable = false)
+    private Boolean deleted = false;
+
     @NotBlank(message = "input comment")
     @Column(nullable = false, length = 1000)
     private String comment;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
 
 
