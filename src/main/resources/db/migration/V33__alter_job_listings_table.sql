@@ -1,0 +1,2 @@
+ALTER TABLE job_listings
+ADD COLUMN updated_at TIMESTAMP NOT NULL
