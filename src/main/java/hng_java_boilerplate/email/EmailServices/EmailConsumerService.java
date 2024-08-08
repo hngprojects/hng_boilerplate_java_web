@@ -17,7 +17,7 @@ public class EmailConsumerService {
     public EmailConsumerService(JavaMailSender emailSender) {
         this.emailSender = emailSender;
     }
-
+    @RabbitListener(queues = "${rabbitmq.queue.email}")
     public void receiveMessage(EmailMessage emailMessage) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(emailMessage.getSendTo());
