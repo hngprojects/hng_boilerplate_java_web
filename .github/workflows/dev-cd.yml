@@ -22,6 +22,18 @@ jobs:
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
+      - name: Install Flyway CLI
+        run: |
+          curl -L https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/9.5.1/flyway-commandline-9.5.1-linux-x64.tar.gz | tar xz
+          sudo ln -s `pwd`/flyway-9.5.1/flyway /usr/local/bin/flyway
+
+      - name: Flyway Repair
+        env:
+          FLYWAY_URL: jdbc:${{ secrets.DB_CONNECTION_STRING }}
+          FLYWAY_USER: ${{ secrets.DB_USERNAME }}
+          FLYWAY_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: flyway repair
+
       - name: SSH into Server and Execute Command
         run: |
           sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
