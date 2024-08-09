@@ -53,7 +53,16 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "Rebasing feat/update-about-page",
-    "last_opened_file_path": "C:/Users/User/Desktop/sabiBank"
+    "last_opened_file_path": "C:/Users/User/Desktop/sabiBank",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -63,7 +72,37 @@
       <recent name="$PROJECT_DIR$/src/main/java/hng_java_boilerplate" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Program">
+  <component name="RunManager" selected="Spring Boot.Program">
+    <configuration default="true" type="AZURE_FUNCTION_SUPPORT" factoryName="Run Functions">
+      <option name="appName" />
+      <option name="appServicePlanName" />
+      <option name="appServicePlanResourceGroup" />
+      <option name="appSettingsKey" value="34fb35d7-98cb-44be-8398-0bb1112368c1" />
+      <option name="artifact" />
+      <option name="debugOptions" />
+      <option name="deployment" />
+      <option name="deploymentStagingDirectoryPath" />
+      <option name="funcPath" />
+      <option name="functionHostArguments" />
+      <option name="hostJsonPath" />
+      <option name="insightsName" />
+      <option name="instrumentationKey" />
+      <option name="javaVersion" />
+      <option name="localSettingsJsonPath" />
+      <option name="moduleName" />
+      <option name="os" />
+      <option name="pricingTier" />
+      <option name="providerMap">
+        <map />
+      </option>
+      <option name="region" />
+      <option name="resourceGroup" />
+      <option name="stagingFolder" />
+      <option name="subscription" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.Program" />
       <module name="hng-java-boilerplate" />
@@ -77,6 +116,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="V1__init_database.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
+      <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V1__init_database.sql" />
+      <script-mode>FILE</script-mode>
+      <method v="2" />
+    </configuration>
     <configuration name="AboutPageServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
       <extension name="coverage">
@@ -87,21 +131,6 @@
       </extension>
       <option name="PACKAGE_NAME" value="hng_java_boilerplate.aboutpage" />
       <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.aboutpage.AboutPageServiceTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="NotificationControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="hng-java-boilerplate" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.notification.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationControllerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -122,28 +151,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SmsControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="Program" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="hng_java_boilerplate.Program" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.sms.*" />
+          <option name="PATTERN" value="hng_java_boilerplate.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.sms" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.sms.SmsControllerTest" />
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.Program" />
+        <item itemvalue="Database Script.V1__init_database.sql" />
         <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.AboutPageServiceTest" />
         <item itemvalue="JUnit.NotificationSettingsControllerTest" />
-        <item itemvalue="JUnit.NotificationControllerTest" />
-        <item itemvalue="JUnit.SmsControllerTest" />
       </list>
     </recent_temporary>
   </component>
@@ -152,5 +179,8 @@
       <setting name="editor" value="IDEA" />
       <setting name="editor" value="true" />
     </settings>
+  </component>
+  <component name="TaskManager">
+    <servers />
   </component>
 </project>
