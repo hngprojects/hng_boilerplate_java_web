@@ -8,7 +8,6 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,12 @@ import java.util.Random;
 @Slf4j
 public class EmailServiceImpl {
 
-    @Value("${app.host.baseurl:http://localhost:3000}")
-    private String baseUrl;
 
     private final JavaMailSender javaMailSender;
     private final EmailTemplateService emailTemplateService;
 
     public String applicationUrl(HttpServletRequest request){
-        return baseUrl + "/api/v1/auth" + request.getContextPath();
+        return "https://anchor-java.teams.hng.tech/" + request.getContextPath();
     }
 
     public void passwordResetTokenMail(User user, HttpServletRequest request, String token) {

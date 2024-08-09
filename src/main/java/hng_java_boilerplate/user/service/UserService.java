@@ -17,4 +17,5 @@ public interface UserService {
     User getLoggedInUser();
     ResponseEntity<ApiResponse> loginUser(LoginDto loginDto);
     User save(User user);
+    ResponseEntity<?> magicLinkLogin(String token);
 }

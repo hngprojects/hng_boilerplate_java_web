@@ -1,16 +1,19 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.entity.MagicLinkToken;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.exception.*;
+import hng_java_boilerplate.user.repository.MagicLinkTokenRepository;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.repository.VerificationTokenRepository;
 import hng_java_boilerplate.user.service.UserService;
@@ -31,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +46,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final ActivityLogService activityLogService;
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailServiceImpl emailService;
+    private final MagicLinkTokenRepository magicLinkTokenRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -132,6 +137,47 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpirationTime().getTime() - cal.getTime().getTime()) <= 0) {
             verificationTokenRepository.delete(verificationToken);
+            return "expired";
+        }
+        return "valid";
+    }
+
+    @Override
+    public ResponseEntity<?> magicLinkLogin(String token) {
+        String result = verifyMagicLinkToken(token);
+        if (result.equals("invalid")) {
+            throw new UnAuthorizedUserException("Unknown request");
+        }
+        Optional<User> user = Optional.ofNullable(magicLinkTokenRepository.findByToken(token).getUser());
+        if (result.equals("expired")) {
+            String newToken = UUID.randomUUID().toString();
+            recreateMagicLinkTokenForUser(user.get(), newToken);
+            return new ResponseEntity<>("Your token has expired, check you email for a new token", HttpStatus.OK);
+        } else {
+            UserDetails userDetails = loadUserByUsername(user.get().getEmail());
+            String jwtToken = jwtUtils.createJwt.apply(userDetails);
+            UserResponse userResponse = getUserResponse((User) userDetails);
+            ResponseData data = new ResponseData(jwtToken, userResponse);
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
+        }
+    }
+
+    private void recreateMagicLinkTokenForUser(User user, String token) {
+        MagicLinkToken newlyCreatedMagicKinkToken = new MagicLinkToken(user, token);
+        MagicLinkToken magicLinkToken = magicLinkTokenRepository.findByUserId(user.getId());
+        magicLinkTokenRepository.delete(magicLinkToken);
+        magicLinkTokenRepository.save(newlyCreatedMagicKinkToken);
+    }
+
+    private String verifyMagicLinkToken(String token) {
+        MagicLinkToken magicLinkToken = magicLinkTokenRepository.findByToken(token);
+        if (magicLinkToken == null) {
+            return "invalid";
+        }
+        Calendar cal = Calendar.getInstance();
+        if (magicLinkToken.getExpirationTime().getTime()
+                - cal.getTime().getTime() <= 0) {
+            magicLinkTokenRepository.delete(magicLinkToken);
             return "expired";
         }
         return "valid";

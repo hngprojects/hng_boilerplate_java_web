@@ -54,4 +54,9 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @PostMapping("/magic-link/login")
+    public  ResponseEntity<?> magicLinkLogin(@RequestParam("token") String token){
+        return userService.magicLinkLogin(token);
+    }
 }
