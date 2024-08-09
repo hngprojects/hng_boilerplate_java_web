@@ -22,14 +22,12 @@ import java.util.Random;
 @Slf4j
 public class EmailServiceImpl {
 
-    @Value("${app.host.baseurl:http://localhost:3000}")
-    private String baseUrl;
 
     private final JavaMailSender javaMailSender;
     private final EmailTemplateService emailTemplateService;
 
     public String applicationUrl(HttpServletRequest request){
-        return baseUrl + "/api/v1/auth" + request.getContextPath();
+        return "https://anchor-java.teams.hng.tech/" + request.getContextPath();
     }
 
     public void passwordResetTokenMail(User user, HttpServletRequest request, String token) {
