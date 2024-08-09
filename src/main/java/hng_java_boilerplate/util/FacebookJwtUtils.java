@@ -25,13 +25,13 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-public class FacebookJwtUtils {
+public class cFacebookJwtUtils {
 
     private UserRepository userRepository;
     private UserServiceImpl userService;
     private PasswordEncoder passwordEncoder;
     private JwtUtils utils;
-    private ProfileRepository profileRepository;
+    private final ProfileRepository profileRepository;
 
     @Autowired
     public FacebookJwtUtils(UserRepository userRepository, @Lazy UserServiceImpl userService, PasswordEncoder passwordEncoder, JwtUtils utils, ProfileRepository profileRepository) {

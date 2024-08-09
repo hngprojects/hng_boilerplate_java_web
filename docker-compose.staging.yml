@@ -1,10 +1,10 @@
 version: "3"
 
 services:
-  development-postgresdb:
+  staging-postgresdb:
     image: postgres
-    container_name: development-postgresdb
-    # restart: unless-stopped
+    container_name: staging-postgresdb
+    restart: unless-stopped
     env_file:
       - ./.env
     environment:
@@ -12,8 +12,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      # - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
-      - postgresdatap:/var/lib/postgresql/data
+      - staging-postgresdatax:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
@@ -22,11 +21,11 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - backend-net
+      - staging-backend-net
 
-  development-rabbitmq:
+  staging-rabbitmq:
     image: rabbitmq:3-management
-    container_name: development-rabbitmq
+    container_name: staging-rabbitmq
     ports:
       - "15672:15672" # Management UI
       - "5672:5672"   # AMQP port
@@ -41,15 +40,14 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - backend-net
-    # restart: unless-stopped
-
+      - staging-backend-net
+    restart: unless-stopped
 
   backend:
     build: .
-    container_name: development
+    container_name: staging
     ports:
-      - "8030:8080"
+      - "8000:8080"
     env_file:
       - ./.env
     environment:
@@ -57,23 +55,22 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
     volumes:
       - ./src/main/resources/application.properties:/app/config/application.properties
     networks:
-      - backend-net
+      - staging-backend-net
     depends_on:
-      development-rabbitmq:
+      staging-rabbitmq:
         condition: service_healthy
-      development-postgresdb:
+      staging-postgresdb:
         condition: service_healthy
     restart: unless-stopped
 
 networks:
-  backend-net:
+  staging-backend-net:
     driver: bridge
 
 volumes:
-    postgresdatap:
+  staging-postgresdatax:

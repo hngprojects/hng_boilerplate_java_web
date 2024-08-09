@@ -32,8 +32,8 @@ public class GoogleJwtUtils {
     private UserRepository userRepository;
     private UserServiceImpl userService;
     private PasswordEncoder passwordEncoder;
-    private JwtUtils utils;
-    private ProfileRepository profileRepository;
+    private final JwtUtils utils;
+    private final ProfileRepository profileRepository;
 
     @Autowired
     public GoogleJwtUtils(UserRepository userRepository, @Lazy UserServiceImpl userService, PasswordEncoder passwordEncoder, JwtUtils utils, ProfileRepository profileRepository) {

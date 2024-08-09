@@ -8,6 +8,7 @@ import hng_java_boilerplate.comment.entity.Comment;
 import hng_java_boilerplate.comment.service.CommentService;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @PostMapping("/add")
     public ResponseEntity<?> createComment(@Valid @RequestBody RequestDto request){
