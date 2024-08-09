@@ -47,4 +47,11 @@ public class JobListingController {
         ApiResponse<JobListing> response = new ApiResponse<>("Job listing updated successfully", 200, updatedJob);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<String>> deleteJobListing(@PathVariable Long id) {
+        jobListingService.deleteJobListing(id);
+        ApiResponse<String> response = new ApiResponse<>("Job listing deleted successfully", 200, "Job deleted with id: " + id);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -9,4 +9,5 @@ public interface JobListingService {
     JobListing getJobListingById(Long id);
     List<JobListing> getAllJobListings();
     JobListing updateJobListing(Long id, JobListing updatedJobListing);
+    void deleteJobListing(Long id);
 }

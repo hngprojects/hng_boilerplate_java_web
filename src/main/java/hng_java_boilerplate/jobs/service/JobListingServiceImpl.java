@@ -51,4 +51,11 @@ public class JobListingServiceImpl implements JobListingService {
 
         return jobListingRepository.save(existingJobListing);
     }
+
+    @Override
+    public void deleteJobListing(Long id) {
+        JobListing jobListing = getJobListingById(id);
+        jobListingRepository.delete(jobListing);
+    }
+
 }
