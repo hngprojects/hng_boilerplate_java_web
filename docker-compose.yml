@@ -10,7 +10,7 @@ services:
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DEV_DB}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       # - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
       - postgresdatap:/var/lib/postgresql/data
@@ -56,7 +56,7 @@ services:
       - SPRING_CONFIG_LOCATION=/app/config/application.properties
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DEV_DB}
+      - POSTGRES_DB=${POSTGRES_DB}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
