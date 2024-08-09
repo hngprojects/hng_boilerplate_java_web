@@ -11,6 +11,7 @@ import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.profile.exceptions.UnauthorizedException;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @PostMapping("/add")
     public ResponseEntity<?> createComment(@Valid @RequestBody RequestDto request){
@@ -52,7 +53,7 @@ public class CommentController {
 
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/delete/{commentId}")
     @PreAuthorize("@CommentService.isUserAuthorizedToDeleteComment(#commentId, principal.username)")
     public ResponseEntity<Object> deleteComment(@PathVariable String commentId, String userId) {
         try {
