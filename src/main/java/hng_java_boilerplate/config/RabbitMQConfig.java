@@ -17,7 +17,6 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.finishedConcat}")
     private String finishedConcatJob;
 
-
     @Bean
     public Queue emailQueue() {
         return new Queue(emailQueueName, true);

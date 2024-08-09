@@ -301,4 +301,45 @@ vi. Click on the `Send` button.
 ```json
 
  "Verification Successful" 
+```
 
+## **Request Verification Token**
+
+### **Endpoint**
+
+- **URL**: `/api/v1/auth/request/token`
+- **Method**: `POST`
+- **Content-Type**: `application/json`
+
+### **Description**
+
+The feature to request for 6 digit OTP for user verification
+
+#### * Using Postman
+i. Open Postman.
+
+ii. Create a new POST request.
+
+iii. Enter the endpoint URL: http://localhost:8080/api/v1/auth/request/token.
+
+iv. Set the request body type to raw and select JSON from the dropdown.
+
+v. Paste the following JSON into the body:
+```
+{
+"email": "johndoe@example.com"
+}
+```
+vi. Click on the `Send` button.
+
+
+### **Responses**
+
+#### **Success Response**
+
+- **Status Code**: `200 OK`
+- **Content-Type**: `application/json`
+- **Response Body**:
+```json
+
+ "Verification email sent successfully" 

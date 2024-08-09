@@ -1,6 +1,8 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -83,24 +85,28 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public ResponseEntity<ApiResponse> loginUser(LoginDto loginDto) {
         UserDetails userDetails = loadUserByUsername(loginDto.getEmail());
         User user = (User) userDetails;
-
-        boolean isValidPassword = passwordEncoder.matches(loginDto.getPassword(), userDetails.getPassword());
-
+        boolean isValidPassword =
+                passwordEncoder.matches(loginDto.getPassword(), userDetails.getPassword());
         if (!isValidPassword) {
-            ApiResponse apiResponse = new ApiResponse(HttpStatus.BAD_REQUEST.value(), "Invalid email or password", null);
-            return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+            throw new BadRequestException("Invalid email or password");
         }
-
         String token = jwtUtils.createJwt.apply(userDetails);
-
         UserResponse userResponse = getUserResponse(user);
         ResponseData data = new ResponseData(token, userResponse);
-
-        // Log activity
-        GetUserDto userDto = convertUserToGetUserDto(user);
-        String organisationId = userDto.getOrganisations().isEmpty() ? null : userDto.getOrganisations().get(0).getOrg_id();
-        activityLogService.logActivity(organisationId, user.getId(), "User logged in");
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
+    }
+
+    @Override
+    public void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request) {
+        User user = findUserByEmail(emailSenderDto.getEmail());
+        String token = emailService.generateToken();
+        saveVerificationTokenForUser(user, token);
+        emailService.sendVerificationEmail(user, request, token);
+    }
+
+    public void saveVerificationTokenForUser(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken(user, token);
+        verificationTokenRepository.save(verificationToken);
     }
 
     @Override
@@ -135,6 +141,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return "expired";
         }
         return "valid";
+    }
+
+    public User findUserByEmail(String username) {
+        return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User with email " + username + " not found"));
     }
 
     // Convert User to GetUserDto
