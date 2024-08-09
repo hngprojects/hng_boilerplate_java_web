@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="Fix: update my sql file">
+      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/user_data_test/UserServiceE2ETest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,6 +51,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "Rebasing feat/update-about-page",
@@ -72,7 +77,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/hng_java_boilerplate" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.Program">
+  <component name="RunManager" selected="JUnit.user_data_test in hng-java-boilerplate">
     <configuration default="true" type="AZURE_FUNCTION_SUPPORT" factoryName="Run Functions">
       <option name="appName" />
       <option name="appServicePlanName" />
@@ -136,17 +141,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NotificationSettingsControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="user_data_test in hng-java-boilerplate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="hng-java-boilerplate" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="hng_java_boilerplate.notification.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="hng_java_boilerplate.notification" />
-      <option name="MAIN_CLASS_NAME" value="hng_java_boilerplate.notification.NotificationSettingsControllerTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/user_data_test" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -166,11 +164,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.user_data_test in hng-java-boilerplate" />
         <item itemvalue="Spring Boot.Program" />
         <item itemvalue="Database Script.V1__init_database.sql" />
         <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.AboutPageServiceTest" />
-        <item itemvalue="JUnit.NotificationSettingsControllerTest" />
       </list>
     </recent_temporary>
   </component>
