@@ -58,6 +58,7 @@ runs:
         spring.rabbitmq.username=${RABBITMQ_USERNAME}
         spring.rabbitmq.password=${RABBITMQ_PASSWORD}
         rabbitmq.queue.email=emailQueue
+        rabbitmq.queue.finishedConcat=finishedConcat
         rabbitmq.queue.concat=videoConcat
         spring.rabbitmq.exchange.key=exchange_key
         spring.rabbitmq.routing.key=routing_key

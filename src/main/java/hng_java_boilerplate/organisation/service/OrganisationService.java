@@ -1,5 +1,6 @@
 package hng_java_boilerplate.organisation.service;
 
+import hng_java_boilerplate.activitylog.service.ActivityLogService;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.dto.DataDto;
@@ -21,9 +22,14 @@ import java.util.List;
 public class OrganisationService {
     private final OrganisationRepository organisationRepository;
     private final UserRepository userRepository;
+    private final ActivityLogService activityLogService;
 
     @Transactional
-    public CreateOrganisationResponseDto create(CreateOrganisationRequestDto orgRequest, Authentication activeUser) {
+    public CreateOrganisationResponseDto create(
+            CreateOrganisationRequestDto orgRequest,
+            Authentication activeUser
+    ) {
+
         if (organisationRepository.findByName(orgRequest.name()).isPresent()) {
             throw new OrganisationNameAlreadyExistsException(
                     "Sorry, an Organisation with NAME::" + orgRequest.name() + " already exists"
@@ -51,6 +57,7 @@ public class OrganisationService {
 
         user.setOrganisations(List.of(organisation));
         userRepository.save(user);
+        activityLogService.logActivity(organisation.getId(), user.getId(), "Organisation created");
 
         return CreateOrganisationResponseDto.builder()
                 .status("success")

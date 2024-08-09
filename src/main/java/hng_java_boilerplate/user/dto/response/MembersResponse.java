@@ -1,12 +1,10 @@
-package hng_java_boilerplate.organisation.dto.responses;
+package hng_java_boilerplate.user.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+@Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Builder
-@ToString
 @Setter
 @Getter
 public class MembersResponse {
@@ -14,7 +12,8 @@ public class MembersResponse {
     private String fullName;
     private String email;
     private String phone;
-    private String createdAt;
     private String status;
+    private String createdAt;
+
 
 }

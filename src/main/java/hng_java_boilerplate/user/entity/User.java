@@ -33,19 +33,14 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-
-    @Column(name = "phone")
-    private String phoneNumber;
-
-    @Column(name = "status")
-    private String status = "Active";
-
-
-    @Column(name = "is_active")
-    private boolean isActive = true;
-
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false, unique = true)
+    private String status;
+
+    @Column(nullable = false)
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Role userRole;
@@ -54,6 +49,11 @@ public class User implements UserDetails {
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
 
+    @Column(name = "secret_key")
+    @JsonIgnore
+    private String secretKey;
+
+    private Boolean TwoFactorEnabled = false;
 
     @ManyToMany
     @JoinTable(

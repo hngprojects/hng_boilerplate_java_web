@@ -1,6 +1,6 @@
 package hng_java_boilerplate.user.crudOperations;
 
-import hng_java_boilerplate.organisation.dto.responses.MembersResponse;
+import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.exception.InvalidPageNumberException;
 import hng_java_boilerplate.user.repository.UserRepository;
@@ -23,7 +23,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -81,7 +80,5 @@ public class UserServiceTest {
 
         assertEquals("Invalid page number requested: 2", exception.getMessage());
     }
+
 }
-
-
-

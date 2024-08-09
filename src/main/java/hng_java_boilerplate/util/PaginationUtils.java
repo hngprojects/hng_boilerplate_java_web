@@ -1,5 +1,4 @@
-package hng_java_boilerplate.user;
-
+package hng_java_boilerplate.util;
 
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.exception.InvalidPageNumberException;
@@ -10,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public class Utils {
+public class PaginationUtils {
 
     public static final int ONE = 1;
     public static final int ZERO = 0;
@@ -26,7 +25,7 @@ public class Utils {
     }
 
     public static Page<User> getPaginatedUsers(int page, List<User> allUser) {
-        Pageable pageable = Utils.buildPageRequest(page, 0);
+        Pageable pageable = buildPageRequest(page, 0);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), allUser.size());
         return new PageImpl<>(allUser.subList(start, end), pageable, allUser.size());
