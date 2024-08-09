@@ -3,7 +3,7 @@ version: "3"
 services:
   postgresdb:
     image: postgres
-    container_name: postgresdb
+    container_name: development-postgresdb
     # restart: unless-stopped
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -24,7 +24,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
+    container_name: development-rabbitmq
     ports:
       - "15672:15672" # Management UI
       - "5672:5672"   # AMQP port
@@ -43,6 +43,7 @@ services:
 
   backend:
     build: .
+    container_name: development
     ports:
       - "8030:8080"
     environment:

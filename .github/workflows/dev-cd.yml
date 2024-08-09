@@ -15,22 +15,64 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Add SSH Key to Known Hosts
+      - name: Compose Build Docker image
+        run: docker compose -f docker-compose.development.yml build
+      
+      - name: Save and compress Docker images
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
+          docker save $(docker-compose -f docker-compose.development.yml config | grep 'image:' | awk '{print $2}') > development-images.tar
+          gzip development-images.tar
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-images
+          path: development-images.tar.gz
+      
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-images
+          path: .
+      
+      - name: Copy to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.DEV_SSH_USERNAME }}
+          password: ${{ secrets.DEV_SSH_PASSWORD }}
+          source: "development-images.tar.gz,docker-compose.development.yml,.env,scripts/dev-deploy.sh"
+          target: "~/tmp/hng_boilerplate_java_web"
 
-      - name: SSH into Server and Execute Command
-        run: |
-          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
-          cd ~/hng_boilerplate_java_web && git fetch origin dev && git stash && git checkout dev && git pull && chmod +x deploy.sh && ./deploy.sh && sudo systemctl start java_app.service && \
-          exit"
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USERNAME: ${{ secrets.DEV_SSH_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.DEV_SSH_PASSWORD }}
+      - name: Deploy on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.DEV_SSH_USERNAME }}
+          password: ${{ secrets.DEV_SSH_PASSWORD }}
+          script: |
+            cd ~/tmp/hng_boilerplate_java_web
+            gunzip development-images.tar.gz
+            docker load < development-images.tar
+            rm -f development-images.tar
+            chmod +x ./scripts/dev-deploy.sh
+            ./scripts/dev-deploy.sh 
+      # - name: Add SSH Key to Known Hosts
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+      #   env:
+      #     SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      # - name: SSH into Server and Execute Command
+      #   run: |
+      #     sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
+      #     cd ~/hng_boilerplate_java_web && git fetch origin dev && git stash && git checkout dev && git pull && chmod +x deploy.sh && ./deploy.sh && sudo systemctl start java_app.service && \
+      #     exit"
+      #   env:
+      #     SSH_HOST: ${{ secrets.SSH_HOST }}
+      #     SSH_USERNAME: ${{ secrets.DEV_SSH_USERNAME }}
+      #     SSH_PASSWORD: ${{ secrets.DEV_SSH_PASSWORD }}
   
   on-failure:
     runs-on: ubuntu-latest
