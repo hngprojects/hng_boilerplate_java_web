@@ -1,5 +1,6 @@
 package hng_java_boilerplate.comment.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
