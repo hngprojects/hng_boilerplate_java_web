@@ -15,6 +15,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+          
       - name: Create .env file
         run: |
           echo "DB_CONNECTION_STRING=postgresql://prod-postgresdb:5432/${{ secrets.POSTGRES_PROD_DB }}" >> .env
