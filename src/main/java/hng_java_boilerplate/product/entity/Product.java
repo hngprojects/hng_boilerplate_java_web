@@ -33,6 +33,9 @@ public class Product {
     @Column(name = "current_stock")
     private Integer currentStock;
 
+    @Column(name = "is_available")
+    private Boolean isAvailable;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

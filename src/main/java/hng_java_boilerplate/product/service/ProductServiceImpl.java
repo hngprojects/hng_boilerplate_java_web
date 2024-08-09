@@ -1,6 +1,7 @@
 package hng_java_boilerplate.product.service;
 
 import hng_java_boilerplate.product.dto.ErrorDTO;
+import hng_java_boilerplate.product.dto.ProductDTO;
 import hng_java_boilerplate.product.dto.ProductInventoryDto;
 import hng_java_boilerplate.product.dto.ProductUpdateResponseDto;
 import hng_java_boilerplate.product.entity.Product;
@@ -54,4 +55,31 @@ public class ProductServiceImpl implements ProductService{
         return productStatusResponseDto;
 
     }
+
+    public ProductUpdateResponseDto getProductById(String productId) {
+        Product product = productRepository.findById(productId).stream()
+                .filter(foundProduct -> foundProduct.getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException("Product With id: " +productId+ " Not Found"));
+
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(product.getId());
+        productDTO.setName(product.getName());
+        productDTO.setDescription(product.getDescription());
+        productDTO.setCategory(product.getCategory());
+        productDTO.setPrice(product.getPrice());
+        productDTO.setImageUrl(product.getImageUrl());
+        productDTO.setStatus(product.getIsAvailable());
+        productDTO.setCurrent_stock(product.getCurrentStock());
+
+        ProductUpdateResponseDto productStatusResponseDto =new ProductUpdateResponseDto();
+
+        productStatusResponseDto.setMessage("success");
+        productStatusResponseDto.setStatus_code(HttpStatus.OK.value());
+        productStatusResponseDto.setProductData(productDTO);
+
+        return productStatusResponseDto;
+
+    }
+
 }

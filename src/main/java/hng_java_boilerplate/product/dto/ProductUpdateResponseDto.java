@@ -14,7 +14,7 @@ public class ProductUpdateResponseDto {
 
    private String message;
    private int status_code;
-   private ProductDTO productDTO;
+   private ProductDTO productData;
    private  ProductInventoryDto data;
 
 

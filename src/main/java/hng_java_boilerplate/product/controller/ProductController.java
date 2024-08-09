@@ -77,4 +77,18 @@ public class ProductController {
 
         return ResponseEntity.ok(productStatusResponseDto);
     }
+
+    @GetMapping("/{product_id}")
+    public ResponseEntity<?> getProductById( @PathVariable String product_id) {
+        if ((product_id == null) || product_id.trim().isEmpty()) {
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setStatus_code(HttpStatus.BAD_REQUEST.value());
+            errorResponse.setMessage("Bad Request: Product Id cannot be null ");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        ProductUpdateResponseDto productStatusResponseDto = productServiceImpl.getProductById(product_id);
+
+        return ResponseEntity.ok(productStatusResponseDto);
+    }
 }
