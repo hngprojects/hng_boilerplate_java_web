@@ -20,8 +20,6 @@ target/
 *.ipr
 
 ####Docker###
-docker-compose.production.yml
-docker-compose.staging.yml
 docker-compose.yml
 
 
