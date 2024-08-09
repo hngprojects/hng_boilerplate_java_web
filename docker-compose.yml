@@ -60,9 +60,9 @@ services:
     networks:
       - backend-net
     depends_on:
-      rabbitmq:
+      development-rabbitmq:
         condition: service_healthy
-      postgresdb:
+      development-postgresdb:
         condition: service_healthy
     restart: unless-stopped
 
