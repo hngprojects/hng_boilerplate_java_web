@@ -8,13 +8,14 @@ import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.enums.Role;
-import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
-import hng_java_boilerplate.user.exception.UserNotFoundException;
-import hng_java_boilerplate.user.exception.UsernameNotFoundException;
+import hng_java_boilerplate.user.exception.*;
 import hng_java_boilerplate.user.repository.UserRepository;
+import hng_java_boilerplate.user.repository.VerificationTokenRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
     private final ActivityLogService activityLogService;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final EmailServiceImpl emailService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -97,6 +101,40 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         String organisationId = userDto.getOrganisations().isEmpty() ? null : userDto.getOrganisations().get(0).getOrg_id();
         activityLogService.logActivity(organisationId, user.getId(), "User logged in");
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<String> verifyOtp(String email, String token, HttpServletRequest request) {
+        String tokenValidationResult = validateVerificationToken(token);
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("User not found with email: " + email);
+        }
+        User user = userOptional.get();
+        if (tokenValidationResult.equals("invalid")) {
+            throw new UnAuthorizedUserException("Invalid OTP");
+        }
+        if (tokenValidationResult.equals("expired")) {
+            String newToken = emailService.generateToken();
+            emailService.sendVerificationEmail(user, request, newToken);
+            throw new TokenExpiredException("OTP has expired. A new OTP has been sent to your email.");
+        }
+        user.setIsEnabled(true);
+        userRepository.save(user);
+        return ResponseEntity.ok("User verified successfully");
+    }
+
+    public String validateVerificationToken(String token) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            return "invalid";
+        }
+        Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpirationTime().getTime() - cal.getTime().getTime()) <= 0) {
+            verificationTokenRepository.delete(verificationToken);
+            return "expired";
+        }
+        return "valid";
     }
 
     // Convert User to GetUserDto
