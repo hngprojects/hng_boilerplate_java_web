@@ -43,9 +43,9 @@ jobs:
                   
       - name: Compose Build Docker image
         run: |
-          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          export POSTGRES_USER=postgres
+          export POSTGRES_PASSWORD=postgres
+          export POSTGRES_DB=postgres
           export RABBITMQ_USER=${{ secrets.RABBITMQ_USERNAME }}
           export RABBITMQ_HOST=${{ secrets.RABBITMQ_DEV_HOST }}
           export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
