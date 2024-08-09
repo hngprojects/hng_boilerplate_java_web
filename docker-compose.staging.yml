@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  postgresdb:
+  staging-postgresdb:
     image: postgres
     container_name: staging-postgresdb
     restart: unless-stopped
@@ -21,7 +21,7 @@ services:
     networks:
       - staging-backend-net
 
-  rabbitmq:
+  staging-rabbitmq:
     image: rabbitmq:3-management
     container_name: staging-rabbitmq
     ports:

@@ -17,18 +17,15 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/postgres" >> .env
-          echo "DB_USERNAME=admin" >> .env
-          echo "DB_PASSWORD=password123" >> .env
-          echo "RABBITMQ_PORT=5672" >> .env
-          echo "RABBITMQ_USERNAME=guest" >> .env
-          echo "RABBITMQ_PASSWORD=guest" >> .env
-          # echo "ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
-          # echo "AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
-          # echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
+          echo "DB_CONNECTION_STRING=postgresql://staging-postgresdb:5432/${{ secrets.POSTGRES_STAGING_DB }}" >> .env
+          echo "DB_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
+          echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
+          echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
 
       - name: Create application.properties
-        uses: ./.github/workflows/create-application-properties
+        uses: ./.github/workflows/container-application-properties
         
       - name: Compose Build Docker image
         run: docker compose -f docker-compose.staging.yml build
