@@ -1,9 +1,7 @@
 name: PR Deploy
-
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
-
 jobs:
   deploy-pr:
     environment:
@@ -13,13 +11,14 @@ jobs:
     steps:
       - name: Checkout the branch
         uses: actions/checkout@v4
-
       - id: deploy
         name: Pull Request Deploy
         uses: hngprojects/pr-deploy@main
-        run: |
-          preview_url=$(your_command_to_get_url)
-          echo "preview-url=$preview_url" >> $GITHUB_ENV
+        with:
+          server_host: ${{ secrets.SERVER_HOST }}
+          server_username: ${{ secrets.SERVER_USERNAME }}
+          server_password: ${{ secrets.SERVER_PASSWORD }}
+          server_port: ${{ secrets.SERVER_PORT }}
           comment: true
           context: '.'
           dockerfile: 'Dockerfile'
@@ -27,7 +26,6 @@ jobs:
           host_volume_path: '/var/appdata'
           container_volume_path: '/app/data'
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Print Preview URL
         run: |
-         echo "Preview URL: ${{ env.preview-url }}"
+          echo "Preview URL: ${{ steps.deploy.outputs.preview-url }}"
