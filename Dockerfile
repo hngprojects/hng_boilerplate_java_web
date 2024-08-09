@@ -9,8 +9,10 @@ WORKDIR /app
 # Copy just pom.xml
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
+
 # Go-offline using the pom.xml
-RUN mvn dependency:go-offline
+# RUN mvn dependency:go-offline
+
 # Copy your other files
 COPY ./src ./src
 # Compile the source code and package it in a jar file
