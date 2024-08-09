@@ -49,7 +49,7 @@ jobs:
           export RABBITMQ_USER=${{ secrets.RABBITMQ_USERNAME }}
           export RABBITMQ_HOST=${{ secrets.RABBITMQ_PROD_HOST }}
           export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
-          docker compose -f docker-compose.yml build
+          docker compose -f docker-compose.production.yml build
       
       - name: Save and compress Docker images
         run: |
