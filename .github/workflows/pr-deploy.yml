@@ -18,8 +18,6 @@ jobs:
         name: Pull Request Deploy
         uses: hngprojects/pr-deploy@main
         run: |
-          # Your deployment commands here
-          # For example, if you have a command that returns the URL:
           preview_url=$(your_command_to_get_url)
           echo "preview-url=$preview_url" >> $GITHUB_ENV
           comment: true
