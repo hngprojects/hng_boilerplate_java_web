@@ -22,7 +22,7 @@ jobs:
           comment: true
           context: '.'
           dockerfile: 'Dockerfile'
-          exposed_port: '8000'
+          exposed_port: '8030'
           host_volume_path: '/var/appdata'
           container_volume_path: '/app/data'
           github_token: ${{ secrets.GITHUB_TOKEN }}
