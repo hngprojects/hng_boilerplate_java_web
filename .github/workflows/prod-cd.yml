@@ -45,7 +45,7 @@ jobs:
         run: |
           export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          export POSTGRES_DEV_DB=${{ secrets.POSTGRES_DB }}
+          export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
           export RABBITMQ_USER=${{ secrets.RABBITMQ_USERNAME }}
           export RABBITMQ_HOST=${{ secrets.RABBITMQ_PROD_HOST }}
           export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
