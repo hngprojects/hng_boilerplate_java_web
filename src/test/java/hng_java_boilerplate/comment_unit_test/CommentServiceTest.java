@@ -3,18 +3,21 @@ package hng_java_boilerplate.comment_unit_test;
 import hng_java_boilerplate.comment.entity.Comment;
 import hng_java_boilerplate.comment.repository.CommentRepository;
 import hng_java_boilerplate.comment.service.CommentService;
+import hng_java_boilerplate.profile.exceptions.UnauthorizedException;
 import hng_java_boilerplate.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CommentServiceTest {
 
@@ -56,5 +59,88 @@ class CommentServiceTest {
     }
 
 
+    @Test
+    void isUserAuthorizedToDeleteComment_ShouldReturnTrueIfUserIsAuthorized() {
+        String commentId = "comment1";
+        String username = "user1";
 
+        User user = new User();
+        user.setId(username);
+
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
+        comment.setUser(user);
+
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+
+        boolean isAuthorized = commentService.isUserAuthorizedToDeleteComment(commentId, username);
+
+        assertTrue(isAuthorized);
+        verify(commentRepository, times(1)).findById(commentId);
+    }
+
+    @Test
+    void isUserAuthorizedToDeleteComment_ShouldThrowExceptionIfCommentNotFound() {
+        String commentId = "comment1";
+        String username = "user1";
+
+        when(commentRepository.findById(commentId)).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () ->
+                commentService.isUserAuthorizedToDeleteComment(commentId, username));
+    }
+
+    @Test
+    void softDeleteComment_ShouldSoftDeleteCommentIfUserIsAuthorized() {
+        String commentId = "comment1";
+        String userId = "user1";
+
+        User user = new User();
+        user.setId(userId);
+
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
+        comment.setUser(user);
+        comment.setDeleted(false);
+
+        when(commentRepository.findByCommentIdAndDeletedFalse(commentId)).thenReturn(Optional.of(comment));
+        when(commentRepository.save(comment)).thenReturn(comment);
+
+        Comment result = commentService.softDeleteComment(commentId, userId);
+
+        assertTrue(result.getDeleted());  // Assuming getDeleted() is a method to check if the comment is soft deleted
+        verify(commentRepository, times(1)).findByCommentIdAndDeletedFalse(commentId);
+        verify(commentRepository, times(1)).save(comment);
+    }
+
+    @Test
+    void softDeleteComment_ShouldThrowExceptionIfCommentNotFound() {
+        String commentId = "comment1";
+        String userId = "user1";
+
+        when(commentRepository.findByCommentIdAndDeletedFalse(commentId)).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () ->
+                commentService.softDeleteComment(commentId, userId));
+    }
+
+    @Test
+    void softDeleteComment_ShouldThrowUnauthorizedExceptionIfUserIsNotAuthorized() {
+        String commentId = "comment1";
+        String userId = "user1";
+        String differentUserId = "user2";
+
+        User user = new User();
+        user.setId(differentUserId);
+
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
+        comment.setUser(user);
+        comment.setDeleted(false);
+
+        when(commentRepository.findByCommentIdAndDeletedFalse(commentId)).thenReturn(Optional.of(comment));
+
+        assertThrows(UnauthorizedException.class, () ->
+                commentService.softDeleteComment(commentId, userId));
+    }
 }
