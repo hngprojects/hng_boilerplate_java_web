@@ -17,11 +17,11 @@ jobs:
       - id: deploy
         name: Pull Request Deploy
         uses: hngprojects/pr-deploy@main
-        with:
-          server_host: ${{ secrets.SERVER_HOST }}
-          server_username: ${{ secrets.SERVER_USERNAME }}
-          server_password: ${{ secrets.SERVER_PASSWORD }}
-          server_port: ${{ secrets.SERVER_PORT }}
+        run: |
+          # Your deployment commands here
+          # For example, if you have a command that returns the URL:
+          preview_url=$(your_command_to_get_url)
+          echo "preview-url=$preview_url" >> $GITHUB_ENV
           comment: true
           context: '.'
           dockerfile: 'Dockerfile'
@@ -32,4 +32,4 @@ jobs:
 
       - name: Print Preview URL
         run: |
-          echo "Preview URL: ${{ steps.deploy.outputs.preview-url }}"
+         echo "Preview URL: ${{ env.preview-url }}"
