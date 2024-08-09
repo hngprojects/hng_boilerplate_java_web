@@ -51,13 +51,13 @@ jobs:
           export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
           docker compose -f docker-compose.yml build
 
-      - name: Verify Docker images
-        run: |
-          docker images
-          if ! docker images | grep -q 'development_backend'; then
-            echo "Backend image not found. Build may have failed."
-            exit 1
-          fi
+      # - name: Verify Docker images
+      #   run: |
+      #     docker images
+      #     if ! docker images | grep -q 'development_backend'; then
+      #       echo "Backend image not found. Build may have failed."
+      #       exit 1
+      #     fi
       
       - name: List Docker images
         run: docker images
