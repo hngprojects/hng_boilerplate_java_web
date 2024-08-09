@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-public class cFacebookJwtUtils {
+public class FacebookJwtUtils {
 
     private UserRepository userRepository;
     private UserServiceImpl userService;
