@@ -152,7 +152,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-<<<<<<< HEAD
+
     @ExceptionHandler(CategoryAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException ex) {
         ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Category Already Created", HttpStatus.BAD_REQUEST.value());
