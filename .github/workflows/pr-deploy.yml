@@ -11,11 +11,11 @@ jobs:
       url: ${{ steps.deploy.outputs.preview-url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout the branch
         uses: actions/checkout@v4
 
       - id: deploy
-        name: Deploy Pull Request
+        name: Pull Request Deploy
         uses: hngprojects/pr-deploy@main
         with:
           server_host: ${{ secrets.SERVER_HOST }}
@@ -30,6 +30,6 @@ jobs:
           container_volume_path: '/app/data'
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Display Preview URL
+      - name: Print Preview URL
         run: |
           echo "Preview URL: ${{ steps.deploy.outputs.preview-url }}"
