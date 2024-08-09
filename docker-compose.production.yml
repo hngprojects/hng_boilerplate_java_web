@@ -10,7 +10,7 @@ services:
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_DB=${POSTGRES_PROD_DB}
     volumes:
       - prod-postgresdatax:/var/lib/postgresql/data
     ports:
@@ -54,7 +54,7 @@ services:
       - SPRING_CONFIG_LOCATION=/app/config/application.properties
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_DB=${POSTGRES_PROD_DB}
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
     volumes:
