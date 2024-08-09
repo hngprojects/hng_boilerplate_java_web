@@ -56,9 +56,9 @@ services:
     networks:
       - staging-backend-net
     depends_on:
-      rabbitmq:
+      staging-rabbitmq:
         condition: service_healthy
-      postgresdb:
+      staging-postgresdb:
         condition: service_healthy
     restart: unless-stopped
 
