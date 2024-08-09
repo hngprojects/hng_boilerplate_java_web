@@ -22,7 +22,7 @@ jobs:
           
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://staging-postgresdb:5432/${{ secrets.POSTGRES_STAGING_DB }}" >> .env
+          echo "DB_CONNECTION_STRING=postgresql://staging-postgresdb:5432/${{ secrets.POSTGRES_DB }}" >> .env
           echo "DB_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
           echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
           echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
@@ -45,7 +45,7 @@ jobs:
         run: |
           export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          export POSTGRES_DEV_DB=${{ secrets.POSTGRES_DEV_DB }}
+          export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
           export RABBITMQ_USER=${{ secrets.RABBITMQ_USERNAME }}
           export RABBITMQ_HOST=${{ secrets.RABBITMQ_STAGING_HOST }}
           export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
