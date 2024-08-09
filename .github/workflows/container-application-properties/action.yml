@@ -64,27 +64,27 @@ runs:
         spring.rabbitmq.routing.key=routing_key
 
         # twilio configuration
-        spring.twilio.account.sid=${{ secrets.ACCOUNT_SID }}
-        spring.twilio.auth.token=${{ secrets.AUTH_TOKEN }}
-        spring.twilio.outgoing.sms.number=${{ secrets.SMS_NUMBER }}
+        spring.twilio.account.sid=${ACCOUNT_SID}
+        spring.twilio.auth.token=${AUTH_TOKEN}
+        spring.twilio.outgoing.sms.number=${SMS_NUMBER}
 
         # email configuration
         spring.mail.host=smtp.gmail.com
 
         # JWT secret
-        sha512.string=${{ secrets.JWT_TOKEN }}
+        sha512.string=${JWT_TOKEN}
 
         
         #Security configuration
-        spring.security.oauth2.client.registration.google.client-id=${{ secrets.GOOGLE_ID_KEY }}
-        spring.security.oauth2.client.registration.google.client-secret=${{ secrets.GOOGLE_CLIENT_SECRET }}
+        spring.security.oauth2.client.registration.google.client-id=${GOOGLE_ID_KEY}
+        spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET}
 
         #MultiPartfile config
         spring.servlet.multipart.max-file-size=50MB
         spring.servlet.multipart.max-request-size=50MB
 
         ## Payment Configuration
-        paystack.secret.key=${{ secrets.PAYSTACK_KEY }}
-        flutterwave.secret.key=${{ secrets.FLUTTERWAVE_KEY }}
+        paystack.secret.key=${PAYSTACK_KEY}
+        flutterwave.secret.key=${FLUTTERWAVE_KEY}
         EOF
       shell: bash
