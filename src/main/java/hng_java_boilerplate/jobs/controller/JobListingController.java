@@ -6,6 +6,7 @@ import hng_java_boilerplate.jobs.service.JobListingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class JobListingController {
     }
 
     @DeleteMapping("/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<ApiResponse<String>> deleteJobListing(@PathVariable Long id) {
         jobListingService.deleteJobListing(id);
         ApiResponse<String> response = new ApiResponse<>("Job listing deleted successfully", 200, "Job deleted with id: " + id);
