@@ -15,6 +15,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Create .env file
+        run: |
+          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/postgres" >> .env
+          echo "DB_USERNAME=admin" >> .env
+          echo "DB_PASSWORD=password123" >> .env
+          echo "RABBITMQ_PORT=5672" >> .env
+          echo "RABBITMQ_USERNAME=guest" >> .env
+          echo "RABBITMQ_PASSWORD=guest" >> .env
+          # echo "ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
+          # echo "AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
+          # echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
+
+      - name: Create application.properties
+        uses: ./.github/workflows/create-application-properties
+                  
       - name: Compose Build Docker image
         run: docker compose -f docker-compose.development.yml build
       
@@ -41,8 +56,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.DEV_SSH_USERNAME }}
           password: ${{ secrets.DEV_SSH_PASSWORD }}
-          source: "development-images.tar.gz,docker-compose.development.yml,.env,scripts/dev-deploy.sh"
-          target: "~/tmp/hng_boilerplate_java_web"
+          source: "development-images.tar.gz"
+          target: "~/hng_boilerplate_java_web"
 
       - name: Deploy on server
         uses: appleboy/ssh-action@master
@@ -51,7 +66,7 @@ jobs:
           username: ${{ secrets.DEV_SSH_USERNAME }}
           password: ${{ secrets.DEV_SSH_PASSWORD }}
           script: |
-            cd ~/tmp/hng_boilerplate_java_web
+            cd ~/hng_boilerplate_java_web
             gunzip development-images.tar.gz
             docker load < development-images.tar
             rm -f development-images.tar
