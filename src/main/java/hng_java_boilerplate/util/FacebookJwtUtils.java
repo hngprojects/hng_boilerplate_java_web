@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
-import static sun.rmi.transport.TransportConstants.Version;
 
 @Component
 public class FacebookJwtUtils {
