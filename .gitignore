@@ -19,6 +19,12 @@ target/
 *.iml
 *.ipr
 
+####Docker###
+docker-compose.production.yml
+docker-compose.staging.yml
+docker-compose.yml
+
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
