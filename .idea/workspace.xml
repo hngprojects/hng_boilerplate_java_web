@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="Fix: update my sql file">
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/waitlist/dto/WaitlistRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/waitlist/dto/WaitlistResponseDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/waitlist/controller/WaitlistController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hng_java_boilerplate/waitlist/controller/WaitlistController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +56,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Rebasing feat/update-about-page",
+    "git-widget-placeholder": "Rebasing fix/waitlist-api",
     "last_opened_file_path": "C:/Users/User/Desktop/sabiBank"
   }
 }]]></component>
@@ -152,5 +156,8 @@
       <setting name="editor" value="IDEA" />
       <setting name="editor" value="true" />
     </settings>
+  </component>
+  <component name="TaskManager">
+    <servers />
   </component>
 </project>

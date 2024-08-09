@@ -1,6 +1,8 @@
 package hng_java_boilerplate.waitlist.controller;
 
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
+import hng_java_boilerplate.waitlist.dto.WaitlistRequestDto;
+import hng_java_boilerplate.waitlist.dto.WaitlistResponseDto;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +34,10 @@ public class WaitlistController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createWaitlist(@Valid @RequestBody Waitlist waitlist){
+    public ResponseEntity<WaitlistResponseDto> createWaitlist(@Valid @RequestBody WaitlistRequestDto waitlistRequestDTO){
+        Waitlist waitlist = new Waitlist();
+        waitlist.setFullName(waitlistRequestDTO.getFullName());
+        waitlist.setEmail(waitlistRequestDTO.getEmail());
         waitlistService.saveWaitlist(waitlist);
 
         String to = waitlist.getEmail();
@@ -40,9 +45,7 @@ public class WaitlistController {
         String text = "You are all signed up!";
         emailProducerService.sendEmailMessage(to, subject, text);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "You are all signed up!");
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(new WaitlistResponseDto("You are all signed up!"), HttpStatus.CREATED);
     }
 
     @GetMapping

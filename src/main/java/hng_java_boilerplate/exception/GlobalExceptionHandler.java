@@ -10,6 +10,7 @@ import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.twofactor.exception.InvalidTotpException;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import hng_java_boilerplate.user.exception.*;
+import hng_java_boilerplate.waitlist.dto.WaitlistResponseDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
@@ -166,5 +167,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidTotpException.class)
     public ResponseEntity<ResponseMessageDto> handleInvalidTotpException(InvalidTotpException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<WaitlistResponseDto> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldError().getDefaultMessage();
+        WaitlistResponseDto response = new WaitlistResponseDto(errorMessage, HttpStatus.BAD_REQUEST.value(), "Bad Request");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
