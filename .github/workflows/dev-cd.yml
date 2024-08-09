@@ -58,30 +58,30 @@ jobs:
       #       echo "Backend image not found. Build may have failed."
       #       exit 1
       #     fi
-      
+
+      # - name: Pull PostgreSQL and RabbitMQ images
+      #   run: |
+      #     docker pull postgres:latest
+      #     docker pull rabbitmq:3-management
+          
       - name: List Docker images
         run: docker images
 
       - name: Save and compress Docker images
         run: |
-          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          export POSTGRES_DB=${{ secrets.POSTGRES_DEV_DB }}
-          export RABBITMQ_USER=${{ secrets.RABBITMQ_USERNAME }}
-          export RABBITMQ_HOST=${{ secrets.RABBITMQ_DEV_HOST }}
-          export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
-          
           # Save each image individually
-          docker save postgres > postgres.tar
-          docker save rabbitmq:3-management > rabbitmq.tar
-          docker save development_backend > backend.tar
+          # docker save postgres > postgres.tar
+          # docker save rabbitmq:3-management > rabbitmq.tar
+          docker save hng_boilerplate_java_web-backend:latest > backend.tar
           
           # Combine and compress the tar files
-          tar -cvf development-images.tar postgres.tar rabbitmq.tar backend.tar
-          gzip development-images.tar
+          # tar -cvf development-images.tar postgres.tar rabbitmq.tar backend.tar
+          # gzip development-images.tar
+          gzip backend.tar
+          mv backend.tar.gz development-images.tar.gz
           
           # Clean up individual tar files
-          rm postgres.tar rabbitmq.tar backend.tar
+          # rm postgres.tar rabbitmq.tar backend.tar
       
       - name: Upload artifact
         uses: actions/upload-artifact@v2
