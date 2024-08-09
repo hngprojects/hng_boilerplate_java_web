@@ -8,5 +8,5 @@ cp flyway.conf ~/hng_boilerplate_java_web/
 cd ~/hng_boilerplate_java_web/
 mvn dependency:resolve
 ./mvnw clean install
-# # nohup ./mvnw spring-boot:run > app.log 2>&1 &
+# nohup ./mvnw spring-boot:run > app.log 2>&1 &
 # systemctl start java_app.service

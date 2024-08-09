@@ -6,6 +6,7 @@ import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.Response;
 import hng_java_boilerplate.user.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
@@ -13,11 +14,10 @@ import org.springframework.security.core.Authentication;
 public interface UserService {
     GetUserDto getUserWithDetails(String userId);
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
+    ResponseEntity<String> verifyOtp(String email, String token, HttpServletRequest request);
     User getLoggedInUser();
 
     Response<?> getUserById(String userId, Authentication authentication);
-
     ResponseEntity<ApiResponse> loginUser(LoginDto loginDto);
-
     User save(User user);
 }

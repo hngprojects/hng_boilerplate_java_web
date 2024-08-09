@@ -35,4 +35,20 @@ public class JobListingServiceImpl implements JobListingService {
     public List<JobListing> getAllJobListings() {
         return jobListingRepository.findAll();
     }
+
+    @Override
+    public JobListing updateJobListing(Long id, JobListing updatedJobListing) {
+        JobListing existingJobListing = getJobListingById(id);
+
+        existingJobListing.setTitle(updatedJobListing.getTitle());
+        existingJobListing.setDescription(updatedJobListing.getDescription());
+        existingJobListing.setLocation(updatedJobListing.getLocation());
+        existingJobListing.setSalary(updatedJobListing.getSalary());
+        existingJobListing.setJobType(updatedJobListing.getJobType());
+        existingJobListing.setCompanyName(updatedJobListing.getCompanyName());
+
+        existingJobListing.setUpdatedAt(LocalDateTime.now());
+
+        return jobListingRepository.save(existingJobListing);
+    }
 }
