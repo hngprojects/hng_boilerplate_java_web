@@ -42,7 +42,14 @@ jobs:
         uses: ./.github/workflows/container-application-properties
         
       - name: Compose Build Docker image
-        run: docker compose -f docker-compose.production.yml build
+        run: |
+          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          export POSTGRES_DEV_DB=${{ secrets.POSTGRES_DEV_DB }}
+          export RABBITMQ_USER=${{ secrets.RABBITMQ_USERNAME }}
+          export RABBITMQ_HOST=${{ secrets.RABBITMQ_PROD_HOST }}
+          export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
+          docker compose -f docker-compose.production.yml build
       
       - name: Save and compress Docker images
         run: |
