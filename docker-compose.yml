@@ -54,7 +54,6 @@ services:
       - ./.env
     environment:
       - SPRING_CONFIG_LOCATION=/app/config/application.properties
-      - spring.datasource.url=jdbc:postgresql://development-postgresdb:5432/${POSTGRES_DEV_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DEV_DB}
