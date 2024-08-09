@@ -4,7 +4,7 @@ services:
   development-postgresdb:
     image: postgres
     container_name: development-postgresdb
-    # restart: unless-stopped
+    restart: unless-stopped
     env_file:
       - ./.env
     environment:
@@ -49,7 +49,7 @@ services:
     build: .
     container_name: development
     ports:
-      - "8030:8080"
+      - "8080:8080"
     env_file:
       - ./.env
     environment:
