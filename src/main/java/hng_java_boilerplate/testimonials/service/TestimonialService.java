@@ -50,4 +50,11 @@ public class TestimonialService {
 
         return testimonialRepository.save(testimonial);
     }
+
+    public void deleteTestimonial(String testimonialId) {
+        Testimonial testimonial = testimonialRepository.findById(testimonialId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Testimonial not found"));
+
+        testimonialRepository.delete(testimonial);
+    }
 }
