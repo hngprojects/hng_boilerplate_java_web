@@ -259,3 +259,46 @@ vi. Click on the `Send` button.
     }
   }
 }
+```
+
+## **Verify OTP**
+
+### **Endpoint**
+
+- **URL**: `/api/v1/auth/verify-otp`
+- **Method**: `POST`
+- **Content-Type**: `application/json`
+
+### **Description**
+
+The feature to accept and verify the 6 digit sent to a user to verify email
+
+#### * Using Postman
+i. Open Postman.
+
+ii. Create a new POST request.
+
+iii. Enter the endpoint URL: http://localhost:8080/api/v1/auth/verify-otp.
+
+iv. Set the request body type to raw and select JSON from the dropdown.
+
+v. Paste the following JSON into the body:
+```
+{
+"token": "123456"
+}
+```
+vi. Click on the `Send` button.
+
+
+### **Responses**
+
+#### **Success Response**
+
+- **Status Code**: `200 OK`
+- **Content-Type**: `application/json`
+- **Response Body**:
+```json
+
+ "Verification Successful" 
+

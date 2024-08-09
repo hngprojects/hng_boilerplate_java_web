@@ -8,4 +8,5 @@ public interface JobListingService {
     JobListing createJobListing(JobListing jobListing);
     JobListing getJobListingById(Long id);
     List<JobListing> getAllJobListings();
+    JobListing updateJobListing(Long id, JobListing updatedJobListing);
 }
