@@ -37,11 +37,11 @@ jobs:
         uses: ./.github/workflows/container-application-properties
                   
       - name: Compose Build Docker image
-        run: docker compose -f docker-compose.development.yml build
+        run: docker compose -f docker-compose.yml build
       
       - name: Save and compress Docker images
         run: |
-          docker save $(docker-compose -f docker-compose.development.yml config | grep 'image:' | awk '{print $2}') > development-images.tar
+          docker save $(docker-compose -f docker-compose.yml config | grep 'image:' | awk '{print $2}') > development-images.tar
           gzip development-images.tar
       
       - name: Upload artifact
