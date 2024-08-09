@@ -23,9 +23,15 @@ jobs:
           echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
           echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
           echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
-          echo "RABBITMQ_HOST=${{ secrets.RABBITMQ_DEV_HOST }}" 
-
-
+          echo "RABBITMQ_HOST=${{ secrets.RABBITMQ_DEV_HOST }}" >> .env
+          echo "ACCOUNT_SID=${{ secrets.ACCOUNT_SID }}" >> .env
+          echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
+          echo "SMS_NUMBER=${{ secrets.SMS_NUMBER }}" >> .env
+          echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> .env
+          echo "GOOGLE_ID_KEY=${{ secrets.GOOGLE_ID_KEY }}" >> .env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+          echo "PAYSTACK_KEY=${{ secrets.PAYSTACK_KEY }}" >> .env
+          echo "FLUTTERWAVE_KEY=${{ secrets.FLUTTERWAVE_KEY }}" >> .env
 
       - name: Create application.properties
         uses: ./.github/workflows/container-application-properties
