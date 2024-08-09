@@ -5,8 +5,8 @@ services:
     image: postgres
     container_name: development-postgresdb
     # restart: unless-stopped
-    env_file:
-      - ./.env
+    # env_file:
+    #   - ./.env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -30,8 +30,8 @@ services:
     ports:
       - "15672:15672" # Management UI
       - "5672:5672"   # AMQP port
-    env_file:
-      - ./.env
+    # env_file:
+    #   - ./.env
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
@@ -50,16 +50,16 @@ services:
     container_name: development
     ports:
       - "8030:8080"
-    env_file:
-      - ./.env
-    environment:
-      - SPRING_CONFIG_LOCATION=/app/config/application.properties
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+    # env_file:
+    #   - ./.env
+    # environment:
+    #   - SPRING_CONFIG_LOCATION=/app/config/application.properties
+    #   - POSTGRES_USER=${POSTGRES_USER}
+    #   - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    #   - POSTGRES_DB=${POSTGRES_DB}
+    #   - RABBITMQ_HOST=${RABBITMQ_HOST}
+    #   - RABBITMQ_USER=${RABBITMQ_USER}
+    #   - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
     volumes:
       - ./src/main/resources/application.properties:/app/config/application.properties
     networks:
