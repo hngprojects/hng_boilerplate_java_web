@@ -107,7 +107,7 @@ jobs:
       - name: Deploy on server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.DEV_SSH_USERNAME }}
           password: ${{ secrets.DEV_SSH_PASSWORD }}
           script: |
