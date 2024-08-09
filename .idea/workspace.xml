@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="Fix: update my sql file">
-      <change afterPath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/user_data_test/UserServiceE2ETest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/hng_java_boilerplate/user/user_data_test/UserServiceE2ETest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +37,7 @@
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="useMavenConfig" value="true" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -57,12 +58,19 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "Rebasing feat/update-about-page",
     "last_opened_file_path": "C:/Users/User/Desktop/sabiBank",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)"
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "spring.configuration.checksum": "2e56b7c92f9d46da88e49f2303b88df0",
+    "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -77,7 +85,12 @@
       <recent name="$PROJECT_DIR$/src/main/java/hng_java_boilerplate" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.user_data_test in hng-java-boilerplate">
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.Program">
     <configuration default="true" type="AZURE_FUNCTION_SUPPORT" factoryName="Run Functions">
       <option name="appName" />
       <option name="appServicePlanName" />
@@ -164,8 +177,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.user_data_test in hng-java-boilerplate" />
         <item itemvalue="Spring Boot.Program" />
+        <item itemvalue="JUnit.user_data_test in hng-java-boilerplate" />
         <item itemvalue="Database Script.V1__init_database.sql" />
         <item itemvalue="Application.Program" />
         <item itemvalue="JUnit.AboutPageServiceTest" />
@@ -178,7 +191,23 @@
       <setting name="editor" value="true" />
     </settings>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1c41e130-08d3-4e03-936c-a8ec172bdd15" name="Changes" comment="Fix: update my sql file" />
+      <created>1723239510373</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1723239510373</updated>
+      <workItem from="1723239519400" duration="731000" />
+    </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fix: update my sql file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix: update my sql file" />
   </component>
 </project>
