@@ -50,11 +50,38 @@ jobs:
           export RABBITMQ_HOST=${{ secrets.RABBITMQ_DEV_HOST }}
           export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
           docker compose -f docker-compose.yml build
+
+      - name: Verify Docker images
+        run: |
+          docker images
+          if ! docker images | grep -q 'development_backend'; then
+            echo "Backend image not found. Build may have failed."
+            exit 1
+          fi
       
+      - name: List Docker images
+        run: docker images
+
       - name: Save and compress Docker images
         run: |
-          docker save $(docker-compose -f docker-compose.yml config | grep 'image:' | awk '{print $2}') > development-images.tar
+          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          export POSTGRES_DEV_DB=${{ secrets.POSTGRES_DEV_DB }}
+          export RABBITMQ_USER=${{ secrets.RABBITMQ_USERNAME }}
+          export RABBITMQ_HOST=${{ secrets.RABBITMQ_DEV_HOST }}
+          export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
+          
+          # Save each image individually
+          docker save postgres > postgres.tar
+          docker save rabbitmq:3-management > rabbitmq.tar
+          docker save development_backend > backend.tar
+          
+          # Combine and compress the tar files
+          tar -cvf development-images.tar postgres.tar rabbitmq.tar backend.tar
           gzip development-images.tar
+          
+          # Clean up individual tar files
+          rm postgres.tar rabbitmq.tar backend.tar
       
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -90,23 +117,7 @@ jobs:
             rm -f development-images.tar
             chmod +x ./scripts/dev-deploy.sh
             ./scripts/dev-deploy.sh 
-      # - name: Add SSH Key to Known Hosts
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-      #   env:
-      #     SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      # - name: SSH into Server and Execute Command
-      #   run: |
-      #     sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
-      #     cd ~/hng_boilerplate_java_web && git fetch origin dev && git stash && git checkout dev && git pull && chmod +x deploy.sh && ./deploy.sh && sudo systemctl start java_app.service && \
-      #     exit"
-      #   env:
-      #     SSH_HOST: ${{ secrets.SSH_HOST }}
-      #     SSH_USERNAME: ${{ secrets.DEV_SSH_USERNAME }}
-      #     SSH_PASSWORD: ${{ secrets.DEV_SSH_PASSWORD }}
-  
   on-failure:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion=='failure' }}
