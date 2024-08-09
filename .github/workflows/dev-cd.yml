@@ -112,6 +112,10 @@ jobs:
           password: ${{ secrets.DEV_SSH_PASSWORD }}
           script: |
             cd ~/hng_boilerplate_java_web
+            git fetch origin dev
+            git stash
+            git checkout dev
+            git pull
             gunzip development-images.tar.gz
             docker load < development-images.tar
             rm -f development-images.tar
