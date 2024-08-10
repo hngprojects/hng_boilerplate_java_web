@@ -44,7 +44,7 @@ services:
       - staging-backend-net
     restart: unless-stopped
 
-  backend:
+  staging-backend:
     build: .
     container_name: staging
     ports:
