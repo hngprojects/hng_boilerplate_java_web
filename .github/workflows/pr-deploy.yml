@@ -1,12 +1,6 @@
 name: PR-Deploy
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types:
-      - completed
-    branches: [dev]
-
   pull_request:
     types: [opened, synchronize, reopened, closed]
 
@@ -34,6 +28,8 @@ jobs:
           context: '.'
           dockerfile: 'Dockerfile'
           exposed_port: '8080'
+          # host_volume_path: '/var/'
+          # container_volume_path: '/var/'          
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Display Preview URL
