@@ -7,8 +7,8 @@ on:
       - completed
     branches: [dev]
 
-  # pull_request:
-  #   types: [opened, synchronize, reopened, closed]
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
   deploy-pr:
