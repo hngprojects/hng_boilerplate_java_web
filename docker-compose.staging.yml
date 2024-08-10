@@ -13,7 +13,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - staging-postgresdatax:/var/lib/postgresql/data
-      # - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - ./init-db-staging.sh:/docker-entrypoint-initdb.d/init-db-staging.sh
     ports:
       - "5432:5432"
     healthcheck:
