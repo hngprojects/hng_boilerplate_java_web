@@ -1,6 +1,6 @@
 # [App Name] Integration Guide
 
-## Overview
+## Overview of this project
 
 [Description]
 

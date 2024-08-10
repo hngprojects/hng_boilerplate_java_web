@@ -1,5 +1,6 @@
 package hng_java_boilerplate.organisation.service;
 
+import hng_java_boilerplate.activitylog.service.ActivityLogService;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.entity.Organisation;
@@ -38,6 +39,9 @@ class OrganisationServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ActivityLogService activityLogService;
 
     @Mock
     private Authentication activeUser;
