@@ -1,8 +1,12 @@
 name: PR Deploy
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
+  workflow_run:
+    workflows: [CI]
+    types:
+      - completed
+  # pull_request:
+  #   types: [opened, synchronize, reopened, closed]
 
 jobs:
   deploy-pr:
