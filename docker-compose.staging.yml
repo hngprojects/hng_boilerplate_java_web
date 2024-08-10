@@ -15,7 +15,7 @@ services:
       - staging-postgresdatax:/var/lib/postgresql/data
       - ./init-db-staging.sh:/docker-entrypoint-initdb.d/init-db-staging.sh
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
@@ -28,8 +28,8 @@ services:
     image: rabbitmq:3-management
     container_name: staging-rabbitmq
     ports:
-      - "15672:15672" # Management UI
-      - "5672:5672"   # AMQP port
+      - "15673:15672" # Management UI
+      - "5673:5672"   # AMQP port
     env_file:
       - ./.env
     environment:
