@@ -87,6 +87,10 @@ jobs:
           password: ${{ secrets.STAGING_SSH_PASSWORD }}
           script: |
             cd ~/hng_boilerplate_java_web
+            git fetch origin staging
+            git stash
+            git checkout staging
+            git pull
             gunzip staging-images.tar.gz
             docker load < staging-images.tar
             rm -f staging-images.tar
