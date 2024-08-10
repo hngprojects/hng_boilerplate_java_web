@@ -73,7 +73,7 @@ jobs:
       - name: Copy to server
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.STAGING_SSH_USERNAME }}
           password: ${{ secrets.STAGING_SSH_PASSWORD }}
           source: "staging-images.tar.gz"
@@ -82,7 +82,7 @@ jobs:
       - name: Deploy on server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.STAGING_SSH_USERNAME }}
           password: ${{ secrets.STAGING_SSH_PASSWORD }}
           script: |
