@@ -132,7 +132,7 @@ public class EmailServiceImpl {
                 return "<div style=\"width: 50%; margin: 0 auto; background-color: white; color: black;\">" +
                         "<div><img style=\"width: 100%; display: inline-block;\" src=\"cid:magic-link\"></div><br><br>" +
                         "<h1 style=\"text-align: left; color: black;\"> Hello,</h1><br>" +
-                        "<h2>To log in to your account, please click on the button below:</h2> <br>" +
+                        "<h2>To log in to your magic link account, please click on the button below:</h2> <br>" +
                         "<div style=\"text-align: center;\"><a href=\"${url}\" style=\"background-color: #F97316; color: white; text-decoration: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; display: inline-block; width: 250px; height: 35px; font-size: 20px;\">Log In</a></div><br>" +
                         "<h3>If you did not request this link, please ignore this email or contact our support team immediately.</h3>" +
                         "<h3>Thank you.</h3>" +
