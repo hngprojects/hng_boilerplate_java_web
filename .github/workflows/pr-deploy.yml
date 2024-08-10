@@ -1,4 +1,4 @@
-name: PR Deploy
+name: PR-Deploy
 
 on:
   workflow_run:
@@ -6,6 +6,7 @@ on:
     types:
       - completed
     branches: [dev]
+
   # pull_request:
   #   types: [opened, synchronize, reopened, closed]
 
@@ -14,9 +15,7 @@ jobs:
     environment:
       name: preview
       url: ${{ steps.deploy.outputs.preview-url }}
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' }} 
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' }} 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -33,8 +32,6 @@ jobs:
           context: '.'
           dockerfile: 'Dockerfile'
           exposed_port: '8000'
-          host_volume_path: '/var/appdata'
-          container_volume_path: '/app/data'
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Display Preview URL
