@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Copy .env.sample to app.props
+        run: cp .env.sample ./src/main/resources/application.properties
 
       - id: deploy
         name: Deploy Pull Request
