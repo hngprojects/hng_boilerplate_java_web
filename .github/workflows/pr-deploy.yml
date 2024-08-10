@@ -1,4 +1,4 @@
-name: PR Deploy
+name: PR-Deploy
 
 on:
   workflow_run:
