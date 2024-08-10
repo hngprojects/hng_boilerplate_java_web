@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -14,8 +15,7 @@ public class MagicLinkToken {
     private static final int EXPIRATION_TIME = 60;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String token;
 
@@ -27,6 +27,7 @@ public class MagicLinkToken {
 
     public MagicLinkToken(User user, String token){
         super();
+        this.id = UUID.randomUUID().toString();
         this.token = token;
         this.user = user;
         this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);

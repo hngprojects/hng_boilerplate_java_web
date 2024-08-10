@@ -261,7 +261,7 @@ vi. Click on the `Send` button.
 }
 ```
 
-## **Verify OTP**
+## **Magic Link Verify**
 
 ### **Endpoint**
 
@@ -302,55 +302,3 @@ vi. Click on the `Send` button.
 
  "Verification Successful" 
 ```
-
-## **Verify OTP**
-
-### **Endpoint**
-
-- **URL**: `/api/v1/auth/magic-link/verify`
-- **Method**: `POST`
-- **Content-Type**: `application/json`
-
-### **Description**
-
-The feature to request for 6 digit OTP for forgot password implementation
-
-#### * Using Postman
-i. Open Postman.
-
-ii. Create a new POST request.
-
-iii. Enter the endpoint URL: http://localhost:8080/api/v1/auth/magic-link/verify.
-
-```
-http://localhost:8080/api/v1/auth/magic-link/verify?token
-```
-vi. Click on the `Send` button.
-
-
-### **Responses**
-
-#### **Success Response**
-
-- **Status Code**: `200 OK`
-- **Content-Type**: `application/json`
-- **Response Body**:
-
-
-```json
-{
-  "status": 200,
-  "message": "Registration Successful!",
-  "data": {
-    "token": "some-token",
-    "user": {
-      "id": "some-user-id",
-      "first_name": "John",
-      "last_name": "Doe",
-      "email": "johndoe@example.com",
-      "role": "USER",
-      "img_url": "http://example.com/picture",
-      "created_at": "2024-07-19T20:28:34.399829"
-    }
-  }
-}
