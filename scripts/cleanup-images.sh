@@ -11,16 +11,14 @@ COMPOSE_FILE=$1
 # Stop and remove containers defined in the specified docker-compose file
 docker-compose -f "$COMPOSE_FILE" down
 
-# Get a list of services from the docker-compose file
-SERVICES=$(docker-compose -f "$COMPOSE_FILE" config --services)
-
 # List of images to exclude (PostgreSQL and RabbitMQ)
 EXCLUDE_IMAGES=("postgres" "rabbitmq")
 
-# Get a list of image IDs to exclude (based on services in docker-compose file)
-EXCLUDE_IDS=$(docker images -q $(docker images --filter "reference=${EXCLUDE_IMAGES[*]}" -q))
+# Get a list of all images that should be excluded (based on the Docker Compose file)
+EXCLUDE_IDS=$(docker images --filter "reference=${EXCLUDE_IMAGES[*]}" -q)
 
 # Add images for services defined in the docker-compose file to the exclude list
+SERVICES=$(docker-compose -f "$COMPOSE_FILE" config --services)
 for SERVICE in $SERVICES; do
   SERVICE_IMAGE=$(docker-compose -f "$COMPOSE_FILE" images -q "$SERVICE")
   if [ -n "$SERVICE_IMAGE" ]; then
@@ -36,11 +34,11 @@ for IMAGE in $ALL_IMAGES; do
   fi
 done
 
-# Remove unused volumes that are not used by the specified docker-compose file
-docker volume ls -q | xargs -I {} docker volume inspect {} --format '{{.Name}} {{.Mountpoint}}' | grep -vE "$(docker-compose -f "$COMPOSE_FILE" config --volumes)" | awk '{print $1}' | xargs docker volume rm -f
+# Remove unused volumes
+docker volume ls -q | xargs -I {} docker volume inspect {} --format '{{.Name}} {{.Mountpoint}}' | grep -vE "$(docker-compose -f "$COMPOSE_FILE" config --volumes)" | awk '{print $1}' | xargs -r docker volume rm -f
 
-# Remove unused networks that are not used by the specified docker-compose file
-docker network ls -q | xargs -I {} docker network inspect {} --format '{{.Name}}' | grep -vE "$(docker-compose -f "$COMPOSE_FILE" config --networks)" | xargs docker network rm
+# Remove unused networks
+docker network ls -q | xargs -I {} docker network inspect {} --format '{{.Name}}' | grep -vE "$(docker-compose -f "$COMPOSE_FILE" config --networks)" | xargs -r docker network rm
 
 # Remove build cache
 docker builder prune -f
