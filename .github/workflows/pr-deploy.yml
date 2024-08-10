@@ -24,10 +24,10 @@ jobs:
         name: Deploy Pull Request
         uses: hngprojects/pr-deploy@main
         with:
-          server_host: ${{ secrets.SERVER_HOST }}
-          server_username: ${{ secrets.SERVER_USERNAME }}
-          server_password: ${{ secrets.SERVER_PASSWORD }}
-          server_port: ${{ secrets.SERVER_PORT }}
+          server_host: ${{ secrets.SSH_HOST }}
+          server_username: ${{ secrets.DEV_SSH_USERNAME }}
+          server_password: ${{ secrets.DEV_SSH_PASSWORD }}
+          # server_port: ${{ secrets.SERVER_PORT }}
           comment: true
           context: '.'
           dockerfile: 'Dockerfile'
