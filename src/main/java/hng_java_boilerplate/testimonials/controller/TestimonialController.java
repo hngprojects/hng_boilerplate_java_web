@@ -13,12 +13,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -106,4 +108,28 @@ public class TestimonialController {
 
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{testimonial_id}")
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<?> deleteTestimonial(@PathVariable("testimonial_id") String testimonialId) {
+        User loggedInUser = userService.getLoggedInUser();
+
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "message", "User not authenticated", "error", "Unauthorized", "status_code", 401));
+        }
+
+        try {
+            testimonialService.deleteTestimonial(testimonialId);
+            return ResponseEntity.ok(Map.of(
+                    "success", true, "message", "Testimonial deleted successfully", "status_code", 200));
+        } catch (ResponseStatusException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(Map.of(
+                    "message", Objects.requireNonNull(ex.getReason()), "error", ex.getStatusCode(), "status_code", ex.getStatusCode().value()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "message", "An error occurred while deleting the testimonial", "error", "Internal Server Error", "status_code", 500));
+        }
+    }
+
 }
