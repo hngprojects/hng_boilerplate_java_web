@@ -20,18 +20,20 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -206,5 +208,60 @@ class TestimonialControllerTest {
                 .andExpect(jsonPath("$.data.user_id").value("userId123"))
                 .andExpect(jsonPath("$.data.content").value("Updated content"))
                 .andExpect(jsonPath("$.data.updated_at").value(testimonial.getUpdated_at().toString()));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void deleteTestimonial_shouldReturnSuccess() throws Exception {
+        when(userService.getLoggedInUser()).thenReturn(mockUser);
+
+        mockMvc.perform(delete("/api/v1/testimonials/testimonialId123"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("Testimonial deleted successfully"))
+                .andExpect(jsonPath("$.status_code").value(200));
+    }
+
+    @Test
+    void deleteTestimonial_shouldReturnUnauthorizedWhenUserNotAuthenticated() throws Exception {
+        when(userService.getLoggedInUser()).thenReturn(null);
+
+        mockMvc.perform(delete("/api/v1/testimonials/testimonialId123"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.message").value("User not authenticated"))
+                .andExpect(jsonPath("$.error").value("Unauthorized"))
+                .andExpect(jsonPath("$.status_code").value(401));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void deleteTestimonial_shouldReturnNotFoundWhenTestimonialDoesNotExist() throws Exception {
+        when(userService.getLoggedInUser()).thenReturn(mockUser);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Testimonial not found"))
+                .when(testimonialService).deleteTestimonial("testimonialId123");
+
+        mockMvc.perform(delete("/api/v1/testimonials/testimonialId123"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.message").value("Testimonial not found"))
+                .andExpect(jsonPath("$.error").value("NOT_FOUND"))
+                .andExpect(jsonPath("$.status_code").value(404));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    void deleteTestimonial_shouldReturnInternalServerErrorOnUnexpectedException() throws Exception {
+        when(userService.getLoggedInUser()).thenReturn(mockUser);
+        doThrow(new RuntimeException("Unexpected error"))
+                .when(testimonialService).deleteTestimonial("testimonialId123");
+
+        mockMvc.perform(delete("/api/v1/testimonials/testimonialId123"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.message").value("An error occurred while deleting the testimonial"))
+                .andExpect(jsonPath("$.error").value("Internal Server Error"))
+                .andExpect(jsonPath("$.status_code").value(500));
     }
 }
