@@ -5,6 +5,7 @@ on:
     workflows: [CI]
     types:
       - completed
+    branches: [dev]
   # pull_request:
   #   types: [opened, synchronize, reopened, closed]
 
@@ -14,6 +15,7 @@ jobs:
       name: preview
       url: ${{ steps.deploy.outputs.preview-url }}
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' }} 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
