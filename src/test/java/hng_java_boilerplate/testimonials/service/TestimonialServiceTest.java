@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class TestimonialServiceTest {
 
@@ -150,5 +151,30 @@ class TestimonialServiceTest {
         assertThrows(ResponseStatusException.class, () -> {
             testimonialService.updateTestimonial("testimonialId123", "userId123", "Updated content");
         });
+    }
+
+    @Test
+    void deleteTestimonial_shouldDeleteWhenFound() {
+        Testimonial testimonial = new Testimonial();
+        testimonial.setId("testimonialId123");
+
+        when(testimonialRepository.findById("testimonialId123")).thenReturn(Optional.of(testimonial));
+        doNothing().when(testimonialRepository).delete(testimonial);
+
+        testimonialService.deleteTestimonial("testimonialId123");
+
+        verify(testimonialRepository, times(1)).delete(testimonial);
+    }
+
+    @Test
+    void deleteTestimonial_shouldThrowExceptionWhenNotFound() {
+        when(testimonialRepository.findById("testimonialId123")).thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            testimonialService.deleteTestimonial("testimonialId123");
+        });
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Testimonial not found", exception.getReason());
     }
 }

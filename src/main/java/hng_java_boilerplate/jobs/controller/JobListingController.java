@@ -40,4 +40,11 @@ public class JobListingController {
         ApiResponse<List<JobListing>> response = new ApiResponse<>("Job listings retrieved successfully", 200, jobListings);
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<JobListing>> updateJobListing(@PathVariable Long id, @Valid @RequestBody JobListing jobListing) {
+        JobListing updatedJob = jobListingService.updateJobListing(id, jobListing);
+        ApiResponse<JobListing> response = new ApiResponse<>("Job listing updated successfully", 200, updatedJob);
+        return ResponseEntity.ok(response);
+    }
 }
