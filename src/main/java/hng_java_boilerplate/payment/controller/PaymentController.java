@@ -1,6 +1,5 @@
 package hng_java_boilerplate.payment.controller;
 
-import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import hng_java_boilerplate.payment.dtos.PaymentRequestBody;
 import hng_java_boilerplate.payment.dtos.SessionResponse;
@@ -24,12 +23,12 @@ public class PaymentController {
     }
 
     @PostMapping("webhook")
-    public void handleWebhook(@RequestBody String payload,  HttpServletRequest request) throws StripeException {
+    public void handleWebhook(@RequestBody String payload, HttpServletRequest request) throws StripeException {
         service.handleWebhook(payload, request);
     }
 
     @GetMapping("stripe/status")
-    public ResponseEntity<?> returnStatus(@RequestParam("session_id") String id) {
+    public ResponseEntity<?> returnStatus(@RequestParam("session_id") String id) throws StripeException {
         return service.returnStatus(id);
     }
 

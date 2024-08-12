@@ -2,12 +2,13 @@ package hng_java_boilerplate.payment.service;
 
 
 import com.stripe.Stripe;
-import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
-import hng_java_boilerplate.payment.dtos.PaymentNotFoundException;
+import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.payment.exceptions.InvalidIntervalException;
+import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.payment.dtos.PaymentRequestBody;
 import hng_java_boilerplate.payment.dtos.SessionResponse;
 import hng_java_boilerplate.payment.entity.Payment;
@@ -54,6 +55,9 @@ public class PaymentService {
     @Transactional
     public ResponseEntity<SessionResponse> createSession(PaymentRequestBody body) throws StripeException {
         Plan plan = planService.findOne(body.planId());
+        if (plan.getName().equals("free")) {
+            throw new BadRequestException("Can not subscribe to free plan");
+        }
         User loggedUser = userService.getLoggedInUser();
         Stripe.apiKey = API_KEY;
 
@@ -84,16 +88,16 @@ public class PaymentService {
         product.setName(plan.getName() + " pricing plan");
         product.setId(plan.getId());
         product.setDefaultPriceObject(price);
-        LineItem.PriceData.Recurring.Interval interval_unit = body.interval().equals("annual") ?
-                LineItem.PriceData.Recurring.Interval.YEAR : LineItem.PriceData.Recurring.Interval.MONTH;
+        LineItem.PriceData.Recurring.Interval interval_unit = getInterval(body.interval());
+        Mode mode = getMode(interval_unit);
 
         Customer customer = CustomerUtils.findOrCreateCustomer(loggedUser.getEmail(), loggedUser.getName());
 
         Builder params;
         params = builder()
-                .setMode(Mode.SUBSCRIPTION)
+                .setMode(mode)
                 .setCustomer(customer.getId())
-                .setSuccessUrl(clientBaseUrl + "/dashboard?session_id=" + payment.getId())
+                .setSuccessUrl(clientBaseUrl + "/dashboard?session_id={CHECKOUT_SESSION_ID}")
                 .setCancelUrl(clientBaseUrl + "/")
                 .putAllMetadata(metadata)
                 .addLineItem(LineItem.builder()
@@ -116,6 +120,24 @@ public class PaymentService {
                 );
         Session session = Session.create(params.build());
         return ResponseEntity.ok(new SessionResponse(session.getUrl()));
+    }
+
+    private Mode getMode(LineItem.PriceData.Recurring.Interval intervalUnit) {
+
+        if (intervalUnit != null) {
+            return Mode.SUBSCRIPTION;
+        }
+        return Mode.PAYMENT;
+
+    }
+
+    private LineItem.PriceData.Recurring.Interval getInterval(String interval) {
+        return switch (interval) {
+            case "month" -> LineItem.PriceData.Recurring.Interval.MONTH;
+            case "annual" -> LineItem.PriceData.Recurring.Interval.YEAR;
+            case "one-time" -> null;
+            default -> throw new InvalidIntervalException("Invalid interval");
+        };
     }
 
     @Transactional
@@ -161,22 +183,23 @@ public class PaymentService {
                     Payment payment = optionalPayment.get();
                     payment.setStatus(PaymentStatus.FAILED);
                     repository.save(payment);
-
-
                 default:
                     logger.info("Unhandled event type {}", event.getType());
             }
         }
     }
 
-    public ResponseEntity<?> returnStatus(String id) {
-        Optional<Payment> payment = repository.findById(id);
-
-        if (payment.isEmpty()) {
+    public ResponseEntity<?> returnStatus(String id) throws StripeException {
+       Session session = Session.retrieve(id);
+        Map<String, String> metadata = session.getMetadata();
+        String paymentId = metadata.get("payment_id");
+        Optional<Payment> optionalPayment = repository.findById(paymentId);
+        if (optionalPayment.isEmpty()) {
             throw new PaymentNotFoundException("Payment not found");
         }
+        Payment payment = optionalPayment.get();
         return ResponseEntity.ok(new HashMap<>() {{
-            put("status", payment.get().getStatus());
+            put("status", payment.getStatus());
         }});
     }
 }
