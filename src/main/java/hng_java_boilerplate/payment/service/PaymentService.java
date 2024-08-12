@@ -132,8 +132,8 @@ public class PaymentService {
 
     private LineItem.PriceData.Recurring.Interval getInterval(String interval) {
         return switch (interval) {
-            case "month" -> LineItem.PriceData.Recurring.Interval.MONTH;
-            case "annual" -> LineItem.PriceData.Recurring.Interval.YEAR;
+            case "monthly" -> LineItem.PriceData.Recurring.Interval.MONTH;
+            case "annually" -> LineItem.PriceData.Recurring.Interval.YEAR;
             case "one-time" -> null;
             default -> throw new BadRequestException("Invalid interval");
         };
