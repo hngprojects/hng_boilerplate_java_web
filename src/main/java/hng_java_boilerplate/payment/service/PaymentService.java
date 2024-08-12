@@ -37,7 +37,7 @@ import static com.stripe.param.checkout.SessionCreateParams.*;
 @RequiredArgsConstructor
 public class PaymentService {
 
-    private final Logger logger = LoggerFactory.getLogger(PaymentService.class);
+    private Logger logger = LoggerFactory.getLogger(PaymentService.class);
     private final PaymentRepository repository;
     private final PlanService planService;
     private final UserService userService;
