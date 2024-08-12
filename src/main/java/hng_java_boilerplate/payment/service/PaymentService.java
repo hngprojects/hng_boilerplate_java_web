@@ -55,7 +55,7 @@ public class PaymentService {
     public ResponseEntity<SessionResponse> createSession(PaymentRequestBody body) throws StripeException {
         Plan plan = planService.findOne(body.planId());
         if (plan.getName().equals("free")) {
-            throw new BadRequestException("Can not subscribe to free plan");
+            throw new BadRequestException("You can not subscribe to free plan");
         }
         User loggedUser = userService.getLoggedInUser();
         Stripe.apiKey = API_KEY;
