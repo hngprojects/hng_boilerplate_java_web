@@ -96,7 +96,7 @@ public class PaymentService {
         params = builder()
                 .setMode(mode)
                 .setCustomer(customer.getId())
-                .setSuccessUrl(clientBaseUrl + "/dashboard?session_id={CHECKOUT_SESSION_ID}")
+                .setSuccessUrl(clientBaseUrl + "/payment?session_id={CHECKOUT_SESSION_ID}")
                 .setCancelUrl(clientBaseUrl + "/")
                 .putAllMetadata(metadata)
                 .addLineItem(LineItem.builder()
