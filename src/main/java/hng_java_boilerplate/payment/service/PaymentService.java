@@ -116,6 +116,25 @@ public class PaymentService {
         return ResponseEntity.ok(new SessionResponse(session.getUrl()));
     }
 
+    public void handleWebhook(String payload, HttpServletRequest request) throws SignatureVerificationException {
+        Event event = Webhook.constructEvent(payload, request.getHeader("Stripe-Signature"), API_SECRET);
+        EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
+
+
+        if (dataObjectDeserializer.getObject().isEmpty()) {
+            logger.warn("handle this");
+        } else {
+            StripeObject stripeObject = dataObjectDeserializer.getObject().get();
+            switch (event.getType()) {
+                case "payment_intent.succeeded":
+                    PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
+                    break;
+                default:
+                    logger.info("Unhandled event type {}", event.getType());
+            }
+        }
+    }
+
     public ResponseEntity<?> returnStatus(String id) {
         Optional<Payment> payment = repository.findById(id);
 
