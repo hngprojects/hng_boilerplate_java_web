@@ -86,5 +86,10 @@ runs:
         ## Payment Configuration
         paystack.secret.key=${PAYSTACK_KEY}
         flutterwave.secret.key=${FLUTTERWAVE_KEY}
+
+        #Stripe config
+        stripe.api.key=${STRIPE_API_KEY}
+        client.url=${CLIENT_URL}
+        stripe.secret.key=${STRIPE_SECRET_KEY}
         EOF
       shell: bash
