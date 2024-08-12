@@ -24,7 +24,7 @@ public class PaymentController {
     }
 
     @PostMapping("webhook")
-    public void handleWebhook(@RequestBody String payload,  HttpServletRequest request) throws SignatureVerificationException {
+    public void handleWebhook(@RequestBody String payload,  HttpServletRequest request) throws StripeException {
         service.handleWebhook(payload, request);
     }
 

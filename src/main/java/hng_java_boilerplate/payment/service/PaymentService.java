@@ -19,6 +19,7 @@ import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ public class PaymentService {
     @Value("${stripe.secret.key}")
     private String API_SECRET;
 
+    @Transactional
     public ResponseEntity<SessionResponse> createSession(PaymentRequestBody body) throws StripeException {
         Plan plan = planService.findOne(body.planId());
         User loggedUser = userService.getLoggedInUser();
@@ -58,7 +60,7 @@ public class PaymentService {
 
         Payment payment = new Payment();
         payment.setAmount(plan.getPrice());
-        payment.setStatus(PaymentStatus.SUCCESS);
+        payment.setStatus(PaymentStatus.PENDING);
         Set<User> users = payment.getUser();
         if (users == null) {
             users = new HashSet<>();
@@ -69,7 +71,7 @@ public class PaymentService {
         Payment saved = repository.save(payment);
 
         Map<String, String> metadata = new HashMap<>() {{
-            put("product_id", plan.getId());
+            put("plan_id", plan.getId());
             put("user_id", loggedUser.getId());
             put("payment_id", saved.getId());
         }};
@@ -89,7 +91,7 @@ public class PaymentService {
 
         Builder params;
         params = builder()
-                .setMode(Mode.PAYMENT)
+                .setMode(Mode.SUBSCRIPTION)
                 .setCustomer(customer.getId())
                 .setSuccessUrl(clientBaseUrl + "/dashboard?session_id=" + payment.getId())
                 .setCancelUrl(clientBaseUrl + "/")
@@ -116,19 +118,51 @@ public class PaymentService {
         return ResponseEntity.ok(new SessionResponse(session.getUrl()));
     }
 
-    public void handleWebhook(String payload, HttpServletRequest request) throws SignatureVerificationException {
+    @Transactional
+    public void handleWebhook(String payload, HttpServletRequest request) throws StripeException {
         Event event = Webhook.constructEvent(payload, request.getHeader("Stripe-Signature"), API_SECRET);
         EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
 
 
         if (dataObjectDeserializer.getObject().isEmpty()) {
-            logger.warn("handle this");
+            logger.warn("Api version Error");
         } else {
             StripeObject stripeObject = dataObjectDeserializer.getObject().get();
             switch (event.getType()) {
-                case "payment_intent.succeeded":
-                    PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
+                case "checkout.session.completed":
+                    Session session = (Session) stripeObject;
+                    Map<String, String> metadata = ((Session) stripeObject).getMetadata();
+                    String planId = metadata.get("plan_id");
+                    String userId = metadata.get("user_id");
+                    String paymentId = metadata.get("payment_id");
+                    String status = session.getPaymentStatus();
+
+                    if (status.equals("paid")) {
+                        User user = userService.findUser(userId);
+                        Plan plan = planService.findOne(planId);
+                        user.setPlan(plan);
+                        userService.save(user);
+                        Optional<Payment> optionalPayment = repository.findById(paymentId);
+                        if (optionalPayment.isEmpty()) {
+                            throw new PaymentNotFoundException("Payment not found");
+                        }
+                        Payment payment = optionalPayment.get();
+                        payment.setStatus(PaymentStatus.SUCCESS);
+                        repository.save(payment);
+                    }
                     break;
+                case "payment_intent.payment_failed":
+                    Map<String, String> sessionMetadata = ((Session) stripeObject).getMetadata();
+                    String failedPaymentId = sessionMetadata.get("payment_id");
+                    Optional<Payment> optionalPayment = repository.findById(failedPaymentId);
+                    if (optionalPayment.isEmpty()) {
+                        throw new PaymentNotFoundException("Payment not found");
+                    }
+                    Payment payment = optionalPayment.get();
+                    payment.setStatus(PaymentStatus.FAILED);
+                    repository.save(payment);
+
+
                 default:
                     logger.info("Unhandled event type {}", event.getType());
             }
