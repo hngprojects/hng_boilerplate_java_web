@@ -9,5 +9,4 @@ import java.util.Set;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, String> {
-//    Set<Payment> findByUser_IdAndOrderByCreatedAtDesc(String id);
 }
