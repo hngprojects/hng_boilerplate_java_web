@@ -7,7 +7,6 @@ import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import hng_java_boilerplate.exception.BadRequestException;
-import hng_java_boilerplate.payment.exceptions.InvalidIntervalException;
 import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.payment.dtos.PaymentRequestBody;
 import hng_java_boilerplate.payment.dtos.SessionResponse;
@@ -136,7 +135,7 @@ public class PaymentService {
             case "month" -> LineItem.PriceData.Recurring.Interval.MONTH;
             case "annual" -> LineItem.PriceData.Recurring.Interval.YEAR;
             case "one-time" -> null;
-            default -> throw new InvalidIntervalException("Invalid interval");
+            default -> throw new BadRequestException("Invalid interval");
         };
     }
 

@@ -7,7 +7,6 @@ import dev.samstevens.totp.exceptions.QrGenerationException;
 import hng_java_boilerplate.email.exception.EmailTemplateExists;
 import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
-import hng_java_boilerplate.payment.exceptions.InvalidIntervalException;
 import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.plans.exceptions.PlanNotFoundException;
@@ -209,11 +208,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> paymentNotFoundException(PlanNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Payment not found", ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(InvalidIntervalException.class)
-    public ResponseEntity<ErrorResponse> invalidIntervalException(InvalidIntervalException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Invalid interval", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
