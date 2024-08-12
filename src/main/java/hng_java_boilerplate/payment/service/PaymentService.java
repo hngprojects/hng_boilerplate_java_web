@@ -4,13 +4,7 @@ package hng_java_boilerplate.payment.service;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Product;
-import com.stripe.model.Price;
-import com.stripe.model.Customer;
-import com.stripe.model.Event;
-import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.model.PaymentIntent;
-import com.stripe.model.StripeObject;
+import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import hng_java_boilerplate.payment.dtos.PaymentNotFoundException;
@@ -35,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.stripe.param.checkout.SessionCreateParams.LineItem;
 import static com.stripe.param.checkout.SessionCreateParams.*;
 
 @Service
@@ -55,8 +50,8 @@ public class PaymentService {
     @Value("${stripe.secret.key}")
     private String API_SECRET;
 
-    public ResponseEntity<SessionResponse> createSession(PaymentRequestBody todo) throws StripeException {
-        Plan plan = planService.findOne(todo.planId());
+    public ResponseEntity<SessionResponse> createSession(PaymentRequestBody body) throws StripeException {
+        Plan plan = planService.findOne(body.planId());
         User loggedUser = userService.getLoggedInUser();
         Stripe.apiKey = API_KEY;
 
@@ -87,6 +82,8 @@ public class PaymentService {
         product.setName(plan.getName() + " pricing plan");
         product.setId(plan.getId());
         product.setDefaultPriceObject(price);
+        LineItem.PriceData.Recurring.Interval interval_unit = body.interval().equals("annual") ?
+                LineItem.PriceData.Recurring.Interval.YEAR : LineItem.PriceData.Recurring.Interval.MONTH;
 
         Customer customer = CustomerUtils.findOrCreateCustomer(loggedUser.getEmail(), loggedUser.getName());
 
@@ -106,6 +103,9 @@ public class PaymentService {
                                                         .setName(product.getName())
                                                         .build()
                                         )
+                                        .setRecurring(LineItem.PriceData.Recurring.builder()
+                                                .setInterval(interval_unit)
+                                                .build())
                                         .setCurrency(product.getDefaultPriceObject().getCurrency())
                                         .setUnitAmountDecimal(product.getDefaultPriceObject().getUnitAmountDecimal())
                                         .build()
@@ -141,7 +141,7 @@ public class PaymentService {
         if (payment.isEmpty()) {
             throw new PaymentNotFoundException("Payment not found");
         }
-        return ResponseEntity.ok(new HashMap<>(){{
+        return ResponseEntity.ok(new HashMap<>() {{
             put("status", payment.get().getStatus());
         }});
     }
