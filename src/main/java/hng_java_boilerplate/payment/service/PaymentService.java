@@ -94,7 +94,7 @@ public class PaymentService {
         params = builder()
                 .setMode(Mode.PAYMENT)
                 .setCustomer(customer.getId())
-                .setSuccessUrl(clientBaseUrl + "/session_id=" + payment.getId())
+                .setSuccessUrl(clientBaseUrl + "/dashboard?session_id=" + payment.getId())
                 .setCancelUrl(clientBaseUrl + "/")
                 .putAllMetadata(metadata)
                 .addLineItem(LineItem.builder()
