@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = {ListOfStringsValidator.class})
 public @interface ValidList {
     String message() default "Invalid list of strings";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

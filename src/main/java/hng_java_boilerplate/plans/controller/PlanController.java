@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/plans")
+@RequestMapping("api/v1/payment/plans")
 @RequiredArgsConstructor
-@Tag(name="Plans")
+@Tag(name = "Plans")
 public class PlanController {
 
     private final PlanService planService;

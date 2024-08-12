@@ -7,7 +7,11 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+
 public interface PlanService {
     ResponseEntity<PlanResponse> create(CreatePlanDto createPlanDto);
+
     ResponseEntity<List<Plan>> findAll();
+
+    Plan findOne(String id);
 }
