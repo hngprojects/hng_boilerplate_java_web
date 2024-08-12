@@ -118,7 +118,11 @@ public class PaymentService {
                         .build()
                 );
         Session session = Session.create(params.build());
-        return ResponseEntity.ok(new SessionResponse(session.getUrl()));
+
+        HashMap<String, String> data = new HashMap<>() {{
+            put("checkout_url", session.getUrl());
+        }};
+        return ResponseEntity.ok(new SessionResponse("Payment initiated", 201, data));
     }
 
     private Mode getMode(LineItem.PriceData.Recurring.Interval intervalUnit) {
@@ -173,7 +177,7 @@ public class PaymentService {
                     }
                     break;
                 case "payment_intent.payment_failed":
-                    Map<String, String> sessionMetadata = ((Session) stripeObject).getMetadata();
+                    Map<String, String> sessionMetadata = ((PaymentIntent) stripeObject).getMetadata();
                     String failedPaymentId = sessionMetadata.get("payment_id");
                     Optional<Payment> optionalPayment = repository.findById(failedPaymentId);
                     if (optionalPayment.isEmpty()) {
