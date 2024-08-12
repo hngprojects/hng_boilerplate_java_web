@@ -1,4 +1,4 @@
-name: PR Deploy
+name: PR-Deploy
 
 on:
   pull_request:
@@ -13,21 +13,23 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Copy .env.sample to app.props
+        run: cp .env.sample ./src/main/resources/application.properties
 
       - id: deploy
         name: Deploy Pull Request
         uses: hngprojects/pr-deploy@main
         with:
-          server_host: ${{ secrets.SERVER_HOST }}
-          server_username: ${{ secrets.SERVER_USERNAME }}
-          server_password: ${{ secrets.SERVER_PASSWORD }}
-          server_port: ${{ secrets.SERVER_PORT }}
+          server_host: ${{ secrets.SSH_HOST }}
+          server_username: ${{ secrets.DEV_SSH_USERNAME }}
+          server_password: ${{ secrets.DEV_SSH_PASSWORD }}
+          # server_port: ${{ secrets.SERVER_PORT }}
           comment: true
           context: '.'
           dockerfile: 'Dockerfile'
-          exposed_port: '8000'
-          host_volume_path: '/var/appdata'
-          container_volume_path: '/app/data'
+          exposed_port: '8080'
+          # host_volume_path: '/var/'
+          # container_volume_path: '/var/'          
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Display Preview URL
