@@ -31,7 +31,6 @@ public class VideoServiceImpl implements VideoService{
     @Override
     public VideoResponseDTO<VideoStatusDTO> videoConcat(VideoUploadDTO videoUploadDTO) throws IOException {
         VideoPathDTO videoPathDTO = new VideoPathDTO();
-        VideoStatusDTO videoStatusDTO = new VideoStatusDTO();
         VideoSuite videoSuite;
         String jobId = VideoUtils.generateUuid();
 
@@ -45,7 +44,7 @@ public class VideoServiceImpl implements VideoService{
         if(publisher.sendVideoConcat(videoPathDTO)){
            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
                     VideoJobType.MERGE_VIDEO.toString(), VideoMessage.PENDING.toString(),
-                   VideoStatus.PENDING.toString());
+                   VideoStatus.PENDING.toString(), null, null);
 
             return VideoUtils.response("Job created", HttpStatus.CREATED.value(), true,
                     VideoMapper.INSTANCE.toDTO(videoRepository.save(videoSuite)));
