@@ -95,8 +95,6 @@ jobs:
             docker load < staging-images.tar
             rm -f staging-images.tar
             chmod +x ./scripts/staging-deploy.sh
-            chmod +x ./scripts/cleanup-images.sh
-            ./scripts/cleanup-images.sh docker-compose.staging.yml
             ./scripts/staging-deploy.sh 
       # - name: Add SSH Key to Known Hosts
       #   run: |
