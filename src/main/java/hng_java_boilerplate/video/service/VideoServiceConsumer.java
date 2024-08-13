@@ -1,8 +1,6 @@
 package hng_java_boilerplate.video.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.email.entity.EmailMessage;
 import hng_java_boilerplate.video.dto.VideoPathDTO;
 import hng_java_boilerplate.video.utils.VideoUtils;
 import hng_java_boilerplate.video.videoEnums.VideoStatus;
@@ -22,7 +20,7 @@ public class VideoServiceConsumer {
     @RabbitListener(queues = "${rabbitmq.queue.concat}")
     public void receiveMessage(String message) throws IOException {
         VideoPathDTO videoPathDTO = objectMapper.readValue(message, VideoPathDTO.class);
-        String filename = VideoUtils.SaveVideoToFile(videoPathDTO.getVideo().get("video1"));
+        String filename = VideoUtils.SaveMediaToFile(videoPathDTO.getVideo().get("video1"));
         videoService.addUpdateRecord(videoPathDTO.getJobId(), filename, 100, VideoStatus.SAVED.toString());
     }
 }
