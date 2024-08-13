@@ -7,12 +7,9 @@ import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
 import hng_java_boilerplate.video.exceptions.FileDoesNotExist;
 import hng_java_boilerplate.video.service.VideoService;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -55,7 +52,8 @@ public class VideoUtils {
 
     public static VideoSuite videoSuite(String jobId, String status,
                                         String fileName, String jobType,
-                                        String message, String currentProcess){
+                                        String message, String currentProcess,
+                                        String mediaFormat, String expectedFormat){
         VideoSuite videoSuite = new VideoSuite();
 
         videoSuite.setJobId(jobId);
@@ -64,6 +62,8 @@ public class VideoUtils {
         videoSuite.setJobType(jobType);
         videoSuite.setMessage(message);
         videoSuite.setCurrentProcess(currentProcess);
+        videoSuite.setMediaFormat(mediaFormat);
+        videoSuite.setExpectedFormat(expectedFormat);
         return videoSuite;
     }
 
@@ -93,7 +93,7 @@ public class VideoUtils {
         return responseDTO;
     }
 
-    public static String SaveVideoToFile(byte[] videoByte)throws IOException{
+    public static String SaveMediaToFile(byte[] videoByte)throws IOException{
         try {
             File dir = new File(UPLOAD_DIR);
             if (!dir.exists()) {
@@ -127,7 +127,7 @@ public class VideoUtils {
     }
 
     private static String generateFileName() {
-        return "video_" + VideoUtils.generateUuid();
+        return "media_" + VideoUtils.generateUuid();
     }
 
     public static String sanitizeFileName(String filename) {

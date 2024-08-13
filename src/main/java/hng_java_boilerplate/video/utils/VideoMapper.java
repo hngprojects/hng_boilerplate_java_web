@@ -19,6 +19,8 @@ public interface VideoMapper {
     @Mapping(source = "message", target = "message")
     @Mapping(source = "progress", target = "progress")
     @Mapping(source = "currentProcess", target = "currentProcess")
+    @Mapping(source = "expectedFormat", target = "expectedFormat")
+    @Mapping(source = "mediaFormat", target = "mediaFormat")
     VideoStatusDTO toDTO(VideoSuite videoSuite);
 
 
@@ -30,5 +32,7 @@ public interface VideoMapper {
     @Mapping(source = "message", target = "message")
     @Mapping(source = "progress", target = "progress")
     @Mapping(source = "currentProcess", target = "currentProcess")
+    @Mapping(source = "expectedFormat", target = "expectedFormat")
+    @Mapping(source = "mediaFormat", target = "mediaFormat")
     VideoSuite toDTO(VideoStatusDTO statusDTO);
 }
