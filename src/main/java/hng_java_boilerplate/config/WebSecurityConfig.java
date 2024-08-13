@@ -71,6 +71,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain httpSecurity(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(httpRequests ->
                         httpRequests
                                 .requestMatchers(
