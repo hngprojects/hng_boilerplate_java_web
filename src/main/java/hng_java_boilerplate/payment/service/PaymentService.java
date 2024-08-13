@@ -123,7 +123,6 @@ public class PaymentService {
                         .build()
         );
         Session session = Session.create(params.build());
-
         HashMap<String, String> data = new HashMap<>() {{
             put("checkout_url", session.getUrl());
             put("session_id", session.getId());
