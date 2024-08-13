@@ -6,14 +6,16 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
+import com.stripe.param.checkout.SessionExpireParams;
 import hng_java_boilerplate.exception.BadRequestException;
-import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.payment.dtos.PaymentRequestBody;
 import hng_java_boilerplate.payment.dtos.SessionResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
+import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.payment.repository.PaymentRepository;
 import hng_java_boilerplate.payment.utils.CustomerUtils;
+import hng_java_boilerplate.payment.utils.FulfillCheckout;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.entity.User;
@@ -92,6 +94,7 @@ public class PaymentService {
 
         Customer customer = CustomerUtils.findOrCreateCustomer(loggedUser.getEmail(), loggedUser.getName());
 
+
         Builder params;
         params = builder()
                 .setMode(mode)
@@ -117,10 +120,24 @@ public class PaymentService {
                         )
                         .build()
                 );
+        if (mode == Mode.PAYMENT) {
+            params.setPaymentIntentData(
+                    PaymentIntentData.builder()
+                            .putAllMetadata(metadata)
+                            .build()
+            );
+        } else {
+            params.setSubscriptionData(
+                    SubscriptionData.builder()
+                            .putAllMetadata(metadata)
+                            .build()
+            );
+        }
         Session session = Session.create(params.build());
 
         HashMap<String, String> data = new HashMap<>() {{
             put("checkout_url", session.getUrl());
+            put("session_id", session.getId());
         }};
         return ResponseEntity.ok(new SessionResponse("Payment initiated", 201, data));
     }
@@ -144,7 +161,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public void handleWebhook(String payload, HttpServletRequest request) throws StripeException {
+    public ResponseEntity<?> handleWebhook(String payload, HttpServletRequest request) throws StripeException {
         Event event = Webhook.constructEvent(payload, request.getHeader("Stripe-Signature"), API_SECRET);
         EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
 
@@ -153,47 +170,14 @@ public class PaymentService {
             logger.warn("Api version Error");
         } else {
             StripeObject stripeObject = dataObjectDeserializer.getObject().get();
-            switch (event.getType()) {
-                case "checkout.session.completed":
-                    Session session = (Session) stripeObject;
-                    Map<String, String> metadata = ((Session) stripeObject).getMetadata();
-                    String planId = metadata.get("plan_id");
-                    String userId = metadata.get("user_id");
-                    String paymentId = metadata.get("payment_id");
-                    String status = session.getPaymentStatus();
-
-                    if (status.equals("paid")) {
-                        User user = userService.findUser(userId);
-                        Plan plan = planService.findOne(planId);
-                        user.setPlan(plan);
-                        userService.save(user);
-                        Optional<Payment> optionalPayment = repository.findById(paymentId);
-                        if (optionalPayment.isEmpty()) {
-                            throw new PaymentNotFoundException("Payment not found");
-                        }
-                        Payment payment = optionalPayment.get();
-                        payment.setStatus(PaymentStatus.SUCCESS);
-                        repository.save(payment);
-                    }
-                    break;
-                case "payment_intent.payment_failed":
-                    Map<String, String> sessionMetadata = ((PaymentIntent) stripeObject).getMetadata();
-                    String failedPaymentId = sessionMetadata.get("payment_id");
-                    Optional<Payment> optionalPayment = repository.findById(failedPaymentId);
-                    if (optionalPayment.isEmpty()) {
-                        throw new PaymentNotFoundException("Payment not found");
-                    }
-                    Payment payment = optionalPayment.get();
-                    payment.setStatus(PaymentStatus.FAILED);
-                    repository.save(payment);
-                default:
-                    logger.info("Unhandled event type {}", event.getType());
-            }
+            Thread thread = new Thread(new FulfillCheckout(userService, planService, repository, stripeObject, event.getType()));
+            thread.start();
         }
+        return ResponseEntity.ok().body(null);
     }
 
     public ResponseEntity<?> returnStatus(String id) throws StripeException {
-       Session session = Session.retrieve(id);
+        Session session = Session.retrieve(id);
         Map<String, String> metadata = session.getMetadata();
         String paymentId = metadata.get("payment_id");
         Optional<Payment> optionalPayment = repository.findById(paymentId);
@@ -204,5 +188,19 @@ public class PaymentService {
         return ResponseEntity.ok(new HashMap<>() {{
             put("status", payment.getStatus());
         }});
+    }
+
+    public ResponseEntity<?> cancelSession(String id) throws StripeException {
+        Session resource = Session.retrieve(id);
+        SessionExpireParams params = SessionExpireParams.builder().build();
+        resource.expire(params);
+
+        HashMap<String, Object> response = new HashMap<>() {{
+            put("status_code", 200);
+            put("message", "Session successfully expired");
+        }};
+
+        return ResponseEntity.ok().body(response);
+
     }
 }

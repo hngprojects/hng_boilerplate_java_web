@@ -23,13 +23,18 @@ public class PaymentController {
     }
 
     @PostMapping("webhook")
-    public void handleWebhook(@RequestBody String payload, HttpServletRequest request) throws StripeException {
-        service.handleWebhook(payload, request);
+    public ResponseEntity<?> handleWebhook(@RequestBody String payload, HttpServletRequest request) throws StripeException {
+        return service.handleWebhook(payload, request);
     }
 
     @GetMapping("stripe/status")
     public ResponseEntity<?> returnStatus(@RequestParam("session_id") String id) throws StripeException {
         return service.returnStatus(id);
+    }
+
+    @GetMapping("stripe/cancel")
+    public ResponseEntity<?> cancelSession(@RequestParam("session_id") String id) throws StripeException {
+        return service.cancelSession(id);
     }
 
 }
