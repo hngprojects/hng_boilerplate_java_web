@@ -19,7 +19,7 @@ public class VideoServiceConsumer {
     private final ObjectMapper objectMapper;
     private final VideoService videoService;
 
-    @RabbitListener(queues = "${rabbitmq.queue.concat}")
+    @RabbitListener(queues = "${rabbitmq.queue.finishedConcat:finishedConcat}")
     public void receiveMessage(String message) throws IOException {
         VideoPathDTO videoPathDTO = objectMapper.readValue(message, VideoPathDTO.class);
         String filename = VideoUtils.SaveVideoToFile(videoPathDTO.getVideo().get("video1"));
