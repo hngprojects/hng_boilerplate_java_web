@@ -100,7 +100,7 @@ public class PaymentService {
                 .setMode(mode)
                 .setCustomer(customer.getId())
                 .setSuccessUrl(clientBaseUrl + "/payment/success?session_id={CHECKOUT_SESSION_ID}")
-                .setCancelUrl(clientBaseUrl + "/payment/cancel?session_id={CHECKOUT_SESSION_ID}")
+                .setCancelUrl(clientBaseUrl + "/pricing")
                 .putAllMetadata(metadata)
                 .addLineItem(LineItem.builder()
                         .setQuantity(1L)
@@ -174,7 +174,7 @@ public class PaymentService {
 
         HashMap<String, Object> response = new HashMap<>() {{
             put("status_code", 200);
-            put("message", "Session successfully expired");
+            put("message", "Payment successfully cancelled");
         }};
 
         return ResponseEntity.ok().body(response);
