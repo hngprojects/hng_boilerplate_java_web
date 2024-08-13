@@ -48,8 +48,6 @@ public class PlanServiceTest {
                 .name("plan name")
                 .description("plan description")
                 .price(19.99)
-                .durationUnit("day")
-                .duration(1)
                 .features(features)
                 .build();
         when(this.planRepository.save(any(Plan.class))).thenReturn(plan);
@@ -71,8 +69,6 @@ public class PlanServiceTest {
         assertEquals(plan.getDescription(), "plan description");
         assertEquals(plan.getName(), "plan name");
         assertEquals(plan.getPrice(), 19.99);
-        assertEquals(plan.getDuration(), 1);
-        assertEquals(plan.getDurationUnit(), "day");
         assertNotNull(plan.getFeatures());
 
     }
@@ -100,8 +96,6 @@ public class PlanServiceTest {
                 .name("plan name")
                 .description("plan description")
                 .price(19.99)
-                .durationUnit("day")
-                .duration(1)
                 .features(features)
                 .build();
         Plan plan2 = Plan.builder()
@@ -109,8 +103,6 @@ public class PlanServiceTest {
                 .name("plan name")
                 .description("plan description")
                 .price(19.99)
-                .durationUnit("day")
-                .duration(1)
                 .features(features)
                 .build();
         List<Plan> plans = List.of(plan1, plan2);

@@ -5,6 +5,7 @@ set -e
 # Create the admindb database
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
     CREATE DATABASE $POSTGRES_DEV_DB;
+    GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_DEV_DB TO $POSTGRES_USER;
 EOSQL
 
 
