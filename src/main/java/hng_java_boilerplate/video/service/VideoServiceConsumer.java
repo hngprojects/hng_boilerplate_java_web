@@ -1,8 +1,6 @@
 package hng_java_boilerplate.video.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.email.entity.EmailMessage;
 import hng_java_boilerplate.video.dto.VideoPathDTO;
 import hng_java_boilerplate.video.utils.VideoUtils;
 import hng_java_boilerplate.video.videoEnums.VideoStatus;
