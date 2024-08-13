@@ -61,7 +61,7 @@ public class FulfillCheckout implements Runnable {
                     }
                 }
             }
-            case "payment_intent.payment_failed" -> {
+            case "payment_intent.payment_failed", "checkout.session.async_payment_failed" -> {
 
                 Map<String, String> sessionMetadata = ((PaymentIntent) stripeObject).getMetadata();
                 String failedPaymentId = sessionMetadata.get("payment_id");
@@ -92,6 +92,7 @@ public class FulfillCheckout implements Runnable {
                     repository.save(payment);
                 }
             }
+
             default -> logger.info("Unhandled event type {}", eventType);
         }
 
