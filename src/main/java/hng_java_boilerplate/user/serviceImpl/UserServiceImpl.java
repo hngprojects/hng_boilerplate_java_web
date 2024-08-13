@@ -1,6 +1,8 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.plans.entity.Plan;
+import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final ActivityLogService activityLogService;
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailServiceImpl emailService;
+    private final PlanService planService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -60,9 +63,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         validateEmail(signupDto.getEmail());
 
         User user = new User();
+        Plan plan = planService.findOne("1");
         user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
+        user.setPlan(plan);
         user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
 
         User savedUser = userRepository.save(user);
@@ -159,6 +164,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public User findUser(String id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     // GetUserResponse method that combines both branches
