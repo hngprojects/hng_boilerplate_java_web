@@ -174,7 +174,7 @@ public class PaymentService {
 
         HashMap<String, Object> response = new HashMap<>() {{
             put("status_code", 200);
-            put("message", "Session successfully expired");
+            put("message", "Payment successfully cancelled");
         }};
 
         return ResponseEntity.ok().body(response);

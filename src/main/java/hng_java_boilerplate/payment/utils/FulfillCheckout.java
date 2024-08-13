@@ -34,6 +34,16 @@ public class FulfillCheckout implements Runnable {
         this.eventType = eventType;
     }
 
+    private void handlePayment(Map<String, String> metadata, PaymentStatus status) {
+        String paymentId = metadata.get("payment_id");
+        Optional<Payment> optionalPayment = repository.findById(paymentId);
+        if (optionalPayment.isPresent()) {
+            Payment payment = optionalPayment.get();
+            payment.setStatus(status);
+            repository.save(payment);
+        }
+    }
+
     @Override
     public void run() {
         switch (eventType) {
@@ -55,42 +65,25 @@ public class FulfillCheckout implements Runnable {
                     if (status.equals("paid")) {
                         payment.setStatus(PaymentStatus.SUCCESS);
                         repository.save(payment);
-                    } else if (status.equals("unpaid")) {
-                        payment.setStatus(PaymentStatus.FAILED);
-                        repository.save(payment);
                     }
                 }
             }
             case "payment_intent.payment_failed", "checkout.session.async_payment_failed" -> {
 
                 Map<String, String> sessionMetadata = ((PaymentIntent) stripeObject).getMetadata();
-                String failedPaymentId = sessionMetadata.get("payment_id");
-                Optional<Payment> optionalPayment = repository.findById(failedPaymentId);
-                if (optionalPayment.isPresent()) {
-                    Payment payment = optionalPayment.get();
-                    payment.setStatus(PaymentStatus.FAILED);
-                    repository.save(payment);
-                }
+                handlePayment(sessionMetadata, PaymentStatus.FAILED);
             }
             case "payment_intent.succeeded" -> {
                 Map<String, String> sessionMetadata = ((PaymentIntent) stripeObject).getMetadata();
-                String failedPaymentId = sessionMetadata.get("payment_id");
-                Optional<Payment> optionalPayment = repository.findById(failedPaymentId);
-                if (optionalPayment.isPresent()) {
-                    Payment payment = optionalPayment.get();
-                    payment.setStatus(PaymentStatus.SUCCESS);
-                    repository.save(payment);
-                }
+                handlePayment(sessionMetadata, PaymentStatus.SUCCESS);
             }
             case "payment_intent.canceled" -> {
                 Map<String, String> sessionMetadata = ((PaymentIntent) stripeObject).getMetadata();
-                String failedPaymentId = sessionMetadata.get("payment_id");
-                Optional<Payment> optionalPayment = repository.findById(failedPaymentId);
-                if (optionalPayment.isPresent()) {
-                    Payment payment = optionalPayment.get();
-                    payment.setStatus(PaymentStatus.CANCELLED);
-                    repository.save(payment);
-                }
+                handlePayment(sessionMetadata, PaymentStatus.CANCELLED);
+            }
+            case "checkout.session.canceled" -> {
+                Map<String, String> sessionMetadata = ((Session) stripeObject).getMetadata();
+                handlePayment(sessionMetadata, PaymentStatus.CANCELLED);
             }
 
             default -> logger.info("Unhandled event type {}", eventType);
