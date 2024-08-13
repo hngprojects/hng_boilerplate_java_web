@@ -73,7 +73,6 @@ public class FulfillCheckout implements Runnable {
                 }
             }
             case "payment_intent.succeeded" -> {
-
                 Map<String, String> sessionMetadata = ((PaymentIntent) stripeObject).getMetadata();
                 String failedPaymentId = sessionMetadata.get("payment_id");
                 Optional<Payment> optionalPayment = repository.findById(failedPaymentId);

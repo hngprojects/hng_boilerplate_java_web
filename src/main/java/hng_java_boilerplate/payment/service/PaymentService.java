@@ -89,8 +89,8 @@ public class PaymentService {
         product.setName(plan.getName() + " pricing plan");
         product.setId(plan.getId());
         product.setDefaultPriceObject(price);
-        LineItem.PriceData.Recurring.Interval interval_unit = getInterval(body.interval());
-        Mode mode = getMode(interval_unit);
+        getInterval(body.interval());
+        Mode mode = Mode.PAYMENT;
 
         Customer customer = CustomerUtils.findOrCreateCustomer(loggedUser.getEmail(), loggedUser.getName());
 
@@ -111,51 +111,29 @@ public class PaymentService {
                                                         .setName(product.getName())
                                                         .build()
                                         )
-                                        .setRecurring(LineItem.PriceData.Recurring.builder()
-                                                .setInterval(interval_unit)
-                                                .build())
                                         .setCurrency(product.getDefaultPriceObject().getCurrency())
                                         .setUnitAmountDecimal(product.getDefaultPriceObject().getUnitAmountDecimal())
                                         .build()
                         )
                         .build()
                 );
-        if (mode == Mode.PAYMENT) {
-            params.setPaymentIntentData(
-                    PaymentIntentData.builder()
-                            .putAllMetadata(metadata)
-                            .build()
-            );
-        } else {
-            params.setSubscriptionData(
-                    SubscriptionData.builder()
-                            .putAllMetadata(metadata)
-                            .build()
-            );
-        }
+        params.setPaymentIntentData(
+                PaymentIntentData.builder()
+                        .putAllMetadata(metadata)
+                        .build()
+        );
         Session session = Session.create(params.build());
 
         HashMap<String, String> data = new HashMap<>() {{
             put("checkout_url", session.getUrl());
             put("session_id", session.getId());
         }};
-        return ResponseEntity.ok(new SessionResponse("Payment initiated", 201, data));
+        return ResponseEntity.ok(new SessionResponse("Payment initiated", 200, data));
     }
 
-    private Mode getMode(LineItem.PriceData.Recurring.Interval intervalUnit) {
-
-        if (intervalUnit != null) {
-            return Mode.SUBSCRIPTION;
-        }
-        return Mode.PAYMENT;
-
-    }
-
-    private LineItem.PriceData.Recurring.Interval getInterval(String interval) {
+    private Object getInterval(String interval) {
         return switch (interval) {
-            case "monthly" -> LineItem.PriceData.Recurring.Interval.MONTH;
-            case "annually" -> LineItem.PriceData.Recurring.Interval.YEAR;
-            case "one-time" -> null;
+            case "monthly", "annually", "one-time" -> null;
             default -> throw new BadRequestException("Invalid interval");
         };
     }
