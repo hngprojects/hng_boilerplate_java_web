@@ -17,23 +17,23 @@ jobs:
             - 5432:5432
           options: >-
             --health-cmd pg_isready
-            --health-interval 10s
+            --health-interval 5s
             --health-timeout 5s
-            --health-retries 5
+            --health-retries 3
 
         rabbitmq:
           image: rabbitmq:3-management
           env:
-            RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_DEFAULT_USER }}
-            RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_DEFAULT_PASS }}
+            RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_USER }}
+            RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_PASSWORD }}
           ports:
             - 5672:5672
             - 15672:15672
           options: >-
             --health-cmd "rabbitmqctl node_health_check"
-            --health-interval 10s
+            --health-interval 5s
             --health-timeout 5s
-            --health-retries 5
+            --health-retries 3
     env:
       SPRING_PROFILE_ACTIVE: dev
     steps:
