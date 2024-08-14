@@ -36,6 +36,7 @@ jobs:
             --health-retries 3
     env:
       SPRING_PROFILE_ACTIVE: staging
+      spring_profile_active: prod
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
