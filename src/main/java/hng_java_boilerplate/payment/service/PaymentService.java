@@ -68,6 +68,7 @@ public class PaymentService {
 
         Map<String, String> metadata = new HashMap<>() {{
             put("plan_id", plan.getId());
+            put("user_email", body.userEmail());
             put("payment_id", saved.getId());
         }};
 
@@ -148,6 +149,7 @@ public class PaymentService {
         Map<String, String> metadata = session.getMetadata();
         String paymentId = metadata.get("payment_id");
         String planId = metadata.get("plan_id");
+        String userEmail = metadata.get("user_email");
         Plan plan = planService.findOne(planId);
         Optional<Payment> optionalPayment = repository.findById(paymentId);
         if (optionalPayment.isEmpty()) {
@@ -158,6 +160,7 @@ public class PaymentService {
         return ResponseEntity.ok(new HashMap<>() {{
             put("status", payment.getStatus());
             put("plan_id", plan.getId());
+            put("user_email", userEmail);
         }});
     }
 
