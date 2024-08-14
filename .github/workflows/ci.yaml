@@ -35,7 +35,7 @@ jobs:
             --health-timeout 5s
             --health-retries 3
     env:
-      SPRING_PROFILE_ACTIVE: dev
+      SPRING_PROFILE_ACTIVE: staging
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
