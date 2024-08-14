@@ -35,7 +35,7 @@ jobs:
             --health-timeout 10s
             --health-retries 5
     env:
-      SPRING_PROFILES_ACTIVE: dev
+      spring_profiles_active: dev
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
