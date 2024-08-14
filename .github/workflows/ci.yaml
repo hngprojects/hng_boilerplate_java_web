@@ -35,7 +35,7 @@ jobs:
             --health-timeout 5s
             --health-retries 5
     env:
-      SPRING_PROFILE_ACTIVE: devy                  
+      SPRING_PROFILE_ACTIVE: dev
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
@@ -49,13 +49,11 @@ jobs:
 
       - name: Create application.properties
         run: |
-          export spring_profiles_active=dev
-          echo "SPRING_PROFILE_ACTIVE: ${SPRING_PROFILE_ACTIVE}"
-          echo "spring_profiles_active: ${spring_profiles_active}"
           echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application-dev.properties
+          ls -la src/main/resources
 
       - name: Build the application
-        run: mvn clean install
+        run: mvn clean install -Pdev
 
       - name: Start Application
         run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &
