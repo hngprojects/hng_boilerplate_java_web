@@ -52,7 +52,7 @@ jobs:
           echo -n "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-dev.properties
 
       - name: Build the application
-        run: mvn verify -Drun.jvmArguments="-Dspring.profiles.active=dev"
+        run: mvn verify -Dspring.profiles.active="dev"
 
       - name: Start Application
         run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &
