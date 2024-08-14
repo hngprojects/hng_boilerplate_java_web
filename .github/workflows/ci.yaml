@@ -36,6 +36,9 @@ jobs:
             --health-timeout 5s
             --health-retries 5
 
+    env:
+      SPRING_PROFILE_ACTIVE: dev
+
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
@@ -48,7 +51,7 @@ jobs:
           cache: maven
 
       - name: Create application.properties
-        run: echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application.properties
+        run: echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application-dev.properties
 
       - name: Build the application
         run: mvn clean install
