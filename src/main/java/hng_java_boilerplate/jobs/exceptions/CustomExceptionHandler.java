@@ -15,10 +15,4 @@ public class CustomExceptionHandler {
         ApiResponse<Void> response = new ApiResponse<>("Invalid request data", HttpStatus.BAD_REQUEST.value(), null);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Void>> handleGenericExceptions(Exception ex) {
-        ApiResponse<Void> response = new ApiResponse<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }
