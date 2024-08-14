@@ -49,10 +49,11 @@ jobs:
 
       - name: Create application.properties
         run: |
+          echo "spring.profiles.active=dev" > src/main/resources/application.properties
           echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application-dev.properties
 
       - name: Build the application
-        run: mvn verify -Pdev
+        run: mvn verify
 
       - name: Start Application
         run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &
