@@ -44,7 +44,7 @@ public class VideoServiceImpl implements VideoService{
         if(publisher.sendVideo(videoPathDTO)){
            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
                     JobType.MERGE_VIDEO.toString(), VideoMessage.PENDING.toString(),
-                   VideoStatus.PENDING.toString(), null, null);
+                   VideoStatus.PENDING.toString(), null, "video/mp4");
 
             return VideoUtils.response("Job created", HttpStatus.CREATED.value(), true,
                     VideoMapper.INSTANCE.toDTO(videoRepository.save(videoSuite)));
