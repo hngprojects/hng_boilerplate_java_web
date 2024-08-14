@@ -88,6 +88,7 @@ public class WebSecurityConfig {
                                         "/api/v1/faqs",
                                         "/api/v1/contacts",
                                         "/api/v1/squeeze/",
+                                        "/api/v1/audio/**",
                                         "/api/v1/comments/delete/{commentId}",
                                         "/api/v1/payment/**"
                                 ).permitAll()
