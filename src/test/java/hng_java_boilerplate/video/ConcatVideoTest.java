@@ -46,7 +46,7 @@ public class ConcatVideoTest {
         when(mockFile.getBytes()).thenReturn(new byte[0]);
         VideoUploadDTO videoUploadDTO = new VideoUploadDTO(Collections.singletonList(mockFile));
         UUID jobId = UUID.randomUUID();
-        when(publisher.sendVideoConcat(any(VideoPathDTO.class))).thenReturn(true);
+        when(publisher.sendVideo(any(VideoPathDTO.class))).thenReturn(true);
         when(videoRepository.save(any(VideoSuite.class))).thenReturn(new VideoSuite());
 
         VideoResponseDTO<VideoStatusDTO> response = videoService.videoConcat(videoUploadDTO);
@@ -62,7 +62,7 @@ public class ConcatVideoTest {
         MultipartFile mockFile = mock(MultipartFile.class);
         when(mockFile.getBytes()).thenReturn(new byte[0]); // Simulate video file bytes
         VideoUploadDTO videoUploadDTO = new VideoUploadDTO(Collections.singletonList(mockFile));
-        when(publisher.sendVideoConcat(any(VideoPathDTO.class))).thenReturn(false);
+        when(publisher.sendVideo(any(VideoPathDTO.class))).thenReturn(false);
 
         assertThrows(JobCreationError.class, () -> videoService.videoConcat(videoUploadDTO));
     }

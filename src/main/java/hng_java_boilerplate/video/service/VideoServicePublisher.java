@@ -20,13 +20,13 @@ public class VideoServicePublisher {
     @Value("${rabbitmq.queue.concat}")
     private String videoConcat;
     private static final Logger logger = LoggerFactory.getLogger(VideoServicePublisher.class);
-    public boolean sendVideoConcat(VideoPathDTO videoPathDTO){
-        try{
+    public boolean sendVideo(VideoPathDTO videoPathDTO){
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonString = objectMapper.writeValueAsString(videoPathDTO);
             rabbitTemplate.convertAndSend(videoConcat, jsonString);
             return true;
-        }catch (AmqpException e){
+        } catch (AmqpException e){
             return false;
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

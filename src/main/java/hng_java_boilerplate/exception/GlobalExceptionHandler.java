@@ -1,10 +1,15 @@
 package hng_java_boilerplate.exception;
 
+import com.google.gson.JsonSyntaxException;
+import com.stripe.exception.SignatureVerificationException;
+import com.stripe.exception.StripeException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import hng_java_boilerplate.email.exception.EmailTemplateExists;
 import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
+import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
+import hng_java_boilerplate.plans.exceptions.PlanNotFoundException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.twofactor.exception.InvalidTotpException;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -166,5 +172,35 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidTotpException.class)
     public ResponseEntity<ResponseMessageDto> handleInvalidTotpException(InvalidTotpException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
+    }
+
+    @ExceptionHandler(PlanNotFoundException.class)
+    public ResponseEntity<ErrorResponse> planNotFoundException(PlanNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("This pricing plan does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(StripeException.class)
+    public ResponseEntity<ErrorResponse> stripeException(StripeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Stripe error", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(JsonSyntaxException.class)
+    public ResponseEntity<ErrorResponse> jsonSyntaxException(JsonSyntaxException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Invalid json", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SignatureVerificationException.class)
+    public ResponseEntity<ErrorResponse> signatureVerificationException(SignatureVerificationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Invalid signature", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> paymentNotFoundException(PlanNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Payment not found", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
