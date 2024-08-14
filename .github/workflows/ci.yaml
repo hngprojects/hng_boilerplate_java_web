@@ -35,7 +35,7 @@ jobs:
             --health-timeout 10s
             --health-retries 5
     env:
-      SPRING_PROFILE_ACTIVE: dev
+      SPRING_PROFILES_ACTIVE: dev
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
@@ -50,6 +50,7 @@ jobs:
       - name: Create application.properties
         run: |
           echo -n "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-dev.properties
+          cat src/main/resources/application-dev.properties
 
       - name: Build the application
         run: mvn verify
