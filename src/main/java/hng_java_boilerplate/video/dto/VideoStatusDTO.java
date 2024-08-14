@@ -18,4 +18,6 @@ public class VideoStatusDTO {
     private String jobType;
     private int progress;
     private String currentProcess;
+    private String mediaFormat;
+    private String expectedFormat;
 }
