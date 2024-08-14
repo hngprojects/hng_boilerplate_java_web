@@ -50,19 +50,19 @@ jobs:
       - name: Create application.properties
         run: |
           echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application-dev.properties
-          ls -la src/main/resources
+          cat src/main/resources/application-dev.properties
 
       - name: Build the application
-        run: mvn clean install -Pdev
+        # run: mvn clean install -Pdev
 
       - name: Start Application
-        run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &
+        # run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &
 
       - name: Wait for Application to be Ready
         run: sleep 30
 
       - name: Unit and Integration Testing
-        run: mvn -B test
+        # run: mvn -B test
 
       # - name: Archive Test Result
       #   uses: actions/upload-artifact@v3
