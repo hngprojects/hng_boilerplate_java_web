@@ -32,12 +32,4 @@ public class ProfileErrorHandler {
                 .build(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(InternalServerErrorException.class)
-    public ResponseEntity<ProfileErrorResponseDto> handleInternalServerErrorException(InternalServerErrorException ex) {
-        return new ResponseEntity<>(ProfileErrorResponseDto.builder()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .message(ex.getMessage())
-                .error("Internal server error")
-                .build(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }
