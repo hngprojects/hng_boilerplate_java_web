@@ -9,6 +9,14 @@ public record PaymentRequestBody(
 
         @JsonProperty("plan_id")
         @NotBlank(message = "Plan id can not be blank")
-        String planId
+        String planId,
+
+        @NotBlank(message = "User email can not be blank")
+        @JsonProperty("user_email")
+        String userEmail,
+
+        @NotBlank(message = "Name must not be blank")
+        @JsonProperty("user_name")
+        String userName
 ) {
 }

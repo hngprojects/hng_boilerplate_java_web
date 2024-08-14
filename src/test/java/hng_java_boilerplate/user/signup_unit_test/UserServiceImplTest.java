@@ -41,9 +41,6 @@ class UserServiceImplTest {
     UserRepository userRepository;
 
     @Mock
-    PlanService planService;
-
-    @Mock
     PasswordEncoder passwordEncoder;
 
     @Mock
@@ -68,7 +65,6 @@ class UserServiceImplTest {
 
         when(passwordEncoder.encode(signupDto.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(planService.findOne("1")).thenReturn(null);
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(new User()));
         when(jwtUtils.createJwt.apply(any(User.class))).thenReturn("someToken");
 
@@ -117,7 +113,6 @@ class UserServiceImplTest {
         when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(signupDto.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
-        when(planService.findOne("1")).thenReturn(null);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.registerUser(signupDto));
@@ -136,7 +131,6 @@ class UserServiceImplTest {
 
         when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(signupDto.getPassword())).thenReturn("encodedPassword");
-        when(planService.findOne("1")).thenReturn(null);
         when(userRepository.save(any(User.class))).thenReturn(user); // Simulate saving user
         when(userRepository.findByEmail(signupDto.getEmail())).thenReturn(Optional.of(user));
 
