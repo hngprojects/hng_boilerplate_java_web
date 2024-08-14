@@ -4,7 +4,7 @@ import hng_java_boilerplate.video.dto.*;
 import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.exceptions.JobNotFound;
 import hng_java_boilerplate.video.utils.VideoMapper;
-import hng_java_boilerplate.video.videoEnums.VideoJobType;
+import hng_java_boilerplate.video.videoEnums.JobType;
 import hng_java_boilerplate.video.videoEnums.VideoMessage;
 import hng_java_boilerplate.video.videoEnums.VideoStatus;
 import hng_java_boilerplate.video.entity.VideoSuite;
@@ -41,9 +41,9 @@ public class VideoServiceImpl implements VideoService{
             count += 1;
         }
 
-        if(publisher.sendVideoConcat(videoPathDTO)){
+        if(publisher.sendVideo(videoPathDTO)){
            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
-                    VideoJobType.MERGE_VIDEO.toString(), VideoMessage.PENDING.toString(),
+                    JobType.MERGE_VIDEO.toString(), VideoMessage.PENDING.toString(),
                    VideoStatus.PENDING.toString(), null, null);
 
             return VideoUtils.response("Job created", HttpStatus.CREATED.value(), true,
