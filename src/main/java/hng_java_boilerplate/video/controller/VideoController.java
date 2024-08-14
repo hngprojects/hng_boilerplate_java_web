@@ -57,7 +57,7 @@ public class VideoController {
         DownloadableDTO downloadDTO = videoService.downloadVideo(jobId);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=video.mp4")
-                .contentType(MediaType.valueOf("video/mp4"))
+                .contentType(MediaType.valueOf(downloadDTO.getContentType()))
                 .contentLength(downloadDTO.getVideoByteLength())
                 .body(downloadDTO.getResource());
     }

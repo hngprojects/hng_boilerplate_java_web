@@ -1,11 +1,12 @@
 package hng_java_boilerplate.video.videoEnums;
 
-public enum VideoJobType {
+public enum JobType {
 
-    MERGE_VIDEO("merge video");
+    MERGE_VIDEO("merge video"),
+    EXTRACT_AUDIO("extract audio");
     private final String status;
 
-    VideoJobType(String status) {
+    JobType(String status) {
         this.status = status;
     }
 
