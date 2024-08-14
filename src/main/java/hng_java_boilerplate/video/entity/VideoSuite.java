@@ -37,5 +37,11 @@ public class VideoSuite {
 
     @Column(name = "current_process")
     private String currentProcess;
+
+    @Column(name = "media_format")
+    private String mediaFormat;
+
+    @Column(name = "expected_format")
+    private String expectedFormat;
 }
 

@@ -11,16 +11,6 @@ public interface VideoMapper {
 
     VideoMapper INSTANCE = Mappers.getMapper(VideoMapper.class);
 
-    //To Video suite Entity
-    @Mapping(source = "jobId", target = "jobId")
-    @Mapping(source = "status", target = "status")
-    @Mapping(source = "jobType", target = "jobType")
-    @Mapping(source = "filename", target = "filename")
-    @Mapping(source = "message", target = "message")
-    @Mapping(source = "progress", target = "progress")
-    @Mapping(source = "currentProcess", target = "currentProcess")
-    VideoStatusDTO toDTO(VideoSuite videoSuite);
-
 
     //To VideoStatusDTO
     @Mapping(source = "jobId", target = "jobId")
@@ -29,6 +19,21 @@ public interface VideoMapper {
     @Mapping(source = "filename", target = "filename")
     @Mapping(source = "message", target = "message")
     @Mapping(source = "progress", target = "progress")
-    @Mapping(source = "currentProcess", target = "currentProcess")
+    @Mapping(source = "currentProcess", target = "current_process")
+    @Mapping(source = "expectedFormat", target = "expected_format")
+    @Mapping(source = "mediaFormat", target = "media_format")
+    VideoStatusDTO toDTO(VideoSuite videoSuite);
+
+
+    //To Video suite Entity
+    @Mapping(source = "jobId", target = "jobId")
+    @Mapping(source = "status", target = "status")
+    @Mapping(source = "jobType", target = "jobType")
+    @Mapping(source = "filename", target = "filename")
+    @Mapping(source = "message", target = "message")
+    @Mapping(source = "progress", target = "progress")
+    @Mapping(source = "current_process", target = "currentProcess")
+    @Mapping(source = "expected_format", target = "expectedFormat")
+    @Mapping(source = "media_format", target = "mediaFormat")
     VideoSuite toDTO(VideoStatusDTO statusDTO);
 }
