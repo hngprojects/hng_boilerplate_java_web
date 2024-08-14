@@ -6,7 +6,6 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-      
     services:
         postgres:  
           image: postgres:latest
@@ -35,10 +34,8 @@ jobs:
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
-
     env:
-      SPRING_PROFILE_ACTIVE: dev
-
+      SPRING_PROFILE_ACTIVE: devy                  
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
@@ -51,7 +48,11 @@ jobs:
           cache: maven
 
       - name: Create application.properties
-        run: echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application-dev.properties
+        run: |
+          export spring_profiles_active=dev
+          echo "SPRING_PROFILE_ACTIVE: ${SPRING_PROFILE_ACTIVE}"
+          echo "spring_profiles_active: ${spring_profiles_active}"
+          echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application-dev.properties
 
       - name: Build the application
         run: mvn clean install
