@@ -1,0 +1,17 @@
+name: java_dev
+
+services:
+  backend:
+    env_file:
+      - .env.dev
+
+  postgres:
+    env_file:
+      - .env.dev
+
+  rabbitmq:
+    env_file:
+      - .env.dev
+  nginx:
+    ports:
+      - 8000:80

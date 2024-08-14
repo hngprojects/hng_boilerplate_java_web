@@ -1,0 +1,61 @@
+name: java
+
+services:
+  backend:
+    image: ${COMPOSE_PROJECT_NAME}
+    build: .
+    environment:
+      - SPRING_PROFILE_ACTIVE=development
+    healthcheck:
+      test: "wget -qO- http://backend:8080"
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      postgresdb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    env_file: .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready -U ${POSTGRES_USER}"
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    env_file: .env
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: "rabbitmq-diagnostics check_running"
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: "wget -qO- http://nginx:80"
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  postgres:
+  rabbitmq:

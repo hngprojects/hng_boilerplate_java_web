@@ -1,27 +1,19 @@
 name: CI
 
 on:
-  push:
-    branches: [dev, staging, main]
   pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [dev, staging, main]
-
-# permissions:
-#   contents: read
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    #environment: PR-Validation
       
     services:
         postgres:  
           image: postgres:latest
           env:
-            POSTGRES_USER: "admin"
-            POSTGRES_PASSWORD: "password123"
-            POSTGRES_DB: "postgres"
+            POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           ports:
             - 5432:5432
           options: >-
@@ -33,11 +25,11 @@ jobs:
         rabbitmq:
           image: rabbitmq:3-management
           env:
-            RABBITMQ_DEFAULT_USER: "guest"
-            RABBITMQ_DEFAULT_PASS: "guest"
+            RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_DEFAULT_USER }}
+            RABBITMQ_DEFAULT_PASS: ${{ secrets.RABBITMQ_DEFAULT_PASS }}
           ports:
             - 5672:5672
-            - 15672:15672  # Management plugin port
+            - 15672:15672
           options: >-
             --health-cmd "rabbitmqctl node_health_check"
             --health-interval 10s
@@ -46,9 +38,7 @@ jobs:
 
     steps:
       - name: Checkout repository base
-        uses: actions/checkout@v3
-        # with:
-        #   ref: ${{ github.event.pull_request.base.sha }}
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -57,24 +47,8 @@ jobs:
           distribution: temurin
           cache: maven
 
-      # Create configuration files
-      - name: Create .env file
-        run: |
-          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/postgres" >> .env
-          echo "DB_USERNAME=admin" >> .env
-          echo "DB_PASSWORD=password123" >> .env
-          echo "RABBITMQ_PORT=5672" >> .env
-          echo "RABBITMQ_USERNAME=guest" >> .env
-          echo "RABBITMQ_PASSWORD=guest" >> .env
-          # echo "ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> .env
-          # echo "AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> .env
-          # echo "SMS_NUMBER=${{ secrets.OUTGOING_SMS_NUMBER }}" >> .env
-
       - name: Create application.properties
-        uses: ./.github/workflows/create-application-properties
-
-      - name: Download Dependencies
-        run: mvn dependency:resolve
+        run: echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application.properties
 
       - name: Build the application
         run: mvn clean install
@@ -88,9 +62,9 @@ jobs:
       - name: Unit and Integration Testing
         run: mvn -B test
 
-      - name: Archive Test Result
-        uses: actions/upload-artifact@v3
-        if: always()
-        with: 
-          name: test-results
-          path: target/*.jar
+      # - name: Archive Test Result
+      #   uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with: 
+      #     name: test-results
+      #     path: target/*.jar
