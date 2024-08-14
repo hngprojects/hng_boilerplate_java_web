@@ -2,11 +2,9 @@ package hng_java_boilerplate.config;
 
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -91,9 +89,8 @@ public class WebSecurityConfig {
                                         "/api/v1/contacts",
                                         "/api/v1/squeeze/",
                                         "/api/v1/comments/delete/{commentId}",
-                                        "/api/v1/payment/webhook"
+                                        "/api/v1/payment/**"
                                 ).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/v1/payment/plans").permitAll()
                                 .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
