@@ -49,7 +49,7 @@ jobs:
 
       - name: Create application.properties
         run: |
-          echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application-dev.properties
+          echo -n "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-dev.properties
 
       - name: Build the application
         run: mvn verify
