@@ -35,8 +35,7 @@ jobs:
             --health-timeout 5s
             --health-retries 3
     env:
-      SPRING_PROFILE_ACTIVE: staging
-      spring_profile_active: prod
+      - SPRING_PROFILE_ACTIVE: staging
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
@@ -50,6 +49,7 @@ jobs:
 
       - name: Create application.properties
         run: |
+          export spring_profile_active=prod
           echo "spring.profiles.active=dev" > src/main/resources/application.properties
           echo ${{ secrets.APPLICATION_PROPERTIES }} | base64 --decode > src/main/resources/application-dev.properties
 
