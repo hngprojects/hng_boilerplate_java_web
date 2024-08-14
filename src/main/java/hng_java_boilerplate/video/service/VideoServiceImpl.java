@@ -72,6 +72,9 @@ public class VideoServiceImpl implements VideoService{
                 .orElseThrow(() -> new JobNotFound("Job doesn't exist"));
         if(job.getFilename() == null)
             throw new FileNotFoundException("This file is not ready for download");
-        return VideoUtils.byteArrayResource(job.getFilename());
+
+        DownloadableDTO downloadableDTO = VideoUtils.byteArrayResource(job.getFilename());
+        downloadableDTO.setContentType(job.getExpectedFormat());
+        return downloadableDTO;
     }
 }
