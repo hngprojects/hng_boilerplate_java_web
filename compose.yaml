@@ -5,7 +5,7 @@ services:
     image: ${COMPOSE_PROJECT_NAME}
     build: .
     environment:
-      - SPRING_PROFILE_ACTIVE=development
+      - SPRING_PROFILE_ACTIVE=dev
     healthcheck:
       test: "wget -qO- http://backend:8080"
       interval: 5s
