@@ -55,8 +55,10 @@ public class VideoController {
     @GetMapping("/{jobId}/download")
     public ResponseEntity<?> downloadJob(@PathVariable("jobId") String jobId) throws IOException {
         DownloadableDTO downloadDTO = videoService.downloadVideo(jobId);
+        String contentType = downloadDTO.getContentType();
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=video.mp4")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=video."
+                        + contentType.substring(6))
                 .contentType(MediaType.valueOf(downloadDTO.getContentType()))
                 .contentLength(downloadDTO.getVideoByteLength())
                 .body(downloadDTO.getResource());
