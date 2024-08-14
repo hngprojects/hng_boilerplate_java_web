@@ -18,8 +18,6 @@ import hng_java_boilerplate.payment.utils.CustomerUtils;
 import hng_java_boilerplate.payment.utils.FulfillCheckout;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
-import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +40,7 @@ public class PaymentService {
     private final Logger logger = LoggerFactory.getLogger(PaymentService.class);
     private final PaymentRepository repository;
     private final PlanService planService;
-    private final UserService userService;
+
 
     @Value("${stripe.api.key}")
     private String API_KEY;
@@ -59,25 +57,18 @@ public class PaymentService {
         if (plan.getName().equals("free")) {
             throw new BadRequestException("You can not subscribe to free plan");
         }
-        User loggedUser = userService.getLoggedInUser();
         Stripe.apiKey = API_KEY;
 
 
         Payment payment = new Payment();
         payment.setAmount(plan.getPrice());
         payment.setStatus(PaymentStatus.PENDING);
-        Set<User> users = payment.getUser();
-        if (users == null) {
-            users = new HashSet<>();
-        }
-        users.add(loggedUser);
-        payment.setUser(users);
 
         Payment saved = repository.save(payment);
 
         Map<String, String> metadata = new HashMap<>() {{
             put("plan_id", plan.getId());
-            put("user_id", loggedUser.getId());
+            put("user_email", body.userEmail());
             put("payment_id", saved.getId());
         }};
 
@@ -92,7 +83,7 @@ public class PaymentService {
         getInterval(body.interval());
         Mode mode = Mode.PAYMENT;
 
-        Customer customer = CustomerUtils.findOrCreateCustomer(loggedUser.getEmail(), loggedUser.getName());
+        Customer customer = CustomerUtils.findOrCreateCustomer(body.userEmail(), body.userName());
 
 
         Builder params;
@@ -147,7 +138,7 @@ public class PaymentService {
             logger.warn("Api version Error");
         } else {
             StripeObject stripeObject = dataObjectDeserializer.getObject().get();
-            Thread thread = new Thread(new FulfillCheckout(userService, planService, repository, stripeObject, event.getType()));
+            Thread thread = new Thread(new FulfillCheckout(repository, stripeObject, event.getType()));
             thread.start();
         }
         return ResponseEntity.ok().body(null);
@@ -157,13 +148,19 @@ public class PaymentService {
         Session session = Session.retrieve(id);
         Map<String, String> metadata = session.getMetadata();
         String paymentId = metadata.get("payment_id");
+        String planId = metadata.get("plan_id");
+        String userEmail = metadata.get("user_email");
+        Plan plan = planService.findOne(planId);
         Optional<Payment> optionalPayment = repository.findById(paymentId);
         if (optionalPayment.isEmpty()) {
             throw new PaymentNotFoundException("Payment not found");
         }
         Payment payment = optionalPayment.get();
+
         return ResponseEntity.ok(new HashMap<>() {{
             put("status", payment.getStatus());
+            put("plan_id", plan.getId());
+            put("user_email", userEmail);
         }});
     }
 
