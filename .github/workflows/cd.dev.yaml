@@ -59,7 +59,7 @@ jobs:
       #       git add .
       #       git stash
       #       git checkout dev
-            git pull origin dev
-            gunzip -c /tmp/java_dev.tar.gz | docker load
-            # rm -f /tmp/java_dev.tar.gz
-            docker compose -f compose.yaml -f compose/compose.dev.yaml up -d
+      #       git pull origin dev
+      #       gunzip -c /tmp/java_dev.tar.gz | docker load
+      #       rm -f /tmp/java_dev.tar.gz
+      #       docker compose -f compose.yaml -f compose/compose.dev.yaml up -d
