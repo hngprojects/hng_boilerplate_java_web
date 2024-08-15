@@ -1,10 +1,6 @@
 name: java_staging
 
 services:
-  backend:
-    environment:
-      - SPRING_PROFILE_ACTIVE=staging
-
   postgres:
     env_file:
       - .env.staging

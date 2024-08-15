@@ -1,10 +1,6 @@
 name: java_prod
 
 services:
-  backend:
-    environment:
-      - SPRING_PROFILE_ACTIVE=prod
-
   postgres:
     env_file:
       - .env.prod
