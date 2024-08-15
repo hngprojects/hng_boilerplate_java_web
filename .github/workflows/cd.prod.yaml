@@ -57,8 +57,8 @@ jobs:
             cd ~/hng_boilerplate_java_web
             git add .
             git stash
-            git checkout prod
-            git pull origin prod
+            git checkout main
+            git pull origin main
             gunzip -c /tmp/java_prod.tar.gz | docker load
             rm -f /tmp/java_prod.tar.gz
             docker compose -f compose.yaml -f compose/compose.prod.yaml up -d
