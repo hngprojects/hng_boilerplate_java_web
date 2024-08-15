@@ -5,6 +5,7 @@ import hng_java_boilerplate.videotogif.service.VideoToGifService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,27 +25,44 @@ public class VideoToGifController {
 
     @PostMapping("/video-to-gif")
     public ResponseEntity<String> convertVideoToGif(@RequestParam("file") MultipartFile videoFile) {
+        File tempDir;
+        File inputFile = null;
+        String inputVideoPath = null;
+        String outputGifPath = null;
+
         try {
-            // Get the temporary directory
-            File tempDir = tempDirectoryService.getTempDir();
+            tempDir = tempDirectoryService.getTempDir();
 
-            // Define input and output paths
-            String inputVideoPath = tempDir.getAbsolutePath() + "/" + videoFile.getOriginalFilename();
-            String outputGifPath = inputVideoPath.replace(".mp4", ".gif");
+            if (!tempDir.exists()) {
+                tempDir.mkdirs();
+            }
 
-            // Save the uploaded video file to the temporary directory
-            File inputFile = new File(inputVideoPath);
+            inputVideoPath = tempDir.getAbsolutePath() + "/" + videoFile.getOriginalFilename();
+            outputGifPath = inputVideoPath.replace(".mp4", ".gif");
+
+            inputFile = new File(inputVideoPath);
             videoFile.transferTo(inputFile);
 
-            // Convert the video to GIF
             videoToGifService.convertVideoToGif(inputVideoPath, outputGifPath);
 
-            // Return the path to the generated GIF
             return ResponseEntity.ok("GIF created successfully: " + outputGifPath);
 
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error converting video to GIF: " + e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing the file: " + e.getMessage());
+        } catch (InterruptedException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("FFmpeg process was interrupted: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("A runtime error occurred: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
+        } finally {
+            if (inputFile != null && inputFile.exists()) {
+                if (!inputFile.delete()) {
+                    System.err.println("Failed to delete temporary video file: " + inputFile.getAbsolutePath());
+                }
+            }
+//
         }
     }
+
 }

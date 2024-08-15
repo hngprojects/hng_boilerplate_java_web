@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 
 import java.util.HashMap;
@@ -167,4 +168,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseMessageDto> handleInvalidTotpException(InvalidTotpException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
     }
+
+    // Handle max upload size exceeded exception
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                .body("File too large! The maximum file size allowed is 500MB.");
+    }
+
 }

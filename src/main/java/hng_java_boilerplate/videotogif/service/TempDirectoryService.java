@@ -8,7 +8,7 @@ import java.io.File;
 
 @Service
 public class TempDirectoryService {
-    @Value("${temp.dir.path:./temp}")
+    @Value("${temp.dir.path:temp}")
     private String tempDirPath;
 
     private File tempDir;

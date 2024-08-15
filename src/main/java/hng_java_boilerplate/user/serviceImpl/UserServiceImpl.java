@@ -97,9 +97,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         ResponseData data = new ResponseData(token, userResponse);
 
         // Log activity
-        GetUserDto userDto = convertUserToGetUserDto(user);
-        String organisationId = userDto.getOrganisations().isEmpty() ? null : userDto.getOrganisations().get(0).getOrg_id();
-        activityLogService.logActivity(organisationId, user.getId(), "User logged in");
+//        GetUserDto userDto = convertUserToGetUserDto(user);
+//        String organisationId = userDto.getOrganisations().isEmpty() ? null : userDto.getOrganisations().get(0).getOrg_id();
+//        activityLogService.logActivity(organisationId, user.getId(), "User logged in");
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
     }
 
