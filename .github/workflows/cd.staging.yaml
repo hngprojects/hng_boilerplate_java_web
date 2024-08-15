@@ -1,120 +1,59 @@
-name: Staging-Deployment
+name: Staging Deployment
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types:
-      - completed
-    branches: [staging]
+  workflow_dispatch:
+  push:
+    branches:
+      - staging
 
 jobs:
-  on-success:
+  build-and-push:
+    if: github.event.repository.fork == false
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion=='success' && github.event.workflow_run.head_branch == 'staging' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-          
-      - name: Create .env file
-        run: |
-          echo "DB_CONNECTION_STRING=postgresql://staging-postgresdb:5432/${{ secrets.POSTGRES_STAGING_DB }}" >> .env
-          echo "DB_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-          echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
-          echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
-          echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
-          echo "RABBITMQ_HOST=${{ secrets.RABBITMQ_STAGING_HOST }}" >> .env
-          echo "ACCOUNT_SID=${{ secrets.ACCOUNT_SID }}" >> .env
-          echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
-          echo "SMS_NUMBER=${{ secrets.SMS_NUMBER }}" >> .env
-          echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> .env
-          echo "GOOGLE_ID_KEY=${{ secrets.GOOGLE_ID_KEY }}" >> .env
-          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
-          echo "PAYSTACK_KEY=${{ secrets.PAYSTACK_KEY }}" >> .env
-          echo "FLUTTERWAVE_KEY=${{ secrets.FLUTTERWAVE_KEY }}" >> .env
+      - name: Create application-staging.properties
+        run: echo ${{ secrets.APPLICATION_STAGING_PROPERTIES }} | base64 --decode > src/main/resources/application-staging.properties
+                  
+      - name: Set up Docker CLI
+        uses: docker/setup-buildx-action@v3
 
-      - name: Create application.properties
-        uses: ./.github/workflows/container-application-properties
-        
-      - name: Compose Build Docker image
-        run: |
-          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          export POSTGRES_STAGING_DB=${{ secrets.POSTGRES_STAGING_DB }}
-          export RABBITMQ_USER=${{ secrets.RABBITMQ_USERNAME }}
-          export RABBITMQ_HOST=${{ secrets.RABBITMQ_STAGING_HOST }}
-          export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
-          docker compose -f docker-compose.staging.yml build
-      
-      - name: Save and compress Docker images
-        run: |
-          docker save hng_boilerplate_java_web-staging-backend:latest > staging-backend.tar
-          gzip staging-backend.tar
-          mv staging-backend.tar.gz staging-images.tar.gz
-      
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
         with:
-          name: docker-images
-          path: staging-images.tar.gz
+          push: false
+          tags: java_staging:latest
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Save and compress Docker image
+        run: |
+          docker save java_staging:latest | gzip > java_staging.tar.gz
       
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: docker-images
-          path: .
-      
-      - name: Copy to server
+      - name: Copy compressed image to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.STAGING_SSH_USERNAME }}
-          password: ${{ secrets.STAGING_SSH_PASSWORD }}
-          source: "staging-images.tar.gz"
-          target: "~/hng_boilerplate_java_web"
+          username: ${{ secrets.DEV_SSH_USERNAME }}
+          password: ${{ secrets.DEV_SSH_PASSWORD }}
+          source: "java_staging.tar.gz"
+          target: "/tmp"
 
       - name: Deploy on server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.STAGING_SSH_USERNAME }}
-          password: ${{ secrets.STAGING_SSH_PASSWORD }}
+          username: ${{ secrets.DEV_SSH_USERNAME }}
+          password: ${{ secrets.DEV_SSH_PASSWORD }}
           script: |
             cd ~/hng_boilerplate_java_web
-            git fetch origin staging
+            git add .
             git stash
             git checkout staging
-            git pull
-            gunzip staging-images.tar.gz
-            docker load < staging-images.tar
-            rm -f staging-images.tar
-            chmod +x ./scripts/staging-deploy.sh
-            ./scripts/staging-deploy.sh 
-      # - name: Add SSH Key to Known Hosts
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-      #   env:
-      #     SSH_HOST: ${{ secrets.SSH_HOST }}
-
-      # - name: SSH into Server and Execute Command
-      #   run: |
-      #     sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
-      #     cd ~/hng_boilerplate_java_web && git fetch origin staging && git stash && git checkout staging && git pull && chmod +x deploy.sh && ./deploy.sh && sudo systemctl start java_staging_app.service && \
-      #     exit"
-      #   env:
-      #     SSH_HOST: ${{ secrets.SSH_HOST }}
-      #     SSH_USERNAME: ${{ secrets.STAGING_SSH_USERNAME }}
-      #     SSH_PASSWORD: ${{ secrets.STAGING_SSH_PASSWORD }}
-
-  on-failure:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion=='failure' }}
-    steps:
-      - run: echo "Triggering the Workflow Failed"
+            git pull origin staging
+            gunzip -c /tmp/java_staging.tar.gz | docker load
+            rm -f /tmp/java_staging.tar.gz
+            docker compose -f compose.yaml -f compose/compose.staging.yaml up -d
