@@ -22,9 +22,9 @@ services:
       - postgres:/var/lib/postgresql/data
     healthcheck:
       test: "pg_isready"
-      interval: 5s
-      timeout: 5s
-      retries: 3
+      interval: 10s
+      timeout: 10s
+      retries: 5
     restart: unless-stopped
 
   rabbitmq:
@@ -33,9 +33,9 @@ services:
       - rabbitmq:/var/lib/rabbitmq
     healthcheck:
       test: "rabbitmq-diagnostics check_running"
-      interval: 5s
-      timeout: 5s
-      retries: 3
+      interval: 10s
+      timeout: 10s
+      retries: 5
     restart: unless-stopped
 
   nginx:
@@ -47,9 +47,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: "wget -qO- http://nginx:80"
-      interval: 5s
-      timeout: 5s
-      retries: 3
+      interval: 10s
+      timeout: 10s
+      retries: 5
     restart: unless-stopped
 
 volumes:
