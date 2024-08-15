@@ -35,7 +35,7 @@ jobs:
             --health-timeout 10s
             --health-retries 5
     env:
-      MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+      MAVEN_OPTS: "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
