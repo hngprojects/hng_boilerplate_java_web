@@ -52,3 +52,6 @@ jobs:
 
       - name: Build the application
         run: mvn verify
+
+      - name: Start Application
+        run: java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar
