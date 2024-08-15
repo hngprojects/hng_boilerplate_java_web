@@ -116,16 +116,16 @@ public class VideoServiceImpl implements VideoService{
 
         boolean status = publisher.sendCompressionJob(videoCompressDto);
         if (status) {
-            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), request.getVideoFile().getOriginalFilename(), VideoJobType.COMPRESS_VIDEO.toString(), VideoMessage.PENDING.toString(), VideoStatus.PENDING.toString());
+            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), request.getVideoFile().getOriginalFilename(), JobType.COMPRESS_VIDEO.toString(), VideoMessage.PENDING.toString(), VideoStatus.PENDING.toString(), null, null);
             videoRepository.save(videoSuite);
-            VideoStatusDTO response = new VideoStatusDTO(jobId, PENDING, PENDING, request.getVideoFile().getOriginalFilename(), "Compress video", 0, PENDING);
+            VideoStatusDTO response = new VideoStatusDTO(jobId, PENDING, PENDING, request.getVideoFile().getOriginalFilename(), "Compress video", 0, PENDING, null, null);
             return VideoCompressResponse.builder().message("Job Created").statusCode(HttpStatus.CREATED.value()).data(response).build();
         }
 
         throw new JobCreationError("Error creating job");
     }
 
-    private void validateCompressionRequest(VideoCompressRequest request) {
+    public void validateCompressionRequest(VideoCompressRequest request) {
         MultipartFile videoFile = request.getVideoFile();
         if (videoFile == null || videoFile.isEmpty()) {
             throw new IllegalArgumentException("Video file is required and cannot be empty.");
