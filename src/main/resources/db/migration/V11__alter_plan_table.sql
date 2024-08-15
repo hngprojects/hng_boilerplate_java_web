@@ -1,0 +1,2 @@
+ALTER TABLE plans
+ADD features VARCHAR(255);
