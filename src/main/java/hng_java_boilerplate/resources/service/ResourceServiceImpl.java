@@ -11,6 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ResourceServiceImpl implements ResourceService{
 
@@ -24,7 +27,7 @@ public class ResourceServiceImpl implements ResourceService{
 
 
     @Override
-    public ResourceResponseDto findByTitleAndDescription(String query, Pageable pageable) {
+    public ResourceResponseDto findByTitleAndDescriptionForUser(String query, Pageable pageable) {
 
         Page<Resources> resources = resourceRepository.search(query,
                 PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
@@ -39,8 +42,22 @@ public class ResourceServiceImpl implements ResourceService{
     }
 
     @Override
+    public ResourceResponseDto findByTitleAndDescriptionForAdmin(String query) {
+
+        List<Resources> resources = resourceRepository.searchAllResourcesForAdmin(query);
+
+        if (resources.isEmpty()) {
+            throw new ResourcesNotFoundException("No resources found with query: " + query);
+        }
+
+        ResourceResponseDto responseDto = new ResourceResponseDto();
+        responseDto.setData(resources);
+
+        return responseDto;
+    }
+    @Override
     public ResourceResponseDto getAllResources(Pageable pageable) {
-        Page<Resources> resources = resourceRepository.findAll(pageable);
+        Page<Resources> resources = resourceRepository.searchAllPublishedArticles(pageable);
 
         ResourceResponseDto responseDto = new ResourceResponseDto();
 
@@ -173,6 +190,36 @@ public class ResourceServiceImpl implements ResourceService{
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setMessage(Id + " published Successfully");
         responseDto.setResourceData(resources);
+
+        return responseDto;
+    }
+
+    @Override
+    public ResourceResponseDto getAllPublishedResource() {
+
+        List<Resources> resources = resourceRepository.getAllPublishedResources();
+
+        if (resources.isEmpty()) {
+            throw new ResourcesNotFoundException("No resources found");
+        }
+
+        ResourceResponseDto responseDto = new ResourceResponseDto();
+        responseDto.setData(resources);
+
+        return responseDto;
+    }
+
+    @Override
+    public ResourceResponseDto getAllUnPublishedResource() {
+
+        List<Resources> resources = resourceRepository.getAllUnPublishedResources();
+
+        if (resources.isEmpty()) {
+            throw new ResourcesNotFoundException("No resources found");
+        }
+
+        ResourceResponseDto responseDto = new ResourceResponseDto();
+        responseDto.setData(resources);
 
         return responseDto;
     }

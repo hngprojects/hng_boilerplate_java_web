@@ -19,21 +19,31 @@ public class ResourcesController {
         this.resourceService = resourceService;
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> searchResources(
-            @RequestParam(required = false) String query,
+    @GetMapping("/articles")
+    public ResponseEntity<?> getAllResourcesForUsersOnly(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int limit) {
-            if (query != null) {
+            @RequestParam(defaultValue = "4") int limit) {
 
-                ResourceResponseDto resources = resourceService.findByTitleAndDescription(query, PageRequest.of(page, limit));
-                return ResponseEntity.ok(resources);
-            }
-            else {
+            ResourceResponseDto resources = resourceService.getAllResources(PageRequest.of(page,limit));
+            return ResponseEntity.ok(resources);
 
-                ResourceResponseDto resources = resourceService.getAllResources(PageRequest.of(page,limit));
-                return ResponseEntity.ok(resources);
-            }
+    }
+    @GetMapping("/searchResources")
+    public ResponseEntity<?> searchResourcesForUsersOnly(
+            @RequestParam() String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int limit) {
+
+        ResourceResponseDto resources = resourceService.findByTitleAndDescriptionForUser(query, PageRequest.of(page, limit));
+        return ResponseEntity.ok(resources);
+
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchResourcesForAdminOnly( @RequestParam String query) {
+
+        ResourceResponseDto resources = resourceService.findByTitleAndDescriptionForAdmin(query);
+        return ResponseEntity.ok(resources);
 
     }
 
@@ -81,6 +91,24 @@ public class ResourcesController {
 
         ResourceResponseDto unpublished = resourceService.publishResource(id);
         return ResponseEntity.ok(unpublished);
+
+    }
+
+    @GetMapping("/published")
+    public ResponseEntity<?> getAllPublishedResourceBy()
+    {
+
+        ResourceResponseDto resources = resourceService.getAllPublishedResource();
+        return ResponseEntity.ok(resources);
+
+    }
+
+    @GetMapping("/unpublished")
+    public ResponseEntity<?> getAllUnpublishedResourceBy()
+    {
+
+        ResourceResponseDto resources = resourceService.getAllUnPublishedResource();
+        return ResponseEntity.ok(resources);
 
     }
 

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ResourceService {
 
-    ResourceResponseDto findByTitleAndDescription(String query, Pageable pageable);
+    ResourceResponseDto findByTitleAndDescriptionForUser(String query, Pageable pageable);
     ResourceResponseDto getAllResources(Pageable pageable);
     ResourceResponseDto addResources(ResourceRequestDto resourceRequestDto);
     ResourceResponseDto deleteResources(String Id);
@@ -14,5 +14,8 @@ public interface ResourceService {
     ResourceResponseDto getResourceById(String Id);
     ResourceResponseDto unpublishResource(String Id);
     ResourceResponseDto publishResource(String Id);
+    ResourceResponseDto getAllPublishedResource();
+    ResourceResponseDto findByTitleAndDescriptionForAdmin(String query);
+    ResourceResponseDto getAllUnPublishedResource();
 
 }
