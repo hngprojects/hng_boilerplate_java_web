@@ -34,6 +34,8 @@ jobs:
             --health-interval 10s
             --health-timeout 10s
             --health-retries 5
+    env:
+      MAVEN_OPTS: "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
     steps:
       - name: Checkout repository base
         uses: actions/checkout@v4
@@ -51,7 +53,7 @@ jobs:
           echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-ci.properties
 
       - name: Build the application
-        run: mvn verify
+        run: mvn verify -B
 
       - name: Start Application
-        run: nohup java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar &
+        run:  java -jar target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar & sleep 15
