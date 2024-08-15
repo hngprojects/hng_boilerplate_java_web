@@ -36,28 +36,29 @@ jobs:
 
       - name: Save and compress Docker image
         run: |
+          docker images
           docker save java_dev:latest | gzip > java_dev.tar.gz
       
-      - name: Copy compressed image to server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          source: "java_dev.tar.gz"
-          target: "/tmp"
+      # - name: Copy compressed image to server
+      #   uses: appleboy/scp-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     password: ${{ secrets.PASSWORD }}
+      #     source: "java_dev.tar.gz"
+      #     target: "/tmp"
 
-      - name: Deploy on server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd ~/hng_boilerplate_java_web
-            git add .
-            git stash
-            git checkout dev
+      # - name: Deploy on server
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     password: ${{ secrets.PASSWORD }}
+      #     script: |
+      #       cd ~/hng_boilerplate_java_web
+      #       git add .
+      #       git stash
+      #       git checkout dev
             git pull origin dev
             gunzip -c /tmp/java_dev.tar.gz | docker load
             # rm -f /tmp/java_dev.tar.gz
