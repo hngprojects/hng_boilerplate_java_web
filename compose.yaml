@@ -7,24 +7,23 @@ services:
     environment:
       - SPRING_PROFILE_ACTIVE=dev
     healthcheck:
-      test: "wget -qO- http://backend:8080"
-      interval: 5s
-      timeout: 5s
-      retries: 3
+      test: "wget -qO- http://localhost:8080"
+      interval: 10s
+      timeout: 10s
+      retries: 10
     depends_on:
       rabbitmq:
         condition: service_healthy
-      postgresdb:
+      postgres:
         condition: service_healthy
     restart: unless-stopped
 
   postgres:
     image: postgres:16-alpine
-    env_file: .env
     volumes:
       - postgres:/var/lib/postgresql/data
     healthcheck:
-      test: "pg_isready -U ${POSTGRES_USER}"
+      test: "pg_isready"
       interval: 5s
       timeout: 5s
       retries: 3
@@ -32,7 +31,6 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    env_file: .env
     volumes:
       - rabbitmq:/var/lib/rabbitmq
     healthcheck:
