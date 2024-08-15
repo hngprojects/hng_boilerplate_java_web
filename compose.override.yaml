@@ -1,4 +1,12 @@
 services:
+  postgres:
+    env_file:
+      - .env
+
+  rabbitmq:
+    env_file:
+      - .env
+      
   nginx:
     ports:
       - 8000:80
