@@ -80,7 +80,7 @@ public class VideoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{jobId}/compressed/download")
+    @GetMapping("/compressed/download/{jobId}")
     public ResponseEntity<?> downloadCompressVide(@PathVariable("jobId") String jobId) throws IOException {
         DownloadableDTO downloadDTO = videoService.downloadCompressVideo(jobId);
         return ResponseEntity.ok()
