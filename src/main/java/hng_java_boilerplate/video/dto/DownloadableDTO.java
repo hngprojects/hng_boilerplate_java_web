@@ -9,6 +9,7 @@ import org.springframework.core.io.ByteArrayResource;
 @AllArgsConstructor
 @Data
 public class DownloadableDTO {
-    int videoByteLength;
-    ByteArrayResource resource;
+    private String contentType;
+    private int videoByteLength;
+    private ByteArrayResource resource;
 }

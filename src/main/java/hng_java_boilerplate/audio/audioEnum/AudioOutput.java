@@ -1,12 +1,12 @@
-package hng_java_boilerplate.video.videoEnums;
+package hng_java_boilerplate.audio.audioEnum;
 
-public enum VideoJobType {
+public enum AudioOutput {
 
-    MERGE_VIDEO("merge video"),
-    COMPRESS_VIDEO("compress video");
+    MP3("audio/mp3"), WAV("audio/wav"), OPUS("audio/opus"), FLAC("audio/flac") ;
+
     private final String status;
 
-    VideoJobType(String status) {
+    AudioOutput(String status) {
         this.status = status;
     }
 

@@ -5,7 +5,7 @@ import hng_java_boilerplate.video.exceptions.FileDoesNotExist;
 import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.exceptions.JobNotFound;
 import hng_java_boilerplate.video.utils.VideoMapper;
-import hng_java_boilerplate.video.videoEnums.VideoJobType;
+import hng_java_boilerplate.video.videoEnums.JobType;
 import hng_java_boilerplate.video.videoEnums.VideoMessage;
 import hng_java_boilerplate.video.videoEnums.VideoStatus;
 import hng_java_boilerplate.video.entity.VideoSuite;
@@ -39,7 +39,6 @@ public class VideoServiceImpl implements VideoService{
     @Override
     public VideoResponseDTO<VideoStatusDTO> videoConcat(VideoUploadDTO videoUploadDTO) throws IOException {
         VideoPathDTO videoPathDTO = new VideoPathDTO();
-        VideoStatusDTO videoStatusDTO = new VideoStatusDTO();
         VideoSuite videoSuite;
         String jobId = VideoUtils.generateUuid();
 
@@ -50,10 +49,10 @@ public class VideoServiceImpl implements VideoService{
             count += 1;
         }
 
-        if(publisher.sendVideoConcat(videoPathDTO)){
+        if(publisher.sendVideo(videoPathDTO)){
            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
-                    VideoJobType.MERGE_VIDEO.toString(), VideoMessage.PENDING.toString(),
-                   VideoStatus.PENDING.toString());
+                    JobType.MERGE_VIDEO.toString(), VideoMessage.PENDING.toString(),
+                   VideoStatus.PENDING.toString(), null, null);
 
             return VideoUtils.response("Job created", HttpStatus.CREATED.value(), true,
                     VideoMapper.INSTANCE.toDTO(videoRepository.save(videoSuite)));
@@ -81,7 +80,10 @@ public class VideoServiceImpl implements VideoService{
                 .orElseThrow(() -> new JobNotFound("Job doesn't exist"));
         if(job.getFilename() == null)
             throw new FileNotFoundException("This file is not ready for download");
-        return VideoUtils.byteArrayResource(job.getFilename());
+
+        DownloadableDTO downloadableDTO = VideoUtils.byteArrayResource(job.getFilename());
+        downloadableDTO.setContentType(job.getExpectedFormat());
+        return downloadableDTO;
     }
 
     @Override

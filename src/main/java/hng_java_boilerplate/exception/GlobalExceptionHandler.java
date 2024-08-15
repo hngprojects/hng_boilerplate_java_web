@@ -201,12 +201,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(IOException.class)
-    public ResponseEntity<ErrorResponse> IOException(IOException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Bad request", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(PaymentNotFoundException.class)
     public ResponseEntity<ErrorResponse> paymentNotFoundException(PaymentNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Payment not found", ex.getMessage(), HttpStatus.NOT_FOUND.value());
