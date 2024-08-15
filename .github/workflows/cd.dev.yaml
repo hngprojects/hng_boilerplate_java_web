@@ -60,5 +60,5 @@ jobs:
             git checkout dev
             git pull origin dev
             gunzip -c /tmp/java_dev.tar.gz | docker load
-            rm -f /tmp/java_dev.tar.gz
+            # rm -f /tmp/java_dev.tar.gz
             docker compose -f compose.yaml -f compose/compose.dev.yaml up -d
