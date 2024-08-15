@@ -4,6 +4,7 @@ import hng_java_boilerplate.plans.dtos.CreatePlanDto;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
+import hng_java_boilerplate.plans.exceptions.PlanNotFoundException;
 import hng_java_boilerplate.plans.repository.PlanRepository;
 import hng_java_boilerplate.plans.service.PlanService;
 import jakarta.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,8 +34,6 @@ public class PlanServiceImpl implements PlanService {
                 .price(createPlanDto.price())
                 .name(createPlanDto.name())
                 .description(createPlanDto.description())
-                .duration(createPlanDto.duration())
-                .durationUnit(createPlanDto.durationUnit())
                 .features(createPlanDto.features())
                 .build();
 
@@ -45,5 +45,14 @@ public class PlanServiceImpl implements PlanService {
     public ResponseEntity<List<Plan>> findAll() {
         List<Plan> plans = planRepository.findAll();
         return ResponseEntity.status(200).body(plans);
+    }
+
+    @Override
+    public Plan findOne(String id) {
+        Optional<Plan> plan = planRepository.findById(id);
+        if (plan.isEmpty()) {
+            throw new PlanNotFoundException("Plan not found");
+        }
+        return plan.get();
     }
 }

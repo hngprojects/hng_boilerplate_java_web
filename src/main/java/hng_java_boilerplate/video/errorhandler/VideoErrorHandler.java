@@ -7,9 +7,11 @@ import hng_java_boilerplate.video.exceptions.JobNotFound;
 import hng_java_boilerplate.video.exceptions.VideoLengthConstaint;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.io.FileNotFoundException;
 
@@ -75,4 +77,25 @@ public class VideoErrorHandler {
         );
         return new ResponseEntity<>(videoMessageDTO, HttpStatus.NOT_FOUND);
     }
+
+   @ExceptionHandler(MissingServletRequestPartException.class)
+   public ResponseEntity<VideoMessageDTO> missingServletRequestPartException(MissingServletRequestPartException e){
+       VideoMessageDTO videoMessageDTO = new VideoMessageDTO(
+               e.getMessage(),
+               HttpStatus.BAD_REQUEST.value(),
+               false
+       );
+       return new ResponseEntity<>(videoMessageDTO, HttpStatus.BAD_REQUEST);
+   }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<VideoMessageDTO> missingServletRequestParameterException(MissingServletRequestParameterException e){
+        VideoMessageDTO videoMessageDTO = new VideoMessageDTO(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                false
+        );
+        return new ResponseEntity<>(videoMessageDTO, HttpStatus.BAD_REQUEST);
+    }
+
 }

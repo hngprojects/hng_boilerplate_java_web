@@ -2,7 +2,6 @@ package hng_java_boilerplate.config;
 
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -70,6 +69,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain httpSecurity(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(httpRequests ->
                         httpRequests
                                 .requestMatchers(
@@ -88,7 +88,17 @@ public class WebSecurityConfig {
                                         "/api/v1/faqs",
                                         "/api/v1/contacts",
                                         "/api/v1/squeeze/",
-                                        "/api/v1/pages/newsletter"
+                                        "/api/v1/pages/newsletter",
+                                        "/api/v1/audio/**",
+                                        "/api/v1/comments/delete/{commentId}",
+                                        "/api/v1/payment/**",
+                                        "/api/v1/resources/search",
+                                        "/api/v1/resources/create",
+                                        "/api/v1/resources/edit",
+                                        "/api/v1/resources/delete/{Id}",
+                                        "/api/v1/resources/{Id}",
+                                        "/api/v1/resources/unpublish/{id}",
+                                        "/api/v1/resources/publish/{id}"
                                 ).permitAll()
                                 .requestMatchers( "/api/v1/auth/logout", "/api/**").authenticated()
                                 .requestMatchers("/api/v1/create/blog-categories",

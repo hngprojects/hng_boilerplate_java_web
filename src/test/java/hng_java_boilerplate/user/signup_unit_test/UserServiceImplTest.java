@@ -1,5 +1,6 @@
 package hng_java_boilerplate.user.signup_unit_test;
 
+import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
