@@ -70,7 +70,7 @@ public class ResourcesController {
     }
 
     @GetMapping("/{Id}")
-    public ResponseEntity<?> getResourceById(@PathVariable String Id)
+    public ResponseEntity<?> getResourcesById(@PathVariable String Id)
     {
 
             ResourceResponseDto resources = resourceService.getResourceById(Id);
