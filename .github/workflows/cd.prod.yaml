@@ -1,0 +1,59 @@
+name: Production Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - prod
+
+jobs:
+  build-and-push:
+    if: github.event.repository.fork == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create application-prod.properties
+        run: echo ${{ secrets.APPLICATION_PROD_PROPERTIES }} | base64 --decode > src/main/resources/application-prod.properties
+                  
+      - name: Set up Docker CLI
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          tags: java_prod:latest
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Save and compress Docker image
+        run: |
+          docker save java_prod:latest | gzip > java_prod.tar.gz
+      
+      - name: Copy compressed image to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.DEV_SSH_USERNAME }}
+          password: ${{ secrets.DEV_SSH_PASSWORD }}
+          source: "java_prod.tar.gz"
+          target: "/tmp"
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.DEV_SSH_USERNAME }}
+          password: ${{ secrets.DEV_SSH_PASSWORD }}
+          script: |
+            cd ~/hng_boilerplate_java_web
+            git add .
+            git stash
+            git checkout prod
+            git pull origin prod
+            gunzip -c /tmp/java_prod.tar.gz | docker load
+            rm -f /tmp/java_prod.tar.gz
+            docker compose -f compose.yaml -f compose/compose.prod.yaml up -d

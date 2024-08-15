@@ -1,6 +1,5 @@
 package hng_java_boilerplate.plans.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import hng_java_boilerplate.plans.util.StringListConverter;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,6 +18,7 @@ import java.util.List;
 public class Plan {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(unique = true, nullable = false)
@@ -29,13 +29,6 @@ public class Plan {
 
     @Column(nullable = false)
     private Double price;
-
-    @Column(nullable = false)
-    private int duration;
-
-    @Column(nullable = false)
-    @JsonProperty("duration_unit")
-    private String durationUnit;
 
     @Convert(converter = StringListConverter.class)
     @Column(name = "features", nullable = false)

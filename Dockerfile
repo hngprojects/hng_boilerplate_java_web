@@ -11,12 +11,12 @@ COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 
 # Go-offline using the pom.xml
-# RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline
 
 # Copy your other files
 COPY ./src ./src
 # Compile the source code and package it in a jar file
-RUN mvn clean install -Dmaven.test.skip=true
+RUN mvn package -Dmaven.test.skip=true
 
 # Stage 2
 # Use a base image with Eclipse Temurin JRE 17
