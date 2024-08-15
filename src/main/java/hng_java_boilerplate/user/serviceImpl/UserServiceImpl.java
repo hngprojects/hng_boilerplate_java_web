@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailServiceImpl emailService;
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(username);
@@ -96,10 +97,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         UserResponse userResponse = getUserResponse(user);
         ResponseData data = new ResponseData(token, userResponse);
 
-        // Log activity
-//        GetUserDto userDto = convertUserToGetUserDto(user);
-//        String organisationId = userDto.getOrganisations().isEmpty() ? null : userDto.getOrganisations().get(0).getOrg_id();
-//        activityLogService.logActivity(organisationId, user.getId(), "User logged in");
+//         Log activity
+        GetUserDto userDto = convertUserToGetUserDto(user);
+        String organisationId = userDto.getOrganisations().isEmpty() ? null : userDto.getOrganisations().get(0).getOrg_id();
+        activityLogService.logActivity(organisationId, user.getId(), "User logged in");
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
     }
 
@@ -159,6 +160,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public User findUser(String id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     // GetUserResponse method that combines both branches
