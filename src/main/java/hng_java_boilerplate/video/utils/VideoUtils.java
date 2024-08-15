@@ -42,7 +42,7 @@ public class VideoUtils {
             return filePath.toAbsolutePath().toString();
 
         } catch (IOException e) {
-            logger.error("Error saving V36__alter_video_suite_table.sql: {}", e.getMessage(), e);
+            logger.error("Error saving file: {}", e.getMessage(), e);
             return "File upload failed: " + e.getMessage();
         }
     }
