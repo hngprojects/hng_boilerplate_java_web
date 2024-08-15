@@ -20,7 +20,7 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.finishedConcat}")
     private String finishedConcatJob;
 
-    @Value("${rabbitmq.queue.compress}")
+    @Value("${rabbitmq.queue.compress:videoCompress}")
     private String videoCompress;
 
     @Value("${rabbitmq.queue.save.compress.video:savedVideo}")

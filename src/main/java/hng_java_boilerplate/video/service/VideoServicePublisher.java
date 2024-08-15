@@ -21,7 +21,7 @@ public class VideoServicePublisher {
     @Value("${rabbitmq.queue.concat}")
     private String videoConcat;
 
-    @Value("${rabbitmq.queue.compress}")
+    @Value("${rabbitmq.queue.compress:videoCompress}")
     private String videoCompress;
     private static final Logger logger = LoggerFactory.getLogger(VideoServicePublisher.class);
     public boolean sendVideo(VideoPathDTO videoPathDTO){
