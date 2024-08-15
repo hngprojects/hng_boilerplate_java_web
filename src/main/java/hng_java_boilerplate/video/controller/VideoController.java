@@ -61,4 +61,30 @@ public class VideoController {
                 .contentLength(downloadDTO.getVideoByteLength())
                 .body(downloadDTO.getResource());
     }
+
+    @PostMapping("/compress")
+    public ResponseEntity<?> compressVideo(
+            @RequestParam("video") MultipartFile videoFile,
+            @RequestParam(value = "resolution", required = false) String resolution,
+            @RequestParam(value = "bitrate", required = false) String bitrate,
+            @RequestParam(value = "outputFormat", required = false) String outputFormat)  {
+
+        VideoCompressResponse<?> response;
+        try {
+            response = videoService.compressVideo(new  VideoCompressRequest(videoFile, resolution, bitrate, outputFormat));
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{jobId}/compressed/download")
+    public ResponseEntity<?> downloadCompressVide(@PathVariable("jobId") String jobId) throws IOException {
+        DownloadableDTO downloadDTO = videoService.downloadCompressVideo(jobId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=video.mp4")
+                .contentType(MediaType.valueOf("video/mp4"))
+                .contentLength(downloadDTO.getVideoByteLength())
+                .body(downloadDTO.getResource());
+    }
 }

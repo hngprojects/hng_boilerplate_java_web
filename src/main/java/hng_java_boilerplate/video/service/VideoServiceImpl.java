@@ -1,6 +1,7 @@
 package hng_java_boilerplate.video.service;
 
 import hng_java_boilerplate.video.dto.*;
+import hng_java_boilerplate.video.exceptions.FileDoesNotExist;
 import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.exceptions.JobNotFound;
 import hng_java_boilerplate.video.utils.VideoMapper;
@@ -13,12 +14,19 @@ import hng_java_boilerplate.video.utils.VideoUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+
+import static hng_java_boilerplate.video.utils.VideoUtils.*;
 
 @RequiredArgsConstructor
 @Service
@@ -75,4 +83,68 @@ public class VideoServiceImpl implements VideoService{
             throw new FileNotFoundException("This file is not ready for download");
         return VideoUtils.byteArrayResource(job.getFilename());
     }
+
+    @Override
+    public DownloadableDTO downloadCompressVideo(String jobId) throws IOException {
+        VideoSuite job = videoRepository.findById(jobId)
+                .orElseThrow(() -> new JobNotFound("Job doesn't exist for jobId: " + jobId));
+
+        String filename = jobId + "_compressed.mp4";
+
+        File file = new File(UPLOAD_DIR + File.separator + sanitizeFileName(filename));
+        DownloadableDTO downloadDTO = new DownloadableDTO();
+
+        if (!file.exists()) {
+           throw new FileDoesNotExist("File not found: " + filename);
+        }
+
+        byte[] videoByte = Files.readAllBytes(file.toPath());
+        downloadDTO.setVideoByteLength(videoByte.length);
+        downloadDTO.setResource(new ByteArrayResource(videoByte));
+        return downloadDTO;
+    }
+
+    @Override
+    public VideoCompressResponse<?> compressVideo(VideoCompressRequest request) throws IOException {
+        validateCompressionRequest(request);
+        VideoSuite videoSuite;
+        String jobId = VideoUtils.generateUuid();
+        VideoCompressDto videoCompressDto = VideoCompressDto.builder().video(VideoUtils.videoToByte(request.getVideoFile()))
+                .resolution(request.getResolution()).bitrate(request.getBitrate()).jobId(jobId).outputFormat(request.getOutputFormat()).build();
+
+        boolean status = publisher.sendCompressionJob(videoCompressDto);
+        if (status) {
+            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), request.getVideoFile().getOriginalFilename(), VideoJobType.COMPRESS_VIDEO.toString(), VideoMessage.PENDING.toString(), VideoStatus.PENDING.toString());
+            videoRepository.save(videoSuite);
+            VideoStatusDTO response = new VideoStatusDTO(jobId, PENDING, PENDING, request.getVideoFile().getOriginalFilename(), "Compress video", 0, PENDING);
+            return VideoCompressResponse.builder().message("Job Created").statusCode(HttpStatus.CREATED.value()).data(response).build();
+        }
+
+        throw new JobCreationError("Error creating job");
+    }
+
+    private void validateCompressionRequest(VideoCompressRequest request) {
+        MultipartFile videoFile = request.getVideoFile();
+        if (videoFile == null || videoFile.isEmpty()) {
+            throw new IllegalArgumentException("Video file is required and cannot be empty.");
+        }
+
+        String filename = videoFile.getOriginalFilename();
+        if (filename == null || !isValidVideoFormat(filename)) {
+            throw new IllegalArgumentException("Invalid video format. Accepted formats are: .mp4, .avi, .mkv.");
+        }
+
+        List<String> validOutputFormats = Arrays.asList("mp4", "avi", "mkv");
+        if (!validOutputFormats.contains(request.getOutputFormat())) {
+            throw new IllegalArgumentException("Invalid output format. Valid options are mp4, avi, mkv.");
+        }
+    }
+
+    private boolean isValidVideoFormat(String filename) {
+        List<String> validFormats = Arrays.asList(".mp4", ".avi", ".mkv", ".mov");
+        String fileExtension = filename.substring(filename.lastIndexOf('.')).toLowerCase();
+        return validFormats.contains(fileExtension);
+    }
+
+
 }

@@ -28,6 +28,7 @@ public class VideoUtils {
 
 
     public static String UPLOAD_DIR = "videoFiles";
+    public static String PENDING = "Pending";
     private static final Logger logger = LoggerFactory.getLogger(VideoService.class);
 
     public static String saveVideoTemp(MultipartFile file) {
@@ -44,7 +45,7 @@ public class VideoUtils {
             return filePath.toAbsolutePath().toString();
 
         } catch (IOException e) {
-            logger.error("Error saving file: {}", e.getMessage(), e);
+            logger.error("Error saving V36__alter_video_suite_table.sql: {}", e.getMessage(), e);
             return "File upload failed: " + e.getMessage();
         }
     }

@@ -2,7 +2,8 @@ package hng_java_boilerplate.video.videoEnums;
 
 public enum VideoJobType {
 
-    MERGE_VIDEO("merge video");
+    MERGE_VIDEO("merge video"),
+    COMPRESS_VIDEO("compress video");
     private final String status;
 
     VideoJobType(String status) {

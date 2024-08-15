@@ -15,6 +15,7 @@ import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.twofactor.exception.InvalidTotpException;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import hng_java_boilerplate.user.exception.*;
+import hng_java_boilerplate.video.exceptions.JobCreationError;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
@@ -205,8 +208,20 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PaymentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> paymentNotFoundException(PlanNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> paymentNotFoundException(PaymentNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Payment not found", ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler( JobCreationError.class)
+    public ResponseEntity<ErrorResponse> jobCreationError(JobCreationError ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Could not create job", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalFormatArgument(IllegalArgumentException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Invalid input", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
