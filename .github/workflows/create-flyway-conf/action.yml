@@ -12,3 +12,4 @@ runs:
           flyway.locations=classpath:db/migration
           flyway.baselineOnMigrate=true
           flyway.baselineVersion=1
+      shell: bash
