@@ -1,6 +1,4 @@
 package hng_java_boilerplate.resources.service;
-
-
 import hng_java_boilerplate.resources.dto.ResourceRequestDto;
 import hng_java_boilerplate.resources.dto.ResourceResponseDto;
 import hng_java_boilerplate.resources.entity.Resources;
@@ -10,13 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 public class ResourceServiceImpl implements ResourceService{
-
-
 
    private final ResourceRepository resourceRepository;
 
@@ -24,64 +19,52 @@ public class ResourceServiceImpl implements ResourceService{
         this.resourceRepository = resourceRepository;
     }
 
-
     @Override
     public ResourceResponseDto findByTitleAndDescriptionForUser(String query, Pageable pageable) {
-
         Page<Resources> resources = resourceRepository.search(query,
                 PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
 
         ResourceResponseDto responseDto = new ResourceResponseDto();
-
         responseDto.setData(resources.getContent());
         responseDto.setTotalPages(resources.getSize());
         responseDto.setCurrentPage(resources.getNumber());
-
         return responseDto;
     }
 
     @Override
     public ResourceResponseDto findByTitleAndDescriptionForAdmin(String query) {
-
         List<Resources> resources = resourceRepository.searchAllResourcesForAdmin(query);
-
         if (resources.isEmpty()) {
             throw new ResourcesNotFoundException("No resources found with query: " + query);
         }
-
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setData(resources);
-
         return responseDto;
     }
+
     @Override
     public ResourceResponseDto getAllResources(Pageable pageable) {
         Page<Resources> resources = resourceRepository.searchAllPublishedArticles(pageable);
 
         ResourceResponseDto responseDto = new ResourceResponseDto();
-
         responseDto.setData(resources.getContent());
         responseDto.setCurrentPage(resources.getNumber());
         responseDto.setTotalPages(resources.getTotalPages());
-
         return responseDto;
     }
 
     @Override
     public ResourceResponseDto addResources(ResourceRequestDto resourceRequestDto) {
-
         Resources resources =new Resources();
         resources.setTitle(resourceRequestDto.getTitle());
         resources.setDescription(resourceRequestDto.getDescription());
         resources.setImage(resourceRequestDto.getImage());
         resources.setPublished(resourceRequestDto.getStatus());
-
         resourceRepository.save(resources);
 
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setMessage(resources.getTitle() + " Created Successfully");
         responseDto.setResourceData(resources);
-
         return responseDto;
     }
 
@@ -109,35 +92,22 @@ public class ResourceServiceImpl implements ResourceService{
 
 
         if (resourceRequestDto.getId() != null){
-
             resources.setId(resourceRequestDto.getId());
-
         }
-
         if (resourceRequestDto.getTitle() != null){
-
             resources.setTitle(resourceRequestDto.getTitle());
         }
-
         if (resourceRequestDto.getDescription() != null){
-
             resources.setDescription(resourceRequestDto.getDescription());
         }
-
         if (resourceRequestDto.getImage() != null ){
-
             resources.setPublished(resourceRequestDto.getStatus());
         }
-
         if ( resourceRequestDto.getImage() != null ){
-
             resources.setImage(resourceRequestDto.getImage());
         }
-
         resourceRepository.save(resources);
-
         ResourceResponseDto responseDto = new ResourceResponseDto();
-
         responseDto.setMessage(resources.getTitle() + " Updated successfully");
         responseDto.setResourceData(resources);
 
@@ -147,7 +117,6 @@ public class ResourceServiceImpl implements ResourceService{
 
     @Override
     public ResourceResponseDto getResourceById(String Id) {
-
         Resources resources = resourceRepository.findById(Id).stream()
                 .filter(foundResource -> foundResource.getId().equals(Id))
                 .findFirst()
@@ -155,7 +124,6 @@ public class ResourceServiceImpl implements ResourceService{
 
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setResourceData(resources);
-
         return responseDto;
     }
 
@@ -195,13 +163,10 @@ public class ResourceServiceImpl implements ResourceService{
 
     @Override
     public ResourceResponseDto getAllPublishedResource() {
-
         List<Resources> resources = resourceRepository.getAllPublishedResources();
-
         if (resources.isEmpty()) {
             throw new ResourcesNotFoundException("No resources found");
         }
-
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setData(resources);
 
@@ -210,13 +175,10 @@ public class ResourceServiceImpl implements ResourceService{
 
     @Override
     public ResourceResponseDto getAllUnPublishedResource() {
-
         List<Resources> resources = resourceRepository.getAllUnPublishedResources();
-
         if (resources.isEmpty()) {
             throw new ResourcesNotFoundException("No resources found");
         }
-
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setData(resources);
 

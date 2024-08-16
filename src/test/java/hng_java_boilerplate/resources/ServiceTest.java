@@ -28,15 +28,11 @@ public class ServiceTest {
 
     @Mock
     private ResourceRepository resourceRepository;
-
     @InjectMocks
     private ResourceServiceImpl resourceService;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-
-
     }
 
     @Test
@@ -49,11 +45,7 @@ public class ServiceTest {
 
         when(resourceRepository.findById(resourceId)).thenReturn(Optional.of(mockResource));
         when(resourceRepository.save(any(Resources.class))).thenReturn(mockResource);
-
-
         ResourceResponseDto response = resourceService.unpublishResource(resourceId);
-
-
         assertNotNull(response);
         assertEquals(resourceId + "Unpublished Successfully", response.getMessage());
         assertFalse(mockResource.getPublished());
@@ -72,9 +64,7 @@ public class ServiceTest {
 
         when(resourceRepository.findById(resourceId)).thenReturn(Optional.of(mockResource));
 
-
         ResourceResponseDto response = resourceService.getResourceById(resourceId);
-
 
         assertNotNull(response);
         assertEquals(mockResource, response.getResourceData());
@@ -89,14 +79,12 @@ public class ServiceTest {
 
         when(resourceRepository.findById(resourceId)).thenReturn(Optional.empty());
 
-
         ResourcesNotFoundException exception = assertThrows(
                 ResourcesNotFoundException.class,
                 () -> resourceService.getResourceById(resourceId)
         );
 
         assertEquals("Resource with " + resourceId + " not found", exception.getMessage());
-
         verify(resourceRepository, times(1)).findById(resourceId);
     }
 
@@ -121,9 +109,7 @@ public class ServiceTest {
         when(resourceRepository.findById(resourceId)).thenReturn(Optional.of(mockResource));
         when(resourceRepository.save(any(Resources.class))).thenReturn(mockResource);
 
-
         ResourceResponseDto response = resourceService.editResources(mockRequestDto);
-
 
         assertNotNull(response);
         assertEquals("New Title Updated successfully", response.getMessage());
@@ -166,9 +152,7 @@ public class ServiceTest {
 
         when(resourceRepository.findById(resourceId)).thenReturn(Optional.of(mockResource));
 
-
         ResourceResponseDto response = resourceService.deleteResources(resourceId);
-
 
         assertNotNull(response);
         assertEquals("Resource with " + resourceId + " Deleted successfully", response.getMessage());
@@ -183,7 +167,6 @@ public class ServiceTest {
         String resourceId = "non-existent-resource-id";
 
         when(resourceRepository.findById(resourceId)).thenReturn(Optional.empty());
-
 
         ResourcesNotFoundException exception = assertThrows(
                 ResourcesNotFoundException.class,
@@ -213,9 +196,7 @@ public class ServiceTest {
 
         when(resourceRepository.save(any(Resources.class))).thenReturn(mockResource);
 
-
         ResourceResponseDto response = resourceService.addResources(mockRequestDto);
-
 
         assertNotNull(response);
         assertEquals("Test Title Created Successfully", response.getMessage());
@@ -243,9 +224,7 @@ public class ServiceTest {
 
         when(resourceRepository.search(query, pageable)).thenReturn(mockPage);
 
-
         ResourceResponseDto response = resourceService.findByTitleAndDescriptionForUser(query, pageable);
-
 
         assertNotNull(response);
         assertEquals(2, response.getData().size());
@@ -280,7 +259,6 @@ public class ServiceTest {
         assertEquals(2, response.getData().size());
         assertEquals(1, response.getTotalPages());
         assertEquals(0, response.getCurrentPage());
-
 
         verify(resourceRepository, times(1)).searchAllPublishedArticles(pageable);
     }
