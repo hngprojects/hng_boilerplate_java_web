@@ -66,13 +66,32 @@ public class VideoController {
     }
 
     @PostMapping("/apply-watermark")
-    public ResponseEntity<VideoResponseDTO<VideoStatusDTO>> applyWatermark(@RequestBody VideoWatermarkDTO videoWatermarkDTO) {
-        try {
-            VideoResponseDTO<VideoStatusDTO> response = videoService.applyWatermark(videoWatermarkDTO);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (IOException e) {
-            return new ResponseEntity<>(new VideoResponseDTO<>("Failed to apply watermark", HttpStatus.INTERNAL_SERVER_ERROR.value(), false, null),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> applyWatermark(
+            @RequestParam("video") MultipartFile videoFile,
+            @RequestParam(value = "watermarkImage", required = false) MultipartFile watermarkImage,
+            @RequestParam(value = "watermarkText", required = false) String watermarkText) throws IOException {
+
+
+        if (videoFile.isEmpty()) {
+            return new ResponseEntity<>("No video file provided", HttpStatus.BAD_REQUEST);
         }
+
+
+        if (watermarkImage == null && (watermarkText == null || watermarkText.trim().isEmpty())) {
+            return new ResponseEntity<>("Either an image watermark or text watermark must be provided", HttpStatus.BAD_REQUEST);
+        }
+
+
+        VideoWatermarkDTO videoWatermarkDTO = new VideoWatermarkDTO();
+        videoWatermarkDTO.setVideo(videoFile);
+        videoWatermarkDTO.setWatermarkImage(watermarkImage);
+        videoWatermarkDTO.setWatermarkText(watermarkText);
+
+        VideoResponseDTO<VideoStatusDTO> response = videoService.applyWatermark(videoWatermarkDTO);
+
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+
 }

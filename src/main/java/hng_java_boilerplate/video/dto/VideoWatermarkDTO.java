@@ -6,7 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class VideoWatermarkDTO {
     private MultipartFile video;
-    private MultipartFile watermark;
+    private String watermarkText;
+    private  MultipartFile watermarkImage;
     private String position;
     private int size;
     private int transparency;
