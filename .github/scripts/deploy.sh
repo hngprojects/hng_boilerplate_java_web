@@ -1,10 +1,10 @@
 #!/bin/bash
 
 cd ~
-./stop-app.sh
+# ./stop-app.sh
 # systemctl stop java_app.service
-cp application.properties ~/hng_boilerplate_java_web/src/main/resources/
-cp flyway.conf ~/hng_boilerplate_java_web/
+# cp application.properties ~/hng_boilerplate_java_web/src/main/resources/
+# cp flyway.conf ~/hng_boilerplate_java_web/
 cd ~/hng_boilerplate_java_web/
 mvn dependency:resolve
 ./mvnw clean install
