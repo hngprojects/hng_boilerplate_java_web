@@ -1,101 +1,57 @@
 name: Staging-Deployment
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types:
-      - completed
+  push:
     branches: [staging]
 
 jobs:
-  on-success:
+  build:
+    name: Build for staging
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion=='success' && github.event.workflow_run.head_branch == 'staging' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-          
+      - name: Setup Java with maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
       - name: Create .env file
         run: |
-          echo "DB_CONNECTION_STRING=postgresql://staging-postgresdb:5432/${{ secrets.POSTGRES_STAGING_DB }}" >> .env
+          echo "DB_CONNECTION_STRING=postgresql://localhost:5432/${{ secrets.POSTGRES_DB }}" > .env
           echo "DB_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "DB_NAME=${{ secrets.POSTGRES_DB }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env 
           echo "RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}" >> .env
           echo "RABBITMQ_USERNAME=${{ secrets.RABBITMQ_USERNAME }}" >> .env
           echo "RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}" >> .env
-          echo "RABBITMQ_HOST=${{ secrets.RABBITMQ_STAGING_HOST }}" >> .env
-          echo "ACCOUNT_SID=${{ secrets.ACCOUNT_SID }}" >> .env
-          echo "AUTH_TOKEN=${{ secrets.AUTH_TOKEN }}" >> .env
-          echo "SMS_NUMBER=${{ secrets.SMS_NUMBER }}" >> .env
-          echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> .env
-          echo "GOOGLE_ID_KEY=${{ secrets.GOOGLE_ID_KEY }}" >> .env
-          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
-          echo "PAYSTACK_KEY=${{ secrets.PAYSTACK_KEY }}" >> .env
-          echo "FLUTTERWAVE_KEY=${{ secrets.FLUTTERWAVE_KEY }}" >> .env
+          echo "RABBITMQ_HOST=${{ secrets.RABBITMQ_DEV_HOST }}" >> .env
 
       - name: Create application.properties
-        uses: ./.github/workflows/container-application-properties
-        
-      - name: Compose Build Docker image
-        run: |
-          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          export POSTGRES_STAGING_DB=${{ secrets.POSTGRES_STAGING_DB }}
-          export RABBITMQ_USER=${{ secrets.RABBITMQ_USERNAME }}
-          export RABBITMQ_HOST=${{ secrets.RABBITMQ_STAGING_HOST }}
-          export RABBITMQ_PASSWORD=${{ secrets.RABBITMQ_PASSWORD }}
-          docker compose -f docker-compose.staging.yml build
-      
-      - name: Save and compress Docker images
-        run: |
-          docker save hng_boilerplate_java_web-staging-backend:latest > staging-backend.tar
-          gzip staging-backend.tar
-          mv staging-backend.tar.gz staging-images.tar.gz
-      
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: docker-images
-          path: staging-images.tar.gz
-      
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: docker-images
-          path: .
-      
-      - name: Copy to server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.STAGING_SSH_USERNAME }}
-          password: ${{ secrets.STAGING_SSH_PASSWORD }}
-          source: "staging-images.tar.gz"
-          target: "~/hng_boilerplate_java_web"
+        uses: ./.github/workflows/create-application-properties
 
-      - name: Deploy on server
-        uses: appleboy/ssh-action@master
+      - name: Create ~/flyway.conf
+        uses: ./.github/workflows/create-flyway-conf
+
+      - name: Run the Maven verify phase
+        run: mvn clean install -Dmaven.test.skip=true
+
+      - name: copy service file
+        run: cp .github/java_staging_app.service target/
+
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.STAGING_SSH_USERNAME }}
-          password: ${{ secrets.STAGING_SSH_PASSWORD }}
-          script: |
-            cd ~/hng_boilerplate_java_web
-            git fetch origin staging
-            git stash
-            git checkout staging
-            git pull
-            gunzip staging-images.tar.gz
-            docker load < staging-images.tar
-            rm -f staging-images.tar
-            chmod +x ./scripts/staging-deploy.sh
-            ./scripts/staging-deploy.sh 
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          # port: ${{ secrets.PORT }}
+          source: "target/*"
+          target: boilerplate/staging
+
       # - name: Add SSH Key to Known Hosts
       #   run: |
       #     mkdir -p ~/.ssh

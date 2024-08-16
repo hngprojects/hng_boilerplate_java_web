@@ -10,6 +10,7 @@ import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundExceptio
 import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.plans.exceptions.PlanNotFoundException;
+import hng_java_boilerplate.resources.exception.ResourcesNotFoundException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.twofactor.exception.InvalidTotpException;
@@ -36,6 +37,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Existing exception handlers
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "Bad request", HttpStatus.BAD_REQUEST.value());
@@ -145,8 +147,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ResourcesNotFoundException.class)
+    public ResponseEntity<?> resourcesNotFoundException(ResourcesNotFoundException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse("This resource does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(EmailTemplateNotFound.class)
-    public ResponseEntity<?> emailTemplateNotFoundException(ResourceNotFoundException ex) {
+    public ResponseEntity<?> emailTemplateNotFoundException(EmailTemplateNotFound ex) {
         ErrorResponse errorResponse = new ErrorResponse("This email template does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
@@ -178,39 +186,40 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException exc) {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                .body("File too large! The maximum file size allowed is 500MB.");
+                .body("File too large! The maximum file size allowed is 500KB");
     }
 
     @ExceptionHandler(PlanNotFoundException.class)
-    public ResponseEntity<ErrorResponse> planNotFoundException(PlanNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("This pricing plan does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ResponseMessageDto> handlePlanNotFoundException(PlanNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
     }
 
     @ExceptionHandler(PaymentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> paymentNotFoundException(PaymentNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Payment not found", ex.getMessage(), HttpStatus.NOT_FOUND.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ResponseMessageDto> handlePaymentNotFoundException(PaymentNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
     }
 
     @ExceptionHandler(StripeException.class)
-    public ResponseEntity<ResponseMessageDto> handleStripeException(StripeException ex) {
-        return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.PAYMENT_REQUIRED.value()));
+    public ResponseEntity<ErrorResponse> handleStripeException(StripeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Payment error", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
     @ExceptionHandler(SignatureVerificationException.class)
-    public ResponseEntity<ResponseMessageDto> handleStripeSignatureVerificationException(SignatureVerificationException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
-    }
-
-    @ExceptionHandler(IOException.class)
-    public ResponseEntity<ResponseMessageDto> handleIOException(IOException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    public ResponseEntity<ErrorResponse> handleStripeSignatureException(SignatureVerificationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Stripe signature verification error", ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(JsonSyntaxException.class)
-    public ResponseEntity<ResponseMessageDto> handleJsonSyntaxException(JsonSyntaxException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessageDto("Invalid JSON syntax", HttpStatus.BAD_REQUEST.value()));
+    public ResponseEntity<ErrorResponse> handleJsonSyntaxException(JsonSyntaxException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Invalid JSON syntax", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ErrorResponse> handleIOException(IOException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("I/O error occurred", ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
 }

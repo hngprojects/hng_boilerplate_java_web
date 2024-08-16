@@ -1,0 +1,64 @@
+# name: Staging Deployment
+
+# on:
+#   workflow_dispatch:
+#   push:
+#     branches:
+#       - staging
+
+# jobs:
+#   build-and-push:
+#     if: github.event.repository.fork == false
+#     runs-on: ubuntu-latest
+#     environment:
+#       name: "staging"
+#       url: ${{ vars.URL }}
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Create application-staging.properties
+#         run: |
+#           echo "spring.profiles.active=staging" > src/main/resources/application.properties
+#           echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-staging.properties
+                  
+#       - name: Set up Docker CLI
+#         uses: docker/setup-buildx-action@v3
+
+#       - name: Build Docker image
+#         uses: docker/build-push-action@v6
+#         with:
+#           push: false
+#           load: true
+#           tags: java_staging:latest
+#           context: .
+#           cache-from: type=gha
+#           cache-to: type=gha,mode=max
+
+#       - name: Save and compress Docker image
+#         run: docker save java_staging:latest | gzip > java_staging.tar.gz
+      
+#       - name: Copy compressed image to server
+#         uses: appleboy/scp-action@master
+#         with:
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USERNAME }}
+#           password: ${{ secrets.PASSWORD }}
+#           source: "java_staging.tar.gz"
+#           target: "/tmp"
+
+#       - name: Deploy on server
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USERNAME }}
+#           password: ${{ secrets.PASSWORD }}
+#           script: |
+#             cd ~/hng_boilerplate_java_web
+#             git add .
+#             git stash
+#             git checkout staging
+#             git pull origin staging
+#             gunzip -c /tmp/java_staging.tar.gz | docker load
+#             rm -f /tmp/java_staging.tar.gz
+#             docker compose -f compose.yaml -f compose/compose.staging.yaml up -d
