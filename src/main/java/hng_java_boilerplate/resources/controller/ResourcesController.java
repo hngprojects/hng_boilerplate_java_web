@@ -22,49 +22,46 @@ public class ResourcesController {
     @GetMapping("/articles")
     public ResponseEntity<?> getAllResourcesForUsersOnly(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "4") int limit) {
-
+            @RequestParam(defaultValue = "4") int limit)
+    {
             ResourceResponseDto resources = resourceService.getAllResources(PageRequest.of(page,limit));
             return ResponseEntity.ok(resources);
-
     }
+
     @GetMapping("/searchResources")
     public ResponseEntity<?> searchResourcesForUsersOnly(
             @RequestParam() String query,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "4") int limit) {
-
+            @RequestParam(defaultValue = "4") int limit)
+    {
         ResourceResponseDto resources = resourceService.findByTitleAndDescriptionForUser(query, PageRequest.of(page, limit));
         return ResponseEntity.ok(resources);
-
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchResourcesForAdminOnly( @RequestParam String query) {
-
+    public ResponseEntity<?> searchResourcesForAdminOnly( @RequestParam String query)
+    {
         ResourceResponseDto resources = resourceService.findByTitleAndDescriptionForAdmin(query);
         return ResponseEntity.ok(resources);
-
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> addResources(@Valid @RequestBody ResourceRequestDto requestDto){
-
+    public ResponseEntity<?> addResources(@Valid @RequestBody ResourceRequestDto requestDto)
+    {
         ResourceResponseDto addedResources = resourceService.addResources(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedResources);
     }
 
     @PatchMapping("/edit")
-    public ResponseEntity<?> editResources(@Valid @RequestBody ResourceRequestDto requestDto){
-
+    public ResponseEntity<?> editResources(@Valid @RequestBody ResourceRequestDto requestDto)
+    {
         ResourceResponseDto editedResources = resourceService.editResources(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(editedResources);
-
     }
 
     @DeleteMapping("/delete/{Id}")
-    public ResponseEntity<?> deleteResources( @Valid @PathVariable String Id){
-
+    public ResponseEntity<?> deleteResources( @Valid @PathVariable String Id)
+    {
         ResourceResponseDto deletedResources = resourceService.deleteResources(Id);
         return ResponseEntity.status(HttpStatus.OK).body(deletedResources);
     }
@@ -72,44 +69,36 @@ public class ResourcesController {
     @GetMapping("/{Id}")
     public ResponseEntity<?> getResourcesById(@PathVariable String Id)
     {
-
             ResourceResponseDto resources = resourceService.getResourceById(Id);
             return ResponseEntity.ok(resources);
-
     }
 
     @PatchMapping("/unpublish/{id}")
-    public ResponseEntity<?> unpublishResource(@Valid @PathVariable String id){
-
+    public ResponseEntity<?> unpublishResource(@Valid @PathVariable String id)
+    {
         ResourceResponseDto unpublished = resourceService.unpublishResource(id);
         return ResponseEntity.ok(unpublished);
-
     }
 
     @PatchMapping("/publish/{id}")
-    public ResponseEntity<?> publishResource(@Valid @PathVariable String id){
-
+    public ResponseEntity<?> publishResource(@Valid @PathVariable String id)
+    {
         ResourceResponseDto unpublished = resourceService.publishResource(id);
         return ResponseEntity.ok(unpublished);
-
     }
 
     @GetMapping("/published")
     public ResponseEntity<?> getAllPublishedResourceBy()
     {
-
         ResourceResponseDto resources = resourceService.getAllPublishedResource();
         return ResponseEntity.ok(resources);
-
     }
 
     @GetMapping("/unpublished")
     public ResponseEntity<?> getAllUnpublishedResourceBy()
     {
-
         ResourceResponseDto resources = resourceService.getAllUnPublishedResource();
         return ResponseEntity.ok(resources);
-
     }
 
 }
