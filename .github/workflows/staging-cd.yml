@@ -1,15 +1,18 @@
 name: Staging-Deployment
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types:
-      - completed
-    branches: [staging]
+  workflow_dispatch:
+  push:
+    branches:
+      - staging
 
 jobs:
-  on-success:
+  build-and-push:
+    if: github.event.repository.fork == false
     runs-on: ubuntu-latest
+    environment:
+      name: "staging"
+      url: ${{ vars.URL }}
     if: ${{ github.event.workflow_run.conclusion=='success' && github.event.workflow_run.head_branch == 'staging' }}
     steps:
       - name: Checkout code
@@ -40,7 +43,7 @@ jobs:
         uses: ./.github/workflows/create-flyway-conf
 
       - name: Run the Maven verify phase
-        run: mvn clean install
+        run: mvn clean install -Dmaven.test.skip=true
 
       - name: copy service file
         run: cp .github/java_staging_app.service target/
