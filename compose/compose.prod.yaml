@@ -1,0 +1,14 @@
+name: java_prod
+
+services:
+  postgres:
+    env_file:
+      - .env.prod
+
+  rabbitmq:
+    env_file:
+      - .env.prod
+      
+  nginx:
+    ports:
+      - 8002:80

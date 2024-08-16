@@ -1,0 +1,14 @@
+name: java_staging
+
+services:
+  postgres:
+    env_file:
+      - .env.staging
+
+  rabbitmq:
+    env_file:
+      - .env.staging
+      
+  nginx:
+    ports:
+      - 8001:80
