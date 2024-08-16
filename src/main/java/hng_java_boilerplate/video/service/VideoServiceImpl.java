@@ -82,11 +82,32 @@ public class VideoServiceImpl implements VideoService{
         String jobId = VideoUtils.generateUuid();
         VideoSuite videoSuite;
 
+
         byte[] videoBytes = VideoUtils.videoToByte(videoWatermarkDTO.getVideo());
-        byte[] watermarkBytes = VideoUtils.videoToByte(videoWatermarkDTO.getWatermark());
 
 
-        byte[] watermarkedVideoBytes = VideoUtils.applyWatermark(videoBytes, watermarkBytes, videoWatermarkDTO.getPosition(), videoWatermarkDTO.getSize(), videoWatermarkDTO.getTransparency());
+        byte[] watermarkImageBytes = (videoWatermarkDTO.getWatermarkImage() != null)
+                ? VideoUtils.videoToByte(videoWatermarkDTO.getWatermarkImage()) : null;
+
+
+        String watermarkText = videoWatermarkDTO.getWatermarkText();
+
+        byte[] watermarkedVideoBytes;
+
+        if (watermarkImageBytes != null) {
+
+            watermarkedVideoBytes = VideoUtils.applyImageWatermark(
+                    videoBytes, watermarkImageBytes,
+                    videoWatermarkDTO.getPosition(), videoWatermarkDTO.getSize(), videoWatermarkDTO.getTransparency());
+        } else if (watermarkText != null && !watermarkText.trim().isEmpty()) {
+
+            watermarkedVideoBytes = VideoUtils.applyTextWatermark(
+                    videoBytes, watermarkText,
+                    videoWatermarkDTO.getPosition(), videoWatermarkDTO.getSize(), videoWatermarkDTO.getTransparency());
+        } else {
+
+            return VideoUtils.response("Either an image or text watermark must be provided", HttpStatus.BAD_REQUEST.value(), false, null);
+        }
 
 
         videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
@@ -95,8 +116,8 @@ public class VideoServiceImpl implements VideoService{
 
         videoRepository.save(videoSuite);
 
+
         return VideoUtils.response("Watermark applied successfully", HttpStatus.CREATED.value(), true,
                 VideoMapper.INSTANCE.toDTO(videoSuite));
     }
-
 }
