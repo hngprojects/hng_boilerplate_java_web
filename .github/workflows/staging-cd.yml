@@ -6,6 +6,9 @@ on:
 
 jobs:
   build:
+    environment:
+      name: "staging"
+      url: ${{ vars.URL }}
     name: Build for staging
     runs-on: ubuntu-latest
     steps:
