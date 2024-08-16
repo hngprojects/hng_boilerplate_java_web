@@ -20,7 +20,7 @@ public class AudioReplacementController {
     @Autowired
     private AudioReplacementService audioReplacementService;
 
-    @PostMapping("/replace-audio")"
+    @PostMapping("/replace-audio")
     public ResponseEntity<String> replaceAudio(@RequestParam("videoFile") MultipartFile videoFile,
                                                @RequestParam("audioFile") MultipartFile audioFile) {
         try {
