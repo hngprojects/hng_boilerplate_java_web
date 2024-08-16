@@ -272,17 +272,16 @@ public class ServiceTest {
         List<Resources> resourceList = Arrays.asList(resource1, resource2);
         Page<Resources> mockPage = new PageImpl<>(resourceList, pageable, resourceList.size());
 
-        when(resourceRepository.findAll(pageable)).thenReturn(mockPage);
-
+        when(resourceRepository.searchAllPublishedArticles(pageable)).thenReturn(mockPage);
 
         ResourceResponseDto response = resourceService.getAllResources(pageable);
-
 
         assertNotNull(response);
         assertEquals(2, response.getData().size());
         assertEquals(1, response.getTotalPages());
         assertEquals(0, response.getCurrentPage());
 
-        verify(resourceRepository, times(1)).findAll(pageable);
+
+        verify(resourceRepository, times(1)).searchAllPublishedArticles(pageable);
     }
 }
