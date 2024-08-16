@@ -8,8 +8,7 @@ runs:
         cat << EOF > src/main/resources/application.properties
 
         spring.application.name=hng-java-boilerplate
-
-        # datasource configuration
+        # database connection
         spring.datasource.url=jdbc:${DB_CONNECTION_STRING}
         spring.datasource.username=${DB_USERNAME}
         spring.datasource.password=${DB_PASSWORD}
@@ -22,26 +21,11 @@ runs:
         spring.flyway.url=jdbc:${DB_CONNECTION_STRING}
         spring.flyway.user=${DB_USERNAME}
         spring.flyway.password=${DB_PASSWORD}
-        spring.flyway.baseline-version=1
 
-        #Database Connection pooling
-        spring.datasource.hikari.minimum-idle=5
-        spring.datasource.hikari.maximum-pool-size=20
-        spring.datasource.hikari.idle-timeout=30000
-        spring.datasource.hikari.pool-name=HikariCP
-        spring.datasource.hikari.max-lifetime=1800000
-        spring.datasource.hikari.connection-timeout=20000
-        spring.datasource.hikari.leak-detection-threshold=15000
-
-        #configures Spring Boot to throw an exception if no handler is found for a request
-        spring.mvc.throw-exception-if-no-handler-found=true
-        spring.web.resources.add-mappings=false
-
-        #Logging
-        spring.main.banner-mode=off
         logging.pattern.console = %green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15})- %msg%n
 
         #Swagger doc
+        #springdoc.api-docs.path=/docs/yml
         springdoc.swagger-ui.path=/docs
         springdoc.api-docs.servers[0].url=https://api-java.boilerplate.hng.tech
         springdoc.api-docs.servers[0].description=Production Server
@@ -64,15 +48,51 @@ runs:
         spring.twilio.auth.token=${AUTH_TOKEN}
         spring.twilio.outgoing.sms.number=${SMS_NUMBER}
 
+
+        #MultiPartfile config
+        spring.servlet.multipart.max-file-size=50MB
+        spring.servlet.multipart.max-request-size=50MB
+
+        stripe.api.key=${STRIPE_API_KEY}
+        client.url=https://staging.tifi.tv
+        stripe.secret.key=${STRIPE_SECRET_KEY}
+        ## twilio configuration
+        # spring.twilio.account.sid=${ACCOUNT_SID}
+        # spring.twilio.auth.token=${AUTH_TOKEN}
+        # spring.twilio.outgoing.sms.number=${SMS_NUMBER}
+
+        #Security configuration
+        spring.security.oauth2.client.registration.google.client-id=${GOOGLE_CLIENT_ID}
+        spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET}
+
+
         # email configuration
         spring.mail.host=smtp.gmail.com
+        spring.mail.port=587
+        spring.mail.username=your-email@gmail.com
+        spring.mail.password=your-email-password
+        spring.mail.properties.mail.smtp.auth=true
+        spring.mail.properties.mail.smtp.starttls.enable=true
+        # sha512 string
+        sha512.string=${SHA_STRING}
+        # Database Connection pooling
+        spring.datasource.hikari.minimum-idle=5
+        spring.datasource.hikari.maximum-pool-size=20
+        spring.datasource.hikari.idle-timeout=30000
+        spring.datasource.hikari.pool-name=HikariCP
+        spring.datasource.hikari.max-lifetime=1800000
+        spring.datasource.hikari.connection-timeout=20000
+        spring.datasource.hikari.leak-detection-threshold=15000
+        # Configures Spring Boot to throw an exception if no handler is found for a request
+        spring.mvc.throw-exception-if-no-handler-found=true
+        spring.web.resources.add-mappings=false
 
         # JWT secret
         sha512.string=${JWT_SECRET}
 
-        #Security configuration
-        spring.security.oauth2.client.registration.google.client-id=${GOOGLE_ID}
-        spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_SECRET}
-        
+        ## Payment Configuration
+        paystack.secret.key=${PAYSTACK_SECRET_KEY}
+        flutterwave.secret.key=${FLUTTERWAVE_SECRET_KEY}
+                
         EOF
       shell: bash
