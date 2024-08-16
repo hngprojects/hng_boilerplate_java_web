@@ -6,7 +6,9 @@ import hng_java_boilerplate.video.dto.VideoResponseDTO;
 import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
 import hng_java_boilerplate.video.exceptions.FileDoesNotExist;
+import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.service.VideoService;
+import hng_java_boilerplate.video.videoEnums.VideoOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -25,6 +27,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -141,6 +144,7 @@ public class VideoUtils {
         return filename.replaceAll("[^a-zA-Z0-9.-]", "_");
     }
 
+
     public static byte[] applyWatermark(byte[] videoBytes, byte[] watermarkBytes, String position, int size, int transparency) {
         return videoBytes;
     }
@@ -192,4 +196,13 @@ public class VideoUtils {
         ImageIO.write(image, "png", baos);
         return baos.toByteArray();
     }
+
+    public static VideoOutput getMatchingFormat(String outputFormat, List<VideoOutput> audioFormatList) {
+        return audioFormatList.stream()
+                .filter(audioOutput -> outputFormat.equals(audioOutput.getStatus()))
+                .findFirst()
+                .orElseThrow(() -> new JobCreationError("output_format not supported"));
+    }
+
+
 }

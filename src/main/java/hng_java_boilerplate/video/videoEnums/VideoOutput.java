@@ -1,17 +1,11 @@
 package hng_java_boilerplate.video.videoEnums;
 
-public enum JobType {
-
-    MERGE_VIDEO("merge video"),
-    EXTRACT_AUDIO("extract audio"),
-
-    APPLY_WATERMARK("apply watermark");
-  
-    CONVERT_VIDEO("convert video");
+public enum VideoOutput {
+    MP4("video/mp4"), AVI("video/avi"), MOV("video/mov"), MKV("video/mkv") ;
 
     private final String status;
 
-    JobType(String status) {
+    VideoOutput(String status) {
         this.status = status;
     }
 
