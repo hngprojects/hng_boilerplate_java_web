@@ -40,7 +40,10 @@ jobs:
         run: mvn clean install -Dmaven.test.skip=true
 
       - name: copy service file
-        run: cp .github/java_staging_app.service target/
+        run: |
+          cp .github/scripts/java_staging_app.service target/
+          cp ~/flyway.conf target/
+          cp .env target/
 
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
