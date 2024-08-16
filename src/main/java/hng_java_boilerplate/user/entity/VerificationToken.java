@@ -14,7 +14,6 @@ public class VerificationToken {
     private static final int EXPIRATION_TIME = 60;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     private String token;

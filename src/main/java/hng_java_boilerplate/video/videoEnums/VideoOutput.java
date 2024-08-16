@@ -1,14 +1,11 @@
 package hng_java_boilerplate.video.videoEnums;
 
-public enum JobType {
+public enum VideoOutput {
+    MP4("video/mp4"), AVI("video/avi"), MOV("video/mov"), MKV("video/mkv") ;
 
-    MERGE_VIDEO("merge video"),
-    COMPRESS_VIDEO("compress video"),
-    EXTRACT_AUDIO("extract audio"),
-    CONVERT_VIDEO("convert video");
     private final String status;
 
-    JobType(String status) {
+    VideoOutput(String status) {
         this.status = status;
     }
 

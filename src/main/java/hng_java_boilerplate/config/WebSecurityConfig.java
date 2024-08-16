@@ -90,7 +90,18 @@ public class WebSecurityConfig {
                                         "/api/v1/squeeze/",
                                         "/api/v1/audio/**",
                                         "/api/v1/comments/delete/{commentId}",
-                                        "/api/v1/payment/**"
+                                        "/api/v1/payment/**",
+                                        "/api/v1/resources/articles",
+                                        "/api/v1/resources/search",
+                                        "/api/v1/resources/searchResources",
+                                        "/api/v1/resources/create",
+                                        "/api/v1/resources/edit",
+                                        "/api/v1/resources/delete/{Id}",
+                                        "/api/v1/resources/{Id}",
+                                        "/api/v1/resources/unpublish/{id}",
+                                        "/api/v1/resources/publish/{id}",
+                                        "/api/v1/resources/published",
+                                        "/api/v1/resources/unpublished"
                                 ).permitAll()
                                 .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
                 .logout(logout -> logout
