@@ -77,4 +77,26 @@ public class VideoServiceImpl implements VideoService{
         downloadableDTO.setContentType(job.getExpectedFormat());
         return downloadableDTO;
     }
+
+    public VideoResponseDTO<VideoStatusDTO> applyWatermark(VideoWatermarkDTO videoWatermarkDTO) throws IOException {
+        String jobId = VideoUtils.generateUuid();
+        VideoSuite videoSuite;
+
+        byte[] videoBytes = VideoUtils.videoToByte(videoWatermarkDTO.getVideo());
+        byte[] watermarkBytes = VideoUtils.videoToByte(videoWatermarkDTO.getWatermark());
+
+
+        byte[] watermarkedVideoBytes = VideoUtils.applyWatermark(videoBytes, watermarkBytes, videoWatermarkDTO.getPosition(), videoWatermarkDTO.getSize(), videoWatermarkDTO.getTransparency());
+
+
+        videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
+                JobType.APPLY_WATERMARK.toString(), VideoMessage.PENDING.toString(),
+                VideoStatus.PENDING.toString(), null, null);
+
+        videoRepository.save(videoSuite);
+
+        return VideoUtils.response("Watermark applied successfully", HttpStatus.CREATED.value(), true,
+                VideoMapper.INSTANCE.toDTO(videoSuite));
+    }
+
 }

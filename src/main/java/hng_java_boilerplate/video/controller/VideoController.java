@@ -26,23 +26,24 @@ public class VideoController {
 
     @PostMapping("/merge")
     public ResponseEntity<?> concatVideo(@RequestParam("videos") List<MultipartFile> files) throws IOException {
-        if(files.size() > 3)
+        if (files.size() > 3)
             throw new VideoLengthConstaint("Not more than 3 videos");
         VideoUploadDTO videoUploadDTO = new VideoUploadDTO();
         videoUploadDTO.setVideos(files);
 
-       return new ResponseEntity<>(videoService.videoConcat(videoUploadDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(videoService.videoConcat(videoUploadDTO), HttpStatus.CREATED);
     }
 
+
     @GetMapping("/{jobId}/status")
-    public ResponseEntity<?> getJob(@PathVariable("jobId") String jobId){
+    public ResponseEntity<?> getJob(@PathVariable("jobId") String jobId) {
         VideoSuite job = videoService.getJob(jobId);
-        if(job.getCurrentProcess().equals(VideoStatus.SAVED.toString())){
+        if (job.getCurrentProcess().equals(VideoStatus.SAVED.toString())) {
             VideoResponseDTO<DownloadDTO> responseDTO = new VideoResponseDTO<>();
             responseDTO.setMessage("Video is ready for download");
             responseDTO.setSuccess(true);
             responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(new DownloadDTO(job.getJobId(), "/api/v1/videos/"+jobId+"/download"));
+            responseDTO.setData(new DownloadDTO(job.getJobId(), "/api/v1/videos/" + jobId + "/download"));
             return new ResponseEntity<>(responseDTO, HttpStatus.OK);
         }
 
@@ -62,5 +63,16 @@ public class VideoController {
                 .contentType(MediaType.valueOf(downloadDTO.getContentType()))
                 .contentLength(downloadDTO.getVideoByteLength())
                 .body(downloadDTO.getResource());
+    }
+
+    @PostMapping("/apply-watermark")
+    public ResponseEntity<VideoResponseDTO<VideoStatusDTO>> applyWatermark(@RequestBody VideoWatermarkDTO videoWatermarkDTO) {
+        try {
+            VideoResponseDTO<VideoStatusDTO> response = videoService.applyWatermark(videoWatermarkDTO);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(new VideoResponseDTO<>("Failed to apply watermark", HttpStatus.INTERNAL_SERVER_ERROR.value(), false, null),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -134,4 +134,7 @@ public class VideoUtils {
         return filename.replaceAll("[^a-zA-Z0-9.-]", "_");
     }
 
+    public static byte[] applyWatermark(byte[] videoBytes, byte[] watermarkBytes, String position, int size, int transparency) {
+        return videoBytes;
+    }
 }
