@@ -5,13 +5,15 @@ on:
     branches: [staging]
 
 jobs:
+# if: github.event.repository.fork == false
+# runs-on: ubuntu-latest
+# environment:
+#   name: "staging"
+#   url: ${{ vars.URL }}
+# if: ${{ github.event.workflow_run.conclusion=='success' && github.event.workflow_run.head_branch == 'staging' }}
   build:
-    if: github.event.repository.fork == false
+    name: Build for staging
     runs-on: ubuntu-latest
-    environment:
-      name: "staging"
-      url: ${{ vars.URL }}
-    if: ${{ github.event.workflow_run.conclusion=='success' && github.event.workflow_run.head_branch == 'staging' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
