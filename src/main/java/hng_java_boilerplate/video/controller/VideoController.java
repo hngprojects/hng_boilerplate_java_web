@@ -5,10 +5,9 @@ import hng_java_boilerplate.video.entity.VideoSuite;
 import hng_java_boilerplate.video.exceptions.VideoLengthConstaint;
 import hng_java_boilerplate.video.service.VideoService;
 import hng_java_boilerplate.video.utils.VideoUtils;
+import hng_java_boilerplate.video.videoEnums.JobType;
 import hng_java_boilerplate.video.videoEnums.VideoStatus;
-import hng_java_boilerplate.videoconversion.conversionEnum.VideoOutput;
-import hng_java_boilerplate.videoconversion.service.VideoConversionService;
-import hng_java_boilerplate.videoconversion.utils.VideoConversionUtils;
+import hng_java_boilerplate.video.videoEnums.VideoOutput;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -30,7 +29,6 @@ import java.util.List;
 public class VideoController {
 
     private final VideoService videoService;
-    private final VideoConversionService videoConversionService;
 
     @PostMapping("/convert")
     public ResponseEntity<?> extract(@RequestParam("video") MultipartFile video,
@@ -42,9 +40,9 @@ public class VideoController {
 
         List<VideoOutput> videoFormatList = Arrays.stream(VideoOutput.values())
                 .toList();
-        String format = VideoConversionUtils.getMatchingFormat("video/"+outputFormat, videoFormatList).toString();
-
-        return new ResponseEntity<>(videoConversionService.startVideoProcess(video,format), HttpStatus.CREATED);
+        String format = VideoUtils.getMatchingFormat("video/"+outputFormat, videoFormatList).toString();
+        String jobType = JobType.CONVERT_VIDEO.toString();
+        return new ResponseEntity<>(videoService.startVideoProcess(video, format, jobType), HttpStatus.CREATED);
     }
 
     @PostMapping("/merge")

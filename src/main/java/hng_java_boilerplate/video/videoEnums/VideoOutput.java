@@ -1,4 +1,4 @@
-package hng_java_boilerplate.videoconversion.conversionEnum;
+package hng_java_boilerplate.video.videoEnums;
 
 public enum VideoOutput {
     MP4("video/mp4"), AVI("video/avi"), MOV("video/mov"), MKV("video/mkv") ;

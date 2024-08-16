@@ -6,7 +6,9 @@ import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
 import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.repository.VideoRepository;
+import hng_java_boilerplate.video.service.VideoServiceImpl;
 import hng_java_boilerplate.video.service.VideoServicePublisher;
+import hng_java_boilerplate.video.videoEnums.JobType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,7 +31,7 @@ public class VideoConversionServiceImplTest {
     private VideoRepository videoRepository;
 
     @InjectMocks
-    private VideoConversionServiceImpl videoConversionService;
+    private VideoServiceImpl videoService;
 
     @BeforeEach
     void setup() {
@@ -46,7 +48,7 @@ public class VideoConversionServiceImplTest {
         when(videoPublisher.sendVideo(any(VideoPathDTO.class))).thenReturn(true);
         when(videoRepository.save(any(VideoSuite.class))).thenReturn(new VideoSuite());
 
-        VideoResponseDTO<VideoStatusDTO> response = videoConversionService.startVideoProcess(videoFile, "video/mp4");
+        VideoResponseDTO<VideoStatusDTO> response = videoService.startVideoProcess(videoFile, "video/mp4", JobType.CONVERT_VIDEO.toString());
 
         assertNotNull(response);
         assertEquals("Job created", response.getMessage());
@@ -65,7 +67,7 @@ public class VideoConversionServiceImplTest {
         when(videoPublisher.sendVideo(any(VideoPathDTO.class))).thenReturn(false);
 
         JobCreationError exception = assertThrows(JobCreationError.class, () -> {
-            videoConversionService.startVideoProcess(videoFile, "video/mp4");
+            videoService.startVideoProcess(videoFile, "video/mp4", JobType.CONVERT_VIDEO.toString());
         });
 
         assertEquals("Error creating job", exception.getMessage());

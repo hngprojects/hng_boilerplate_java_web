@@ -1,4 +1,4 @@
-package hng_java_boilerplate.videoconversion.dto;
+package hng_java_boilerplate.video.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
