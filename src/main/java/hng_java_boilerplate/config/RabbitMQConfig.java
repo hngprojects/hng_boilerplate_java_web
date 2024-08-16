@@ -18,6 +18,7 @@ public class RabbitMQConfig {
     private String finishedConcatJob;
 
 
+
     @Bean
     public Queue emailQueue() {
         return new Queue(emailQueueName, true);
@@ -28,4 +29,5 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue finishedConcatQueue(){return new Queue(finishedConcatJob, true);}
+
 }

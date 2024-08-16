@@ -29,6 +29,24 @@ public class VideoServiceImpl implements VideoService{
     private final VideoRepository videoRepository;
 
     @Override
+    public VideoResponseDTO<VideoStatusDTO> startVideoProcess(MultipartFile video, String outputFormat, String jobType) throws IOException {
+        String jobId = VideoUtils.generateUuid();
+        VideoSuite job = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
+                jobType, VideoMessage.PENDING.toString(),
+                VideoStatus.PENDING.toString(), video.getContentType(),
+                outputFormat);
+        VideoPathDTO videoPathDTO = new VideoPathDTO();
+        videoPathDTO.setJobId(jobId);
+        videoPathDTO.addVideo("video1", video.getBytes());
+
+        if(publisher.sendVideo(videoPathDTO)){
+            return VideoUtils.response("Job created", HttpStatus.CREATED.value(), true,
+                    VideoMapper.INSTANCE.toDTO(videoRepository.save(job)));
+        }
+        throw new JobCreationError("Error creating job");
+    }
+
+    @Override
     public VideoResponseDTO<VideoStatusDTO> videoConcat(VideoUploadDTO videoUploadDTO) throws IOException {
         VideoPathDTO videoPathDTO = new VideoPathDTO();
         VideoSuite videoSuite;
@@ -42,9 +60,9 @@ public class VideoServiceImpl implements VideoService{
         }
 
         if(publisher.sendVideo(videoPathDTO)){
-           videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
+            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), null,
                     JobType.MERGE_VIDEO.toString(), VideoMessage.PENDING.toString(),
-                   VideoStatus.PENDING.toString(), null, null);
+                    VideoStatus.PENDING.toString(), null, null);
 
             return VideoUtils.response("Job created", HttpStatus.CREATED.value(), true,
                     VideoMapper.INSTANCE.toDTO(videoRepository.save(videoSuite)));

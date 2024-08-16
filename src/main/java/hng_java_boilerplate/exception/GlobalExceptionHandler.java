@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,31 +38,31 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),"Bad request", HttpStatus.BAD_REQUEST.value());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "Bad request", HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ErrorResponse> handleInvalidRequestException(InvalidRequestException ex) {
-        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Invalid request", HttpStatus.UNPROCESSABLE_ENTITY.value());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "Invalid request", HttpStatus.UNPROCESSABLE_ENTITY.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Bad request", HttpStatus.NOT_FOUND.value());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "Bad request", HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Bad request", HttpStatus.NOT_FOUND.value());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "Bad request", HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(FacebookOAuthException.class)
-    public ResponseEntity<ErrorResponse> handleFacebookOAuthException (FacebookOAuthException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),"Bad request", HttpStatus.BAD_REQUEST.value());
+    public ResponseEntity<ErrorResponse> handleFacebookOAuthException(FacebookOAuthException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "Bad request", HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -77,7 +76,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TokenExpiredException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<ErrorResponse> handleTokenExpiredException(TokenExpiredException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),"Bad request", HttpStatus.BAD_REQUEST.value());
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), "Bad request", HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -85,7 +84,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ValidationError handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-        for (FieldError error: ex.getBindingResult().getFieldErrors()) {
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
         }
         return new ValidationError(422, "validation error", errors);
@@ -111,7 +110,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExpiredJwtException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
-        ErrorResponse errorResponse = new ErrorResponse( "The JWT token has expired", ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+        ErrorResponse errorResponse = new ErrorResponse("The JWT token has expired", ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
@@ -175,7 +174,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.UNAUTHORIZED.value()));
     }
 
-<<<<<<< HEAD
     // Handle max upload size exceeded exception
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException exc) {
@@ -183,35 +181,36 @@ public class GlobalExceptionHandler {
                 .body("File too large! The maximum file size allowed is 500MB.");
     }
 
-=======
     @ExceptionHandler(PlanNotFoundException.class)
     public ResponseEntity<ErrorResponse> planNotFoundException(PlanNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse("This pricing plan does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(StripeException.class)
-    public ResponseEntity<ErrorResponse> stripeException(StripeException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Stripe error", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(JsonSyntaxException.class)
-    public ResponseEntity<ErrorResponse> jsonSyntaxException(JsonSyntaxException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Invalid json", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(SignatureVerificationException.class)
-    public ResponseEntity<ErrorResponse> signatureVerificationException(SignatureVerificationException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Invalid signature", ex.getMessage(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(PaymentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> paymentNotFoundException(PlanNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> paymentNotFoundException(PaymentNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Payment not found", ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
->>>>>>> 48aa9129ad1d331ad34a66bcd606a381db939d0e
+
+    @ExceptionHandler(StripeException.class)
+    public ResponseEntity<ResponseMessageDto> handleStripeException(StripeException ex) {
+        return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.PAYMENT_REQUIRED.value()));
+    }
+
+    @ExceptionHandler(SignatureVerificationException.class)
+    public ResponseEntity<ResponseMessageDto> handleStripeSignatureVerificationException(SignatureVerificationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<ResponseMessageDto> handleIOException(IOException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    }
+
+    @ExceptionHandler(JsonSyntaxException.class)
+    public ResponseEntity<ResponseMessageDto> handleJsonSyntaxException(JsonSyntaxException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessageDto("Invalid JSON syntax", HttpStatus.BAD_REQUEST.value()));
+    }
+
 }
