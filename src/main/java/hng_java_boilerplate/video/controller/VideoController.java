@@ -55,6 +55,13 @@ public class VideoController {
         return new ResponseEntity<>(videoService.videoConcat(videoUploadDTO), HttpStatus.CREATED);
     }
 
+    @PostMapping("/convert/video-to-gif")
+    public ResponseEntity<?> convertToGif(@RequestParam("video") MultipartFile video) throws IOException {
+        String jobType = JobType.GIF_CONVERSION.toString();
+        return new ResponseEntity<>(videoService.startVideoProcess(video, "image/gif", jobType), HttpStatus.CREATED);
+    }
+
+
     @GetMapping("/{jobId}/status")
     public ResponseEntity<?> getJob(@PathVariable("jobId") String jobId){
         VideoSuite job = videoService.getJob(jobId);
