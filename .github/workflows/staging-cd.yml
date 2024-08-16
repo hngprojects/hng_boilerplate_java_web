@@ -1,13 +1,11 @@
 name: Staging-Deployment
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - staging
+    branches: [staging]
 
 jobs:
-  build-and-push:
+  build:
     if: github.event.repository.fork == false
     runs-on: ubuntu-latest
     environment:
