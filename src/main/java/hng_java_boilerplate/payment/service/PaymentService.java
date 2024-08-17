@@ -45,8 +45,7 @@ public class PaymentService {
     @Value("${stripe.api.key}")
     private String API_KEY;
 
-    @Value("${client.url}")
-    private String clientBaseUrl;
+    private final String clientBaseUrl = "https://staging.tifi.tv";
 
     @Value("${stripe.secret.key}")
     private String API_SECRET;
@@ -54,7 +53,7 @@ public class PaymentService {
     @Transactional
     public ResponseEntity<SessionResponse> createSession(PaymentRequestBody body) throws StripeException {
         Plan plan = planService.findOne(body.planId());
-        if (plan.getName().equals("free")) {
+        if (plan.getName().equals("Free")) {
             throw new BadRequestException("You can not subscribe to free plan");
         }
         Stripe.apiKey = API_KEY;
