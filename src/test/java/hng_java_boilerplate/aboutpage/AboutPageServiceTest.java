@@ -15,10 +15,10 @@ import org.mockito.MockitoAnnotations;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class AboutPageServiceTest {
 
@@ -74,5 +74,11 @@ public class AboutPageServiceTest {
         assertEquals(1200000, savedContent.getSocialFollowers());
         assertEquals("Trained to Give You The Best", savedContent.getServicesTitle());
         assertEquals("Since our founding, Hng Boilerplate has been dedicated to constantly evolving to stay ahead of the curve.", savedContent.getServicesDescription());
+    }
+
+    @Test
+    void deleteAboutPageContent_ShouldDeleteContent() {
+        assertDoesNotThrow(() -> aboutPageService.deleteAboutPageContent());
+        verify(aboutPageRepository, times(1)).deleteAll();
     }
 }
