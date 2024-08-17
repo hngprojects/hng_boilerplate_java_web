@@ -10,6 +10,7 @@ import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundExceptio
 import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.plans.exceptions.PlanNotFoundException;
+import hng_java_boilerplate.privacy_policy.exception.PrivacyPolicyNotFoundException;
 import hng_java_boilerplate.resources.exception.ResourcesNotFoundException;
 import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
@@ -207,6 +208,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourcesNotFoundException.class)
     public ResponseEntity<?> resourcesNotFoundException(ResourcesNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse("This resource does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PrivacyPolicyNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(PrivacyPolicyNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Privacy policy not found", ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
