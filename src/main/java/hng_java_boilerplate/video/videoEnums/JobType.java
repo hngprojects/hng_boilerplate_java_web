@@ -4,7 +4,7 @@ public enum JobType {
 
     MERGE_VIDEO("merge video"),
     EXTRACT_AUDIO("extract audio"),
-    CONVERT_VIDEO("convert video");
+    ENCODE_VIDEO("encode video");
     private final String status;
 
     JobType(String status) {
