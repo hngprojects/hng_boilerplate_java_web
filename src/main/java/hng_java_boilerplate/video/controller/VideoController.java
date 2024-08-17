@@ -59,6 +59,7 @@ public class VideoController {
        return new ResponseEntity<>(videoService.videoConcat(videoUploadDTO), HttpStatus.CREATED);
     }
 
+
     @GetMapping("/{jobId}/status")
     public ResponseEntity<?> getJob(@PathVariable("jobId") String jobId){
         VideoSuite job = videoService.getJob(jobId);
