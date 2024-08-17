@@ -23,4 +23,6 @@ public class ContactUsController {
     public ResponseEntity<CustomResponse> receiveContactMessage(@RequestBody @Valid ContactUsRequest request) {
         return ResponseEntity.ok(contactUsService.processContactMessage(request));
     }
+
+    // new endpoint
 }
