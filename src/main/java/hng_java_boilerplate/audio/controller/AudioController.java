@@ -57,7 +57,7 @@ public class AudioController {
             responseDTO.setMessage("Video is ready for download");
             responseDTO.setSuccess(true);
             responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(new DownloadDTO(job.getJobId(), "/api/v1/audio/"+jobId+"/download"));
+            responseDTO.setData(new DownloadDTO(job.getJobId(), "/api/v1/audio/"+jobId+"/download", "100"));
             return new ResponseEntity<>(responseDTO, HttpStatus.OK);
         }
 

@@ -43,5 +43,18 @@ public class VideoSuite {
 
     @Column(name = "expected_format")
     private String expectedFormat;
+
+    @Column(name = "resolution")
+    private String resolution;
+
+    @Column(name = "bitrate")
+    private String bitrate;
+
+    @Column(name = "original_file_size")
+    private String originalFileSize;
+
+    @Column(name = "compressed_file_size")
+    private String compressedFileSize;
+
 }
 

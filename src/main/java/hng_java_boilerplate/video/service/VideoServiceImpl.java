@@ -24,7 +24,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static hng_java_boilerplate.video.utils.VideoUtils.*;
 
@@ -53,6 +55,7 @@ public class VideoServiceImpl implements VideoService{
         }
         throw new JobCreationError("Error creating job");
     }
+
 
     @Override
     public VideoResponseDTO<VideoStatusDTO> videoConcat(VideoUploadDTO videoUploadDTO) throws IOException {
@@ -105,23 +108,25 @@ public class VideoServiceImpl implements VideoService{
     }
 
     @Override
-    public DownloadableDTO downloadCompressVideo(String jobId) throws IOException {
+    public DownloadableDTO downloadCompressedVideo(String jobId) throws IOException {
         VideoSuite job = videoRepository.findById(jobId)
-                .orElseThrow(() -> new JobNotFound("Job doesn't exist for jobId: " + jobId));
+                .orElseThrow(() -> new JobNotFound("Job doesn't exist"));
+        if(job.getFilename() == null)
+            throw new FileNotFoundException("This file is not ready for download");
 
-        String filename = jobId + "_compressed.mp4";
+        DownloadableDTO downloadableDTO = VideoUtils.byteArrayResource(job.getFilename());
+        downloadableDTO.setContentType(job.getExpectedFormat());
+        return downloadableDTO;
+    }
 
-        File file = new File(UPLOAD_DIR + File.separator + sanitizeFileName(filename));
-        DownloadableDTO downloadDTO = new DownloadableDTO();
-
-        if (!file.exists()) {
-           throw new FileDoesNotExist("File not found: " + filename);
-        }
-
-        byte[] videoByte = Files.readAllBytes(file.toPath());
-        downloadDTO.setVideoByteLength(videoByte.length);
-        downloadDTO.setResource(new ByteArrayResource(videoByte));
-        return downloadDTO;
+    @Override
+    public Map<String, String> getFileSize(String jobId) {
+        VideoSuite job = videoRepository.findById(jobId)
+                .orElseThrow(() -> new JobNotFound("Job doesn't exist"));
+        Map<String, String> data = new HashMap<>();
+        data.put("originalFileSize", job.getOriginalFileSize());
+        data.put("compressedFileSize", job.getCompressedFileSize());
+        return data;
     }
 
     @Override
@@ -129,14 +134,23 @@ public class VideoServiceImpl implements VideoService{
         validateCompressionRequest(request);
         VideoSuite videoSuite;
         String jobId = VideoUtils.generateUuid();
-        VideoCompressDto videoCompressDto = VideoCompressDto.builder().video(VideoUtils.videoToByte(request.getVideoFile()))
-                .resolution(request.getResolution()).bitrate(request.getBitrate()).jobId(jobId).outputFormat(request.getOutputFormat()).build();
+        String originalFileSize = VideoUtils.formatFileSize(request.getVideoFile().getSize());
 
-        boolean status = publisher.sendCompressionJob(videoCompressDto);
+        String originalFilename = request.getVideoFile().getOriginalFilename();
+        assert originalFilename != null;
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+
+        Map<String, byte[]> video = new HashMap<>();
+        video.put("video", VideoUtils.videoToByte(request.getVideoFile()));
+        VideoPathDTO videoPathDTO = new VideoPathDTO(jobId,video);
+        boolean status = publisher.sendVideo(videoPathDTO);
         if (status) {
-            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), request.getVideoFile().getOriginalFilename(), JobType.COMPRESS_VIDEO.toString(), VideoMessage.PENDING.toString(), VideoStatus.PENDING.toString(), null, null);
+            videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), request.getVideoFile().getOriginalFilename(), JobType.COMPRESS_VIDEO.toString(), String.valueOf(VideoMessage.PENDING), VideoStatus.PENDING.toString(), fileExtension, request.getOutputFormat());
+            videoSuite.setBitrate(request.getBitrate());
+            videoSuite.setResolution(request.getResolution());
+            videoSuite.setOriginalFileSize(originalFileSize);
             videoRepository.save(videoSuite);
-            VideoStatusDTO response = new VideoStatusDTO(jobId, PENDING, PENDING, request.getVideoFile().getOriginalFilename(), "Compress video", 0, PENDING, null, null);
+            VideoStatusDTO response = new VideoStatusDTO(jobId, PENDING, VideoMessage.PENDING.getStatus(), request.getVideoFile().getOriginalFilename(), "compress video", 0, PENDING, fileExtension, request.getOutputFormat());
             return VideoCompressResponse.builder().message("Job Created").statusCode(HttpStatus.CREATED.value()).data(response).build();
         }
 
@@ -151,12 +165,12 @@ public class VideoServiceImpl implements VideoService{
 
         String filename = videoFile.getOriginalFilename();
         if (filename == null || !isValidVideoFormat(filename)) {
-            throw new IllegalArgumentException("Invalid video format. Accepted formats are: .mp4, .avi, .mkv.");
+            throw new IllegalArgumentException("Invalid video format. Accepted formats are: .mp4, .avi");
         }
 
-        List<String> validOutputFormats = Arrays.asList("mp4", "avi", "mkv");
+        List<String> validOutputFormats = Arrays.asList("mp4", "avi");
         if (!validOutputFormats.contains(request.getOutputFormat())) {
-            throw new IllegalArgumentException("Invalid output format. Valid options are mp4, avi, mkv.");
+            throw new IllegalArgumentException("Invalid output format. Valid options are mp4, avi.");
         }
     }
 

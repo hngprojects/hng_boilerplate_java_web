@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class DownloadDTO {
     private String job_id;
     private String link;
+    private String progress;
 }

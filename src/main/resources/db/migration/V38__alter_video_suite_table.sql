@@ -1,1 +1,0 @@
-ALTER TABLE video_suite ALTER COLUMN filename TYPE VARCHAR(512);

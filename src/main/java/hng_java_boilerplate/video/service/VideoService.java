@@ -5,6 +5,7 @@ import hng_java_boilerplate.video.entity.VideoSuite;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Map;
 
 public interface VideoService {
 
@@ -12,8 +13,11 @@ public interface VideoService {
     VideoSuite getJob(String id);
     void addUpdateRecord(String id, String filename, int progress, String currentProcess);
     DownloadableDTO downloadVideo(String jobId) throws IOException;
-    DownloadableDTO downloadCompressVideo(String jobId) throws IOException;
+    DownloadableDTO downloadCompressedVideo(String jobId) throws IOException;
 
     VideoCompressResponse<?> compressVideo(VideoCompressRequest request) throws IOException;
     VideoResponseDTO<VideoStatusDTO> startVideoProcess(MultipartFile video, String format, String jobType) throws IOException;
+
+    Map<String, String> getFileSize(String jobId);
+
 }

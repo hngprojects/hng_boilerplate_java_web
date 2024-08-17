@@ -20,12 +20,6 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.finishedConcat}")
     private String finishedConcatJob;
 
-    @Value("${rabbitmq.queue.compress:videoCompress}")
-    private String videoCompress;
-
-    @Value("${rabbitmq.queue.save.compress.video:savedVideo}")
-    private String saveCompressedVideos;
-
 
 
     @Bean
@@ -38,14 +32,6 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue finishedConcatQueue(){return new Queue(finishedConcatJob, true);}
-
-    @Bean
-    public Queue videoCompressQueue(){
-        return new Queue(videoCompress, true);
-    }
-
-    @Bean
-    public Queue saveCompressedVideosQueue(){ return new Queue(saveCompressedVideos, true);}
 
 
 }

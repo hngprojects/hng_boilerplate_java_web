@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("api/v1/videos")
@@ -29,6 +31,8 @@ import java.util.List;
 public class VideoController {
 
     private final VideoService videoService;
+
+    private final VideoUtils videoUtils;
 
     @PostMapping("/convert")
     public ResponseEntity<?> extract(@RequestParam("video") MultipartFile video,
@@ -63,7 +67,7 @@ public class VideoController {
             responseDTO.setMessage("Video is ready for download");
             responseDTO.setSuccess(true);
             responseDTO.setStatusCode(HttpStatus.OK.value());
-            responseDTO.setData(new DownloadDTO(job.getJobId(), "/api/v1/videos/"+jobId+"/download"));
+            responseDTO.setData(new DownloadDTO(job.getJobId(), "/api/v1/videos/"+jobId+"/download", "100"));
             return new ResponseEntity<>(responseDTO, HttpStatus.OK);
         }
 
@@ -76,6 +80,7 @@ public class VideoController {
     @GetMapping("/{jobId}/download")
     public ResponseEntity<?> downloadJob(@PathVariable("jobId") String jobId) throws IOException {
         DownloadableDTO downloadDTO = videoService.downloadVideo(jobId);
+        System.out.println(downloadDTO);
         String contentType = downloadDTO.getContentType();
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=video."
@@ -103,9 +108,12 @@ public class VideoController {
 
     @GetMapping("/compressed/download/{jobId}")
     public ResponseEntity<?> downloadCompressVide(@PathVariable("jobId") String jobId) throws IOException {
-        DownloadableDTO downloadDTO = videoService.downloadCompressVideo(jobId);
+        DownloadableDTO downloadDTO = videoService.downloadCompressedVideo(jobId);
+        Map<String, String> data = videoUtils.getFileSize(jobId);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=video.mp4")
+                .header("Original-File-Size", data.get("originalFileSize"))
+                .header("Compressed-File-Size", data.get("compressedFileSize"))
                 .contentType(MediaType.valueOf("video/mp4"))
                 .contentLength(downloadDTO.getVideoByteLength())
                 .body(downloadDTO.getResource());

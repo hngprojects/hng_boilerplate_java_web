@@ -2,6 +2,7 @@ package hng_java_boilerplate.video;
 
 import hng_java_boilerplate.video.dto.VideoCompressDto;
 import hng_java_boilerplate.video.dto.VideoCompressRequest;
+import hng_java_boilerplate.video.dto.VideoPathDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
 import hng_java_boilerplate.video.repository.VideoRepository;
 import hng_java_boilerplate.video.service.VideoServiceImpl;
@@ -54,7 +55,7 @@ public class CompressVideoTest {
         VideoCompressDto videoCompressDto = VideoCompressDto.builder().bitrate("LOW").resolution("LOW").jobId("jobId")
                 .outputFormat("mp4").video(new byte[]{}).build();
 
-        when(publisher.sendCompressionJob(any(VideoCompressDto.class))).thenReturn(true);
+        when(publisher.sendVideo(any(VideoPathDTO.class))).thenReturn(true);
 
         when(videoRepository.save(any(VideoSuite.class))).thenReturn(suite);
 

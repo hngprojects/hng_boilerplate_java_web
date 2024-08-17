@@ -9,9 +9,11 @@ import hng_java_boilerplate.video.exceptions.FileDoesNotExist;
 import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.service.VideoService;
 import hng_java_boilerplate.video.videoEnums.VideoOutput;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -21,15 +23,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-
+@AllArgsConstructor
+@Component
 public class VideoUtils {
 
 
     public static String UPLOAD_DIR = "videoFiles";
     public static String PENDING = "Pending";
     private static final Logger logger = LoggerFactory.getLogger(VideoService.class);
+
+    private final VideoService videoService;
 
     public static String saveVideoTemp(MultipartFile file) {
 
@@ -144,5 +150,18 @@ public class VideoUtils {
                 .findFirst()
                 .orElseThrow(() -> new JobCreationError("output_format not supported"));
     }
+
+    public Map<String, String> getFileSize(String jobId) {
+        return videoService.getFileSize(jobId);
+
+    }
+
+    public static String formatFileSize(long sizeInBytes) {
+        if (sizeInBytes < 1024) return sizeInBytes + " B";
+        int exp = (int) (Math.log(sizeInBytes) / Math.log(1024));
+        String pre = ("KMGTPE").charAt(exp - 1) + "B";
+        return String.format("%.1f %s", sizeInBytes / Math.pow(1024, exp), pre);
+    }
+
 
 }
