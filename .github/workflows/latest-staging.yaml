@@ -1,11 +1,10 @@
 name: Staging Deployment
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types:
-      - completed
   workflow_dispatch:
+  push:
+    branches:
+      - staging
 
 jobs:
   build-and-push:
@@ -26,18 +25,18 @@ jobs:
       - name: Add SSH Key to Known Hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
+          ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: SSH into Server and Execute Command
         run: |
-          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
-          cd ~/hng_boilerplate_java_web && git fetch origin staging && git stash && git checkout staging && git pull && \
+          sshpass -p ${{ secrets.STAGING_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.STAGING_USERNAME }}@${{ secrets.HOST }} "\
+          cd ~/hng_boilerplate_java_web && \
+          git fetch origin staging && \
+          git stash && \
+          git checkout staging && \
+          git pull && \
           mvn clean install -Dmaven.test.skip=true && \
-          sudo cp .github/scripts/java_staging_app.service /etc/systemd/system && sudo systemctl daemon-reload && sudo systemctl start java_staging_app.service && \
+          sudo cp .github/scripts/java_staging_app.service /etc/systemd/system && \
+          sudo systemctl daemon-reload && \
+          sudo systemctl start java_staging_app.service && \
           exit"
-        env:
-          SSH_HOST: ${{ secrets.HOST }}
-          SSH_USERNAME: ${{ secrets.STAGING_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.STAGING_PASSWORD }}
