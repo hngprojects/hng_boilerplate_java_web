@@ -36,7 +36,7 @@ jobs:
       - name: copy service file
         run: |
           cp .github/scripts/java_dev_app.service target/
-          cp ~/flyway.conf target/
+          # cp ~/flyway.conf target/
           # cp .env target/
 
       - name: copy file via ssh password
