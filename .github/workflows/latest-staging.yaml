@@ -1,14 +1,14 @@
 name: Staging Deployment
 
 on:
-  # workflow_dispatch:
+  workflow_dispatch:
   push:
     branches:
       - staging
 
 jobs:
   build-and-push:
-    # if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     environment:
       name: "staging"
       url: ${{ vars.URL }}
