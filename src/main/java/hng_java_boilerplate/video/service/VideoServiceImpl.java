@@ -110,7 +110,7 @@ public class VideoServiceImpl implements VideoService{
     @Override
     public DownloadableDTO downloadCompressedVideo(String jobId) throws IOException {
         VideoSuite job = videoRepository.findById(jobId)
-                .orElseThrow(() -> new JobNotFound("Job doesn't exist"));
+                .orElseThrow(() -> new JobNotFound("Job does not exist"));
         if(job.getFilename() == null)
             throw new FileNotFoundException("This file is not ready for download");
 
