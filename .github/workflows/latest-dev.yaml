@@ -28,7 +28,7 @@ jobs:
       - name: Create application-dev.properties
         run: |
           echo "spring.profiles.active=dev" > src/main/resources/application.properties
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-dev.properties
+          echo "${{ secrets.TEST_APP_PROPERTIES }}" | base64 --decode > src/main/resources/application-dev.properties
 
       - name: Run the Maven verify phase
         run: mvn clean install -Dmaven.test.skip=true
