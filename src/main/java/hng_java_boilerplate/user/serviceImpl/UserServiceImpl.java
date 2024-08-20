@@ -1,6 +1,8 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.exception.exception_class.NotFoundException;
+import hng_java_boilerplate.exception.exception_class.UnauthorizedException;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             throw new UsernameNotFoundException("User not found");
         }
         if (user.get().getIsDeactivated()) {
-            throw new DisabledException("User is deactivated");
+            throw new UnauthorizedException("User is deactivated");
         }
         return user.get();
     }
@@ -202,7 +204,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     public GetUserDto getUserWithDetails(String userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id"));
+                .orElseThrow(() -> new NotFoundException("User not found with id"));
 
         GetUserDto userDto = GetUserDto.builder()
                 .id(user.getId())

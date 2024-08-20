@@ -1,12 +1,12 @@
 package hng_java_boilerplate.video.utils;
 
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
+import hng_java_boilerplate.exception.exception_class.NotFoundException;
 import hng_java_boilerplate.video.dto.DownloadableDTO;
 import hng_java_boilerplate.video.dto.VideoCurrentStatusDTO;
 import hng_java_boilerplate.video.dto.VideoResponseDTO;
 import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
-import hng_java_boilerplate.video.exceptions.FileDoesNotExist;
-import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.service.VideoService;
 import hng_java_boilerplate.video.videoEnums.VideoOutput;
 import org.slf4j.Logger;
@@ -120,7 +120,7 @@ public class VideoUtils {
         DownloadableDTO downloadDTO =new DownloadableDTO();
 
         if (!file.exists()) {
-            throw new FileDoesNotExist("File not found");
+            throw new NotFoundException("File not found");
         }
 
         byte[] videoByte = Files.readAllBytes(file.toPath());
@@ -141,7 +141,7 @@ public class VideoUtils {
         return audioFormatList.stream()
                 .filter(audioOutput -> outputFormat.equals(audioOutput.getStatus()))
                 .findFirst()
-                .orElseThrow(() -> new JobCreationError("output_format not supported"));
+                .orElseThrow(() -> new BadRequestException("output_format not supported"));
     }
 
 }

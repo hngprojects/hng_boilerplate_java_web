@@ -3,13 +3,11 @@ package hng_java_boilerplate.video;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import hng_java_boilerplate.exception.exception_class.InternalServerException;
+import hng_java_boilerplate.exception.exception_class.NotFoundException;
 import hng_java_boilerplate.video.dto.DownloadableDTO;
-import hng_java_boilerplate.video.dto.VideoResponseDTO;
-import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
-import hng_java_boilerplate.video.exceptions.JobNotFound;
 import hng_java_boilerplate.video.repository.VideoRepository;
-import hng_java_boilerplate.video.utils.VideoMapper;
 import hng_java_boilerplate.video.service.VideoServiceImpl;
 import hng_java_boilerplate.video.utils.VideoUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -45,7 +42,7 @@ public class GetJobTest {
         VideoSuite mockJob = new VideoSuite();
         when(videoRepository.findById(jobId)).thenReturn(Optional.of(mockJob));
 
-        VideoSuite response = videoService.getJob(jobId.toString());
+        VideoSuite response = videoService.getJob(jobId);
 
         assertNotNull(response);
     }
@@ -56,7 +53,7 @@ public class GetJobTest {
         String jobId = UUID.randomUUID().toString();
         when(videoRepository.findById(jobId)).thenReturn(Optional.empty());
 
-        assertThrows(JobNotFound.class, () -> videoService.getJob(jobId.toString()));
+        assertThrows(NotFoundException.class, () -> videoService.getJob(jobId));
     }
 
     @Test
@@ -100,18 +97,18 @@ public class GetJobTest {
         when(videoRepository.findById("123")).thenReturn(Optional.of(testVideoSuite));
         testVideoSuite.setFilename(null);
 
-        assertThrows(IOException.class, () -> {
+        assertThrows(NotFoundException.class, () -> {
             videoService.downloadVideo("123");
-        }, "Should throw FileNotFoundException when filename is null.");
+        }, "Should throw exception when filename is null.");
     }
 
     @Test
     public void testDownloadVideoJobNotFound() {
         when(videoRepository.findById("123")).thenReturn(Optional.empty());
 
-        assertThrows(JobNotFound.class, () -> {
+        assertThrows(NotFoundException.class, () -> {
             videoService.downloadVideo("123");
-        }, "Should throw JobNotFound exception when job does not exist.");
+        }, "Should throw NotFound exception when job does not exist.");
     }
 
 

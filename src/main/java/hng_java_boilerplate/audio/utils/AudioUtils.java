@@ -1,7 +1,7 @@
 package hng_java_boilerplate.audio.utils;
 
 import hng_java_boilerplate.audio.audioEnum.AudioOutput;
-import hng_java_boilerplate.video.exceptions.JobCreationError;
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
 
 import java.util.List;
 
@@ -11,6 +11,6 @@ public class AudioUtils {
         return audioFormatList.stream()
                 .filter(audioOutput -> outputFormat.equals(audioOutput.getStatus()))
                 .findFirst()
-                .orElseThrow(() -> new JobCreationError("output_format not supported"));
+                .orElseThrow(() -> new BadRequestException("output_format not supported"));
     }
 }

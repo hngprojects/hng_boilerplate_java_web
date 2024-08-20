@@ -1,10 +1,10 @@
 package hng_java_boilerplate.videoconversion.serviceImpl;
 
+import hng_java_boilerplate.exception.exception_class.ServiceUnavailableException;
 import hng_java_boilerplate.video.dto.VideoPathDTO;
 import hng_java_boilerplate.video.dto.VideoResponseDTO;
 import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
-import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.repository.VideoRepository;
 import hng_java_boilerplate.video.service.VideoServiceImpl;
 import hng_java_boilerplate.video.service.VideoServicePublisher;
@@ -66,7 +66,7 @@ public class VideoConversionServiceImplTest {
 
         when(videoPublisher.sendVideo(any(VideoPathDTO.class))).thenReturn(false);
 
-        JobCreationError exception = assertThrows(JobCreationError.class, () -> {
+        ServiceUnavailableException exception = assertThrows(ServiceUnavailableException.class, () -> {
             videoService.startVideoProcess(videoFile, "video/mp4", JobType.CONVERT_VIDEO.toString());
         });
 

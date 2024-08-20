@@ -11,9 +11,9 @@ import java.io.IOException;
 
 public interface VideoService {
 
-    VideoResponseDTO<VideoStatusDTO> videoConcat(VideoUploadDTO videoUploadDTO) throws IOException;
+    VideoResponseDTO<VideoStatusDTO> videoConcat(VideoUploadDTO videoUploadDTO);
     VideoSuite getJob(String id);
     void addUpdateRecord(String id, String filename, int progress, String currentProcess);
-    DownloadableDTO downloadVideo(String jobId) throws IOException;
-    VideoResponseDTO<VideoStatusDTO> startVideoProcess(MultipartFile video, String format, String jobType) throws IOException;
+    DownloadableDTO downloadVideo(String jobId);
+    VideoResponseDTO<VideoStatusDTO> startVideoProcess(MultipartFile video, String format, String jobType);
 }

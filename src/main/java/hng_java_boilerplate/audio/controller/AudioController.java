@@ -52,7 +52,7 @@ public class AudioController {
     @GetMapping("/{jobId}/status")
     public ResponseEntity<?> getJob(@PathVariable("jobId") String jobId){
         VideoSuite job = videoService.getJob(jobId);
-        if(job.getCurrentProcess().equals(VideoStatus.SAVED.toString())){
+        if(job.getCurrentProcess().equals(VideoStatus.SAVED.toString())) {
             VideoResponseDTO<DownloadDTO> responseDTO = new VideoResponseDTO<>();
             responseDTO.setMessage("Video is ready for download");
             responseDTO.setSuccess(true);

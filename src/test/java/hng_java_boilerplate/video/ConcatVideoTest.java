@@ -3,12 +3,12 @@ package hng_java_boilerplate.video;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import hng_java_boilerplate.exception.exception_class.ServiceUnavailableException;
 import hng_java_boilerplate.video.dto.VideoPathDTO;
 import hng_java_boilerplate.video.dto.VideoResponseDTO;
 import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.dto.VideoUploadDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
-import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.repository.VideoRepository;
 import hng_java_boilerplate.video.service.VideoServiceImpl;
 import hng_java_boilerplate.video.service.VideoServicePublisher;
@@ -64,7 +64,7 @@ public class ConcatVideoTest {
         VideoUploadDTO videoUploadDTO = new VideoUploadDTO(Collections.singletonList(mockFile));
         when(publisher.sendVideo(any(VideoPathDTO.class))).thenReturn(false);
 
-        assertThrows(JobCreationError.class, () -> videoService.videoConcat(videoUploadDTO));
+        assertThrows(ServiceUnavailableException.class, () -> videoService.videoConcat(videoUploadDTO));
     }
 }
 

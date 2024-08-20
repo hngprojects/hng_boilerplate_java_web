@@ -2,6 +2,7 @@ package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.email.EmailServices.EmailTemplateService;
 import hng_java_boilerplate.email.dto.EmailTemplateResponse;
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
 import hng_java_boilerplate.user.entity.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -147,7 +148,7 @@ public class EmailServiceImpl {
                         "<h2>Best regards,<br>HNG</h2></div>";
 
             default:
-                throw new IllegalArgumentException("Unknown template: " + templateName);
+                throw new BadRequestException("Unknown template: " + templateName);
         }
     }
 

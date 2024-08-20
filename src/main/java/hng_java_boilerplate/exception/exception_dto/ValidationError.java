@@ -1,4 +1,4 @@
-package hng_java_boilerplate.exception;
+package hng_java_boilerplate.exception.exception_dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,8 +1,8 @@
 package hng_java_boilerplate.video.controller;
 
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
 import hng_java_boilerplate.video.dto.*;
 import hng_java_boilerplate.video.entity.VideoSuite;
-import hng_java_boilerplate.video.exceptions.VideoLengthConstaint;
 import hng_java_boilerplate.video.service.VideoService;
 import hng_java_boilerplate.video.utils.VideoUtils;
 import hng_java_boilerplate.video.videoEnums.JobType;
@@ -46,9 +46,9 @@ public class VideoController {
     }
 
     @PostMapping("/merge")
-    public ResponseEntity<?> concatVideo(@RequestParam("videos") List<MultipartFile> files) throws IOException {
+    public ResponseEntity<?> concatVideo(@RequestParam("videos") List<MultipartFile> files) {
         if(files.size() > 3)
-            throw new VideoLengthConstaint("Not more than 3 videos");
+            throw new BadRequestException("Not more than 3 videos");
         VideoUploadDTO videoUploadDTO = new VideoUploadDTO();
         videoUploadDTO.setVideos(files);
 
@@ -56,9 +56,9 @@ public class VideoController {
     }
 
     @GetMapping("/{jobId}/status")
-    public ResponseEntity<?> getJob(@PathVariable("jobId") String jobId){
+    public ResponseEntity<?> getJob(@PathVariable("jobId") String jobId) {
         VideoSuite job = videoService.getJob(jobId);
-        if(job.getCurrentProcess().equals(VideoStatus.SAVED.toString())){
+        if(job.getCurrentProcess().equals(VideoStatus.SAVED.toString())) {
             VideoResponseDTO<DownloadDTO> responseDTO = new VideoResponseDTO<>();
             responseDTO.setMessage("Video is ready for download");
             responseDTO.setSuccess(true);
@@ -74,7 +74,7 @@ public class VideoController {
     }
 
     @GetMapping("/{jobId}/download")
-    public ResponseEntity<?> downloadJob(@PathVariable("jobId") String jobId) throws IOException {
+    public ResponseEntity<?> downloadJob(@PathVariable("jobId") String jobId) {
         DownloadableDTO downloadDTO = videoService.downloadVideo(jobId);
         String contentType = downloadDTO.getContentType();
         return ResponseEntity.ok()

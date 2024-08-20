@@ -1,6 +1,6 @@
 package hng_java_boilerplate.helpCenter.faq.serviceImpl;
 
-import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
 import hng_java_boilerplate.helpCenter.faq.dto.request.FaqRequest;
 import hng_java_boilerplate.helpCenter.faq.dto.response.CustomResponse;
 import hng_java_boilerplate.helpCenter.faq.dto.response.FaqResponse;

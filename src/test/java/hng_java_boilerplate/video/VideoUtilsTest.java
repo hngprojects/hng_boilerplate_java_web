@@ -1,7 +1,7 @@
 package hng_java_boilerplate.video;
 
+import hng_java_boilerplate.exception.exception_class.NotFoundException;
 import hng_java_boilerplate.video.dto.DownloadableDTO;
-import hng_java_boilerplate.video.exceptions.FileDoesNotExist;
 import hng_java_boilerplate.video.utils.VideoUtils;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ public class VideoUtilsTest {
 
     @Test
     public void testByteArrayResourceFileDoesNotExist() {
-        assertThrows(FileDoesNotExist.class, () -> {
+        assertThrows(NotFoundException.class, () -> {
             VideoUtils.byteArrayResource("nonExistentFile.mp4");
         }, "Should throw FileDoesNotExist exception when file does not exist.");
     }

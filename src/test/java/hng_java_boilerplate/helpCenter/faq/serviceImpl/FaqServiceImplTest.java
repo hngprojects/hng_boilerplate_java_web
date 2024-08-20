@@ -1,12 +1,11 @@
 package hng_java_boilerplate.helpCenter.faq.serviceImpl;
 
-import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
 import hng_java_boilerplate.helpCenter.faq.dto.request.FaqRequest;
 import hng_java_boilerplate.helpCenter.faq.dto.response.CustomResponse;
 import hng_java_boilerplate.helpCenter.faq.dto.response.FaqResponse;
 import hng_java_boilerplate.helpCenter.faq.entity.FAQ;
 import hng_java_boilerplate.helpCenter.faq.repository.FaqRepository;
-import hng_java_boilerplate.helpCenter.faq.serviceImpl.FaqServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

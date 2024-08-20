@@ -7,7 +7,7 @@ import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionExpireParams;
-import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
 import hng_java_boilerplate.payment.dtos.PaymentRequestBody;
 import hng_java_boilerplate.payment.dtos.SessionResponse;
 import hng_java_boilerplate.payment.entity.Payment;

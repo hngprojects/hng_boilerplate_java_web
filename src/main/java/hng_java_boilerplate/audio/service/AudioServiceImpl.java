@@ -1,10 +1,10 @@
 package hng_java_boilerplate.audio.service;
 
+import hng_java_boilerplate.exception.exception_class.ServiceUnavailableException;
 import hng_java_boilerplate.video.dto.VideoPathDTO;
 import hng_java_boilerplate.video.dto.VideoResponseDTO;
 import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
-import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.repository.VideoRepository;
 import hng_java_boilerplate.video.service.VideoServicePublisher;
 import hng_java_boilerplate.video.utils.VideoMapper;
@@ -21,7 +21,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class AudioServiceImpl implements AudioService{
+public class AudioServiceImpl implements AudioService {
 
     private final VideoRepository videoRepository;
     private final VideoServicePublisher  videoPublisher;
@@ -37,11 +37,11 @@ public class AudioServiceImpl implements AudioService{
         videoPathDTO.setJobId(jobId);
         videoPathDTO.addVideo("video1", video.getBytes());
 
-        if(videoPublisher.sendVideo(videoPathDTO)){
+        if (videoPublisher.sendVideo(videoPathDTO)){
             return VideoUtils.response("Job created", HttpStatus.CREATED.value(), true,
                     VideoMapper.INSTANCE.toDTO(videoRepository.save(job)));
         }
-        throw new JobCreationError("Error creating job");
+        throw new ServiceUnavailableException("Error creating job");
     }
 
     @Override

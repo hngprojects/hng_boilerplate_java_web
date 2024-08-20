@@ -1,30 +1,22 @@
 package hng_java_boilerplate.audio;
 
 import hng_java_boilerplate.audio.service.AudioServiceImpl;
+import hng_java_boilerplate.exception.exception_class.ServiceUnavailableException;
 import hng_java_boilerplate.video.dto.VideoPathDTO;
 import hng_java_boilerplate.video.dto.VideoResponseDTO;
 import hng_java_boilerplate.video.dto.VideoStatusDTO;
 import hng_java_boilerplate.video.entity.VideoSuite;
-import hng_java_boilerplate.video.exceptions.JobCreationError;
 import hng_java_boilerplate.video.repository.VideoRepository;
 import hng_java_boilerplate.video.service.VideoServicePublisher;
-import hng_java_boilerplate.video.utils.VideoMapper;
-import hng_java_boilerplate.video.utils.VideoUtils;
-import hng_java_boilerplate.video.videoEnums.JobType;
-import hng_java_boilerplate.video.videoEnums.VideoMessage;
-import hng_java_boilerplate.video.videoEnums.VideoStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -75,7 +67,7 @@ public class AudioServiceImplTest {
 
         when(videoPublisher.sendVideo(any(VideoPathDTO.class))).thenReturn(false);
 
-        JobCreationError exception = assertThrows(JobCreationError.class, () -> {
+        ServiceUnavailableException exception = assertThrows(ServiceUnavailableException.class, () -> {
             audioService.startAudioProcess(videoFile, "mp4");
         });
 

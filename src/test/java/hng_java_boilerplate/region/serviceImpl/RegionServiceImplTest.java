@@ -1,6 +1,6 @@
 package hng_java_boilerplate.region.serviceImpl;
 
-import hng_java_boilerplate.exception.NotFoundException;
+import hng_java_boilerplate.exception.exception_class.NotFoundException;
 import hng_java_boilerplate.region.dto.request.CreateRegion;
 import hng_java_boilerplate.region.dto.request.UpdateRequest;
 import hng_java_boilerplate.region.dto.response.GetAllRegion;
