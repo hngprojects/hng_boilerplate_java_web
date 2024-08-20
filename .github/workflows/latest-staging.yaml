@@ -69,5 +69,5 @@ jobs:
           exit"
         env:
           SSH_HOST: ${{ secrets.HOST }}
-          SSH_USERNAME: ${{ secrets.STAGING_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.STAGING_PASSWORD }}
+          SSH_USERNAME: ${{ secrets.USERNAME }}
+          SSH_PASSWORD: ${{ secrets.PASSWORD }}
