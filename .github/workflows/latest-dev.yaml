@@ -63,9 +63,9 @@ jobs:
           git stash && \
           git checkout dev && \
           git pull && \
-          cp .github/scripts/java_dev_app.service /etc/systemd/system/java_dev_app.service && \
-          systemctl daemon-reload && \
-          systemctl start java_dev_app.service && \
+          sudo cp .github/scripts/java_dev_app.service /etc/systemd/system/java_dev_app.service && \
+          sudo systemctl daemon-reload && \
+          sudo systemctl start java_dev_app.service && \
           exit"
         env:
           SSH_HOST: ${{ secrets.HOST }}
