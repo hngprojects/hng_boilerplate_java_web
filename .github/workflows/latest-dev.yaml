@@ -1,18 +1,18 @@
-name: Staging Deployment
+name: Dev Deployment
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - staging
+      - dev
 
 jobs:
   build-and-push:
     if: github.event.repository.fork == false
     environment:
-      name: "staging"
+      name: "dev"
       url: ${{ vars.URL }}
-    name: Build for staging
+    name: Build for dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,17 +25,17 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Create application-staging.properties
+      - name: Create application-dev.properties
         run: |
-          echo "spring.profiles.active=staging" > src/main/resources/application.properties
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-staging.properties
+          echo "spring.profiles.active=dev" > src/main/resources/application.properties
+          echo "${{ secrets.TEST_APP_PROPERTIES }}" | base64 --decode > src/main/resources/application-dev.properties
 
       - name: Run the Maven verify phase
         run: mvn clean install -Dmaven.test.skip=true
 
       - name: copy service file
         run: |
-          cp .github/scripts/java_staging_app.service target/
+          cp .github/scripts/java_dev_app.service target/
           # cp ~/flyway.conf target/
           # cp .env target/
 
@@ -59,14 +59,29 @@ jobs:
         run: |
           sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
           cd ~/hng_boilerplate_java_web && \
-          git fetch origin staging && \
+          git fetch origin dev && \
           git stash && \
-          git checkout staging && \
+          git checkout dev && \
           git pull && \
-          sudo cp .github/scripts/java_staging_app.service /etc/systemd/system && \
+          sudo cp .github/scripts/java_dev_app.service /etc/systemd/system/java_dev_app.service && \
           sudo systemctl daemon-reload && \
-          sudo systemctl start java_staging_app.service && \
+          sudo systemctl start java_dev_app.service && \
           exit"
+        env:
+          SSH_HOST: ${{ secrets.HOST }}
+          SSH_USERNAME: ${{ secrets.USERNAME }}
+          SSH_PASSWORD: ${{ secrets.PASSWORD }}
+
+      - name: Verify Deployment
+        run: |
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
+          sleep 15 && \
+          if sudo systemctl is-active --quiet java_dev_app.service; then \
+            echo 'Deployment successful!'; \
+          else \
+            echo 'Deployment failed!'; \
+            exit 1; \
+          fi"
         env:
           SSH_HOST: ${{ secrets.HOST }}
           SSH_USERNAME: ${{ secrets.USERNAME }}
