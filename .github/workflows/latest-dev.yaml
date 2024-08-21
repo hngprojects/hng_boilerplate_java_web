@@ -1,0 +1,88 @@
+name: Dev Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-push:
+    if: github.event.repository.fork == false
+    environment:
+      name: "dev"
+      url: ${{ vars.URL }}
+    name: Build for dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java with maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Create application-dev.properties
+        run: |
+          echo "spring.profiles.active=dev" > src/main/resources/application.properties
+          echo "${{ secrets.TEST_APP_PROPERTIES }}" | base64 --decode > src/main/resources/application-dev.properties
+
+      - name: Run the Maven verify phase
+        run: mvn clean install -Dmaven.test.skip=true
+
+      - name: copy service file
+        run: |
+          cp .github/scripts/java_dev_app.service target/
+          # cp ~/flyway.conf target/
+          # cp .env target/
+
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "target/*"
+          target: /home/teamjava/hng_boilerplate_java_web
+
+      - name: Add SSH Key to Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+        env:
+          SSH_HOST: ${{ secrets.HOST }}
+
+      - name: SSH into Server and Execute Command
+        run: |
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
+          cd ~/hng_boilerplate_java_web && \
+          git fetch origin dev && \
+          git stash && \
+          git checkout dev && \
+          git pull && \
+          sudo cp .github/scripts/java_dev_app.service /etc/systemd/system/java_dev_app.service && \
+          sudo systemctl daemon-reload && \
+          sudo systemctl start java_dev_app.service && \
+          exit"
+        env:
+          SSH_HOST: ${{ secrets.HOST }}
+          SSH_USERNAME: ${{ secrets.USERNAME }}
+          SSH_PASSWORD: ${{ secrets.PASSWORD }}
+
+      - name: Verify Deployment
+        run: |
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
+          sleep 15 && \
+          if sudo systemctl is-active --quiet java_dev_app.service; then \
+            echo 'Deployment successful!'; \
+          else \
+            echo 'Deployment failed!'; \
+            exit 1; \
+          fi"
+        env:
+          SSH_HOST: ${{ secrets.HOST }}
+          SSH_USERNAME: ${{ secrets.USERNAME }}
+          SSH_PASSWORD: ${{ secrets.PASSWORD }}
