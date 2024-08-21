@@ -41,7 +41,7 @@ public class VideoController {
         List<VideoOutput> videoFormatList = Arrays.stream(VideoOutput.values())
                 .toList();
         String format = VideoUtils.getMatchingFormat("video/"+outputFormat, videoFormatList).toString();
-        String jobType = JobType.CONVERT_VIDEO.toString();
+        String jobType = JobType.ENCODE_VIDEO.toString();
         return new ResponseEntity<>(videoService.startVideoProcess(video, format, jobType), HttpStatus.CREATED);
     }
 

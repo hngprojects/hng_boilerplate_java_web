@@ -48,7 +48,7 @@ public class VideoConversionServiceImplTest {
         when(videoPublisher.sendVideo(any(VideoPathDTO.class))).thenReturn(true);
         when(videoRepository.save(any(VideoSuite.class))).thenReturn(new VideoSuite());
 
-        VideoResponseDTO<VideoStatusDTO> response = videoService.startVideoProcess(videoFile, "video/mp4", JobType.CONVERT_VIDEO.toString());
+        VideoResponseDTO<VideoStatusDTO> response = videoService.startVideoProcess(videoFile, "video/mp4", JobType.ENCODE_VIDEO.toString());
 
         assertNotNull(response);
         assertEquals("Job created", response.getMessage());
@@ -67,7 +67,7 @@ public class VideoConversionServiceImplTest {
         when(videoPublisher.sendVideo(any(VideoPathDTO.class))).thenReturn(false);
 
         JobCreationError exception = assertThrows(JobCreationError.class, () -> {
-            videoService.startVideoProcess(videoFile, "video/mp4", JobType.CONVERT_VIDEO.toString());
+            videoService.startVideoProcess(videoFile, "video/mp4", JobType.ENCODE_VIDEO.toString());
         });
 
         assertEquals("Error creating job", exception.getMessage());
