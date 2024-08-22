@@ -65,6 +65,8 @@ jobs:
           git pull && \
           sudo cp .github/scripts/java_staging_app.service /etc/systemd/system && \
           sudo systemctl daemon-reload && \
+          mvn flyway:repair && \
+          mvn clean install -Dmaven.test.skip=true && \
           sudo systemctl start java_staging_app.service && \
           exit"
         env:
