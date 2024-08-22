@@ -75,9 +75,11 @@ jobs:
       - name: Verify Deployment
         run: |
           sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
-          sleep 15 && \
+          sleep 60 && \
           if sudo systemctl is-active --quiet java_dev_app.service; then \
             echo 'Deployment successful!'; \
+            sudo systemctl stop java_dev_app.service && \
+            echo 'Dev application stopped after being stable for 60 seconds'; \
           else \
             echo 'Deployment failed!'; \
             exit 1; \
@@ -86,3 +88,5 @@ jobs:
           SSH_HOST: ${{ secrets.HOST }}
           SSH_USERNAME: ${{ secrets.USERNAME }}
           SSH_PASSWORD: ${{ secrets.PASSWORD }}
+
+
