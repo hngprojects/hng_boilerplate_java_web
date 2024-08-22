@@ -8,9 +8,9 @@ import hng_java_boilerplate.comment.dto.ResponseDto;
 import hng_java_boilerplate.comment.entity.Comment;
 import hng_java_boilerplate.comment.service.CommentService;
 import hng_java_boilerplate.exception.NotFoundException;
-import hng_java_boilerplate.profile.exceptions.UnauthorizedException;
+
+import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -71,14 +71,6 @@ public class CommentController {
                     HttpStatus.NOT_FOUND.value()
             );
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-        } catch (UnauthorizedException ex) {
-            ErrorResponse errorResponse = new ErrorResponse(
-                    "Unable to delete comment",
-                    "Unauthorized user",
-                    HttpStatus.UNAUTHORIZED.value()
-            );
-            return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
         }
-
     }
 }

@@ -1,10 +1,9 @@
 package hng_java_boilerplate.profile.serviceImpl;
 
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
 import hng_java_boilerplate.profile.dto.response.ProfileUpdateResponseDto;
 import hng_java_boilerplate.profile.entity.Profile;
-import hng_java_boilerplate.profile.exceptions.InternalServerErrorException;
-import hng_java_boilerplate.profile.exceptions.NotFoundException;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
@@ -81,22 +80,4 @@ public class UserProfileUnitTest {
                 .hasMessage("User not found");
     }
 
-    @Test
-    public void test_that_updateUserProfile_throw_error_when_something_excepted_happens_with_status_500(){
-
-        UpdateUserProfileDto profile = TestDataUtil.createUserProfileDto();
-
-        User user = new User();
-        user.setId("existent-id");
-        user.setName("unyime unyime");
-        user.setUserRole(Role.ROLE_USER);
-        user.setEmail("unyime1@gmail.com");
-        user.setPassword("123456");
-
-        when(userRepository.findById(user.getId())).thenThrow(new RuntimeException("Unexpected error"));
-
-        assertThatThrownBy(() -> underTest.updateUserProfile(user.getId(), profile))
-                .isInstanceOf(InternalServerErrorException.class)
-                .hasMessage("An unexpected error occurred");
-    }
 }

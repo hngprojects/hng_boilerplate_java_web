@@ -1,13 +1,11 @@
 package hng_java_boilerplate.user.signup_unit_test;
 
-import hng_java_boilerplate.plans.service.PlanService;
+import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.exception.EmailAlreadyExistsException;
-import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtUtils;
@@ -95,7 +93,7 @@ class UserServiceImplTest {
 
         when(userRepository.existsByEmail(signupDto.getEmail())).thenReturn(true);
 
-        assertThrows(EmailAlreadyExistsException.class, () -> userService.registerUser(signupDto));
+        assertThrows(BadRequestException.class, () -> userService.registerUser(signupDto));
     }
 
 
@@ -115,7 +113,7 @@ class UserServiceImplTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.registerUser(signupDto));
+        assertThrows(BadRequestException.class, () -> userService.registerUser(signupDto));
     }
 
     @Test

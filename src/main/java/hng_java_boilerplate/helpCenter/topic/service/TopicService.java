@@ -1,6 +1,6 @@
 package hng_java_boilerplate.helpCenter.topic.service;
 
-import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.helpCenter.topic.entity.Topic;
 import hng_java_boilerplate.helpCenter.topic.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class TopicService {
     }
 
     public Topic updateTopic(UUID id, Topic topicDetails) {
-        Topic topic = topicRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Topic not found"));
+        Topic topic = topicRepository.findById(id).orElseThrow(() -> new NotFoundException("Topic not found"));
         topic.setTitle(topicDetails.getTitle());
         topic.setContent(topicDetails.getContent());
         topic.setAuthor(topicDetails.getAuthor());

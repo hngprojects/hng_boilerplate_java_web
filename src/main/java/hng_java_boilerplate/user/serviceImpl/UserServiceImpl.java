@@ -1,6 +1,9 @@
 package hng_java_boilerplate.user.serviceImpl;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.exception.NotFoundException;
+import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -10,7 +13,6 @@ import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.enums.Role;
-import hng_java_boilerplate.user.exception.*;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.repository.VerificationTokenRepository;
 import hng_java_boilerplate.user.service.UserService;
@@ -45,10 +47,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws BadRequestException {
         Optional<User> user = userRepository.findByEmail(username);
         if (user.isEmpty()) {
-            throw new UsernameNotFoundException("User not found");
+            throw new BadRequestException("invalid credential");
         }
         if (user.get().getIsDeactivated()) {
             throw new DisabledException("User is deactivated");
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         Optional<User> createdUserCheck = userRepository.findByEmail(user.getEmail());
         if (createdUserCheck.isEmpty()) {
-            throw new UserNotFoundException("Registration Unsuccessful");
+            throw new BadRequestException("Registration Unsuccessful");
         }
 
         String token = jwtUtils.createJwt.apply(loadUserByUsername(savedUser.getEmail()));
@@ -109,16 +111,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         String tokenValidationResult = validateVerificationToken(token);
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
-            throw new UserNotFoundException("User not found with email: " + email);
+            throw new BadRequestException("User not found with email: " + email);
         }
         User user = userOptional.get();
         if (tokenValidationResult.equals("invalid")) {
-            throw new UnAuthorizedUserException("Invalid OTP");
+            throw new UnAuthorizedException("Invalid OTP");
         }
         if (tokenValidationResult.equals("expired")) {
             String newToken = emailService.generateToken();
             emailService.sendVerificationEmail(user, request, newToken);
-            throw new TokenExpiredException("OTP has expired. A new OTP has been sent to your email.");
+            throw new BadRequestException("OTP has expired. A new OTP has been sent to your email.");
         }
         user.setIsEnabled(true);
         userRepository.save(user);
@@ -164,7 +166,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public User findUser(String id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     // GetUserResponse method that combines both branches
@@ -185,7 +187,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     // Validate email method to check if the email already exists
     private void validateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException("Email already exists");
+            throw new BadRequestException("Email already exists");
         }
     }
 
@@ -194,7 +196,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public User getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return userRepository.findByEmail(email).orElseThrow(() -> new BadRequestException("User not found"));
     }
 
     // Get user with details
@@ -202,7 +204,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     public GetUserDto getUserWithDetails(String userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id"));
+                .orElseThrow(() -> new NotFoundException("User not found with id"));
 
         GetUserDto userDto = GetUserDto.builder()
                 .id(user.getId())
