@@ -33,10 +33,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final ErrorResponseDto errorResponseDTO;
+    private final ErrorResponseDto errorResponseDTO = new ErrorResponseDto();
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
