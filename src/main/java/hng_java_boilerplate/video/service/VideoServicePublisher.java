@@ -21,8 +21,6 @@ public class VideoServicePublisher {
     @Value("${rabbitmq.queue.concat}")
     private String videoConcat;
 
-//    @Value("${rabbitmq.queue.compress:videoCompress}")
-//    private String videoCompress;
     private static final Logger logger = LoggerFactory.getLogger(VideoServicePublisher.class);
     public boolean sendVideo(VideoPathDTO videoPathDTO){
         try {
@@ -37,16 +35,5 @@ public class VideoServicePublisher {
         }
     }
 
-    public boolean sendCompressionJob(VideoCompressDto videoCompressDTO) {
-        try{
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonString = objectMapper.writeValueAsString(videoCompressDTO);
-            rabbitTemplate.convertAndSend(videoConcat, jsonString);
-            return true;
-        }catch (AmqpException e){
-            return false;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 }

@@ -37,26 +37,6 @@ public class VideoServiceConsumer {
         videoService.addUpdateRecord(finishedDTO.getJobId(), filename, 100, VideoStatus.SAVED.toString());
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.save.compress.video:savedVideo}")
-    public void handleCompressedVideo(String message) throws IOException {
-        log.info("Received compressed video details from the queue.");
-        Map<String, Object> videoMessage = objectMapper.readValue(message, new TypeReference<Map<String, Object>>() {});
-        String jobId = (String) videoMessage.get("jobId");
-        String filename = (String) videoMessage.get("filename");
-        String videoBase64 = (String) videoMessage.get("video");
-
-        byte[] videoBytes = Base64.getDecoder().decode(videoBase64);
-
-        Path directoryPath = Paths.get(UPLOAD_DIR);
-        if (!Files.exists(directoryPath)) {
-            Files.createDirectories(directoryPath);
-        }
-
-        Path outputPath = directoryPath.resolve(filename);
-
-        Files.write(outputPath, videoBytes);
-        log.info("Compressed video saved successfully at: {}", outputPath);
-    }
 
 
 
