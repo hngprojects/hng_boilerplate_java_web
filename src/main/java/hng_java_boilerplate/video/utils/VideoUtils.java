@@ -1,18 +1,20 @@
 package hng_java_boilerplate.video.utils;
 
-import hng_java_boilerplate.video.dto.DownloadableDTO;
-import hng_java_boilerplate.video.dto.VideoCurrentStatusDTO;
-import hng_java_boilerplate.video.dto.VideoResponseDTO;
-import hng_java_boilerplate.video.dto.VideoStatusDTO;
+import hng_java_boilerplate.video.dto.*;
 import hng_java_boilerplate.video.entity.VideoSuite;
 import hng_java_boilerplate.video.exceptions.FileDoesNotExist;
 import hng_java_boilerplate.video.exceptions.JobCreationError;
+import hng_java_boilerplate.video.repository.VideoRepository;
 import hng_java_boilerplate.video.service.VideoService;
+import hng_java_boilerplate.video.videoEnums.JobType;
+import hng_java_boilerplate.video.videoEnums.VideoMessage;
 import hng_java_boilerplate.video.videoEnums.VideoOutput;
+import hng_java_boilerplate.video.videoEnums.VideoStatus;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -35,7 +38,7 @@ public class VideoUtils {
     public static String PENDING = "Pending";
     private static final Logger logger = LoggerFactory.getLogger(VideoService.class);
 
-    private final VideoService videoService;
+    private final VideoRepository videoRepository;
 
     public static String saveVideoTemp(MultipartFile file) {
 
@@ -151,9 +154,43 @@ public class VideoUtils {
                 .orElseThrow(() -> new JobCreationError("output_format not supported"));
     }
 
-    public Map<String, String> getFileSize(String jobId) {
-        return videoService.getFileSize(jobId);
+    public VideoCompressResponse<?> buildVideoCompressResponse(VideoCompressRequest request, String jobId, String originalFileSize, String fileExtension) {
+        VideoSuite videoSuite;
+        videoSuite = VideoUtils.videoSuite(jobId, VideoStatus.PENDING.toString(), request.getVideoFile().getOriginalFilename(), JobType.COMPRESS_VIDEO.toString(), String.valueOf(VideoMessage.PENDING), VideoStatus.PENDING.toString(), fileExtension, "video/"+request.getOutputFormat());
+        videoSuite.setBitrate(request.getBitrate());
+        videoSuite.setResolution(request.getResolution());
+        videoSuite.setOriginalFileSize(originalFileSize);
+        videoRepository.save(videoSuite);
+        VideoStatusDTO response = new VideoStatusDTO(jobId, PENDING, VideoMessage.PENDING.getStatus(), request.getVideoFile().getOriginalFilename(), "compress video", 0, PENDING, fileExtension, request.getOutputFormat());
+        return VideoCompressResponse.builder().message("Job Created").statusCode(HttpStatus.CREATED.value()).data(response).build();
+    }
 
+    public void validateCompressionRequest(VideoCompressRequest request) {
+        MultipartFile videoFile = request.getVideoFile();
+        if (videoFile == null || videoFile.isEmpty()) {
+            throw new IllegalArgumentException("Video file is required and cannot be empty.");
+        }
+
+        String filename = videoFile.getOriginalFilename();
+        if (filename == null || !isValidVideoFormat(filename)) {
+            throw new IllegalArgumentException("Invalid video format. Accepted formats are: .mp4, .avi");
+        }
+
+        List<String> validOutputFormats = Arrays.asList("mp4", "avi", "mov", "flv");
+        if (!validOutputFormats.contains(request.getOutputFormat())) {
+            throw new IllegalArgumentException("Invalid output format. Valid options are mp4, avi, mov, flv.");
+        }
+    }
+
+    public static boolean isValidVideoFormat(String filename) {
+        List<String> validFormats = Arrays.asList(".mp4", ".avi", ".mkv", ".mov");
+        String fileExtension = filename.substring(filename.lastIndexOf('.')).toLowerCase();
+        return validFormats.contains(fileExtension);
+    }
+
+
+    public Map<String, String> getFileSize(String jobId, VideoService videoService) {
+        return videoService.getFileSize(jobId);
     }
 
     public static String formatFileSize(long sizeInBytes) {

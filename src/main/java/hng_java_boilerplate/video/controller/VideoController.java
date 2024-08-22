@@ -100,7 +100,7 @@ public class VideoController {
 
         VideoCompressResponse<?> response;
         try {
-            response = videoService.compressVideo(new  VideoCompressRequest(videoFile, resolution, bitrate, outputFormat));
+            response = videoService.compressVideo(new VideoCompressRequest(videoFile, resolution, bitrate, outputFormat));
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
@@ -110,7 +110,7 @@ public class VideoController {
     @GetMapping("/compressed/download/{jobId}")
     public ResponseEntity<?> downloadCompressVide(@PathVariable("jobId") String jobId) throws IOException {
         DownloadableDTO downloadDTO = videoService.downloadCompressedVideo(jobId);
-        Map<String, String> data = videoUtils.getFileSize(jobId);
+        Map<String, String> data = videoUtils.getFileSize(jobId, videoService);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=video.mp4")
                 .header("Original-File-Size", data.get("originalFileSize"))
