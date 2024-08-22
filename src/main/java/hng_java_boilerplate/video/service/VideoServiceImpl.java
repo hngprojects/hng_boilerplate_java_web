@@ -162,15 +162,13 @@ public class VideoServiceImpl implements VideoService{
         if (videoFile == null || videoFile.isEmpty()) {
             throw new IllegalArgumentException("Video file is required and cannot be empty.");
         }
-
         String filename = videoFile.getOriginalFilename();
         if (filename == null || !isValidVideoFormat(filename)) {
             throw new IllegalArgumentException("Invalid video format. Accepted formats are: .mp4, .avi");
         }
-
-        List<String> validOutputFormats = Arrays.asList("mp4", "avi");
+        List<String> validOutputFormats = Arrays.asList("mp4", "avi", "mov", "flv");
         if (!validOutputFormats.contains(request.getOutputFormat())) {
-            throw new IllegalArgumentException("Invalid output format. Valid options are mp4, avi.");
+            throw new IllegalArgumentException("Invalid output format. Valid options are mp4, avi, mov, flv.");
         }
     }
 
