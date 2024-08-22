@@ -176,9 +176,9 @@ public class VideoUtils {
             throw new IllegalArgumentException("Invalid video format. Accepted formats are: .mp4, .avi");
         }
 
-        List<String> validOutputFormats = Arrays.asList("mp4", "avi", "mov", "flv");
+        List<String> validOutputFormats = Arrays.asList("mp4", "avi");
         if (!validOutputFormats.contains(request.getOutputFormat())) {
-            throw new IllegalArgumentException("Invalid output format. Valid options are mp4, avi, mov, flv.");
+            throw new IllegalArgumentException("Invalid output format. Valid options are mp4, avi.");
         }
     }
 

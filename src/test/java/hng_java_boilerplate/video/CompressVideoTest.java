@@ -36,7 +36,7 @@ public class CompressVideoTest {
 
     private VideoSuite suite;
 
-    @InjectMocks
+    @Mock
     private VideoUtils videoUtils;
 
     @BeforeEach
