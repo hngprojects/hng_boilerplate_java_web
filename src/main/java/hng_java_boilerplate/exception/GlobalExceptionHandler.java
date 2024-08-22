@@ -4,8 +4,6 @@ import com.google.gson.JsonSyntaxException;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import hng_java_boilerplate.email.exception.EmailTemplateExists;
-import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
@@ -18,6 +16,7 @@ import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import hng_java_boilerplate.user.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -30,12 +29,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final ErrorResponseDto errorResponseDTO;
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
@@ -99,8 +100,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public CustomError handleNotFound(NotFoundException ex) {
-        return new CustomError(404, ex.getMessage());
+    public ErrorResponseDto handleNotFound(NotFoundException ex) {
+        return setResponse(ex.getMessage(), HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND.value());
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
@@ -146,16 +147,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(EmailTemplateNotFound.class)
-    public ResponseEntity<?> emailTemplateNotFoundException(ResourceNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("This email template does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(EmailTemplateExists.class)
+    @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ResponseMessageDto> handleDuplicateEmailTemplateException(EmailTemplateExists ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessageDto(ex.getMessage(), HttpStatus.CONFLICT.value()));
+    public ErrorResponseDto handleConflict(ConflictException ex) {
+        return setResponse(ex.getMessage(), HttpStatus.CONFLICT.getReasonPhrase(), HttpStatus.CONFLICT.value());
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -208,6 +203,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> resourcesNotFoundException(ResourcesNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse("This resource does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    private ErrorResponseDto setResponse(String message, String error, int statusCode){
+        errorResponseDTO.setError(error);
+        errorResponseDTO.setMessage(message);
+        errorResponseDTO.setStatus_code(statusCode);
+        return errorResponseDTO;
     }
 
 }
