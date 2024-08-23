@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -28,17 +29,20 @@ public class NotificationController {
 
 
     @PostMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<NotificationResponse> createNotification(@RequestBody @Valid NotificationRequest request) {
         return ResponseEntity.status(201).body(service.createNotification(request.getMessage()));
     }
 
 
     @PatchMapping("/{notificationId}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<NotificationDtoRes> markAsRead(@PathVariable UUID notificationId, @RequestBody @Valid MarkRead isRead) {
         return ResponseEntity.ok(service.markAsRead(notificationId, isRead));
     }
 
     @DeleteMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<NotificationResponse> markAllAsRead() {
         return ResponseEntity.ok(service.markAllAsRead());
     }
