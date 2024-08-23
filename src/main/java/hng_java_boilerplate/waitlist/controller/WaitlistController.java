@@ -46,7 +46,7 @@ public class WaitlistController {
 
 
     @GetMapping
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_SUPER_ADMIN")
     public ResponseEntity<?> getWaitlistUsers(Pageable pageable) {
         Page<Waitlist> waitlistPage = waitlistService.getWaitlistUsers(pageable);
 
