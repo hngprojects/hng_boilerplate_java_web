@@ -4,6 +4,7 @@ import hng_java_boilerplate.statusPage.entity.ApiStatus;
 import hng_java_boilerplate.statusPage.service.ApiStatusService;
 import hng_java_boilerplate.statusPage.util.NewmanResultParser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class TestScheduler {
 
     private final ApiStatusService apiStatusService;
@@ -41,10 +43,9 @@ public class TestScheduler {
             for (ApiStatus apiStatus : apiStatuses) {
                 apiStatusService.updateApiStatus(apiStatus);
             }
-
-            System.out.println("API statuses updated successfully.");
+            log.info("API statuses updated successfully");
         } catch (IOException | InterruptedException e) {
-            System.err.println("Error running tests: " + e.getMessage());
+            log.error("Error running tests: " + e.getMessage());
         }
     }
 
