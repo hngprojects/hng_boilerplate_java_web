@@ -25,10 +25,10 @@ public class NewmanResultParser {
             int responseTime = execution.path("response").path("responseTime").asInt();
 
             ApiStatus apiStatus = new ApiStatus();
-            apiStatus.setApi_group(apiGroup);
+            apiStatus.setApiGroup(apiGroup);
             apiStatus.setStatus(passed ? ApiStatus.Status.OPERATIONAL : ApiStatus.Status.DOWN);
-            apiStatus.setLast_checked(LocalDateTime.now());
-            apiStatus.setResponse_time(responseTime);
+            apiStatus.setLastChecked(LocalDateTime.now());
+            apiStatus.setResponseTime(responseTime);
             apiStatus.setDetails(passed ? "All tests passed" : "API not responding");
 
             apiStatuses.add(apiStatus);

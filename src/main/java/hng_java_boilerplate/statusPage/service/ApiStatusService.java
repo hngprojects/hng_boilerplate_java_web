@@ -18,11 +18,11 @@ public class ApiStatusService {
     }
 
     public ApiStatus updateApiStatus(ApiStatus apiStatus) {
-        ApiStatus existingStatus = apiStatusRepository.findByApiGroup(apiStatus.getApi_group());
+        ApiStatus existingStatus = apiStatusRepository.findByApiGroup(apiStatus.getApiGroup());
         if (existingStatus != null) {
             existingStatus.setStatus(apiStatus.getStatus());
-            existingStatus.setLast_checked(apiStatus.getLast_checked());
-            existingStatus.setResponse_time(apiStatus.getResponse_time());
+            existingStatus.setLastChecked(apiStatus.getLastChecked());
+            existingStatus.setResponseTime(apiStatus.getResponseTime());
             existingStatus.setDetails(apiStatus.getDetails());
             return apiStatusRepository.save(existingStatus);
         }

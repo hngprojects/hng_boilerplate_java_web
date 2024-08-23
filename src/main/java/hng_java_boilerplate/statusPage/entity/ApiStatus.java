@@ -16,16 +16,16 @@ public class ApiStatus {
     private Long id;
 
     @Column(nullable = false)
-    private String api_group;
+    private String apiGroup;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
 
     @Column(nullable = false)
-    private LocalDateTime last_checked;
+    private LocalDateTime lastChecked;
 
-    private Integer response_time;
+    private Integer responseTime;
 
     private String details;
 
