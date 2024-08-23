@@ -4,6 +4,8 @@ import hng_java_boilerplate.activitylog.service.ActivityLogService;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.exception.UnAuthorizedException;
+import hng_java_boilerplate.plans.entity.Plan;
+import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -44,6 +46,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final ActivityLogService activityLogService;
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailServiceImpl emailService;
+    private final PlanService planService;
 
 
     @Override
@@ -63,6 +66,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         validateEmail(signupDto.getEmail());
 
         User user = new User();
+        Plan plan = planService.findOne("1");
+        user.setPlan(plan);
         user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
