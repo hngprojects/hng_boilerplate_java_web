@@ -5,6 +5,9 @@ import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,9 @@ public class ProductController {
 
     @GetMapping("/search")
     public ResponseEntity<ProductSearchDTO> searchProducts(
+            @NotEmpty(message = "name cannot be empty")
+            @NotBlank(message = "name cannot be blank")
+            @NotNull(message = "name cannot be null")
             @RequestParam(value = "name") String name,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "minPrice", required = false) Double minPrice,

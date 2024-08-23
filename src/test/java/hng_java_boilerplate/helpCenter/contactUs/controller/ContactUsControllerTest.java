@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.helpCenter.contactUs.dto.request.ContactUsRequest;
 import hng_java_boilerplate.helpCenter.contactUs.dto.response.ContactUsResponse;
 import hng_java_boilerplate.helpCenter.contactUs.serviceImpl.ContactUsServiceImpl;
-import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,8 +33,6 @@ class ContactUsControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ContactUsServiceImpl contactusService;
-    @MockBean
-    private ProductErrorHandler productErrorHandler;
     @MockBean
     private JwtUtils jwtUtils;
     private ContactUsRequest contactMessageDto;

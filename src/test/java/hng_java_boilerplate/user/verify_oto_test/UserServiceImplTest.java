@@ -1,9 +1,8 @@
 package hng_java_boilerplate.user.verify_oto_test;
 
+import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
-import hng_java_boilerplate.user.exception.TokenExpiredException;
-import hng_java_boilerplate.user.exception.UserNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.repository.VerificationTokenRepository;
 import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
@@ -85,7 +84,7 @@ public class UserServiceImplTest {
 
         when(verificationTokenRepository.findByToken(token)).thenReturn(null);
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
             userServiceImpl.verifyOtp(email, token, request);
         });
 
@@ -109,7 +108,7 @@ public class UserServiceImplTest {
         when(verificationTokenRepository.findByToken(token)).thenReturn(verificationToken);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
-        TokenExpiredException exception = assertThrows(TokenExpiredException.class, () -> {
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
             userServiceImpl.verifyOtp(email, token, request);
         });
 
@@ -123,7 +122,7 @@ public class UserServiceImplTest {
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
             userServiceImpl.verifyOtp(email, token, request);
         });
 
