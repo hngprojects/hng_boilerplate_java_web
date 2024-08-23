@@ -1,7 +1,8 @@
 package hng_java_boilerplate.squeeze.controller;
 
-import hng_java_boilerplate.squeeze.entity.SqueezeConfig;
-import hng_java_boilerplate.squeeze.service.SqueezeConfigService;
+import hng_java_boilerplate.blog.squeeze.controller.SqueezeConfigController;
+import hng_java_boilerplate.blog.squeeze.entity.SqueezeConfig;
+import hng_java_boilerplate.blog.squeeze.service.SqueezeConfigService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

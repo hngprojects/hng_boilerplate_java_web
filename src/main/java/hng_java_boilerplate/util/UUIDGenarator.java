@@ -2,8 +2,8 @@ package hng_java_boilerplate.util;
 
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.product.entity.Product;
-import hng_java_boilerplate.profile.entity.Profile;
-import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.authentication.profile.entity.Profile;
+import hng_java_boilerplate.authentication.user.entity.User;
 import jakarta.persistence.PrePersist;
 
 import java.util.UUID;

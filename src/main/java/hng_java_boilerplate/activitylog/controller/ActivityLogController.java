@@ -5,7 +5,6 @@ import hng_java_boilerplate.activitylog.dto.ApiResponseDto;
 import hng_java_boilerplate.activitylog.dto.ErrorResponseDto;
 import hng_java_boilerplate.activitylog.model.ActivityLog;
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

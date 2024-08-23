@@ -1,13 +1,13 @@
 package hng_java_boilerplate.user.signup_unit_test;
 
-import hng_java_boilerplate.exception.BadRequestException;
-import hng_java_boilerplate.user.dto.request.SignupDto;
-import hng_java_boilerplate.user.dto.response.ApiResponse;
-import hng_java_boilerplate.user.dto.response.ResponseData;
-import hng_java_boilerplate.user.dto.response.UserResponse;
-import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.repository.UserRepository;
-import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
+import hng_java_boilerplate.authentication.user.dto.request.SignupDto;
+import hng_java_boilerplate.authentication.user.dto.response.ApiResponse;
+import hng_java_boilerplate.authentication.user.dto.response.ResponseData;
+import hng_java_boilerplate.authentication.user.dto.response.UserResponse;
+import hng_java_boilerplate.authentication.user.entity.User;
+import hng_java_boilerplate.authentication.user.repository.UserRepository;
+import hng_java_boilerplate.authentication.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

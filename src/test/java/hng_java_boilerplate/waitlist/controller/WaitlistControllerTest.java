@@ -1,9 +1,10 @@
 package hng_java_boilerplate.waitlist.controller;
 
-import hng_java_boilerplate.email.EmailServices.EmailProducerService;
+import hng_java_boilerplate.blog.waitlist.controller.WaitlistController;
+import hng_java_boilerplate.messaging.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.util.JwtUtils;
-import hng_java_boilerplate.waitlist.entity.Waitlist;
-import hng_java_boilerplate.waitlist.service.WaitlistService;
+import hng_java_boilerplate.blog.waitlist.entity.Waitlist;
+import hng_java_boilerplate.blog.waitlist.service.WaitlistService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

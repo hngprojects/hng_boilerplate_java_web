@@ -1,6 +1,6 @@
 package hng_java_boilerplate.config;
 
-import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
+import hng_java_boilerplate.authentication.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

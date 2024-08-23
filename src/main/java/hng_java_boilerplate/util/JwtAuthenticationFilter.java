@@ -1,6 +1,6 @@
 package hng_java_boilerplate.util;
 
-import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
+import hng_java_boilerplate.authentication.user.serviceImpl.UserServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

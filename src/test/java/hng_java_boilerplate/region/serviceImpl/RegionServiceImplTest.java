@@ -1,14 +1,15 @@
 package hng_java_boilerplate.region.serviceImpl;
 
-import hng_java_boilerplate.exception.NotFoundException;
-import hng_java_boilerplate.region.dto.request.CreateRegion;
-import hng_java_boilerplate.region.dto.request.UpdateRequest;
-import hng_java_boilerplate.region.dto.response.GetAllRegion;
-import hng_java_boilerplate.region.dto.response.GetResponse;
-import hng_java_boilerplate.region.entity.Region;
-import hng_java_boilerplate.region.repository.RegionRepository;
-import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.exception.exception_class.NotFoundException;
+import hng_java_boilerplate.externalPage.region.dto.request.CreateRegion;
+import hng_java_boilerplate.externalPage.region.dto.request.UpdateRequest;
+import hng_java_boilerplate.externalPage.region.dto.response.GetAllRegion;
+import hng_java_boilerplate.externalPage.region.dto.response.GetResponse;
+import hng_java_boilerplate.externalPage.region.entity.Region;
+import hng_java_boilerplate.externalPage.region.repository.RegionRepository;
+import hng_java_boilerplate.authentication.user.entity.User;
+import hng_java_boilerplate.authentication.user.service.UserService;
+import hng_java_boilerplate.externalPage.region.serviceImpl.RegionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

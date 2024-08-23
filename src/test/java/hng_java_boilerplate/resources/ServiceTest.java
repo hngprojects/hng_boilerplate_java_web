@@ -1,11 +1,11 @@
 package hng_java_boilerplate.resources;
 
-import hng_java_boilerplate.exception.NotFoundException;
-import hng_java_boilerplate.resources.dto.ResourceRequestDto;
-import hng_java_boilerplate.resources.dto.ResourceResponseDto;
-import hng_java_boilerplate.resources.entity.Resources;
-import hng_java_boilerplate.resources.repository.ResourceRepository;
-import hng_java_boilerplate.resources.service.ResourceServiceImpl;
+import hng_java_boilerplate.exception.exception_class.NotFoundException;
+import hng_java_boilerplate.authentication.resources.dto.ResourceRequestDto;
+import hng_java_boilerplate.authentication.resources.dto.ResourceResponseDto;
+import hng_java_boilerplate.authentication.resources.entity.Resources;
+import hng_java_boilerplate.authentication.resources.repository.ResourceRepository;
+import hng_java_boilerplate.authentication.resources.service.ResourceServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

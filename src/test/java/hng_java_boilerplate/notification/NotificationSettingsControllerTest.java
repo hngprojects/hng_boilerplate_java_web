@@ -2,10 +2,10 @@ package hng_java_boilerplate.notification;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.config.WebSecurityConfig;
-import hng_java_boilerplate.notification.controllers.NotificationSettingsController;
-import hng_java_boilerplate.notification.dto.request.NotificationSettingsRequestDTO;
-import hng_java_boilerplate.notification.dto.response.NotificationSettingsResponseDTO;
-import hng_java_boilerplate.notification.services.NotificationSettingsService;
+import hng_java_boilerplate.messaging.notification.controllers.NotificationSettingsController;
+import hng_java_boilerplate.messaging.notification.dto.request.NotificationSettingsRequestDTO;
+import hng_java_boilerplate.messaging.notification.dto.response.NotificationSettingsResponseDTO;
+import hng_java_boilerplate.messaging.notification.services.NotificationSettingsService;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

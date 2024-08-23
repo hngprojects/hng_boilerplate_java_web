@@ -1,7 +1,8 @@
 package hng_java_boilerplate.waitlist.controller;
 
-import hng_java_boilerplate.waitlist.entity.WaitlistPage;
-import hng_java_boilerplate.waitlist.service.WaitlistPageService;
+import hng_java_boilerplate.blog.waitlist.controller.WaitlistPageController;
+import hng_java_boilerplate.blog.waitlist.entity.WaitlistPage;
+import hng_java_boilerplate.blog.waitlist.service.WaitlistPageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,14 +15,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

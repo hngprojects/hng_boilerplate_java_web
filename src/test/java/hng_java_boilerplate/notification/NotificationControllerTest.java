@@ -1,14 +1,14 @@
 package hng_java_boilerplate.notification;
 
-import hng_java_boilerplate.notification.controllers.NotificationController;
-import hng_java_boilerplate.notification.dto.request.MarkRead;
-import hng_java_boilerplate.notification.dto.response.NotificationData;
-import hng_java_boilerplate.notification.dto.response.NotificationDto;
-import hng_java_boilerplate.notification.dto.response.NotificationDtoRes;
-import hng_java_boilerplate.notification.dto.response.NotificationResponse;
-import hng_java_boilerplate.notification.services.NotificationService;
-import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.messaging.notification.controllers.NotificationController;
+import hng_java_boilerplate.messaging.notification.dto.request.MarkRead;
+import hng_java_boilerplate.messaging.notification.dto.response.NotificationData;
+import hng_java_boilerplate.messaging.notification.dto.response.NotificationDto;
+import hng_java_boilerplate.messaging.notification.dto.response.NotificationDtoRes;
+import hng_java_boilerplate.messaging.notification.dto.response.NotificationResponse;
+import hng_java_boilerplate.messaging.notification.services.NotificationService;
+import hng_java_boilerplate.authentication.user.entity.User;
+import hng_java_boilerplate.authentication.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

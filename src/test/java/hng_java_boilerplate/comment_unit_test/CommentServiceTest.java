@@ -1,10 +1,10 @@
 package hng_java_boilerplate.comment_unit_test;
 
-import hng_java_boilerplate.comment.entity.Comment;
-import hng_java_boilerplate.comment.repository.CommentRepository;
-import hng_java_boilerplate.comment.service.CommentService;
-import hng_java_boilerplate.exception.UnAuthorizedException;
-import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.blog.comment.entity.Comment;
+import hng_java_boilerplate.blog.comment.repository.CommentRepository;
+import hng_java_boilerplate.blog.comment.service.CommentService;
+import hng_java_boilerplate.exception.exception_class.UnauthorizedException;
+import hng_java_boilerplate.authentication.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -140,7 +140,7 @@ class CommentServiceTest {
 
         when(commentRepository.findByCommentIdAndDeletedFalse(commentId)).thenReturn(Optional.of(comment));
 
-        assertThrows(UnAuthorizedException.class, () ->
+        assertThrows(UnauthorizedException.class, () ->
                 commentService.softDeleteComment(commentId, userId));
     }
 }

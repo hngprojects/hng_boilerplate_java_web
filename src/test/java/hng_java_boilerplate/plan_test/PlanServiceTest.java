@@ -1,11 +1,11 @@
 package hng_java_boilerplate.plan_test;
 
-import hng_java_boilerplate.exception.ConflictException;
-import hng_java_boilerplate.plans.dtos.CreatePlanDto;
-import hng_java_boilerplate.plans.dtos.PlanResponse;
-import hng_java_boilerplate.plans.entity.Plan;
-import hng_java_boilerplate.plans.repository.PlanRepository;
-import hng_java_boilerplate.plans.serviceImpl.PlanServiceImpl;
+import hng_java_boilerplate.exception.exception_class.ConflictException;
+import hng_java_boilerplate.pricing.plans.dtos.CreatePlanDto;
+import hng_java_boilerplate.pricing.plans.dtos.PlanResponse;
+import hng_java_boilerplate.pricing.plans.entity.Plan;
+import hng_java_boilerplate.pricing.plans.repository.PlanRepository;
+import hng_java_boilerplate.pricing.plans.serviceImpl.PlanServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

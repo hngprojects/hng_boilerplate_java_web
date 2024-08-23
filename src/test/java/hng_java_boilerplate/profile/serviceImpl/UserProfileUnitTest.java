@@ -1,13 +1,14 @@
 package hng_java_boilerplate.profile.serviceImpl;
 
-import hng_java_boilerplate.exception.NotFoundException;
-import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
-import hng_java_boilerplate.profile.dto.response.ProfileUpdateResponseDto;
-import hng_java_boilerplate.profile.entity.Profile;
-import hng_java_boilerplate.profile.repository.ProfileRepository;
-import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.enums.Role;
-import hng_java_boilerplate.user.repository.UserRepository;
+import hng_java_boilerplate.authentication.profile.serviceImpl.ProfileServiceImpl;
+import hng_java_boilerplate.exception.exception_class.NotFoundException;
+import hng_java_boilerplate.authentication.profile.dto.request.UpdateUserProfileDto;
+import hng_java_boilerplate.authentication.profile.dto.response.ProfileUpdateResponseDto;
+import hng_java_boilerplate.authentication.profile.entity.Profile;
+import hng_java_boilerplate.authentication.profile.repository.ProfileRepository;
+import hng_java_boilerplate.authentication.user.entity.User;
+import hng_java_boilerplate.authentication.user.enums.Role;
+import hng_java_boilerplate.authentication.user.repository.UserRepository;
 import hng_java_boilerplate.utils.TestDataUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

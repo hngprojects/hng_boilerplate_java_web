@@ -1,11 +1,12 @@
 package hng_java_boilerplate.profile.serviceImpl;
 
-import hng_java_boilerplate.exception.BadRequestException;
-import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
-import hng_java_boilerplate.profile.dto.response.DeactivateUserResponse;
-import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.repository.UserRepository;
-import hng_java_boilerplate.user.service.UserService;
+import hng_java_boilerplate.authentication.profile.serviceImpl.ProfileServiceImpl;
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
+import hng_java_boilerplate.authentication.profile.dto.request.DeactivateUserRequest;
+import hng_java_boilerplate.authentication.profile.dto.response.DeactivateUserResponse;
+import hng_java_boilerplate.authentication.user.entity.User;
+import hng_java_boilerplate.authentication.user.repository.UserRepository;
+import hng_java_boilerplate.authentication.user.service.UserService;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

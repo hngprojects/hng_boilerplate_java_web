@@ -1,9 +1,9 @@
 package hng_java_boilerplate.utils;
 
-import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
-import hng_java_boilerplate.profile.entity.Profile;
-import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.enums.Role;
+import hng_java_boilerplate.authentication.profile.dto.request.UpdateUserProfileDto;
+import hng_java_boilerplate.authentication.profile.entity.Profile;
+import hng_java_boilerplate.authentication.user.entity.User;
+import hng_java_boilerplate.authentication.user.enums.Role;
 
 public final class TestDataUtil {
 

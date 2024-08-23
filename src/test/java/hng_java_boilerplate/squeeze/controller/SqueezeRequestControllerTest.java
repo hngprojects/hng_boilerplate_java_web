@@ -1,10 +1,11 @@
 package hng_java_boilerplate.squeeze.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.exception.ConflictException;
-import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
-import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
-import hng_java_boilerplate.email.EmailServices.EmailProducerService;
+import hng_java_boilerplate.blog.squeeze.controller.SqueezeRequestController;
+import hng_java_boilerplate.exception.exception_class.ConflictException;
+import hng_java_boilerplate.blog.squeeze.entity.SqueezeRequest;
+import hng_java_boilerplate.blog.squeeze.service.SqueezeRequestService;
+import hng_java_boilerplate.messaging.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

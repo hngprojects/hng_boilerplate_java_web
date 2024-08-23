@@ -1,9 +1,9 @@
 package hng_java_boilerplate.aboutpage;
 
-import hng_java_boilerplate.aboutpage.dto.AboutPageContentDto;
-import hng_java_boilerplate.aboutpage.entity.AboutPageContent;
-import hng_java_boilerplate.aboutpage.repository.AboutPageRepository;
-import hng_java_boilerplate.aboutpage.service.AboutPageService;
+import hng_java_boilerplate.externalPage.aboutpage.dto.AboutPageContentDto;
+import hng_java_boilerplate.externalPage.aboutpage.entity.AboutPageContent;
+import hng_java_boilerplate.externalPage.aboutpage.repository.AboutPageRepository;
+import hng_java_boilerplate.externalPage.aboutpage.service.AboutPageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

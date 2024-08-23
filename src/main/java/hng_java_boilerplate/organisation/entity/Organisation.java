@@ -1,8 +1,7 @@
 package hng_java_boilerplate.organisation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.util.UUIDGenarator;
+import hng_java_boilerplate.authentication.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

@@ -1,9 +1,10 @@
 package hng_java_boilerplate.profile.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
-import hng_java_boilerplate.profile.dto.response.DeactivateUserResponse;
-import hng_java_boilerplate.profile.service.ProfileService;
+import hng_java_boilerplate.authentication.profile.controller.ProfileController;
+import hng_java_boilerplate.authentication.profile.dto.request.DeactivateUserRequest;
+import hng_java_boilerplate.authentication.profile.dto.response.DeactivateUserResponse;
+import hng_java_boilerplate.authentication.profile.service.ProfileService;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,8 +1,8 @@
 package hng_java_boilerplate.jobs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.jobs.entity.JobListing;
-import hng_java_boilerplate.jobs.repository.JobListingRepository;
+import hng_java_boilerplate.externalPage.jobs.entity.JobListing;
+import hng_java_boilerplate.externalPage.jobs.repository.JobListingRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

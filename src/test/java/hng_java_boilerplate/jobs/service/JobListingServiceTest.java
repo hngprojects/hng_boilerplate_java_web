@@ -1,7 +1,8 @@
 package hng_java_boilerplate.jobs.service;
 
-import hng_java_boilerplate.jobs.entity.JobListing;
-import hng_java_boilerplate.jobs.repository.JobListingRepository;
+import hng_java_boilerplate.externalPage.jobs.entity.JobListing;
+import hng_java_boilerplate.externalPage.jobs.repository.JobListingRepository;
+import hng_java_boilerplate.externalPage.jobs.service.JobListingServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

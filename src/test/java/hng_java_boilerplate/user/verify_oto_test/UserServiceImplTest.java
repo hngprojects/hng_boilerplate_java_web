@@ -1,12 +1,12 @@
 package hng_java_boilerplate.user.verify_oto_test;
 
-import hng_java_boilerplate.exception.BadRequestException;
-import hng_java_boilerplate.user.entity.User;
-import hng_java_boilerplate.user.entity.VerificationToken;
-import hng_java_boilerplate.user.repository.UserRepository;
-import hng_java_boilerplate.user.repository.VerificationTokenRepository;
-import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
-import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
+import hng_java_boilerplate.exception.exception_class.BadRequestException;
+import hng_java_boilerplate.authentication.user.entity.User;
+import hng_java_boilerplate.authentication.user.entity.VerificationToken;
+import hng_java_boilerplate.authentication.user.repository.UserRepository;
+import hng_java_boilerplate.authentication.user.repository.VerificationTokenRepository;
+import hng_java_boilerplate.authentication.user.serviceImpl.EmailServiceImpl;
+import hng_java_boilerplate.authentication.user.serviceImpl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

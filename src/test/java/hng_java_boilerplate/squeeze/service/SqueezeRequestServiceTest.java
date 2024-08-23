@@ -1,8 +1,9 @@
 package hng_java_boilerplate.squeeze.service;
 
-import hng_java_boilerplate.exception.ConflictException;
-import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
-import hng_java_boilerplate.squeeze.repository.SqueezeRequestRepository;
+import hng_java_boilerplate.blog.squeeze.service.SqueezeRequestService;
+import hng_java_boilerplate.exception.exception_class.ConflictException;
+import hng_java_boilerplate.blog.squeeze.entity.SqueezeRequest;
+import hng_java_boilerplate.blog.squeeze.repository.SqueezeRequestRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
