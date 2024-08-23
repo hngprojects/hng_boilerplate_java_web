@@ -1,5 +1,6 @@
 package hng_java_boilerplate.waitlist.service;
 
+import hng_java_boilerplate.waitlist.dto.WaitlistRequestDto;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
 import hng_java_boilerplate.waitlist.repository.WaitlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,10 @@ public class WaitlistService {
         this.waitlistRepository = waitlistRepository;
     }
 
-    public Waitlist saveWaitlist(Waitlist waitlist) {
+    public Waitlist createAndSaveWaitlist(WaitlistRequestDto waitlistRequestDTO) {
+        Waitlist waitlist = new Waitlist();
+        waitlist.setFullName(waitlistRequestDTO.getFullName());
+        waitlist.setEmail(waitlistRequestDTO.getEmail());
         return waitlistRepository.save(waitlist);
     }
 

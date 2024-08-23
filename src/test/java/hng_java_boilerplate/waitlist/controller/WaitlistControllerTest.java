@@ -2,6 +2,7 @@ package hng_java_boilerplate.waitlist.controller;
 
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.util.JwtUtils;
+import hng_java_boilerplate.waitlist.dto.WaitlistRequestDto;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,18 +55,18 @@ public class WaitlistControllerTest {
         Waitlist waitlist = new Waitlist(UUID.randomUUID(), "Test User", "test@example.com", LocalDateTime.now());
 
         // Mock the service method
-        when(waitlistService.saveWaitlist(any(Waitlist.class))).thenReturn(waitlist);
+        when(waitlistService.createAndSaveWaitlist(any(WaitlistRequestDto.class))).thenReturn(waitlist);
         doNothing().when(emailProducerService).sendEmailMessage(any(String.class), any(String.class), any(String.class));
 
         // Perform the POST request and verify the response
         mockMvc.perform(post("/api/v1/waitlist")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"test@example.com\",\"fullName\":\"Test User\"}"))
+                        .content("{\"email\":\"test@example.com\",\"full_name\":\"Test User\"}")) // Use "full_name" instead of "fullName"
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("You are all signed up!"));
 
         // Verify that the expected methods were called
-        verify(waitlistService).saveWaitlist(any(Waitlist.class));
+        verify(waitlistService).createAndSaveWaitlist(any(WaitlistRequestDto.class));
         verify(emailProducerService).sendEmailMessage("test@example.com", "Confirmation Email", "You are all signed up!");
     }
 

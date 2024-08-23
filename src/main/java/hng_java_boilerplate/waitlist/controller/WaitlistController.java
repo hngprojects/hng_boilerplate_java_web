@@ -1,6 +1,8 @@
 package hng_java_boilerplate.waitlist.controller;
 
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
+import hng_java_boilerplate.waitlist.dto.WaitlistRequestDto;
+import hng_java_boilerplate.waitlist.dto.WaitlistResponseDto;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,18 +34,16 @@ public class WaitlistController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createWaitlist(@Valid @RequestBody Waitlist waitlist){
-        waitlistService.saveWaitlist(waitlist);
-
-        String to = waitlist.getEmail();
-        String subject = "Confirmation Email";
-        String text = "You are all signed up!";
-        emailProducerService.sendEmailMessage(to, subject, text);
-
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "You are all signed up!");
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<WaitlistResponseDto> createWaitlist(@Valid @RequestBody WaitlistRequestDto waitlistRequestDTO) {
+        try {
+            Waitlist waitlist = waitlistService.createAndSaveWaitlist(waitlistRequestDTO);
+            emailProducerService.sendEmailMessage(waitlist.getEmail(), "Confirmation Email", "You are all signed up!");
+            return new ResponseEntity<>(new WaitlistResponseDto("You are all signed up!"), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new WaitlistResponseDto("There was an error processing your request.", HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
     @GetMapping
     @Secured("ROLE_ADMIN")
