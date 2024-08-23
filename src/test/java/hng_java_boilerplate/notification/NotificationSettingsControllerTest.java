@@ -6,7 +6,6 @@ import hng_java_boilerplate.notification.controllers.NotificationSettingsControl
 import hng_java_boilerplate.notification.dto.request.NotificationSettingsRequestDTO;
 import hng_java_boilerplate.notification.dto.response.NotificationSettingsResponseDTO;
 import hng_java_boilerplate.notification.services.NotificationSettingsService;
-import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +38,6 @@ public class NotificationSettingsControllerTest {
 
     @MockBean
     private NotificationSettingsService notificationSettingsService;
-
-    @MockBean
-    private ProductErrorHandler productErrorHandler;
 
     @BeforeEach
     public void setUp() {

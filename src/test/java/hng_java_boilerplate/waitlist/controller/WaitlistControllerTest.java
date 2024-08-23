@@ -1,16 +1,11 @@
 package hng_java_boilerplate.waitlist.controller;
 
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
-import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.util.JwtUtils;
 import hng_java_boilerplate.waitlist.entity.Waitlist;
 import hng_java_boilerplate.waitlist.service.WaitlistService;
-import jakarta.validation.Valid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -44,9 +39,6 @@ public class WaitlistControllerTest {
 
     @MockBean
     private EmailProducerService emailProducerService;
-
-    @MockBean
-    private ProductErrorHandler productErrorHandler;
 
     @MockBean
     private JwtUtils jwtUtils;

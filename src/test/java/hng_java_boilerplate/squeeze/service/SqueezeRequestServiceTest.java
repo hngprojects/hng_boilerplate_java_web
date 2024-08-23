@@ -1,9 +1,8 @@
 package hng_java_boilerplate.squeeze.service;
 
+import hng_java_boilerplate.exception.ConflictException;
 import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
-import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.repository.SqueezeRequestRepository;
-import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -47,7 +46,7 @@ public class SqueezeRequestServiceTest {
     }
 
     @Test
-    public void testSaveSqueezeRequest_Success() throws DuplicateEmailException {
+    public void testSaveSqueezeRequest_Success() throws ConflictException {
         when(repository.existsByEmail(validRequest.getEmail())).thenReturn(false);
         when(repository.save(any(SqueezeRequest.class))).thenReturn(validRequest);
 
@@ -62,7 +61,7 @@ public class SqueezeRequestServiceTest {
     public void testSaveSqueezeRequest_DuplicateEmail() {
         when(repository.existsByEmail(validRequest.getEmail())).thenReturn(true);
 
-        DuplicateEmailException exception = assertThrows(DuplicateEmailException.class, () -> {
+        ConflictException exception = assertThrows(ConflictException.class, () -> {
             service.saveSqueezeRequest(validRequest);
         });
 
