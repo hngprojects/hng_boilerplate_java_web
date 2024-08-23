@@ -1,7 +1,7 @@
 package hng_java_boilerplate.statusPage.controller;
 
 import hng_java_boilerplate.statusPage.entity.ApiStatus;
-import hng_java_boilerplate.statusPage.service.ApiStatusService;
+import hng_java_boilerplate.statusPage.service.ApiStatusServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +30,7 @@ public class ApiStatusControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private ApiStatusService apiStatusService;
+    private ApiStatusServiceImpl apiStatusService;
 
     @InjectMocks
     private ApiStatusController apiStatusController;

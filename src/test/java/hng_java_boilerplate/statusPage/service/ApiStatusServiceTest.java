@@ -23,7 +23,7 @@ public class ApiStatusServiceTest {
     private ApiStatusRepository apiStatusRepository;
 
     @InjectMocks
-    private ApiStatusService apiStatusService;
+    private ApiStatusServiceImpl apiStatusService;
 
     @BeforeEach
     public void setUp() {
