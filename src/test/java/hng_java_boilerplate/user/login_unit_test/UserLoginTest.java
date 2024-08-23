@@ -1,14 +1,13 @@
 package hng_java_boilerplate.user.login_unit_test;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
-import hng_java_boilerplate.user.exception.UserNotFoundException;
-import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtUtils;
@@ -128,7 +127,7 @@ class UserLoginTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         assertThrows(
-                UsernameNotFoundException.class,
+                BadRequestException.class,
                 () -> userService.loadUserByUsername(email)
         );
     }

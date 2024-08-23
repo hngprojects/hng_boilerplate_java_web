@@ -1,6 +1,6 @@
 package hng_java_boilerplate.jobs.service;
 
-import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.jobs.entity.JobListing;
 import hng_java_boilerplate.jobs.repository.JobListingRepository;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class JobListingServiceImpl implements JobListingService {
     @Override
     public JobListing getJobListingById(Long id) {
         return jobListingRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Job not found with id: " + id));
     }
 
     @Override

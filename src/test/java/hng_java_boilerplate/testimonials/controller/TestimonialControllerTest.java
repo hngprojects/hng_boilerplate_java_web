@@ -1,7 +1,6 @@
 package hng_java_boilerplate.testimonials.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.testimonials.dto.TestimonialRequestDto;
 import hng_java_boilerplate.testimonials.dto.UpdateTestimonialRequestDto;
 import hng_java_boilerplate.testimonials.entity.Testimonial;
@@ -51,9 +50,6 @@ class TestimonialControllerTest {
     private UserService userService;
 
     private User mockUser;
-
-    @MockBean
-    private ProductErrorHandler productErrorHandler;
 
     @MockBean
     private JwtUtils jwtUtils;

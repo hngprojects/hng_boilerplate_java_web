@@ -1,8 +1,8 @@
 package hng_java_boilerplate.resources.service;
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.resources.dto.ResourceRequestDto;
 import hng_java_boilerplate.resources.dto.ResourceResponseDto;
 import hng_java_boilerplate.resources.entity.Resources;
-import hng_java_boilerplate.resources.exception.ResourcesNotFoundException;
 import hng_java_boilerplate.resources.repository.ResourceRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +35,7 @@ public class ResourceServiceImpl implements ResourceService{
     public ResourceResponseDto findByTitleAndDescriptionForAdmin(String query) {
         List<Resources> resources = resourceRepository.searchAllResourcesForAdmin(query);
         if (resources.isEmpty()) {
-            throw new ResourcesNotFoundException("No resources found with query: " + query);
+            throw new NotFoundException("No resources found with query: " + query);
         }
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setData(resources);
@@ -74,7 +74,7 @@ public class ResourceServiceImpl implements ResourceService{
         Resources resources = resourceRepository.findById(Id).stream()
                 .filter(foundResource -> foundResource.getId().equals(Id))
                 .findFirst()
-                .orElseThrow(() -> new ResourcesNotFoundException("Resource with " +Id+ " not found"));
+                .orElseThrow(() -> new NotFoundException("Resource with " +Id+ " not found"));
 
         resourceRepository.deleteById(resources.getId());
         ResourceResponseDto responseDto = new ResourceResponseDto();
@@ -88,7 +88,7 @@ public class ResourceServiceImpl implements ResourceService{
         Resources resources = resourceRepository.findById(resourceRequestDto.getId()).stream()
                 .filter(foundResource -> foundResource.getId().equals(resourceRequestDto.getId()))
                 .findFirst()
-                .orElseThrow(() -> new ResourcesNotFoundException("Resource with " +resourceRequestDto.getId()+ " not found"));
+                .orElseThrow(() -> new NotFoundException("Resource with " +resourceRequestDto.getId()+ " not found"));
 
 
         if (resourceRequestDto.getId() != null){
@@ -120,7 +120,7 @@ public class ResourceServiceImpl implements ResourceService{
         Resources resources = resourceRepository.findById(Id).stream()
                 .filter(foundResource -> foundResource.getId().equals(Id))
                 .findFirst()
-                .orElseThrow(() -> new ResourcesNotFoundException("Resource with " +Id+ " not found"));
+                .orElseThrow(() -> new NotFoundException("Resource with " +Id+ " not found"));
 
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setResourceData(resources);
@@ -132,7 +132,7 @@ public class ResourceServiceImpl implements ResourceService{
         Resources resources = resourceRepository.findById(Id).stream()
                 .filter(foundResource -> foundResource.getId().equals(Id))
                 .findFirst()
-                .orElseThrow(() -> new ResourcesNotFoundException("Resource with " +Id+ "not found"));
+                .orElseThrow(() -> new NotFoundException("Resource with " +Id+ "not found"));
 
         resources.setPublished(false);
         resourceRepository.save(resources);
@@ -149,7 +149,7 @@ public class ResourceServiceImpl implements ResourceService{
         Resources resources = resourceRepository.findById(Id).stream()
                 .filter(foundResource -> foundResource.getId().equals(Id))
                 .findFirst()
-                .orElseThrow(() -> new ResourcesNotFoundException("Resource with " +Id+ "not found"));
+                .orElseThrow(() -> new NotFoundException("Resource with " +Id+ "not found"));
 
         resources.setPublished(true);
         resourceRepository.save(resources);
@@ -165,7 +165,7 @@ public class ResourceServiceImpl implements ResourceService{
     public ResourceResponseDto getAllPublishedResource() {
         List<Resources> resources = resourceRepository.getAllPublishedResources();
         if (resources.isEmpty()) {
-            throw new ResourcesNotFoundException("No resources found");
+            throw new NotFoundException("No resources found");
         }
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setData(resources);
@@ -177,7 +177,7 @@ public class ResourceServiceImpl implements ResourceService{
     public ResourceResponseDto getAllUnPublishedResource() {
         List<Resources> resources = resourceRepository.getAllUnPublishedResources();
         if (resources.isEmpty()) {
-            throw new ResourcesNotFoundException("No resources found");
+            throw new NotFoundException("No resources found");
         }
         ResourceResponseDto responseDto = new ResourceResponseDto();
         responseDto.setData(resources);

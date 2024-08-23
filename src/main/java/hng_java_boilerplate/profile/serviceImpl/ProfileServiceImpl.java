@@ -1,13 +1,12 @@
 package hng_java_boilerplate.profile.serviceImpl;
 
 import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
 import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
 import hng_java_boilerplate.profile.dto.response.DeactivateUserResponse;
 import hng_java_boilerplate.profile.dto.response.ProfileUpdateResponseDto;
 import hng_java_boilerplate.profile.entity.Profile;
-import hng_java_boilerplate.profile.exceptions.InternalServerErrorException;
-import hng_java_boilerplate.profile.exceptions.NotFoundException;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.profile.service.ProfileService;
 import hng_java_boilerplate.user.entity.User;
@@ -48,9 +47,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public Optional<?> updateUserProfile(String id, UpdateUserProfileDto updateUserProfileDto) {
-        try{
+
             Optional<User> user = userRepository.findById(id);
-            if (user.isPresent()){
+            if (user.isPresent()) {
                 Profile profile = user.get().getProfile();
 
                 profile.setFirstName(updateUserProfileDto.getFirstName());
@@ -65,19 +64,13 @@ public class ProfileServiceImpl implements ProfileService {
                 profile.setAvatarUrl(updateUserProfileDto.getAvatarUrl());
 
                 profile = profileRepository.save(profile);
-                return Optional.of( ProfileUpdateResponseDto.builder()
+                return Optional.of(ProfileUpdateResponseDto.builder()
                         .statusCode(HttpStatus.OK.value())
                         .message("Profile updated successfully")
                         .data(profile)
                         .build()
                 );
-            }else {
-                throw new NotFoundException("User not found");
             }
-        }catch (NotFoundException e) {
-            throw e;
-        }catch (Exception e){
-            throw new InternalServerErrorException("An unexpected error occurred");
-        }
+            throw new NotFoundException("User not found");
     }
 }

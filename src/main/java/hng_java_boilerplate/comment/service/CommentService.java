@@ -1,9 +1,8 @@
 package hng_java_boilerplate.comment.service;
 
-
 import hng_java_boilerplate.comment.entity.Comment;
 import hng_java_boilerplate.comment.repository.CommentRepository;
-import hng_java_boilerplate.profile.exceptions.UnauthorizedException;
+import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,7 +39,7 @@ public class CommentService {
         Comment comment = commentRepository.findByCommentIdAndDeletedFalse(commentId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         if(!comment.getUser().getId().equals(userId)){
-            throw new UnauthorizedException("Unauthorized user");
+            throw new UnAuthorizedException("Unauthorized user");
         }
         comment.setDeleted(true);
         comment.setUpdatedAt(LocalDateTime.now());

@@ -1,6 +1,6 @@
 package hng_java_boilerplate.notification.services;
 
-import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.notification.dto.request.MarkRead;
 import hng_java_boilerplate.notification.dto.response.NotificationData;
 import hng_java_boilerplate.notification.dto.response.NotificationDto;
@@ -122,7 +122,7 @@ public class NotificationService {
 
     public NotificationDtoRes markAsRead(UUID notificationId, MarkRead read) {
         Notification notification = repository.findById(notificationId)
-                .orElseThrow(()-> new ResourceNotFoundException("Notification not found"));
+                .orElseThrow(()-> new NotFoundException("Notification not found"));
 
         notification.setIsRead(read.is_read());
         repository.saveAndFlush(notification);

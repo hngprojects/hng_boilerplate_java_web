@@ -1,10 +1,7 @@
 package hng_java_boilerplate.product_test.unit_test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import hng_java_boilerplate.product.dto.ErrorDTO;
-import hng_java_boilerplate.product.exceptions.ValidationError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -54,26 +51,6 @@ public class ProductSearchTest {
 
         // Assert
         assertEquals(expectedProducts, result);
-    }
-
-    @Test
-    public void testProductsSearch_NoName_ThrowsValidationError() {
-        // Arrange
-        String name = "";
-        String category = "testCategory";
-        Double minPrice = 10.0;
-        Double maxPrice = 100.0;
-        Pageable pageable = PageRequest.of(0, 10);
-
-        // Act & Assert
-        ValidationError thrown = assertThrows(ValidationError.class, () -> {
-            productService.productsSearch(name, category, minPrice, maxPrice, pageable);
-        });
-
-        // Verify the error details
-        ErrorDTO errorDTO = thrown.getError();
-        assertEquals("name is a required parameter", errorDTO.getMessage());
-        assertEquals("name", errorDTO.getParameter());
     }
 
     @Test
