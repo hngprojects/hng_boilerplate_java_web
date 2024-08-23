@@ -19,7 +19,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/squeeze/config")
 @Tag(name = "Squeeze Pages")
-@PreAuthorize("hasRole('ADMIN')")
 public class SqueezeConfigController {
 
     private final SqueezeConfigService squeezeConfigService;
@@ -29,6 +28,7 @@ public class SqueezeConfigController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> createSqueezePage(@RequestBody SqueezeConfig squeezeConfig) throws IOException, SQLException {
         SqueezeConfig savedPage = squeezeConfigService.createSqueezePage(squeezeConfig);
 
@@ -82,6 +82,7 @@ public class SqueezeConfigController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> deleteSqueezePage(@PathVariable String id) {
         boolean deleted = squeezeConfigService.deleteSqueezePage(id);
 
