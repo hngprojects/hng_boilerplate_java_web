@@ -1,28 +1,31 @@
 package hng_java_boilerplate.privacy_policy.controller;
 
-import hng_java_boilerplate.privacy_policy.dto.ApiResponse;
 import hng_java_boilerplate.privacy_policy.entity.PrivacyPolicy;
-import hng_java_boilerplate.privacy_policy.service.PrivacyPolicyService;
+import hng_java_boilerplate.privacy_policy.service.PrivacyPolicyServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class PrivacyPolicyControllerTest {
 
     @Mock
-    private PrivacyPolicyService privacyPolicyService;
+    private PrivacyPolicyServiceImpl privacyPolicyService;
 
     @InjectMocks
     private PrivacyPolicyController privacyPolicyController;
@@ -43,6 +46,7 @@ class PrivacyPolicyControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "SUPER_ADMIN")
     void createPrivacyPolicy_ShouldReturnCreatedPolicy() throws Exception {
         when(privacyPolicyService.createPrivacyPolicy(any(PrivacyPolicy.class))).thenReturn(privacyPolicy);
 
@@ -81,6 +85,7 @@ class PrivacyPolicyControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "SUPER_ADMIN")
     void updatePrivacyPolicy_ShouldReturnUpdatedPolicy() throws Exception {
         when(privacyPolicyService.updatePrivacyPolicy(eq(id), any(PrivacyPolicy.class))).thenReturn(privacyPolicy);
 
@@ -95,6 +100,7 @@ class PrivacyPolicyControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "SUPER_ADMIN")
     void deletePrivacyPolicy_ShouldReturnSuccessMessage() throws Exception {
         doNothing().when(privacyPolicyService).deletePrivacyPolicy(id);
 

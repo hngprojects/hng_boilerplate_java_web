@@ -6,6 +6,7 @@ import hng_java_boilerplate.privacy_policy.service.PrivacyPolicyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class PrivacyPolicyController {
     private final PrivacyPolicyService privacyPolicyService;
 
     @PostMapping
+    @Secured("ROLE_SUPER_ADMIN")
     public ResponseEntity<?> createPrivacyPolicy(@RequestBody PrivacyPolicy newPolicy) {
         PrivacyPolicy createdPolicy = privacyPolicyService.createPrivacyPolicy(newPolicy);
         return new ResponseEntity<>(new ApiResponse(
@@ -49,6 +51,7 @@ public class PrivacyPolicyController {
     }
 
     @PutMapping("/{id}")
+    @Secured("ROLE_SUPER_ADMIN")
     public ResponseEntity<?> updatePrivacyPolicy(
             @PathVariable UUID id,
             @RequestBody PrivacyPolicy updatedPolicy) {
@@ -62,6 +65,7 @@ public class PrivacyPolicyController {
     }
 
     @DeleteMapping("/{id}")
+    @Secured("ROLE_SUPER_ADMIN")
     public ResponseEntity<?> deletePrivacyPolicy(@PathVariable UUID id) {
         privacyPolicyService.deletePrivacyPolicy(id);
         return ResponseEntity.ok(new ApiResponse(

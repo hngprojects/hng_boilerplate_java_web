@@ -23,7 +23,7 @@ class PrivacyPolicyServiceTest {
     private PrivacyPolicyRepository privacyPolicyRepository;
 
     @InjectMocks
-    private PrivacyPolicyService privacyPolicyService;
+    private PrivacyPolicyServiceImpl privacyPolicyService;
 
     private PrivacyPolicy privacyPolicy;
     private UUID id;
