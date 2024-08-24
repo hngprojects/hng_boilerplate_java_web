@@ -1,4 +1,4 @@
-package hng_java_boilerplate.user.crd_operations_test;
+package hng_java_boilerplate.user.crud_operations_test;
 
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.entity.User;
