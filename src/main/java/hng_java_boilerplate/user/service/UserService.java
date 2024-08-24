@@ -8,7 +8,6 @@ import hng_java_boilerplate.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 
-import javax.crypto.BadPaddingException;
 
 public interface UserService {
     GetUserDto getUserWithDetails(String userId);
@@ -17,6 +16,5 @@ public interface UserService {
     User getLoggedInUser();
     ResponseEntity<ApiResponse> loginUser(LoginDto loginDto);
     User save(User user);
-
     User findUser(String id);
 }

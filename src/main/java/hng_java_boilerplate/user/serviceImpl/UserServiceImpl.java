@@ -165,6 +165,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
+
     // GetUserResponse method that combines both branches
     public UserResponse getUserResponse(User user) {
         String[] nameParts = user.getName().split(" ", 2);
