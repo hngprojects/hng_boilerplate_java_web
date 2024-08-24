@@ -304,7 +304,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         String email = authentication.getName();
 
         if (!userRepository.existsByEmail(email)) {
-            return Response.builder().status_code("401").message("Unauthorized").build();
+            throw new BadRequestException("Email does not exist");
         }
 
         Optional<User> userOptional = userRepository.findById(userId);
