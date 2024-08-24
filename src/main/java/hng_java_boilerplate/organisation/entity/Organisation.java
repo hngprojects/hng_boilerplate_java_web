@@ -33,6 +33,7 @@ public class Organisation {
     private String country;
     private String address;
     private String state;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -41,6 +42,7 @@ public class Organisation {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "owner_id")
     private String owner;
 
     @ManyToMany(mappedBy = "organisations")
