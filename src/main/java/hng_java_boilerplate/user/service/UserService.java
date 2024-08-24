@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
+
+
 public interface UserService {
     GetUserDto getUserWithDetails(String userId);
     ResponseEntity<ApiResponse<ResponseData>> registerUser(SignupDto signupDto);

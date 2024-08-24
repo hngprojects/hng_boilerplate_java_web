@@ -52,6 +52,7 @@ import static hng_java_boilerplate.util.PaginationUtils.getPaginatedUsers;
 import static hng_java_boilerplate.util.PaginationUtils.validatePageNumber;
 import java.util.*;
 
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserDetailsService, UserService {
