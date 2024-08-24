@@ -1,0 +1,46 @@
+name: API Test and Status Update
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  run-newman-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Newman Collection
+        run: |
+          newman run "$NEW_COLLECTION_PATH" \
+            --environment "$NEW_ENVIRONMENT_PATH" \
+            --reporters json \
+            --reporter-json-export "result.json"
+
+        env:
+          NEW_COLLECTION_PATH: ${{ secrets.NEWMAN_COLLECTION_PATH }}
+          NEW_ENVIRONMENT_PATH: ${{ secrets.NEWMAN_ENVIRONMENT_PATH }}
+
+      - name: Upload results to Status Page
+        run: |
+          # You can add the command to upload the result.json to your status page server
+          scp -o StrictHostKeyChecking=no result.json user@yourserver.com:/path/to/status_page/result.json
+
+      - name: Commit and Push Results (for GitHub Pages)
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add result.json
+          git commit -m "Update test results"
+          git push
