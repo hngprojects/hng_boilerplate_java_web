@@ -21,9 +21,9 @@ public interface UserService {
     ResponseEntity<ApiResponse> loginUser(LoginDto loginDto);
     User save(User user);
     User findUser(String id);
-
     void forgotPassword(EmailSenderDto passwordDto, HttpServletRequest request);
-
+    ResponseEntity<String> resetPassword(String token, ResetPasswordDto passwordDto);
+    void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request);
     List<MembersResponse> getAllUsers(int page, Authentication authentication);
 
     Response<?> deleteUserByEmail(DeleteUserRequest request, Authentication authentication);

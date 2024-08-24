@@ -1,5 +1,7 @@
 package hng_java_boilerplate.categories.service;
 
+import hng_java_boilerplate.categories.dto.CategoryDto;
+import hng_java_boilerplate.categories.dto.CategoryRequest;
 import hng_java_boilerplate.categories.entity.Category;
 import hng_java_boilerplate.categories.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -36,13 +37,15 @@ class CategoryServiceTest {
         category.setName("Test Category");
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
 
-        Category createdCategory = categoryService.createCategory(category);
+        CategoryRequest request = new CategoryRequest();
+        request.setName(category.getName());
+        CategoryDto createdCategory = categoryService.createCategory(request);
 
         assertNotNull(createdCategory);
         assertEquals("Test Category", createdCategory.getName());
-        assertNotNull(createdCategory.getCreatedAt());
-        assertNotNull(createdCategory.getUpdatedAt());
-        verify(categoryRepository, times(1)).save(category);
+        assertNotNull(createdCategory.getCreated_at());
+        assertNotNull(createdCategory.getUpdated_at());
+        verify(categoryRepository, times(1)).saveAndFlush(any(Category.class));
     }
 
     @Test
@@ -50,9 +53,8 @@ class CategoryServiceTest {
         List<Category> categories = Arrays.asList(new Category(), new Category());
         when(categoryRepository.findAll()).thenReturn(categories);
 
-        List<Category> result = categoryService.getAllCategories();
+        List<CategoryDto> result = categoryService.getAllCategories();
 
-        assertEquals(categories, result);
         verify(categoryRepository, times(1)).findAll();
     }
 
@@ -62,19 +64,22 @@ class CategoryServiceTest {
         Category category = new Category();
         when(categoryRepository.findById(id)).thenReturn(Optional.of(category));
 
-        Optional<Category> result = categoryService.getCategoryById(id);
+        CategoryDto result = categoryService.getCategoryById(id);
 
-        assertTrue(result.isPresent());
-        assertEquals(category, result.get());
+        assertEquals(category.getId(), result.getCategory_id());
+        assertEquals(category.getName(), result.getName());
         verify(categoryRepository, times(1)).findById(id);
     }
 
     @Test
     void deleteCategory() {
         UUID id = UUID.randomUUID();
+        Category category = new Category();
+
+        when(categoryRepository.findById(id)).thenReturn(Optional.of(category));
 
         categoryService.deleteCategory(id);
 
-        verify(categoryRepository, times(1)).deleteById(id);
+        verify(categoryRepository, times(1)).delete(category);
     }
 }

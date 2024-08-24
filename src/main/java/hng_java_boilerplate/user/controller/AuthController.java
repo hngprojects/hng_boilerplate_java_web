@@ -1,10 +1,7 @@
 package hng_java_boilerplate.user.controller;
 
 import hng_java_boilerplate.exception.UnAuthorizedException;
-import hng_java_boilerplate.user.dto.request.EmailSenderDto;
-import hng_java_boilerplate.user.dto.request.LoginDto;
-import hng_java_boilerplate.user.dto.request.OAuthDto;
-import hng_java_boilerplate.user.dto.request.SignupDto;
+import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.OAuthBaseResponse;
 import hng_java_boilerplate.user.service.UserService;
@@ -16,6 +13,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -61,5 +60,23 @@ public class AuthController {
     public ResponseEntity<String> forgotPassword(@RequestBody EmailSenderDto passwordDto, HttpServletRequest request){
         userService.forgotPassword(passwordDto, request);
         return new ResponseEntity<>("Forgot password email sent successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/reset-password/{token}")
+    public ResponseEntity<String> resetPassword(@PathVariable String token, @RequestBody ResetPasswordDto passwordDto) {
+        return userService.resetPassword(token, passwordDto);
+    }
+
+    @PostMapping("/request/token")
+    public ResponseEntity<?> requestToken(@RequestBody EmailSenderDto emailSenderDto, HttpServletRequest request){
+        userService.requestToken(emailSenderDto, request);
+        return new ResponseEntity<>("Verification email sent successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<String> verifyOtp(@RequestBody VerificationTokenDto verificationTokenDto, HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userService.verifyOtp(email, verificationTokenDto.getToken(), request);
     }
 }

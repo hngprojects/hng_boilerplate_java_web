@@ -1,0 +1,42 @@
+name: API Test and Status Update
+
+on:
+  schedule:
+    - cron: "*/15 * * * *" 
+  workflow_dispatch:
+
+jobs:
+  run-newman-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Newman Collection
+        run: |
+          newman run "$NEW_COLLECTION_PATH" \
+            --environment "$NEW_ENVIRONMENT_PATH" \
+            --reporters json \
+            --reporter-json-export "result.json"
+
+        env:
+          NEW_COLLECTION_PATH: ${{ secrets.NEWMAN_COLLECTION_PATH }}
+          NEW_ENVIRONMENT_PATH: ${{ secrets.NEWMAN_ENVIRONMENT_PATH }}
+
+      - name: Copy result.json to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "result.json"
+          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web"
