@@ -13,6 +13,7 @@ import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
+import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.PasswordResetToken;
@@ -26,6 +27,7 @@ import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.DisabledException;
@@ -36,8 +38,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static hng_java_boilerplate.util.PaginationUtils.getPaginatedUsers;
+import static hng_java_boilerplate.util.PaginationUtils.validatePageNumber;
 import java.util.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -275,5 +285,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .build()).toList());
 
         return userDto;
+    }
+
+    @Override
+    public List<MembersResponse> getAllUsers(int page, Authentication authentication) {
+        List<MembersResponse> users = new ArrayList<>();
+        User user  = (User) authentication.getPrincipal();
+        if (user != null) {
+            List<User> allUser = userRepository.findAll();
+            validatePageNumber(page, allUser);
+            Page<User> paginatedMembers = getPaginatedUsers(page, allUser);
+            users = paginatedMembers.stream().map(member -> MembersResponse.builder()
+                    .fullName(member.getName()).email(member.getEmail()).createdAt(member.getCreatedAt().toString())
+                   .build()).collect(Collectors.toList());
+        }
+        return users;
     }
 }
