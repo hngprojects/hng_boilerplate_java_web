@@ -6,6 +6,7 @@ import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
+import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.user.dto.request.EmailSenderDto;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
@@ -16,10 +17,12 @@ import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.entity.MagicLinkToken;
 import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.enums.Role;
+import hng_java_boilerplate.user.repository.MagicLinkTokenRepository;
 import hng_java_boilerplate.user.repository.PasswordResetTokenRepository;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.repository.VerificationTokenRepository;
@@ -53,6 +56,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final OrganisationRepository organisationRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PlanService planService;
+    private final MagicLinkTokenRepository magicLinkTokenRepository;
 
 
     @Override
@@ -68,7 +72,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public ResponseEntity<ApiResponse> registerUser(SignupDto signupDto) {
+    public ResponseEntity<ApiResponse<ResponseData>> registerUser(SignupDto signupDto) {
         validateEmail(signupDto.getEmail());
 
         User user = new User();
@@ -89,12 +93,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         String token = jwtUtils.createJwt.apply(loadUserByUsername(savedUser.getEmail()));
 
         UserResponse userResponse = getUserResponse(savedUser);
-        ResponseData data = new ResponseData(token, userResponse);
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED.value(), "Registration Successful!", data), HttpStatus.CREATED);
+        ResponseData data = new ResponseData(userResponse);
+        return new ResponseEntity<>(new ApiResponse<>(HttpStatus.CREATED.value(), "Registration Successful!", token, data), HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<ApiResponse> loginUser(LoginDto loginDto) {
+    public ResponseEntity<ApiResponse<ResponseData>> loginUser(LoginDto loginDto) {
         UserDetails userDetails = loadUserByUsername(loginDto.getEmail());
         User user = (User) userDetails;
         boolean isValidPassword =
@@ -104,8 +108,32 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
         String token = jwtUtils.createJwt.apply(userDetails);
         UserResponse userResponse = getUserResponse(user);
-        ResponseData data = new ResponseData(token, userResponse);
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
+        ResponseData data = new ResponseData(userResponse);
+        return new ResponseEntity<>(new ApiResponse<>(HttpStatus.OK.value(), "Login Successful!", token, data), HttpStatus.OK);
+    }
+
+    @Override
+    public void sendMagicLink(String email, HttpServletRequest request) {
+        String token = UUID.randomUUID().toString();
+        if (userRepository.existsByEmail(email)){
+            magicLinkTokenRepository.save(new MagicLinkToken(userRepository.findByEmail(email).get(), token));
+            emailService.sendMagicLink(email, request, token);
+        }
+        else {
+            User user = saveMagicLinkUser(email);
+            magicLinkTokenRepository.save(new MagicLinkToken(user, token));
+            emailService.sendMagicLink(email, request, token);
+        }
+    }
+
+    private User saveMagicLinkUser(String email){
+        String password = UUID.randomUUID().toString();
+        User user = new User();
+        user.setName("No name");
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setUserRole(Role.ROLE_USER);
+        return userRepository.save(user);
     }
 
     @Override

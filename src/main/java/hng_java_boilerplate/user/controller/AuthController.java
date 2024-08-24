@@ -2,7 +2,6 @@ package hng_java_boilerplate.user.controller;
 
 import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.user.dto.request.*;
-import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.OAuthBaseResponse;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.FacebookJwtUtils;
@@ -38,17 +37,16 @@ public class AuthController {
     }
 
     @PostMapping("/facebook")
-    public ResponseEntity<ApiResponse> handleFacebookAuth(@RequestBody OAuthDto payload) {
+    public ResponseEntity<OAuthBaseResponse> handleFacebookAuth(@RequestBody FacebookDto payload) {
         try {
-            ApiResponse savedPayload = facebookJwtUtils.facebookOauthUserJWT(payload);
-            return new ResponseEntity<>(savedPayload, HttpStatus.CREATED);
+            return new ResponseEntity<>(facebookJwtUtils.facebookOauthUserJWT(payload), HttpStatus.CREATED);
         } catch (UnAuthorizedException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @PostMapping("/google")
-    public ResponseEntity<OAuthBaseResponse> handleGoogleAuth(@RequestBody OAuthDto payload) {
+    public ResponseEntity<OAuthBaseResponse> handleGoogleAuth(@RequestBody GoogleOAuthDto payload) {
         try {
             return ResponseEntity.ok(googleJwtUtils.googleOauthUserJWT(payload));
         } catch (UnAuthorizedException e) {
@@ -78,5 +76,11 @@ public class AuthController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         return userService.verifyOtp(email, verificationTokenDto.getToken(), request);
+    }
+
+    @PostMapping("/magic-link")
+    public ResponseEntity<String> sendMagicLink(@RequestBody MagicLinkRequest magicLinkRequest, HttpServletRequest request) {
+        userService.sendMagicLink(magicLinkRequest.getEmail(), request);
+        return new ResponseEntity<>("Magic link sent successfully! Go to your email to login", HttpStatus.OK);
     }
 }
