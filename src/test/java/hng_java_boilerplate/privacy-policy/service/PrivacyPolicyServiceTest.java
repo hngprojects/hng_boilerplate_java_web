@@ -1,7 +1,7 @@
 package hng_java_boilerplate.privacy_policy.service;
 
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.privacy_policy.entity.PrivacyPolicy;
-import hng_java_boilerplate.privacy_policy.exception.PrivacyPolicyNotFoundException;
 import hng_java_boilerplate.privacy_policy.repository.PrivacyPolicyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,7 +76,7 @@ class PrivacyPolicyServiceTest {
     void getPrivacyPolicyById_ShouldThrowException_WhenPolicyDoesNotExist() {
         when(privacyPolicyRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(PrivacyPolicyNotFoundException.class, () -> privacyPolicyService.getPrivacyPolicyById(id));
+        assertThrows(NotFoundException.class, () -> privacyPolicyService.getPrivacyPolicyById(id));
         verify(privacyPolicyRepository, times(1)).findById(id);
     }
 
@@ -103,7 +103,7 @@ class PrivacyPolicyServiceTest {
         PrivacyPolicy updatedPolicy = new PrivacyPolicy();
         updatedPolicy.setContent("Updated Content");
 
-        assertThrows(PrivacyPolicyNotFoundException.class, () -> privacyPolicyService.updatePrivacyPolicy(id, updatedPolicy));
+        assertThrows(NotFoundException.class, () -> privacyPolicyService.updatePrivacyPolicy(id, updatedPolicy));
         verify(privacyPolicyRepository, times(1)).findById(id);
     }
 
@@ -121,7 +121,7 @@ class PrivacyPolicyServiceTest {
     void deletePrivacyPolicy_ShouldThrowException_WhenPolicyDoesNotExist() {
         when(privacyPolicyRepository.existsById(id)).thenReturn(false);
 
-        assertThrows(PrivacyPolicyNotFoundException.class, () -> privacyPolicyService.deletePrivacyPolicy(id));
+        assertThrows(NotFoundException.class, () -> privacyPolicyService.deletePrivacyPolicy(id));
         verify(privacyPolicyRepository, times(1)).existsById(id);
     }
 }

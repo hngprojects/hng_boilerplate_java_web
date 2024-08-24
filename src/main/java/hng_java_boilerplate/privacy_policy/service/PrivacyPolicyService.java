@@ -1,7 +1,7 @@
 package hng_java_boilerplate.privacy_policy.service;
 
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.privacy_policy.entity.PrivacyPolicy;
-import hng_java_boilerplate.privacy_policy.exception.PrivacyPolicyNotFoundException;
 import hng_java_boilerplate.privacy_policy.repository.PrivacyPolicyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +30,13 @@ public class PrivacyPolicyService {
 
     public PrivacyPolicy getPrivacyPolicyById(UUID id) {
         return privacyPolicyRepository.findById(id)
-                .orElseThrow(() -> new PrivacyPolicyNotFoundException("Privacy policy not found."));
+                .orElseThrow(() -> new NotFoundException("Privacy policy not found."));
     }
 
     public PrivacyPolicy updatePrivacyPolicy(UUID id, PrivacyPolicy updatedPolicy) {
         Optional<PrivacyPolicy> existingPolicyOpt = privacyPolicyRepository.findById(id);
         if (existingPolicyOpt.isEmpty()) {
-            throw new PrivacyPolicyNotFoundException("Privacy policy not found.");
+            throw new NotFoundException("Privacy policy not found.");
         }
         PrivacyPolicy existingPolicy = existingPolicyOpt.get();
         existingPolicy.setContent(updatedPolicy.getContent());
@@ -47,7 +47,7 @@ public class PrivacyPolicyService {
     @Transactional
     public void deletePrivacyPolicy(UUID id) {
         if (!privacyPolicyRepository.existsById(id)) {
-            throw new PrivacyPolicyNotFoundException("Privacy policy not found.");
+            throw new NotFoundException("Privacy policy not found.");
         }
         privacyPolicyRepository.deleteById(id);
     }
