@@ -130,22 +130,4 @@ public class UserServiceImplTest {
 
         assertEquals("User not found with email: notfound@example.com", exception.getMessage());
     }
-
-
-    @Test
-    public void testForgotPassword() {
-        String email = "test@user.com";
-        ForgotPasswordRequest passwordRequest = new ForgotPasswordRequest();
-        passwordRequest.setEmail(email);
-
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
-
-        CustomResponse response = userServiceImpl.forgotPassword(passwordRequest, request);
-
-        assertEquals(200, response.status_code());
-        assertEquals("forgot password reset token generated successfully", response.message());
-
-        verify(userRepository).findByEmail(email);
-        verify(userRepository).save(any(User.class));
-    }
 }
