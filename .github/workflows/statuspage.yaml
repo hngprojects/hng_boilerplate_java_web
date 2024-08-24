@@ -32,15 +32,11 @@ jobs:
           NEW_COLLECTION_PATH: ${{ secrets.NEWMAN_COLLECTION_PATH }}
           NEW_ENVIRONMENT_PATH: ${{ secrets.NEWMAN_ENVIRONMENT_PATH }}
 
-      - name: Upload results to Status Page
-        run: |
-          # You can add the command to upload the result.json to your status page server
-          scp -o StrictHostKeyChecking=no result.json user@yourserver.com:/path/to/status_page/result.json
-
-      - name: Commit and Push Results (for GitHub Pages)
-        run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
-          git add result.json
-          git commit -m "Update test results"
-          git push
+      - name: Copy result.json to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "result.json"
+          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web"
