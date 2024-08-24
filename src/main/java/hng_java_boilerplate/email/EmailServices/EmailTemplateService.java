@@ -5,9 +5,9 @@ import hng_java_boilerplate.email.dto.EmailTemplateRequestDto;
 import hng_java_boilerplate.email.dto.EmailTemplateUpdate;
 import hng_java_boilerplate.email.entity.EmailTemplate;
 import hng_java_boilerplate.email.enums.EmailTemplateStatus;
-import hng_java_boilerplate.email.exception.EmailTemplateExists;
-import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.email.repository.EmailTemplateRepository;
+import hng_java_boilerplate.exception.ConflictException;
+import hng_java_boilerplate.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class EmailTemplateService {
 
     public ResponseEntity<EmailTemplateResponse> create(EmailTemplateRequestDto body) {
         if (repository.existsByTitle(body.title())) {
-            throw new EmailTemplateExists("Email template already exists");
+            throw new ConflictException("Email template already exists");
         }
         String template = HtmlUtils.htmlEscape(body.template());
         EmailTemplate emailTemplate = EmailTemplate.builder()
@@ -40,7 +40,7 @@ public class EmailTemplateService {
     public ResponseEntity<EmailTemplateResponse> getTemplate(String title) {
         Optional<EmailTemplate> template = repository.findByTitle(title);
         if(template.isEmpty()) {
-            throw new EmailTemplateNotFound("Email template not found");
+            throw new NotFoundException("Email template not found");
         }
         return ResponseEntity.status(200).body(new EmailTemplateResponse("Email template found", 201, template.get()));
     }
@@ -48,7 +48,7 @@ public class EmailTemplateService {
     public ResponseEntity<?> delete(String name) {
         Optional<EmailTemplate> emailTemplate = repository.findByTitle(name);
         if (emailTemplate.isEmpty()) {
-            throw new EmailTemplateNotFound("Email template not found");
+            throw new NotFoundException("Email template not found");
         }
         repository.delete(emailTemplate.get());
         return ResponseEntity.status(204).body(null);
@@ -57,7 +57,7 @@ public class EmailTemplateService {
     public ResponseEntity<EmailTemplateResponse> update(String id, EmailTemplateUpdate emailTemplateUpdate) {
         Optional<EmailTemplate> emailTemplate = repository.findById(id);
         if (emailTemplate.isEmpty()) {
-            throw new EmailTemplateNotFound("Email template not found");
+            throw new NotFoundException("Email template not found");
         }
         String content = HtmlUtils.htmlEscape(emailTemplateUpdate.content());
         EmailTemplate template  = emailTemplate.get();

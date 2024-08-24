@@ -8,11 +8,11 @@ import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionExpireParams;
 import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.payment.dtos.PaymentRequestBody;
 import hng_java_boilerplate.payment.dtos.SessionResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
-import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.payment.repository.PaymentRepository;
 import hng_java_boilerplate.payment.utils.CustomerUtils;
 import hng_java_boilerplate.payment.utils.FulfillCheckout;
@@ -153,7 +153,7 @@ public class PaymentService {
         Plan plan = planService.findOne(planId);
         Optional<Payment> optionalPayment = repository.findById(paymentId);
         if (optionalPayment.isEmpty()) {
-            throw new PaymentNotFoundException("Payment not found");
+            throw new NotFoundException("Payment not found");
         }
         Payment payment = optionalPayment.get();
 

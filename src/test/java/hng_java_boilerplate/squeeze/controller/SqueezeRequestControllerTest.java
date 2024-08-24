@@ -1,10 +1,8 @@
 package hng_java_boilerplate.squeeze.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
-import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
+import hng_java_boilerplate.exception.ConflictException;
 import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
-import hng_java_boilerplate.squeeze.exceptions.DuplicateEmailException;
 import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 import hng_java_boilerplate.util.JwtUtils;
@@ -47,10 +45,6 @@ public class SqueezeRequestControllerTest {
     private ObjectMapper objectMapper;
 
     private SqueezeRequest validRequest;
-
-    @MockBean
-    private ProductErrorHandler productErrorHandler;
-
     @MockBean
     private JwtUtils jwtUtils;
 
@@ -82,7 +76,7 @@ public class SqueezeRequestControllerTest {
 
     @Test
     public void testHandleSqueezeRequest_DuplicateEmail() throws Exception {
-        when(service.saveSqueezeRequest(any(SqueezeRequest.class))).thenThrow(new DuplicateEmailException("Email address already exists"));
+        when(service.saveSqueezeRequest(any(SqueezeRequest.class))).thenThrow(new ConflictException("Email address already exists"));
 
         mockMvc.perform(post("/api/v1/squeeze")
                         .contentType(MediaType.APPLICATION_JSON)

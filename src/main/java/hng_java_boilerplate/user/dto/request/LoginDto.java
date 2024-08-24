@@ -1,6 +1,5 @@
 package hng_java_boilerplate.user.dto.request;
 
-import hng_java_boilerplate.user.exception.InvalidRequestException;
 import hng_java_boilerplate.util.ValidPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

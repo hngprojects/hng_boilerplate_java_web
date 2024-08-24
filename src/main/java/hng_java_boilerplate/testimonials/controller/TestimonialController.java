@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,6 +33,7 @@ public class TestimonialController {
     private final UserService userService;
 
     @PostMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> createTestimonial(@Valid @RequestBody TestimonialRequestDto request) {
         User loggedInUser = userService.getLoggedInUser();
 
@@ -92,6 +94,7 @@ public class TestimonialController {
     }
 
     @PatchMapping("/{testimonial_id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> updateTestimonial(@PathVariable("testimonial_id") String testimonialId,
                                                @Valid @RequestBody UpdateTestimonialRequestDto request) {
         User loggedInUser = userService.getLoggedInUser();
@@ -110,7 +113,7 @@ public class TestimonialController {
     }
 
     @DeleteMapping("/{testimonial_id}")
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_SUPER_ADMIN")
     public ResponseEntity<?> deleteTestimonial(@PathVariable("testimonial_id") String testimonialId) {
         User loggedInUser = userService.getLoggedInUser();
 

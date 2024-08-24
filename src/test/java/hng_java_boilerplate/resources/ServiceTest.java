@@ -1,9 +1,9 @@
 package hng_java_boilerplate.resources;
 
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.resources.dto.ResourceRequestDto;
 import hng_java_boilerplate.resources.dto.ResourceResponseDto;
 import hng_java_boilerplate.resources.entity.Resources;
-import hng_java_boilerplate.resources.exception.ResourcesNotFoundException;
 import hng_java_boilerplate.resources.repository.ResourceRepository;
 import hng_java_boilerplate.resources.service.ResourceServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,8 +79,8 @@ public class ServiceTest {
 
         when(resourceRepository.findById(resourceId)).thenReturn(Optional.empty());
 
-        ResourcesNotFoundException exception = assertThrows(
-                ResourcesNotFoundException.class,
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
                 () -> resourceService.getResourceById(resourceId)
         );
 
@@ -132,8 +132,8 @@ public class ServiceTest {
         when(resourceRepository.findById(resourceId)).thenReturn(Optional.empty());
 
 
-        ResourcesNotFoundException exception = assertThrows(
-                ResourcesNotFoundException.class,
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
                 () -> resourceService.editResources(mockRequestDto)
         );
 
@@ -168,8 +168,8 @@ public class ServiceTest {
 
         when(resourceRepository.findById(resourceId)).thenReturn(Optional.empty());
 
-        ResourcesNotFoundException exception = assertThrows(
-                ResourcesNotFoundException.class,
+        NotFoundException exception = assertThrows(
+               NotFoundException.class,
                 () -> resourceService.deleteResources(resourceId)
         );
 

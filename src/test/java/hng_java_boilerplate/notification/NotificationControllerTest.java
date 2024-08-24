@@ -1,15 +1,12 @@
 package hng_java_boilerplate.notification;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hng_java_boilerplate.notification.controllers.NotificationController;
 import hng_java_boilerplate.notification.dto.request.MarkRead;
 import hng_java_boilerplate.notification.dto.response.NotificationData;
 import hng_java_boilerplate.notification.dto.response.NotificationDto;
 import hng_java_boilerplate.notification.dto.response.NotificationDtoRes;
 import hng_java_boilerplate.notification.dto.response.NotificationResponse;
-import hng_java_boilerplate.notification.models.Notification;
 import hng_java_boilerplate.notification.services.NotificationService;
-import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
@@ -41,8 +38,7 @@ public class NotificationControllerTest {
     private UserService userService;
     @InjectMocks
     private NotificationController notificationController;
-    @MockBean
-    private ProductErrorHandler productErrorHandler;
+
     @MockBean
     private JwtUtils jwtUtils;
     @Autowired
