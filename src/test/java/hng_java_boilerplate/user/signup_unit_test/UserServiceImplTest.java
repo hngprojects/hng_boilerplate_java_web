@@ -3,18 +3,24 @@ package hng_java_boilerplate.user.signup_unit_test;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.repository.PasswordResetTokenRepository;
 import hng_java_boilerplate.user.repository.UserRepository;
+import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +52,15 @@ class UserServiceImplTest {
 
     @Mock
     PasswordEncoder passwordEncoder;
+
+    @Mock
+    EmailServiceImpl emailService;
+
+    @Mock
+    PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Mock
+    HttpServletRequest request;
 
     @Mock
     JwtUtils jwtUtils;
@@ -168,6 +183,21 @@ class UserServiceImplTest {
         long expirationTime = Instant.now().plusSeconds(3600).toEpochMilli(); // Implement this method based on how the token is structured
         long now = Instant.now().toEpochMilli();
         assertTrue(expirationTime > now, "Token should not be expired yet");
+    }
+
+    @Test
+    void testForgotPassword() {
+        EmailSenderDto emailSenderDto = new EmailSenderDto("john.doe@example.com");
+        User user = new User();
+        user.setId("someUserId");
+        user.setEmail("john.doe@example.com");
+
+        when(userRepository.findByEmail(emailSenderDto.getEmail())).thenReturn(Optional.of(user));
+        when(passwordResetTokenRepository.save(any(PasswordResetToken.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        userService.forgotPassword(emailSenderDto, request);
+
+        Mockito.verify(emailService).passwordResetTokenMail(any(User.class), any(HttpServletRequest.class), any(String.class));
     }
 
 }

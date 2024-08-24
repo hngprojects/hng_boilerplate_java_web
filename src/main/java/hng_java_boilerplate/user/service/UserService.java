@@ -1,5 +1,6 @@
 package hng_java_boilerplate.user.service;
 
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -19,4 +20,6 @@ public interface UserService {
     User save(User user);
 
     User findUser(String id);
+
+    void forgotPassword(EmailSenderDto passwordDto, HttpServletRequest request);
 }
