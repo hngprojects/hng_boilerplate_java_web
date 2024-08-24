@@ -4,10 +4,12 @@ import hng_java_boilerplate.activitylog.service.ActivityLogService;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.exception.UnAuthorizedException;
+import hng_java_boilerplate.user.dto.request.ForgotPasswordRequest;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
+import hng_java_boilerplate.user.dto.response.CustomResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
@@ -158,6 +160,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public User findUser(String id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    @Override
+    public CustomResponse forgotPassword(ForgotPasswordRequest passReq, HttpServletRequest request) {
+        User user = userRepository.findByEmail(passReq.getEmail())
+                .orElseThrow(() -> new BadRequestException("Account with the specified email doesn't exist"));
+
+        String token = emailService.generateToken();
+        user.setForgotPasswordToken(token);
+        userRepository.save(user);
+
+        emailService.passwordResetTokenMail(user, request, token);
+
+        return new CustomResponse("forgot password reset token generated successfully", 200);
     }
 
     // GetUserResponse method that combines both branches

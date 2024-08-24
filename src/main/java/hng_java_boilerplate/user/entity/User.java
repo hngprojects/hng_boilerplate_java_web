@@ -47,6 +47,8 @@ public class User implements UserDetails {
     @JsonIgnore
     private String secretKey;
 
+    private String forgotPasswordToken;
+
     private Boolean TwoFactorEnabled = false;
 
     @ManyToMany
