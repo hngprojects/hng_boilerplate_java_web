@@ -4,6 +4,8 @@ import hng_java_boilerplate.activitylog.service.ActivityLogService;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.exception.UnAuthorizedException;
+import hng_java_boilerplate.organisation.entity.Organisation;
+import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
@@ -32,9 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final ActivityLogService activityLogService;
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailServiceImpl emailService;
+    private final OrganisationRepository organisationRepository;
     private final PlanService planService;
 
 
@@ -72,8 +73,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
         user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
-
         User savedUser = userRepository.save(user);
+        createDefaultOrganisation(savedUser);
 
         Optional<User> createdUserCheck = userRepository.findByEmail(user.getEmail());
         if (createdUserCheck.isEmpty()) {
@@ -165,20 +166,39 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-
-    // GetUserResponse method that combines both branches
-    public UserResponse getUserResponse(User user) {
+    private Map<String, String> splitName(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
         String lastName = nameParts.length > 1 ? nameParts[1] : "";
 
+        Map<String, String> nameDict = new HashMap<>();
+        nameDict.put("firstName", firstName);
+        nameDict.put("lastName", lastName);
+        return nameDict;
+    }
+
+    // GetUserResponse method that combines both branches
+    public UserResponse getUserResponse(User user) {
+        Map<String, String> splitName = splitName(user);
+
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
-        userResponse.setFirst_name(firstName);
-        userResponse.setLast_name(lastName);
+        userResponse.setFirst_name(splitName.get("firstName"));
+        userResponse.setLast_name(splitName.get("lastName"));
         userResponse.setEmail(user.getEmail());
+        userResponse.setOrganisations(user.getOrganisations());
         userResponse.setCreated_at(user.getCreatedAt());
         return userResponse;
+    }
+
+    private void createDefaultOrganisation(User user){
+        Organisation organisation = new Organisation();
+        organisation.setName(splitName(user).get("firstName") + "'s Organisation");
+        organisation.setOwner(user.getId());
+        organisation.setDescription("Default organisation for " + splitName(user).get("firstName"));
+        organisation.setUsers(Collections.singletonList(user));
+        user.setOrganisations(Collections.singletonList(organisation));
+        organisationRepository.save(organisation);
     }
 
     // Validate email method to check if the email already exists
