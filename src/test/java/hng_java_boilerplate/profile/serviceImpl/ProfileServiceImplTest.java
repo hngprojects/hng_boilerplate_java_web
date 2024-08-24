@@ -3,6 +3,8 @@ package hng_java_boilerplate.profile.serviceImpl;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
 import hng_java_boilerplate.profile.dto.response.DeactivateUserResponse;
+import hng_java_boilerplate.profile.dto.response.ProfileResponse;
+import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
@@ -12,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -107,5 +111,29 @@ class ProfileServiceImplTest {
         assertThatThrownBy(() -> underTest.deactivateUser(request))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("User has been deactivated");
+    }
+
+    @Test
+    void shouldGetUserProfile() {
+        Profile profile = new Profile();
+        profile.setId("profile-id");
+        profile.setFirstName("first_name");
+        profile.setLastName("last_name");
+
+        User user = new User();
+        user.setId("user-id");
+        user.setProfile(profile);
+
+        when(userRepository.findById("user-id")).thenReturn(Optional.of(user));
+
+        ProfileResponse response = underTest.getUserProfile("user-id");
+
+        assertThat(response.status_code()).isEqualTo(200);
+        assertThat(response.message()).isEqualTo("user profile");
+        assertThat(response.data()).hasFieldOrPropertyWithValue("id", "profile-id");
+        assertThat(response.data()).hasFieldOrPropertyWithValue("first_name", "first_name");
+        assertThat(response.data()).hasFieldOrPropertyWithValue("last_name", "last_name");
+
+        verify(userRepository).findById(anyString());
     }
 }
