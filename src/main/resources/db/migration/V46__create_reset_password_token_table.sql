@@ -1,4 +1,4 @@
--- V45__create_password_reset_token_table.sql
+-- V46__create_password_reset_token_table.sql
 CREATE TABLE password_reset_token (
     id VARCHAR(36) PRIMARY KEY,
     token VARCHAR(255) NOT NULL,
