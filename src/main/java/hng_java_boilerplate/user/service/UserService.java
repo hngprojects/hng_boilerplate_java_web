@@ -22,6 +22,7 @@ public interface UserService {
     User findUser(String id);
     void forgotPassword(EmailSenderDto passwordDto, HttpServletRequest request);
     ResponseEntity<String> resetPassword(String token, ResetPasswordDto passwordDto);
+    void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request);
     List<MembersResponse> getAllUsers(int page, Authentication authentication);
     Response<?> getUserById(String userId, Authentication authentication);
 }
