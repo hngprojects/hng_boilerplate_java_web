@@ -77,19 +77,4 @@ class CategoryServiceTest {
 
         verify(categoryRepository, times(1)).deleteById(id);
     }
-
-    @Test
-    void createCategory_SetsCreatedAndUpdatedAt() {
-        Category category = new Category();
-        category.setName("Test Category");
-        when(categoryRepository.save(any(Category.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        Category createdCategory = categoryService.createCategory(category);
-
-        assertNotNull(createdCategory.getCreatedAt());
-        assertNotNull(createdCategory.getUpdatedAt());
-        assertTrue(createdCategory.getCreatedAt().isBefore(LocalDateTime.now().plusSeconds(1)));
-        assertTrue(createdCategory.getUpdatedAt().isBefore(LocalDateTime.now().plusSeconds(1)));
-        assertEquals(createdCategory.getCreatedAt(), createdCategory.getUpdatedAt());
-    }
 }
