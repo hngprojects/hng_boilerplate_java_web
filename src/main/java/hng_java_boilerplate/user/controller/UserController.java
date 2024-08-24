@@ -1,5 +1,6 @@
 package hng_java_boilerplate.user.controller;
 
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.Response;
 import hng_java_boilerplate.user.service.UserService;
@@ -32,4 +33,15 @@ public class UserController {
         Response<?> response = Response.builder().message("Users List Successfully Fetched").status_code("200").data(allUsers).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/me/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable String id, Authentication authentication) {
+        try {
+            Response<?> response = userService.getUserById(id, authentication);
+            return ResponseEntity.status(response.getStatus_code().equals("200") ? 200 : 401).body(response);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(Response.builder().status_code("404").message(e.getMessage()).build());
+        }
+    }
+
 }
