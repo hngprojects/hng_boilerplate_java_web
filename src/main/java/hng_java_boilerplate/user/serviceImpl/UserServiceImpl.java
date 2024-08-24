@@ -16,6 +16,7 @@ import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
@@ -27,6 +28,7 @@ import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.DisabledException;
@@ -37,8 +39,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static hng_java_boilerplate.util.PaginationUtils.getPaginatedUsers;
+import static hng_java_boilerplate.util.PaginationUtils.validatePageNumber;
 import java.util.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -311,4 +321,43 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         return userDto;
     }
+
+    @Override
+    public List<MembersResponse> getAllUsers(int page, Authentication authentication) {
+        List<MembersResponse> users = new ArrayList<>();
+        User user  = (User) authentication.getPrincipal();
+        if (user != null) {
+            List<User> allUser = userRepository.findAll();
+            validatePageNumber(page, allUser);
+            Page<User> paginatedMembers = getPaginatedUsers(page, allUser);
+            users = paginatedMembers.stream().map(member -> MembersResponse.builder()
+                    .fullName(member.getName()).email(member.getEmail()).createdAt(member.getCreatedAt().toString())
+                   .build()).collect(Collectors.toList());
+        }
+        return users;
+    }
+
+    @Override
+    public Response<?> getUserById(String userId, Authentication authentication) {
+        String email = authentication.getName();
+
+        if (!userRepository.existsByEmail(email)) {
+            throw new BadRequestException("Email does not exist");
+        }
+
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User foundUser = userOptional.get();
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("id", foundUser.getId());
+            data.put("fullname", foundUser.getName());
+            data.put("email", foundUser.getEmail());
+            data.put("role", foundUser.getUserRole().toString());
+            data.put("createdAt", foundUser.getCreatedAt() != null ? foundUser.getCreatedAt().toString() : "N/A");
+            return Response.builder().status_code("200").message("User data successfully fetched").data(data).build();
+        } else {
+            throw new NotFoundException("User not found with id: " + userId);
+        }
+    }
+
 }
