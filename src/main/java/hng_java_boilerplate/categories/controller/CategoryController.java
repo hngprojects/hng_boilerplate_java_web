@@ -1,7 +1,11 @@
 package hng_java_boilerplate.categories.controller;
 
+import hng_java_boilerplate.categories.dto.CategoryDto;
+import hng_java_boilerplate.categories.dto.CategoryRequest;
+import hng_java_boilerplate.categories.dto.CustomResponse;
 import hng_java_boilerplate.categories.entity.Category;
 import hng_java_boilerplate.categories.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,35 +23,24 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody Category category) {
-        Category createdCategory = categoryService.createCategory(category);
-        return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody @Valid CategoryRequest category) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(categoryService.createCategory(category));
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
+       return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCategoryById(@PathVariable UUID id) {
-        Optional<Category> category = categoryService.getCategoryById(id);
-        if (category.isPresent()) {
-            return ResponseEntity.ok(category.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
-        }
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable UUID id) {
+        return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable UUID id) {
-        Optional<Category> category = categoryService.getCategoryById(id);
-        if (category.isPresent()) {
-            categoryService.deleteCategory(id);
-            return ResponseEntity.ok("Category deleted successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
-        }
+    public ResponseEntity<CustomResponse> deleteCategory(@PathVariable UUID id) {
+       return ResponseEntity.ok(categoryService.deleteCategory(id));
     }
 }
