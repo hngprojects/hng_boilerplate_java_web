@@ -4,6 +4,8 @@ import com.google.gson.JsonSyntaxException;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import hng_java_boilerplate.blogCategory.exception.BlogCategoryAlreadyExistsException;
+import hng_java_boilerplate.blogCategory.exception.BlogCategoryNotFoundException;
 import hng_java_boilerplate.email.exception.EmailTemplateExists;
 import hng_java_boilerplate.email.exception.EmailTemplateNotFound;
 import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
@@ -207,6 +209,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourcesNotFoundException.class)
     public ResponseEntity<?> resourcesNotFoundException(ResourcesNotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse("This resource does not exist", ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BlogCategoryAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryAlreadyExistsException(BlogCategoryAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Category Already Created", HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BlogCategoryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryAlreadyExistsException(BlogCategoryNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse( ex.getMessage(),"Category Does Not Exist", HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 

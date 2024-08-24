@@ -101,9 +101,10 @@ public class WebSecurityConfig {
                                         "/api/v1/resources/unpublish/{id}",
                                         "/api/v1/resources/publish/{id}",
                                         "/api/v1/resources/published",
-                                        "/api/v1/resources/unpublished"
+                                        "/api/v1/resources/unpublished",
+                                        "/api/v1/create/blog-category"
                                 ).permitAll()
-                                .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
+                                .requestMatchers("/api/v1/auth/logout").authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)
