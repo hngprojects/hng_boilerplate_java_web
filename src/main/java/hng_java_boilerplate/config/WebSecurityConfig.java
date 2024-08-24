@@ -105,13 +105,15 @@ public class WebSecurityConfig {
                                         "/api/v1/jobs/**",
                                         "/api/v1/notifications",
                                         "/api/v1/categories",
+                                        "/api/v1/payment/plans",
+                                        "/api/v1/payment/webhook",
                                         "/api/v1/notification-settings"
                                 ).permitAll()
                                 .requestMatchers(
 
                                         "/api/v1/auth/logout",
                                         "/api/v1/organisations/**",
-                                        "/api/v1/payment/**",
+                                        "/api/v1/payment/stripe/**",
                                         "/api/v1/accounts/**",
                                         "api/v1/auth/2fa/**").authenticated())
                 .logout(logout -> logout
