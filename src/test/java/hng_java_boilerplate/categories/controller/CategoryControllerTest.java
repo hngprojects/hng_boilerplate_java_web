@@ -1,6 +1,8 @@
 package hng_java_boilerplate.categories.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hng_java_boilerplate.categories.dto.CategoryDto;
+import hng_java_boilerplate.categories.dto.CategoryRequest;
 import hng_java_boilerplate.categories.entity.Category;
 import hng_java_boilerplate.categories.service.CategoryService;
 import org.junit.jupiter.api.Test;
@@ -37,15 +39,15 @@ public class CategoryControllerTest {
 
     @Test
     void testCreateCategory() throws Exception {
-        Category category = new Category();
-        category.setId(UUID.randomUUID());
+        CategoryDto category = new CategoryDto();
+        category.setCategory_id(UUID.randomUUID());
         category.setName("Test Category");
         category.setDescription("Test Description");
         category.setSlug("test-category");
-        category.setCreatedAt(LocalDateTime.now());
-        category.setUpdatedAt(LocalDateTime.now());
+        category.setCreated_at(LocalDateTime.now());
+        category.setUpdated_at(LocalDateTime.now());
 
-        when(categoryService.createCategory(any(Category.class))).thenReturn(category);
+        when(categoryService.createCategory(any(CategoryRequest.class))).thenReturn(category);
 
         mockMvc.perform(post("/api/v1/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -57,13 +59,13 @@ public class CategoryControllerTest {
 
     @Test
     void testGetAllCategories() throws Exception {
-        Category category = new Category();
-        category.setId(UUID.randomUUID());
+        CategoryDto category = new CategoryDto();
+        category.setCategory_id(UUID.randomUUID());
         category.setName("Test Category");
         category.setDescription("Test Description");
         category.setSlug("test-category");
-        category.setCreatedAt(LocalDateTime.now());
-        category.setUpdatedAt(LocalDateTime.now());
+        category.setCreated_at(LocalDateTime.now());
+        category.setUpdated_at(LocalDateTime.now());
 
         when(categoryService.getAllCategories()).thenReturn(List.of(category));
 
