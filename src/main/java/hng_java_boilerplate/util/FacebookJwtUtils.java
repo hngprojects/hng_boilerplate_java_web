@@ -3,6 +3,7 @@ package hng_java_boilerplate.util;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Version;
+import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.OAuthDto;
@@ -12,7 +13,6 @@ import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
-import hng_java_boilerplate.user.exception.FacebookOAuthException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +50,8 @@ public class FacebookJwtUtils {
         try {
             user = facebookClient.fetchObject("me", com.restfb.types.User.class,
                     com.restfb.Parameter.with("fields", "id,email,first_name,last_name,picture"));
-        } catch (FacebookOAuthException e) {
-            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            throw new BadRequestException("Bad Request");
         }
 
         if (user != null) {

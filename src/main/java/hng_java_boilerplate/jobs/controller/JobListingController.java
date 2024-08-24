@@ -6,6 +6,7 @@ import hng_java_boilerplate.jobs.service.JobListingService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class JobListingController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<ApiResponse<JobListing>> createJobListing(@Valid @RequestBody JobListing jobListing) {
         JobListing createdJobListing = jobListingService.createJobListing(jobListing);
         ApiResponse<JobListing> response = new ApiResponse<>("Job listing created successfully", HttpStatus.CREATED.value(), createdJobListing);
@@ -42,6 +44,7 @@ public class JobListingController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<ApiResponse<JobListing>> updateJobListing(@PathVariable Long id, @Valid @RequestBody JobListing jobListing) {
         JobListing updatedJob = jobListingService.updateJobListing(id, jobListing);
         ApiResponse<JobListing> response = new ApiResponse<>("Job listing updated successfully", 200, updatedJob);

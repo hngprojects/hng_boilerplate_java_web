@@ -1,4 +1,4 @@
-package hng_java_boilerplate.video.dto;
+package hng_java_boilerplate.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class VideoMessageDTO {
+public class ErrorResponseDto {
+
     private String message;
-    private int statusCode;
-    private boolean success;
+    private String error;
+    private int status_code;
 }

@@ -1,7 +1,7 @@
 package hng_java_boilerplate.helpCenter.topic.service;
 
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.helpCenter.topic.entity.Topic;
-import hng_java_boilerplate.helpCenter.topic.exceptions.ResourceNotFoundException;
 import hng_java_boilerplate.helpCenter.topic.repository.TopicRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -137,7 +137,7 @@ class TopicServiceTest {
     void updateTopic_ShouldThrowResourceNotFoundException_WhenTopicDoesNotExist() {
         when(topicRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> topicService.updateTopic(id, new Topic()));
+        assertThrows(NotFoundException.class, () -> topicService.updateTopic(id, new Topic()));
         verify(topicRepository).findById(id);
     }
 

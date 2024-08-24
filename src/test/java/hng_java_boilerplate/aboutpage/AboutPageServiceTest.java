@@ -4,7 +4,6 @@ import hng_java_boilerplate.aboutpage.dto.AboutPageContentDto;
 import hng_java_boilerplate.aboutpage.entity.AboutPageContent;
 import hng_java_boilerplate.aboutpage.repository.AboutPageRepository;
 import hng_java_boilerplate.aboutpage.service.AboutPageService;
-import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,8 +16,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 public class AboutPageServiceTest {
 
@@ -27,9 +25,6 @@ public class AboutPageServiceTest {
 
     @InjectMocks
     private AboutPageService aboutPageService;
-
-    @Mock
-    private ProductErrorHandler productErrorHandler;
 
     @BeforeEach
     public void setUp() {

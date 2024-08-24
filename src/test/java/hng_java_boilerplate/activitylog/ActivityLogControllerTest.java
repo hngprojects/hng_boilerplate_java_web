@@ -1,18 +1,12 @@
 package hng_java_boilerplate.activitylog;
 
 import hng_java_boilerplate.activitylog.controller.ActivityLogController;
-import hng_java_boilerplate.activitylog.dto.ActivityLogResponseDto;
-import hng_java_boilerplate.activitylog.dto.ApiResponseDto;
-import hng_java_boilerplate.activitylog.dto.ErrorResponseDto;
 import hng_java_boilerplate.activitylog.model.ActivityLog;
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
-import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.util.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -40,9 +33,6 @@ public class ActivityLogControllerTest {
 
     @MockBean
     private ActivityLogService activityLogService;
-
-    @MockBean
-    private ProductErrorHandler productErrorHandler;
 
     @MockBean
     private JwtUtils jwtUtils;
