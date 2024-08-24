@@ -1,5 +1,6 @@
 package hng_java_boilerplate.user.controller;
 
+import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.user.dto.request.DeleteUserRequest;
 import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.Response;
@@ -37,12 +38,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUserByEmail(@RequestBody DeleteUserRequest request, Authentication authentication) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Response.builder().message("Unauthorized").status_code("401").build());
+        if (authentication == null) throw new UnAuthorizedException("Unauthorized");
         Response<?> response = userService.deleteUserByEmail(request, authentication);
-        return ResponseEntity.status(Integer.parseInt(response.getStatus_code())).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+
+    @GetMapping("/me/{id}")
+    public Response<?> getUserById(@PathVariable String id, Authentication authentication) {
+        return userService.getUserById(id, authentication);
+    }
+
+
 }

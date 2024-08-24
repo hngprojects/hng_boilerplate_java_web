@@ -27,4 +27,7 @@ public interface UserService {
 
     Response<?> deleteUserByEmail(DeleteUserRequest request, Authentication authentication);
 
+    Response<?> getUserById(String userId, Authentication authentication);
+
+
 }

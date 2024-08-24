@@ -9,6 +9,10 @@ import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
+import hng_java_boilerplate.user.dto.request.GetUserDto;
+import hng_java_boilerplate.user.dto.request.LoginDto;
+import hng_java_boilerplate.user.dto.request.SignupDto;
+
 import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
@@ -296,18 +300,44 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return users;
     }
 
+
     @Transactional
     public Response<?> deleteUserByEmail(DeleteUserRequest request, Authentication authentication) {
         String email = request.getEmail();
         if (email == null || email.isEmpty()) {
-            return Response.builder().status_code("400").message("Bad Request. The email field is required.").build();
+            throw new BadRequestException("The email field is required.");
         }
 
         if (userRepository.existsByEmail(email)) {
             userRepository.deleteByEmail(email);
             return Response.builder().status_code("success").message("The account has been successfully deleted.").build();
         }
-        return Response.builder().status_code("404").message("User not found with email: " + email).build();
+        throw new NotFoundException("User not found with email: "  + email);
+
+    }
+
+    @Override
+    public Response<?> getUserById(String userId, Authentication authentication) {
+        String email = authentication.getName();
+
+        if (!userRepository.existsByEmail(email)) {
+            throw new BadRequestException("Email does not exist");
+        }
+
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User foundUser = userOptional.get();
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("id", foundUser.getId());
+            data.put("fullname", foundUser.getName());
+            data.put("email", foundUser.getEmail());
+            data.put("role", foundUser.getUserRole().toString());
+            data.put("createdAt", foundUser.getCreatedAt() != null ? foundUser.getCreatedAt().toString() : "N/A");
+            return Response.builder().status_code("200").message("User data successfully fetched").data(data).build();
+        } else {
+            throw new NotFoundException("User not found with id: " + userId);
+        }
+
     }
 
 }

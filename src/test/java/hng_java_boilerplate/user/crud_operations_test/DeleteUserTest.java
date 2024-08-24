@@ -34,17 +34,13 @@ public class DeleteUserTest {
 
     @Test
     void deleteUserSuccessfullyTest() {
-        // Arrange
         String email = "johndoe@example.com";
         DeleteUserRequest request = new DeleteUserRequest();
         request.setEmail(email);
 
         when(userRepository.existsByEmail(email)).thenReturn(true);
-
-        // Act
         Response<?> response = userService.deleteUserByEmail(request, authentication);
 
-        // Assert
         assertEquals("success", response.getStatus_code());
         assertEquals("The account has been successfully deleted.", response.getMessage());
 
@@ -53,17 +49,13 @@ public class DeleteUserTest {
 
     @Test
     void deleteUserNotFoundTest() {
-        // Arrange
         String email = "johndoe@example.com";
         DeleteUserRequest request = new DeleteUserRequest();
         request.setEmail(email);
 
         when(userRepository.existsByEmail(email)).thenReturn(false);
-
-        // Act
         Response<?> response = userService.deleteUserByEmail(request, authentication);
 
-        // Assert
         assertEquals("404", response.getStatus_code());
         assertEquals("User not found with email: " + email, response.getMessage());
 
@@ -72,14 +64,11 @@ public class DeleteUserTest {
 
     @Test
     void deleteUserBadRequestTest() {
-        // Arrange
         DeleteUserRequest request = new DeleteUserRequest();
-        request.setEmail(""); // Empty email
-
-        // Act
+        request.setEmail("email@gmail.com"); 
+        
         Response<?> response = userService.deleteUserByEmail(request, authentication);
 
-        // Assert
         assertEquals("400", response.getStatus_code());
         assertEquals("Bad Request. The email field is required.", response.getMessage());
 
