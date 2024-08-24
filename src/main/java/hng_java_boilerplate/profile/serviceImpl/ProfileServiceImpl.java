@@ -5,6 +5,8 @@ import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
 import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
 import hng_java_boilerplate.profile.dto.response.DeactivateUserResponse;
+import hng_java_boilerplate.profile.dto.response.ProfileDto;
+import hng_java_boilerplate.profile.dto.response.ProfileResponse;
 import hng_java_boilerplate.profile.dto.response.ProfileUpdateResponseDto;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
@@ -72,5 +74,27 @@ public class ProfileServiceImpl implements ProfileService {
                 );
             }
             throw new NotFoundException("User not found");
+    }
+
+    @Override
+    public ProfileResponse getUserProfile(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("user not found with id"));
+
+        Profile profile = user.getProfile();
+        ProfileDto profileDto = ProfileDto.builder()
+                .id(profile.getId())
+                .first_name(profile.getFirstName())
+                .last_name(profile.getLastName())
+                .job_title(profile.getJobTitle())
+                .avatar_url(profile.getAvatarUrl())
+                .bio(profile.getBio())
+                .department(profile.getDepartment())
+                .social(profile.getSocial())
+                .phone_number(profile.getPhone())
+                .pronouns(profile.getPronouns())
+                .build();
+
+        return new ProfileResponse(200, "user profile", profileDto);
     }
 }

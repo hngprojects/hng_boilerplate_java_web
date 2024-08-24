@@ -85,7 +85,7 @@ public class WebSecurityConfig {
                                         "/api/v1/auth/**",
                                         "/api/v1/waitlist",
                                         "/api/v1/faqs",
-                                        "/api/v1/contacts",
+                                        "/api/v1/contact-us",
                                         "/api/v1/squeeze/",
                                         "/api/v1/comments/**",
                                         "/api/v1/resources/articles",
@@ -104,13 +104,16 @@ public class WebSecurityConfig {
                                         "api/v1/waitlist/**",
                                         "/api/v1/jobs/**",
                                         "/api/v1/notifications",
+                                        "/api/v1/categories",
+                                        "/api/v1/payment/plans",
+                                        "/api/v1/payment/webhook",
                                         "/api/v1/notification-settings"
                                 ).permitAll()
                                 .requestMatchers(
 
                                         "/api/v1/auth/logout",
                                         "/api/v1/organisations/**",
-                                        "/api/v1/payment/**",
+                                        "/api/v1/payment/stripe/**",
                                         "/api/v1/accounts/**",
                                         "api/v1/auth/2fa/**", "/api/v1/users/members").authenticated())
                 .logout(logout -> logout

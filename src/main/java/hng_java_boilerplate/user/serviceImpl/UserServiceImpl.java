@@ -4,6 +4,11 @@ import hng_java_boilerplate.activitylog.service.ActivityLogService;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.exception.UnAuthorizedException;
+import hng_java_boilerplate.organisation.entity.Organisation;
+import hng_java_boilerplate.organisation.repository.OrganisationRepository;
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
+import hng_java_boilerplate.plans.entity.Plan;
+import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
@@ -11,9 +16,11 @@ import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.enums.Role;
+import hng_java_boilerplate.user.repository.PasswordResetTokenRepository;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.repository.VerificationTokenRepository;
 import hng_java_boilerplate.user.service.UserService;
@@ -31,7 +38,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -40,6 +46,8 @@ import java.util.stream.Collectors;
 
 import static hng_java_boilerplate.util.PaginationUtils.getPaginatedUsers;
 import static hng_java_boilerplate.util.PaginationUtils.validatePageNumber;
+import java.util.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +59,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final ActivityLogService activityLogService;
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailServiceImpl emailService;
+    private final OrganisationRepository organisationRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PlanService planService;
 
 
     @Override
@@ -70,12 +81,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         validateEmail(signupDto.getEmail());
 
         User user = new User();
+        Plan plan = planService.findOne("1");
+        user.setPlan(plan);
         user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
         user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
-
         User savedUser = userRepository.save(user);
+        createDefaultOrganisation(savedUser);
 
         Optional<User> createdUserCheck = userRepository.findByEmail(user.getEmail());
         if (createdUserCheck.isEmpty()) {
@@ -138,6 +151,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return "valid";
     }
 
+    @Override
+    public void forgotPassword(EmailSenderDto emailSenderDto, HttpServletRequest request) {
+        User user = findUserByEmail(emailSenderDto.getEmail());
+        String token = UUID.randomUUID().toString();
+        createPasswordResetTokenForUser(user, token);
+        emailService.passwordResetTokenMail(user, request, token);
+    }
+
+    private void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken newlyCreatedPasswordResetToken = new PasswordResetToken(user, token);
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByUserId(user.getId());
+        if(passwordResetToken != null){
+            passwordResetTokenRepository.delete(passwordResetToken);
+        }
+        passwordResetTokenRepository.save(newlyCreatedPasswordResetToken);
+    }
+
+    public User findUserByEmail(String username) {
+        return userRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("User with email " + username + " not found"));
+    }
+
     // Convert User to GetUserDto
     private GetUserDto convertUserToGetUserDto(User user) {
         return GetUserDto.builder()
@@ -167,19 +201,39 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    // GetUserResponse method that combines both branches
-    public UserResponse getUserResponse(User user) {
+    private Map<String, String> splitName(User user){
         String[] nameParts = user.getName().split(" ", 2);
         String firstName = nameParts.length > 0 ? nameParts[0] : "";
         String lastName = nameParts.length > 1 ? nameParts[1] : "";
 
+        Map<String, String> nameDict = new HashMap<>();
+        nameDict.put("firstName", firstName);
+        nameDict.put("lastName", lastName);
+        return nameDict;
+    }
+
+    // GetUserResponse method that combines both branches
+    public UserResponse getUserResponse(User user) {
+        Map<String, String> splitName = splitName(user);
+
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
-        userResponse.setFirst_name(firstName);
-        userResponse.setLast_name(lastName);
+        userResponse.setFirst_name(splitName.get("firstName"));
+        userResponse.setLast_name(splitName.get("lastName"));
         userResponse.setEmail(user.getEmail());
+        userResponse.setOrganisations(user.getOrganisations());
         userResponse.setCreated_at(user.getCreatedAt());
         return userResponse;
+    }
+
+    private void createDefaultOrganisation(User user){
+        Organisation organisation = new Organisation();
+        organisation.setName(splitName(user).get("firstName") + "'s Organisation");
+        organisation.setOwner(user.getId());
+        organisation.setDescription("Default organisation for " + splitName(user).get("firstName"));
+        organisation.setUsers(Collections.singletonList(user));
+        user.setOrganisations(Collections.singletonList(organisation));
+        organisationRepository.save(organisation);
     }
 
     // Validate email method to check if the email already exists

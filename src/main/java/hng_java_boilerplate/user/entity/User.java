@@ -2,6 +2,7 @@ package hng_java_boilerplate.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hng_java_boilerplate.organisation.entity.Organisation;
+import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.user.enums.Role;
@@ -35,6 +36,10 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "plan_id")
+    private Plan plan;
 
     @Enumerated(EnumType.STRING)
     private Role userRole;

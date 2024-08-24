@@ -47,11 +47,9 @@ public class OrganisationService {
         organisation.setCountry(orgRequest.country());
         organisation.setAddress(orgRequest.address());
         organisation.setState(orgRequest.state());
-        organisation.setCreatedAt(LocalDateTime.now());
-        organisation.setUpdatedAt(null);
         organisation.setUsers(List.of(user));
         // set the user that owns the organisation.
-        organisation.setOwner(user);
+        organisation.setOwner(user.getId());
 
         organisationRepository.save(organisation);
 
