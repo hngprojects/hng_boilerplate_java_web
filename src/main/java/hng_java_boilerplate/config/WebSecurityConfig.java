@@ -85,7 +85,7 @@ public class WebSecurityConfig {
                                         "/api/v1/auth/**",
                                         "/api/v1/waitlist",
                                         "/api/v1/faqs",
-                                        "/api/v1/contacts",
+                                        "/api/v1/contact-us",
                                         "/api/v1/squeeze/",
                                         "/api/v1/comments/**",
                                         "/api/v1/resources/articles",
