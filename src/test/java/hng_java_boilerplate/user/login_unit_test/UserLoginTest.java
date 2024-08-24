@@ -99,7 +99,7 @@ class UserLoginTest {
         String password = "wrongPassword";
         User user = new User();
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode("correctPassword"));  // Mock encoded password
+        user.setPassword("correctPassword");
         user.setId("1");
 
         LoginDto loginDto = new LoginDto();
@@ -109,12 +109,7 @@ class UserLoginTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(password, user.getPassword())).thenReturn(false);
 
-        ResponseEntity<ApiResponse> responseEntity = userService.loginUser(loginDto);
-
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        ApiResponse apiResponse = responseEntity.getBody();
-        assertNotNull(apiResponse);
-        assertEquals("Invalid email or password", apiResponse.getMessage());
+        assertThrows(BadRequestException.class, () -> userService.loginUser(loginDto));
     }
 
     @Test
