@@ -6,21 +6,29 @@ import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
+import hng_java_boilerplate.plans.entity.Plan;
+import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
+import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.dto.response.*;
+import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.enums.Role;
+import hng_java_boilerplate.user.repository.PasswordResetTokenRepository;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.repository.VerificationTokenRepository;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.DisabledException;
@@ -31,8 +39,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static hng_java_boilerplate.util.PaginationUtils.getPaginatedUsers;
+import static hng_java_boilerplate.util.PaginationUtils.validatePageNumber;
 import java.util.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +61,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailServiceImpl emailService;
     private final OrganisationRepository organisationRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PlanService planService;
 
 
     @Override
@@ -64,6 +82,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         validateEmail(signupDto.getEmail());
 
         User user = new User();
+        Plan plan = planService.findOne("1");
+        user.setPlan(plan);
         user.setName(signupDto.getFirstName().trim() + " " + signupDto.getLastName().trim());
         user.setUserRole(Role.ROLE_USER);
         user.setEmail(signupDto.getEmail());
@@ -99,6 +119,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    public void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request) {
+        User user = findUserByEmail(emailSenderDto.getEmail());
+        String token = emailService.generateToken();
+        saveVerificationTokenForUser(user, token);
+        emailService.sendVerificationEmail(user, request, token);
+    }
+
+    public void saveVerificationTokenForUser(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken(user, token);
+        verificationTokenRepository.save(verificationToken);
+    }
+
+    @Override
     public ResponseEntity<String> verifyOtp(String email, String token, HttpServletRequest request) {
         String tokenValidationResult = validateVerificationToken(token);
         Optional<User> userOptional = userRepository.findByEmail(email);
@@ -130,6 +163,61 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return "expired";
         }
         return "valid";
+    }
+
+    @Override
+    public void forgotPassword(EmailSenderDto emailSenderDto, HttpServletRequest request) {
+        User user = findUserByEmail(emailSenderDto.getEmail());
+        String token = UUID.randomUUID().toString();
+        createPasswordResetTokenForUser(user, token);
+        emailService.passwordResetTokenMail(user, request, token);
+    }
+
+    private void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken newlyCreatedPasswordResetToken = new PasswordResetToken(user, token);
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByUserId(user.getId());
+        if(passwordResetToken != null){
+            passwordResetTokenRepository.delete(passwordResetToken);
+        }
+        passwordResetTokenRepository.save(newlyCreatedPasswordResetToken);
+    }
+
+    @Override
+    public ResponseEntity<String> resetPassword(String token, ResetPasswordDto passwordDto) {
+        String result = validatePasswordResetToken(token);
+        if (!result.equalsIgnoreCase("valid")) {
+            throw new UnAuthorizedException("Invalid Token");
+        }
+        Optional<User> user = Optional.ofNullable(passwordResetTokenRepository.findByToken(token).getUser());
+        if (user.isPresent()) {
+            changePassword(user.get(), passwordDto.getNew_password());
+            return new ResponseEntity<>("Password Reset Successful", HttpStatus.OK);
+        } else {
+            throw new UnAuthorizedException("Invalid Token");
+        }
+    }
+
+    private String validatePasswordResetToken(String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        if (passwordResetToken == null) {
+            return "invalid";
+        }
+        Calendar cal = Calendar.getInstance();
+        if (passwordResetToken.getExpirationTime().getTime()
+                - cal.getTime().getTime() <= 0) {
+            passwordResetTokenRepository.delete(passwordResetToken);
+            return "expired";
+        }
+        return "valid";
+    }
+
+    private void changePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public User findUserByEmail(String username) {
+        return userRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("User with email " + username + " not found"));
     }
 
     // Convert User to GetUserDto
@@ -246,4 +334,43 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         return userDto;
     }
+
+    @Override
+    public List<MembersResponse> getAllUsers(int page, Authentication authentication) {
+        List<MembersResponse> users = new ArrayList<>();
+        User user  = (User) authentication.getPrincipal();
+        if (user != null) {
+            List<User> allUser = userRepository.findAll();
+            validatePageNumber(page, allUser);
+            Page<User> paginatedMembers = getPaginatedUsers(page, allUser);
+            users = paginatedMembers.stream().map(member -> MembersResponse.builder()
+                    .fullName(member.getName()).email(member.getEmail()).createdAt(member.getCreatedAt().toString())
+                   .build()).collect(Collectors.toList());
+        }
+        return users;
+    }
+
+    @Override
+    public Response<?> getUserById(String userId, Authentication authentication) {
+        String email = authentication.getName();
+
+        if (!userRepository.existsByEmail(email)) {
+            throw new BadRequestException("Email does not exist");
+        }
+
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User foundUser = userOptional.get();
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("id", foundUser.getId());
+            data.put("fullname", foundUser.getName());
+            data.put("email", foundUser.getEmail());
+            data.put("role", foundUser.getUserRole().toString());
+            data.put("createdAt", foundUser.getCreatedAt() != null ? foundUser.getCreatedAt().toString() : "N/A");
+            return Response.builder().status_code("200").message("User data successfully fetched").data(data).build();
+        } else {
+            throw new NotFoundException("User not found with id: " + userId);
+        }
+    }
+
 }
