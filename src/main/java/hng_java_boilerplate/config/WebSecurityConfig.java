@@ -104,6 +104,7 @@ public class WebSecurityConfig {
                                         "api/v1/waitlist/**",
                                         "/api/v1/jobs/**",
                                         "/api/v1/notifications",
+                                        "/api/v1/categories",
                                         "/api/v1/notification-settings"
                                 ).permitAll()
                                 .requestMatchers(
