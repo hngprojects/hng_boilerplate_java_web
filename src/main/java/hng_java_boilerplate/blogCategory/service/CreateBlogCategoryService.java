@@ -3,7 +3,7 @@ package hng_java_boilerplate.blogCategory.service;
 import hng_java_boilerplate.blogCategory.dto.BlogCategoryRequestDTO;
 import hng_java_boilerplate.blogCategory.dto.BlogCategoryResponseDto;
 import hng_java_boilerplate.blogCategory.dto.CategoryBlogData;
-import hng_java_boilerplate.blogCategory.entity.Category;
+import hng_java_boilerplate.blogCategory.entity.BlogCategory;
 import hng_java_boilerplate.blogCategory.exception.BlogCategoryAlreadyExistsException;
 import hng_java_boilerplate.blogCategory.repository.CreateBlogCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ public class CreateBlogCategoryService {
     public BlogCategoryResponseDto CreateBlogCategoryRequestDTO(BlogCategoryRequestDTO request) throws BlogCategoryAlreadyExistsException {
 
         BlogCategoryResponseDto createBlogCategoryResponseDTO = new BlogCategoryResponseDto();
-        Optional<Category> existingCategory = categoryRepository.findByName(request.getName());
+        Optional<BlogCategory> existingCategory = categoryRepository.findByName(request.getName());
 
         if ((existingCategory.isEmpty())) {
-            Category category = new Category();
+            BlogCategory category = new BlogCategory();
             category.setName(request.getName());
             categoryRepository.save(category);
 

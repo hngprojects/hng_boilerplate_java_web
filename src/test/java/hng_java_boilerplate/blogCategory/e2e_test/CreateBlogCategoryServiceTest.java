@@ -2,7 +2,7 @@ package hng_java_boilerplate.blogCategory.e2e_test;
 
 import hng_java_boilerplate.blogCategory.dto.BlogCategoryRequestDTO;
 import hng_java_boilerplate.blogCategory.dto.BlogCategoryResponseDto;
-import hng_java_boilerplate.blogCategory.entity.Category;
+import hng_java_boilerplate.blogCategory.entity.BlogCategory;
 import hng_java_boilerplate.blogCategory.exception.BlogCategoryAlreadyExistsException;
 import hng_java_boilerplate.blogCategory.repository.CreateBlogCategoryRepository;
 import hng_java_boilerplate.blogCategory.service.CreateBlogCategoryService;
@@ -43,7 +43,7 @@ public class CreateBlogCategoryServiceTest {
     public void testCreateBlogCategoryFailureCategoryAlreadyExists() {
 
         BlogCategoryRequestDTO request = new BlogCategoryRequestDTO("Existing Category");
-        when(categoryRepository.findByName(request.getName())).thenReturn(Optional.of(new Category()));
+        when(categoryRepository.findByName(request.getName())).thenReturn(Optional.of(new BlogCategory()));
 
         assertThrows(BlogCategoryAlreadyExistsException.class, () -> createBlogCategoryService.CreateBlogCategoryRequestDTO(request));
     }

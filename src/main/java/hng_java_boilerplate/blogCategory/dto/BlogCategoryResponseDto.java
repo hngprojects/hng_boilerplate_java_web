@@ -2,7 +2,7 @@ package hng_java_boilerplate.blogCategory.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import hng_java_boilerplate.blogCategory.entity.Category;
+import hng_java_boilerplate.blogCategory.entity.BlogCategory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +17,7 @@ public class BlogCategoryResponseDto {
     private String message;
     private CategoryBlogData data;
     private String status_Code;
-    private List<Category> categoryData;
+    private List<BlogCategory> categoryData;
 
     public BlogCategoryResponseDto(String status, String message, CategoryBlogData data) {
         this.status = status;

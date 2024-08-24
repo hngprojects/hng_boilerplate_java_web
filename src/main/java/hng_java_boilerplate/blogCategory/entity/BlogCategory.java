@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "category")
-public class Category {
+public class BlogCategory {
     @Id
     private String id;
 
