@@ -3,9 +3,13 @@ package hng_java_boilerplate.user.service;
 import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
+import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+
+import java.util.List;
 
 public interface UserService {
     GetUserDto getUserWithDetails(String userId);
@@ -19,4 +23,5 @@ public interface UserService {
     ResponseEntity<String> resetPassword(String token, ResetPasswordDto passwordDto);
     void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request);
     void sendMagicLink(String email, HttpServletRequest request);
+    List<MembersResponse> getAllUsers(int page, Authentication authentication);
 }
