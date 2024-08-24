@@ -54,7 +54,7 @@ class ProfileControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String requestString = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(patch("/api/v1/accounts/deactivate")
+        mockMvc.perform(patch("/api/v1/profile/deactivate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestString))
                 .andExpect(status().isOk())

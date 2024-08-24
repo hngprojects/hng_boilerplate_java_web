@@ -13,8 +13,8 @@ public class ContactUsRequest {
     @Email(message = "email must be valid")
     private String email;
 
-    @NotBlank(message = "phone_no is required")
-    private String phone_no;
+    @NotBlank(message = "phone_number is required")
+    private String phone_number;
 
     @NotBlank(message = "message is required")
     private String message;
