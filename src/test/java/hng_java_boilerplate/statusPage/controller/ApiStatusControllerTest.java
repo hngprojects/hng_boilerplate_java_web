@@ -43,7 +43,6 @@ public class ApiStatusControllerTest {
 
     @Test
     public void testGetAllApiStatuses() throws Exception {
-        // Arrange
         ApiStatus apiStatus = new ApiStatus();
         apiStatus.setApiGroup("Test API");
         apiStatus.setStatus(ApiStatus.Status.OPERATIONAL);
@@ -53,7 +52,6 @@ public class ApiStatusControllerTest {
 
         when(apiStatusService.getAllApiStatuses()).thenReturn(apiStatuses);
 
-        // Act and Assert
         mockMvc.perform(get("/api/v1/api-status"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -63,7 +61,6 @@ public class ApiStatusControllerTest {
 
     @Test
     public void testUpdateApiStatus() throws Exception {
-        // Arrange
         ApiStatus apiStatus = new ApiStatus();
         apiStatus.setApiGroup("Test API");
         apiStatus.setStatus(ApiStatus.Status.OPERATIONAL);
@@ -71,7 +68,6 @@ public class ApiStatusControllerTest {
 
         when(apiStatusService.updateApiStatus(any(ApiStatus.class))).thenReturn(apiStatus);
 
-        // Act and Assert
         mockMvc.perform(post("/api/v1/api-status")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"apiGroup\":\"Test API\",\"status\":\"OPERATIONAL\"}"))

@@ -33,13 +33,10 @@ public class TestScheduler {
     @Scheduled(fixedRate = 900000) // 15 minutes
     public void runTests() {
         try {
-            // Run Newman tests
             runNewmanTests();
 
-            // Parse test results
             List<ApiStatus> apiStatuses = NewmanResultParser.parseNewmanResults(newmanOutputPath);
 
-            // Update API statuses in the database
             for (ApiStatus apiStatus : apiStatuses) {
                 apiStatusService.updateApiStatus(apiStatus);
             }
@@ -59,7 +56,6 @@ public class TestScheduler {
 
         Process process = processBuilder.start();
 
-        // Read the output of the Newman command
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         while ((line = reader.readLine()) != null) {
