@@ -9,7 +9,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
-import hng_java_boilerplate.user.dto.request.OAuthDto;
+import hng_java_boilerplate.user.dto.request.GoogleOAuthDto;
 import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
@@ -46,7 +46,7 @@ public class GoogleJwtUtils {
 
 
 
-    private final Function<OAuthDto, OAuthResponse> getUserFromIdToken = (oAuthDto) -> {
+    private final Function<GoogleOAuthDto, OAuthResponse> getUserFromIdToken = (oAuthDto) -> {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = new GsonFactory();
 
@@ -142,8 +142,8 @@ public class GoogleJwtUtils {
         return profileRepository.save(profile);
     }
 
-    public OAuthBaseResponse googleOauthUserJWT(OAuthDto oAuthDto){
-        OAuthResponse user =  getUserFromIdToken.apply(oAuthDto);
+    public OAuthBaseResponse googleOauthUserJWT(GoogleOAuthDto googleOAuthDto){
+        OAuthResponse user =  getUserFromIdToken.apply(googleOAuthDto);
         OAuthUserResponse data = saveOauthUser.apply(user);
         UserOAuthDetails userOAuthDetails = userOAuthDetailsResponse(data);
         OAuthLastUserResponse lastData = oAuthLastUserResponse(userOAuthDetails);

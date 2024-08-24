@@ -1,9 +1,11 @@
 package hng_java_boilerplate.user.signup_unit_test;
 
 import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
 import hng_java_boilerplate.user.dto.request.EmailSenderDto;
+import hng_java_boilerplate.user.dto.request.ResetPasswordDto;
 import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
@@ -96,19 +98,19 @@ class UserServiceImplTest {
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(new User()));
         when(jwtUtils.createJwt.apply(any(User.class))).thenReturn("someToken");
 
-        ResponseEntity<ApiResponse> responseEntity = userService.registerUser(signupDto);
+        ResponseEntity<ApiResponse<ResponseData>> responseEntity = userService.registerUser(signupDto);
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
-        ApiResponse response = responseEntity.getBody();
+        ApiResponse<ResponseData> response = responseEntity.getBody();
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
         assertNotNull(data);
-        assertEquals("someToken", data.getToken());
+        assertEquals("someToken", response.getAccess_token());
 
         UserResponse userResponse = data.getUser();
         assertNotNull(userResponse);
@@ -165,19 +167,19 @@ class UserServiceImplTest {
         String token = "someToken";
         when(jwtUtils.createJwt.apply(any(UserDetails.class))).thenReturn(token);
 
-        ResponseEntity<ApiResponse> responseEntity = userService.registerUser(signupDto);
+        ResponseEntity<ApiResponse<ResponseData>> responseEntity = userService.registerUser(signupDto);
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
-        ApiResponse response = responseEntity.getBody();
+        ApiResponse<ResponseData> response = responseEntity.getBody();
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
         assertNotNull(data);
-        assertEquals(token, data.getToken());
+        assertEquals(token, response.getAccess_token());
 
         UserResponse userResponse = data.getUser();
         assertNotNull(userResponse);
@@ -203,6 +205,36 @@ class UserServiceImplTest {
         userService.forgotPassword(emailSenderDto, request);
 
         Mockito.verify(emailService).passwordResetTokenMail(any(User.class), any(HttpServletRequest.class), any(String.class));
+    }
+
+    @Test
+    void testResetPassword_Success() {
+        String token = UUID.randomUUID().toString();
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto("newPassword123");
+        User user = new User();
+        user.setId("someUserId");
+        user.setPassword("oldPassword");
+
+        PasswordResetToken passwordResetToken = new PasswordResetToken(user, token);
+        when(passwordResetTokenRepository.findByToken(token)).thenReturn(passwordResetToken);
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(passwordEncoder.encode(resetPasswordDto.getNew_password())).thenReturn("encodedNewPassword");
+
+        ResponseEntity<String> responseEntity = userService.resetPassword(token, resetPasswordDto);
+
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Password Reset Successful", responseEntity.getBody());
+    }
+
+    @Test
+    void testResetPassword_InvalidToken() {
+        String token = UUID.randomUUID().toString();
+        ResetPasswordDto resetPasswordDto = new ResetPasswordDto("newPassword123");
+
+        when(passwordResetTokenRepository.findByToken(token)).thenReturn(null);
+
+        assertThrows(UnAuthorizedException.class, () -> userService.resetPassword(token, resetPasswordDto));
     }
 
 }

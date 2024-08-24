@@ -1,5 +1,7 @@
 package hng_java_boilerplate.user.controller;
 
+import hng_java_boilerplate.exception.BadRequestException;
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.Response;
 import hng_java_boilerplate.user.service.UserService;
@@ -32,4 +34,12 @@ public class UserController {
         Response<?> response = Response.builder().message("Users List Successfully Fetched").status_code("200").data(allUsers).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+
+    @GetMapping("/me/{id}")
+    public Response<?> getUserById(@PathVariable String id, Authentication authentication) {
+        return userService.getUserById(id, authentication);
+    }
+
+
 }

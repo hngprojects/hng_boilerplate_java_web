@@ -12,14 +12,20 @@ import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
+import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.entity.MagicLinkToken;
+import hng_java_boilerplate.user.dto.response.ResponseData;
+import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.enums.Role;
+import hng_java_boilerplate.user.repository.MagicLinkTokenRepository;
 import hng_java_boilerplate.user.repository.PasswordResetTokenRepository;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.repository.VerificationTokenRepository;
@@ -38,6 +44,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -62,6 +69,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final OrganisationRepository organisationRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PlanService planService;
+    private final MagicLinkTokenRepository magicLinkTokenRepository;
 
 
     @Override
@@ -77,7 +85,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public ResponseEntity<ApiResponse> registerUser(SignupDto signupDto) {
+    public ResponseEntity<ApiResponse<ResponseData>> registerUser(SignupDto signupDto) {
         validateEmail(signupDto.getEmail());
 
         User user = new User();
@@ -98,12 +106,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         String token = jwtUtils.createJwt.apply(loadUserByUsername(savedUser.getEmail()));
 
         UserResponse userResponse = getUserResponse(savedUser);
-        ResponseData data = new ResponseData(token, userResponse);
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.CREATED.value(), "Registration Successful!", data), HttpStatus.CREATED);
+        ResponseData data = new ResponseData(userResponse);
+        return new ResponseEntity<>(new ApiResponse<>(HttpStatus.CREATED.value(), "Registration Successful!", token, data), HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<ApiResponse> loginUser(LoginDto loginDto) {
+    public ResponseEntity<ApiResponse<ResponseData>> loginUser(LoginDto loginDto) {
         UserDetails userDetails = loadUserByUsername(loginDto.getEmail());
         User user = (User) userDetails;
         boolean isValidPassword =
@@ -113,9 +121,47 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
         String token = jwtUtils.createJwt.apply(userDetails);
         UserResponse userResponse = getUserResponse(user);
-        ResponseData data = new ResponseData(token, userResponse);
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data), HttpStatus.OK);
+        ResponseData data = new ResponseData(userResponse);
+        return new ResponseEntity<>(new ApiResponse<>(HttpStatus.OK.value(), "Login Successful!", token, data), HttpStatus.OK);
     }
+
+    @Override
+    public void sendMagicLink(String email, HttpServletRequest request) {
+        String token = UUID.randomUUID().toString();
+        if (userRepository.existsByEmail(email)){
+            magicLinkTokenRepository.save(new MagicLinkToken(userRepository.findByEmail(email).get(), token));
+            emailService.sendMagicLink(email, request, token);
+        }
+        else {
+            User user = saveMagicLinkUser(email);
+            magicLinkTokenRepository.save(new MagicLinkToken(user, token));
+            emailService.sendMagicLink(email, request, token);
+        }
+    }
+
+    private User saveMagicLinkUser(String email){
+        String password = UUID.randomUUID().toString();
+        User user = new User();
+        user.setName("No name");
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setUserRole(Role.ROLE_USER);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request) {
+        User user = findUserByEmail(emailSenderDto.getEmail());
+        String token = emailService.generateToken();
+        saveVerificationTokenForUser(user, token);
+        emailService.sendVerificationEmail(user, request, token);
+    }
+
+    public void saveVerificationTokenForUser(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken(user, token);
+        verificationTokenRepository.save(verificationToken);
+    }
+
 
     @Override
     public ResponseEntity<String> verifyOtp(String email, String token, HttpServletRequest request) {
@@ -166,6 +212,40 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             passwordResetTokenRepository.delete(passwordResetToken);
         }
         passwordResetTokenRepository.save(newlyCreatedPasswordResetToken);
+    }
+
+    @Override
+    public ResponseEntity<String> resetPassword(String token, ResetPasswordDto passwordDto) {
+        String result = validatePasswordResetToken(token);
+        if (!result.equalsIgnoreCase("valid")) {
+            throw new UnAuthorizedException("Invalid Token");
+        }
+        Optional<User> user = Optional.ofNullable(passwordResetTokenRepository.findByToken(token).getUser());
+        if (user.isPresent()) {
+            changePassword(user.get(), passwordDto.getNew_password());
+            return new ResponseEntity<>("Password Reset Successful", HttpStatus.OK);
+        } else {
+            throw new UnAuthorizedException("Invalid Token");
+        }
+    }
+
+    private String validatePasswordResetToken(String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        if (passwordResetToken == null) {
+            return "invalid";
+        }
+        Calendar cal = Calendar.getInstance();
+        if (passwordResetToken.getExpirationTime().getTime()
+                - cal.getTime().getTime() <= 0) {
+            passwordResetTokenRepository.delete(passwordResetToken);
+            return "expired";
+        }
+        return "valid";
+    }
+
+    private void changePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     public User findUserByEmail(String username) {
@@ -301,4 +381,28 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
         return users;
     }
+
+    @Override
+    public Response<?> getUserById(String userId, Authentication authentication) {
+        String email = authentication.getName();
+
+        if (!userRepository.existsByEmail(email)) {
+            throw new BadRequestException("Email does not exist");
+        }
+
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User foundUser = userOptional.get();
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("id", foundUser.getId());
+            data.put("fullname", foundUser.getName());
+            data.put("email", foundUser.getEmail());
+            data.put("role", foundUser.getUserRole().toString());
+            data.put("createdAt", foundUser.getCreatedAt() != null ? foundUser.getCreatedAt().toString() : "N/A");
+            return Response.builder().status_code("200").message("User data successfully fetched").data(data).build();
+        } else {
+            throw new NotFoundException("User not found with id: " + userId);
+        }
+    }
+
 }

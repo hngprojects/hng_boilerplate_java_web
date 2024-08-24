@@ -22,18 +22,18 @@ import java.util.Random;
 @Slf4j
 public class EmailServiceImpl {
 
-    @Value("${app.host.baseurl:http://localhost:3000}")
+    @Value("${app.host.baseurl:https://anchor-java.teams.hng.tech}")
     private String baseUrl;
 
     private final JavaMailSender javaMailSender;
     private final EmailTemplateService emailTemplateService;
 
     public String applicationUrl(HttpServletRequest request){
-        return baseUrl + "/api/v1/auth" + request.getContextPath();
+        return baseUrl + request.getContextPath();
     }
 
     public void passwordResetTokenMail(User user, HttpServletRequest request, String token) {
-        String url = applicationUrl(request) + "/reset-password/" + token;
+        String url = applicationUrl(request) + "/" + token;
         Map<String, String> variables = new HashMap<>();
         variables.put("name", user.getName());
         variables.put("url", url);
@@ -54,7 +54,7 @@ public class EmailServiceImpl {
     }
 
     public void sendMagicLink(String email, HttpServletRequest request, String token) {
-        String url = applicationUrl(request) + "/magic-link/login?token=" + token;
+        String url = applicationUrl(request) + "?token=" + token;
         Map<String, String> variables = new HashMap<>();
         variables.put("url", url);
 
