@@ -49,6 +49,7 @@ public class User implements UserDetails {
 
     private Boolean TwoFactorEnabled = false;
 
+
     @ManyToMany
     @JoinTable(
             name = "user_organisation",
