@@ -6,16 +6,10 @@ import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
-import hng_java_boilerplate.user.dto.request.EmailSenderDto;
+import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
-import hng_java_boilerplate.user.dto.request.GetUserDto;
-import hng_java_boilerplate.user.dto.request.LoginDto;
-import hng_java_boilerplate.user.dto.request.SignupDto;
-import hng_java_boilerplate.user.dto.response.ApiResponse;
-import hng_java_boilerplate.user.dto.response.MembersResponse;
-import hng_java_boilerplate.user.dto.response.ResponseData;
-import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
@@ -301,4 +295,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
         return users;
     }
+
+    @Transactional
+    public Response<?> deleteUserByEmail(DeleteUserRequest request, Authentication authentication) {
+        String email = request.getEmail();
+        if (email == null || email.isEmpty()) {
+            return Response.builder().status_code("400").message("Bad Request. The email field is required.").build();
+        }
+
+        if (userRepository.existsByEmail(email)) {
+            userRepository.deleteByEmail(email);
+            return Response.builder().status_code("success").message("The account has been successfully deleted.").build();
+        }
+        return Response.builder().status_code("404").message("User not found with email: " + email).build();
+    }
+
 }
