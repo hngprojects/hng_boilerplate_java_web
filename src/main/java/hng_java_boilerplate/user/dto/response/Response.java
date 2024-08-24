@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 public class Response<T> {
 
-    private String status;
+    private String status_code;
     private String message;
     private T data;
 
