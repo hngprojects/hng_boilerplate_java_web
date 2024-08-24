@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @Entity
 @NoArgsConstructor
-public class VerificationToken {
+public class MagicLinkToken {
     private static final int EXPIRATION_TIME = 60;
 
     @Id
@@ -25,14 +25,14 @@ public class VerificationToken {
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "FK_USER_VERIFY_TOKEN"))
     private User user;
 
-    public VerificationToken(User user, String token){
+    public MagicLinkToken(User user, String token){
         super();
         this.id = UUID.randomUUID().toString();
         this.token = token;
         this.user = user;
         this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);
     }
-    public VerificationToken(String token){
+    public MagicLinkToken(String token){
         super();
         this.token = token;
         this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);

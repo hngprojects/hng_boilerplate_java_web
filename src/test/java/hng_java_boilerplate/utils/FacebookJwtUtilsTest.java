@@ -5,11 +5,8 @@ import com.restfb.FacebookClient;
 import com.restfb.types.ProfilePictureSource;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
-import hng_java_boilerplate.user.dto.request.OAuthDto;
-import hng_java_boilerplate.user.dto.response.ApiResponse;
-import hng_java_boilerplate.user.dto.response.OAuthResponse;
-import hng_java_boilerplate.user.dto.response.ResponseData;
-import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.dto.request.GoogleOAuthDto;
+import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
 import hng_java_boilerplate.user.repository.UserRepository;
@@ -61,8 +58,8 @@ public class FacebookJwtUtilsTest {
 
     @Test
     void testFacebookOauthUserJWT_successfulLogin() {
-        OAuthDto oAuthDto = new OAuthDto();
-        oAuthDto.setIdToken("test-access-token");
+        GoogleOAuthDto googleOAuthDto = new GoogleOAuthDto();
+        googleOAuthDto.setIdToken("test-access-token");
 
         com.restfb.types.User facebookUser = new com.restfb.types.User();
         facebookUser.setId("123456789");
@@ -104,23 +101,34 @@ public class FacebookJwtUtilsTest {
                 .is_active(true)
                 .build();
 
-        UserResponse userResponse = UserResponse.builder()
+        OAuthUserResponse userResponse = OAuthUserResponse.builder()
                 .id(savedUser.getId())
+                .email(savedUser.getEmail())
                 .first_name(authDto.getFirst_name())
                 .last_name(authDto.getLast_name())
-                .email(savedUser.getEmail())
+                .fullname(authDto.getFirst_name() + " " + authDto.getLast_name())
                 .role(savedUser.getUserRole().name())
-                .imr_url(authDto.getImg_url())
-                .created_at(savedUser.getCreatedAt())
+                .access_token("jwt-token")
                 .build();
 
-        ResponseData data = new ResponseData("jwt-token", userResponse);
-        ApiResponse response = new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data);
+        UserOAuthDetails userOAuthDetails = UserOAuthDetails.builder()
+                .id(userResponse.getId())
+                .email(userResponse.getEmail())
+                .first_name(userResponse.getFirst_name())
+                .last_name(userResponse.getLast_name())
+                .fullname(userResponse.getFullname())
+                .role(userResponse.getRole())
+                .build();
+
+        OAuthLastUserResponse oAuthLastUserResponse = OAuthLastUserResponse.builder()
+                .user(userOAuthDetails)
+                .build();
+
+        OAuthBaseResponse response = new OAuthBaseResponse(HttpStatus.OK.value(), "User Created Successful!", userResponse.getAccess_token(), oAuthLastUserResponse);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK.value(), response.getStatus_code());
-        assertEquals("Login Successful!", response.getMessage());
-        ResponseData responseData = (ResponseData) response.getData();
-        assertEquals("jwt-token", responseData.getToken());
+        assertEquals("User Created Successful!", response.getMessage());
+        assertEquals("jwt-token", response.getAccess_token());
     }
 }

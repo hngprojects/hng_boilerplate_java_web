@@ -98,19 +98,19 @@ class UserServiceImplTest {
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(new User()));
         when(jwtUtils.createJwt.apply(any(User.class))).thenReturn("someToken");
 
-        ResponseEntity<ApiResponse> responseEntity = userService.registerUser(signupDto);
+        ResponseEntity<ApiResponse<ResponseData>> responseEntity = userService.registerUser(signupDto);
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
-        ApiResponse response = responseEntity.getBody();
+        ApiResponse<ResponseData> response = responseEntity.getBody();
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
         assertNotNull(data);
-        assertEquals("someToken", data.getToken());
+        assertEquals("someToken", response.getAccess_token());
 
         UserResponse userResponse = data.getUser();
         assertNotNull(userResponse);
@@ -167,19 +167,19 @@ class UserServiceImplTest {
         String token = "someToken";
         when(jwtUtils.createJwt.apply(any(UserDetails.class))).thenReturn(token);
 
-        ResponseEntity<ApiResponse> responseEntity = userService.registerUser(signupDto);
+        ResponseEntity<ApiResponse<ResponseData>> responseEntity = userService.registerUser(signupDto);
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
-        ApiResponse response = responseEntity.getBody();
+        ApiResponse<ResponseData> response = responseEntity.getBody();
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED.value(), response.getStatus_code());
         assertEquals("Registration Successful!", response.getMessage());
 
         ResponseData data = response.getData();
         assertNotNull(data);
-        assertEquals(token, data.getToken());
+        assertEquals(token, response.getAccess_token());
 
         UserResponse userResponse = data.getUser();
         assertNotNull(userResponse);
