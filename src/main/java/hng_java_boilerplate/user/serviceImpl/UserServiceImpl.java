@@ -18,6 +18,8 @@ import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.MagicLinkToken;
+import hng_java_boilerplate.user.dto.response.ResponseData;
+import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;

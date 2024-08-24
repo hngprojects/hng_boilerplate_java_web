@@ -2,6 +2,7 @@ package hng_java_boilerplate.user.controller;
 
 import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.user.dto.request.*;
+import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.OAuthBaseResponse;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.FacebookJwtUtils;
