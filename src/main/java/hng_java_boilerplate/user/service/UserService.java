@@ -4,6 +4,7 @@ import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.MembersResponse;
+import hng_java_boilerplate.user.dto.response.Response;
 import hng_java_boilerplate.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -26,4 +27,5 @@ public interface UserService {
     void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request);
     void sendMagicLink(String email, HttpServletRequest request);
     List<MembersResponse> getAllUsers(int page, Authentication authentication);
+    Response<?> getUserById(String userId, Authentication authentication);
 }
