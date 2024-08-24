@@ -11,6 +11,8 @@ import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class NewsletterService {
@@ -24,6 +26,8 @@ public class NewsletterService {
 
        Newsletter newsletter = new Newsletter();
        newsletter.setUserId(user.getId());
+       newsletter.setCreatedAt(LocalDateTime.now());
+       newsletter.setUpdatedAt(LocalDateTime.now());
        newsletterRepository.saveAndFlush(newsletter);
 
        emailService.sendNewsletterNotification(user);
