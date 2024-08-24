@@ -112,7 +112,7 @@ public class WebSecurityConfig {
                                         "/api/v1/organisations/**",
                                         "/api/v1/payment/**",
                                         "/api/v1/accounts/**",
-                                        "api/v1/auth/2fa/**").authenticated())
+                                        "api/v1/auth/2fa/**", "/api/v1/users/members").authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)
