@@ -42,7 +42,7 @@ class ContactUsControllerTest {
         contactMessageDto = new ContactUsRequest();
         contactMessageDto.setName("John Doe");
         contactMessageDto.setEmail("john.doe@example.com");
-        contactMessageDto.setPhone_no("123-456-7890");
+        contactMessageDto.setPhone_number("123-456-7890");
         contactMessageDto.setMessage("Hello, I need help with...");
     }
 
@@ -56,7 +56,7 @@ class ContactUsControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String requestString = objectMapper.writeValueAsString(contactMessageDto);
 
-        mockMvc.perform(post("/api/v1/contacts")
+        mockMvc.perform(post("/api/v1/contact-us")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestString))
                 .andExpect(status().isOk());
@@ -66,7 +66,7 @@ class ContactUsControllerTest {
 
     @Test
     void processContactMessageWhenNoBody() throws Exception {
-        mockMvc.perform(post("/api/v1/contacts")
+        mockMvc.perform(post("/api/v1/contact-us")
                 .content("{}")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity());
@@ -79,7 +79,7 @@ class ContactUsControllerTest {
 
         Mockito.when(contactusService.getAllContacts()).thenReturn(Arrays.asList(contact1, contact2));
 
-        mockMvc.perform(get("/api/v1/contacts")
+        mockMvc.perform(get("/api/v1/contact-us")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\",\"phone\":\"123-456-7890\",\"message\":\"Hello, I need help with...\"}," +

@@ -35,7 +35,7 @@ class ContactUsServiceImplTest {
         ContactUsRequest request = new ContactUsRequest();
         request.setEmail("john.doe@example.com");
         request.setName("John Doe");
-        request.setPhone_no("123-456-7890");
+        request.setPhone_number("123-456-7890");
         request.setMessage("Hello, I need help with...");
 
         ReflectionTestUtils.setField(underTest, "companyEmail", "info-company@mail.com");
@@ -53,7 +53,7 @@ class ContactUsServiceImplTest {
         Contact savedContact = contactCaptor.getValue();
         assertThat(savedContact.getEmail()).isEqualTo(request.getEmail());
         assertThat(savedContact.getName()).isEqualTo(request.getName());
-        assertThat(savedContact.getPhone()).isEqualTo(request.getPhone_no());
+        assertThat(savedContact.getPhone()).isEqualTo(request.getPhone_number());
         assertThat(savedContact.getMessage()).isEqualTo(request.getMessage());
 
         // Verify that the email was sent

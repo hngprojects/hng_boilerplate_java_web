@@ -30,7 +30,7 @@ public class ContactUsServiceImpl implements ContactUsService {
         Contact contact = new Contact();
         contact.setEmail(request.getEmail());
         contact.setName(request.getName());
-        contact.setPhone(request.getPhone_no());
+        contact.setPhone(request.getPhone_number());
         contact.setMessage(request.getMessage());
 
         contactUsRepository.save(contact);

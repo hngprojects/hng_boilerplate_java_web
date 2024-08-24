@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/contacts")
+@RequestMapping("/api/v1/contact-us")
 @Tag(name = "Contact Us")
 public class ContactUsController {
     private final ContactUsService contactUsService;
