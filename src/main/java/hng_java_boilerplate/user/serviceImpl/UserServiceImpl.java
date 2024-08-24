@@ -6,6 +6,7 @@ import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
@@ -14,9 +15,11 @@ import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.enums.Role;
+import hng_java_boilerplate.user.repository.PasswordResetTokenRepository;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.repository.VerificationTokenRepository;
 import hng_java_boilerplate.user.service.UserService;
@@ -47,6 +50,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final EmailServiceImpl emailService;
     private final OrganisationRepository organisationRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PlanService planService;
 
 
@@ -135,6 +139,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return "expired";
         }
         return "valid";
+    }
+
+    @Override
+    public void forgotPassword(EmailSenderDto emailSenderDto, HttpServletRequest request) {
+        User user = findUserByEmail(emailSenderDto.getEmail());
+        String token = UUID.randomUUID().toString();
+        createPasswordResetTokenForUser(user, token);
+        emailService.passwordResetTokenMail(user, request, token);
+    }
+
+    private void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken newlyCreatedPasswordResetToken = new PasswordResetToken(user, token);
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByUserId(user.getId());
+        if(passwordResetToken != null){
+            passwordResetTokenRepository.delete(passwordResetToken);
+        }
+        passwordResetTokenRepository.save(newlyCreatedPasswordResetToken);
+    }
+
+    public User findUserByEmail(String username) {
+        return userRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("User with email " + username + " not found"));
     }
 
     // Convert User to GetUserDto
