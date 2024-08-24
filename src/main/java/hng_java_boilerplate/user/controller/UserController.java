@@ -30,7 +30,6 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     @GetMapping(value = "/members", produces = "application/json")
     public ResponseEntity<?> getAllMembers(@RequestParam int page, Authentication authentication) {
-        System.out.println("helloooooo");
         List<MembersResponse> allUsers = userService.getAllUsers(page, authentication);
         Response<?> response = Response.builder().message("Users List Successfully Fetched").status("200").data(allUsers).build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
