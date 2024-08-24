@@ -1,9 +1,6 @@
 package hng_java_boilerplate.user.service;
 
-import hng_java_boilerplate.user.dto.request.EmailSenderDto;
-import hng_java_boilerplate.user.dto.request.GetUserDto;
-import hng_java_boilerplate.user.dto.request.LoginDto;
-import hng_java_boilerplate.user.dto.request.SignupDto;
+import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.Response;
@@ -23,11 +20,8 @@ public interface UserService {
     ResponseEntity<ApiResponse> loginUser(LoginDto loginDto);
     User save(User user);
     User findUser(String id);
-
     void forgotPassword(EmailSenderDto passwordDto, HttpServletRequest request);
-
+    ResponseEntity<String> resetPassword(String token, ResetPasswordDto passwordDto);
     List<MembersResponse> getAllUsers(int page, Authentication authentication);
-
     Response<?> getUserById(String userId, Authentication authentication);
-
 }

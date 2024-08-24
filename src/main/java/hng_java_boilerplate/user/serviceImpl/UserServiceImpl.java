@@ -12,6 +12,10 @@ import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
+import hng_java_boilerplate.user.dto.request.*;
+import hng_java_boilerplate.user.dto.response.ApiResponse;
+import hng_java_boilerplate.user.dto.response.ResponseData;
+import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.PasswordResetToken;
 import hng_java_boilerplate.user.entity.User;
@@ -163,6 +167,40 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             passwordResetTokenRepository.delete(passwordResetToken);
         }
         passwordResetTokenRepository.save(newlyCreatedPasswordResetToken);
+    }
+
+    @Override
+    public ResponseEntity<String> resetPassword(String token, ResetPasswordDto passwordDto) {
+        String result = validatePasswordResetToken(token);
+        if (!result.equalsIgnoreCase("valid")) {
+            throw new UnAuthorizedException("Invalid Token");
+        }
+        Optional<User> user = Optional.ofNullable(passwordResetTokenRepository.findByToken(token).getUser());
+        if (user.isPresent()) {
+            changePassword(user.get(), passwordDto.getNew_password());
+            return new ResponseEntity<>("Password Reset Successful", HttpStatus.OK);
+        } else {
+            throw new UnAuthorizedException("Invalid Token");
+        }
+    }
+
+    private String validatePasswordResetToken(String token) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        if (passwordResetToken == null) {
+            return "invalid";
+        }
+        Calendar cal = Calendar.getInstance();
+        if (passwordResetToken.getExpirationTime().getTime()
+                - cal.getTime().getTime() <= 0) {
+            passwordResetTokenRepository.delete(passwordResetToken);
+            return "expired";
+        }
+        return "valid";
+    }
+
+    private void changePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     public User findUserByEmail(String username) {
