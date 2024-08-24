@@ -1,5 +1,3 @@
--- V40__create_api_status_table.sql
-
 CREATE TABLE api_status (
     id BIGSERIAL PRIMARY KEY,
     api_group VARCHAR(255) NOT NULL,
