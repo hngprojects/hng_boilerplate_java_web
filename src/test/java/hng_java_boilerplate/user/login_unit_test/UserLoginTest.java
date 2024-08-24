@@ -73,16 +73,16 @@ class UserLoginTest {
         when(passwordEncoder.matches(loginDto.getPassword(), mockUser.getPassword())).thenReturn(true);
         when(jwtUtils.createJwt.apply(any(UserDetails.class))).thenReturn("mockedToken");
 
-        ResponseEntity<ApiResponse> responseEntity = userService.loginUser(loginDto);
+        ResponseEntity<ApiResponse<ResponseData>> responseEntity = userService.loginUser(loginDto);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ApiResponse apiResponse = responseEntity.getBody();
+        ApiResponse<ResponseData> apiResponse = responseEntity.getBody();
         assertNotNull(apiResponse);
         assertEquals("Login Successful!", apiResponse.getMessage());
 
         ResponseData data = (ResponseData) apiResponse.getData();
         assertNotNull(data);
-        assertEquals("mockedToken", data.getToken());
+        assertEquals("mockedToken", apiResponse.getAccess_token());
 
         UserResponse userResponse = data.getUser();
         assertNotNull(userResponse);

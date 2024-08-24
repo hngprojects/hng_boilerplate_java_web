@@ -5,7 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
-import hng_java_boilerplate.user.dto.request.OAuthDto;
+import hng_java_boilerplate.user.dto.request.GoogleOAuthDto;
 import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
@@ -61,8 +61,8 @@ public class GoogleJwtUtilsTest {
     @Test
     void testGoogleOauthUserJWT_successfulLogin() throws GeneralSecurityException, IOException {
         // Arrange
-        OAuthDto oAuthDto = new OAuthDto();
-        oAuthDto.setIdToken("test-id-token");
+        GoogleOAuthDto googleOAuthDto = new GoogleOAuthDto();
+        googleOAuthDto.setIdToken("test-id-token");
 
         GoogleIdToken googleIdToken = mock(GoogleIdToken.class);
         Payload payload = mock(Payload.class);

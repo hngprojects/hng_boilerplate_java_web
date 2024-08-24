@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OAuthDto {
-    @JsonProperty("id_token")
-    private String idToken;
+public class FacebookDto {
+    @JsonProperty("access_token")
+    private String accessToken;
 }
