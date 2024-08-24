@@ -17,7 +17,7 @@ public class AboutPageController {
     private final AboutPageService aboutPageService;
 
     @PutMapping("/about")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> updateAboutPageContent(@Valid @RequestBody AboutPageContentDto contentDto) {
         try {
             aboutPageService.updateAboutPageContent(contentDto);
@@ -30,7 +30,7 @@ public class AboutPageController {
     }
 
     @DeleteMapping("/about")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> deleteAboutPageContent() {
         try {
             aboutPageService.deleteAboutPageContent();
