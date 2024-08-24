@@ -13,6 +13,7 @@ import java.util.List;
 
 
 public interface UserService {
+
     GetUserDto getUserWithDetails(String userId);
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
     ResponseEntity<String> verifyOtp(String email, String token, HttpServletRequest request);
