@@ -39,4 +39,9 @@ public class AboutPageService {
 
         aboutPageRepository.save(content);
     }
+
+    @Transactional
+    public void deleteAboutPageContent() {
+        aboutPageRepository.deleteAll();
+    }
 }

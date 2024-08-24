@@ -1,8 +1,6 @@
 package hng_java_boilerplate.profile.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hng_java_boilerplate.product.errorhandler.ProductErrorHandler;
 import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
 import hng_java_boilerplate.profile.dto.response.DeactivateUserResponse;
 import hng_java_boilerplate.profile.service.ProfileService;
@@ -31,8 +29,6 @@ class ProfileControllerTest {
     @MockBean
     private ProfileService profileService;
     @MockBean
-    private ProductErrorHandler productErrorHandler;
-    @MockBean
     private JwtUtils jwtUtils;
 
     @Test
@@ -58,7 +54,7 @@ class ProfileControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String requestString = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(patch("/api/v1/accounts/deactivate")
+        mockMvc.perform(patch("/api/v1/profile/deactivate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestString))
                 .andExpect(status().isOk())

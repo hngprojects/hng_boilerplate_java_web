@@ -1,15 +1,17 @@
 package hng_java_boilerplate.user.controller;
 
+import hng_java_boilerplate.exception.UnAuthorizedException;
+import hng_java_boilerplate.user.dto.request.EmailSenderDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.OAuthDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.OAuthBaseResponse;
-import hng_java_boilerplate.user.exception.UnAuthorizedUserException;
 import hng_java_boilerplate.user.service.UserService;
 import hng_java_boilerplate.util.FacebookJwtUtils;
 import hng_java_boilerplate.util.GoogleJwtUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,7 +43,7 @@ public class AuthController {
         try {
             ApiResponse savedPayload = facebookJwtUtils.facebookOauthUserJWT(payload);
             return new ResponseEntity<>(savedPayload, HttpStatus.CREATED);
-        } catch (UnAuthorizedUserException e) {
+        } catch (UnAuthorizedException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
@@ -50,8 +52,14 @@ public class AuthController {
     public ResponseEntity<OAuthBaseResponse> handleGoogleAuth(@RequestBody OAuthDto payload) {
         try {
             return ResponseEntity.ok(googleJwtUtils.googleOauthUserJWT(payload));
-        } catch (UnAuthorizedUserException e) {
+        } catch (UnAuthorizedException e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody EmailSenderDto passwordDto, HttpServletRequest request){
+        userService.forgotPassword(passwordDto, request);
+        return new ResponseEntity<>("Forgot password email sent successfully", HttpStatus.OK);
     }
 }

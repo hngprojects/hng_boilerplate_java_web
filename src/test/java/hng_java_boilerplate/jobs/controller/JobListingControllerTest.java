@@ -35,7 +35,7 @@ class JobListingControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "SUPER_ADMIN")
     void createJobListing_shouldReturnCreatedJobListing() throws Exception {
         JobListing jobListing = new JobListing();
         jobListing.setTitle("Software Engineer");

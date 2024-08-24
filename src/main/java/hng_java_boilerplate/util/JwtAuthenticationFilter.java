@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,14 +23,12 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private  JwtUtils utils;
-    private  UserServiceImpl userService;
-    private final HandlerExceptionResolver handlerExceptionResolver;
+    private final UserServiceImpl userService;
 
     @Autowired
     public JwtAuthenticationFilter(JwtUtils utils, @Lazy UserServiceImpl userService, HandlerExceptionResolver handlerExceptionResolver) {
         this.utils = utils;
         this.userService = userService;
-        this.handlerExceptionResolver = handlerExceptionResolver;
     }
     @Override
     protected void doFilterInternal(
@@ -50,7 +47,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
             String token = authenticationHeader.substring(7);
-            try {
                 String username = utils.extractUsername.apply(token);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -65,10 +61,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
                 filterChain.doFilter(request, response);
-            } catch (Exception exception) {
-                handlerExceptionResolver.resolveException(request, response, null, exception);
-            }
-
-
     }
 }
