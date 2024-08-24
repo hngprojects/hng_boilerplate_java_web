@@ -9,7 +9,6 @@ import hng_java_boilerplate.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 
-
 public interface UserService {
     GetUserDto getUserWithDetails(String userId);
     ResponseEntity<ApiResponse> registerUser(SignupDto signupDto);
