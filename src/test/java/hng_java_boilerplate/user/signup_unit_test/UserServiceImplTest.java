@@ -3,6 +3,7 @@ package hng_java_boilerplate.user.signup_unit_test;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
+import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.SignupDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
@@ -45,6 +46,9 @@ class UserServiceImplTest {
     OrganisationRepository organisationRepository;
 
     @Mock
+    PlanService planService;
+
+    @Mock
     PasswordEncoder passwordEncoder;
 
     @Mock
@@ -71,6 +75,7 @@ class UserServiceImplTest {
 
 
         when(passwordEncoder.encode(signupDto.getPassword())).thenReturn("encodedPassword");
+        when(planService.findOne("1")).thenReturn(null);
         when(organisationRepository.save(any(Organisation.class))).thenReturn(organisation);
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(userRepository.findByEmail("john.doe@example.com")).thenReturn(Optional.of(new User()));
