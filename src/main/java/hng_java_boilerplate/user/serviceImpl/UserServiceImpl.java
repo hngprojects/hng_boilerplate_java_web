@@ -109,6 +109,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    public void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request) {
+        User user = findUserByEmail(emailSenderDto.getEmail());
+        String token = emailService.generateToken();
+        saveVerificationTokenForUser(user, token);
+        emailService.sendVerificationEmail(user, request, token);
+    }
+
+    public void saveVerificationTokenForUser(User user, String token) {
+        VerificationToken verificationToken = new VerificationToken(user, token);
+        verificationTokenRepository.save(verificationToken);
+    }
+
+    @Override
     public ResponseEntity<String> verifyOtp(String email, String token, HttpServletRequest request) {
         String tokenValidationResult = validateVerificationToken(token);
         Optional<User> userOptional = userRepository.findByEmail(email);

@@ -13,6 +13,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -63,5 +65,18 @@ public class AuthController {
     @PostMapping("/reset-password/{token}")
     public ResponseEntity<String> resetPassword(@PathVariable String token, @RequestBody ResetPasswordDto passwordDto) {
         return userService.resetPassword(token, passwordDto);
+    }
+
+    @PostMapping("/request/token")
+    public ResponseEntity<?> requestToken(@RequestBody EmailSenderDto emailSenderDto, HttpServletRequest request){
+        userService.requestToken(emailSenderDto, request);
+        return new ResponseEntity<>("Verification email sent successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<String> verifyOtp(@RequestBody VerificationTokenDto verificationTokenDto, HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userService.verifyOtp(email, verificationTokenDto.getToken(), request);
     }
 }
