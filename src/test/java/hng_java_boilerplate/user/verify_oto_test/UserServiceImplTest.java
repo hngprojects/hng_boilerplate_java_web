@@ -1,8 +1,6 @@
 package hng_java_boilerplate.user.verify_oto_test;
 
 import hng_java_boilerplate.exception.BadRequestException;
-import hng_java_boilerplate.user.dto.request.ForgotPasswordRequest;
-import hng_java_boilerplate.user.dto.response.CustomResponse;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.entity.VerificationToken;
 import hng_java_boilerplate.user.repository.UserRepository;
