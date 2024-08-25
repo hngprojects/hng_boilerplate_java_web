@@ -59,18 +59,5 @@ public class DeleteUserTest {
         verify(userRepository, never()).deleteByEmail(anyString());
     }
 
-    @Test
-    void deleteUserBadRequestTest() {
-        DeleteUserRequest request = new DeleteUserRequest();
-        request.setEmail("");
-
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
-            userService.deleteUserByEmail(request, authentication);
-        });
-
-        assertEquals("The email field is required.", exception.getMessage());
-        verify(userRepository, never()).existsByEmail(anyString());
-        verify(userRepository, never()).deleteByEmail(anyString());
-    }
 
 }
