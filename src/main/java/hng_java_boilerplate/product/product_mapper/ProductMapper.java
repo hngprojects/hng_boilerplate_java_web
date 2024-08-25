@@ -17,7 +17,7 @@ public interface ProductMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "category", target = "category")
     @Mapping(source = "description", target = "description")
-    @Mapping(source = "imageUrl", target = "imageUrl")
+    @Mapping(source = "imageUrl", target = "image_url")
     ProductDTO toDTO(Product product);
 
     default Page<ProductDTO> toDTOList(Page<Product> products) {
