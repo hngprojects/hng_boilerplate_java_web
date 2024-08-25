@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "api_status")
-public class ApiStatus {
+public class StatusPage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
