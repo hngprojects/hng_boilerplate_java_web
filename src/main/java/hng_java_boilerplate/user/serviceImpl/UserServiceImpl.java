@@ -6,13 +6,12 @@ import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
-import hng_java_boilerplate.user.dto.request.EmailSenderDto;
+import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
 import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.request.SignupDto;
-import hng_java_boilerplate.user.dto.request.*;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
@@ -382,6 +381,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return users;
     }
 
+
+    @Transactional
+    public Response<?> deleteUserByEmail(DeleteUserRequest request, Authentication authentication) {
+        String email = request.getEmail();
+        if (userRepository.existsByEmail(email)) {
+            userRepository.deleteByEmail(email);
+            return Response.builder().status_code("success").message("The account has been successfully deleted.").build();
+        }
+        throw new NotFoundException("User not found with email: "  + email);
+
+    }
+
     @Override
     public Response<?> getUserById(String userId, Authentication authentication) {
         String email = authentication.getName();
@@ -403,6 +414,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         } else {
             throw new NotFoundException("User not found with id: " + userId);
         }
+
     }
 
 }
