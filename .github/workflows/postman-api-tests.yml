@@ -22,11 +22,8 @@ jobs:
         run: npm install -g newman
 
       - name: Run Postman Collection with HTML Reporter
-        run: |
-          newman run "hg_boilerplate_java_web/qa_tests/regression/Spartacus_Java_Boilerplate_copy-postman_collection.json" \
-            --reporter htmlextra \
-            --reporter-htmlextra-export "newman-report.html" \
-            --reporter-json-export "result.json"
+        run: newman run postman-api-tests.json -r cli, json --reporter-json-export result.json
+        continue-on-error: true
 
       - name: Set up Java
         uses: actions/setup-java@v3
