@@ -6,6 +6,7 @@ import hng_java_boilerplate.user.dto.response.MembersResponse;
 import hng_java_boilerplate.user.dto.response.Response;
 import hng_java_boilerplate.user.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +42,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUserByEmail(@RequestBody DeleteUserRequest request, Authentication authentication) {
-        if (authentication == null) throw new UnAuthorizedException("Unauthorized");
+    public ResponseEntity<?> deleteUserByEmail(@Valid @RequestBody DeleteUserRequest request, Authentication authentication) {
         Response<?> response = userService.deleteUserByEmail(request, authentication);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -385,10 +385,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     public Response<?> deleteUserByEmail(DeleteUserRequest request, Authentication authentication) {
         String email = request.getEmail();
-        if (email == null || email.isEmpty()) {
-            throw new BadRequestException("The email field is required.");
-        }
-
         if (userRepository.existsByEmail(email)) {
             userRepository.deleteByEmail(email);
             return Response.builder().status_code("success").message("The account has been successfully deleted.").build();
