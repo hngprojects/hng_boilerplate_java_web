@@ -270,7 +270,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .build();
     }
 
-    // Save method for User entity
+    // Save method for User controller
     @Override
     public User save(User user) {
         return userRepository.save(user);
