@@ -2,15 +2,15 @@ package hng_java_boilerplate.blogPost.controller.dto;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class BlogPostDTO {
     @NotEmpty(message = "Enter your title")
     @Column(name = "title", nullable = false)
