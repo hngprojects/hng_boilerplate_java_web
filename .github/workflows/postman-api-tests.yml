@@ -23,14 +23,9 @@ jobs:
 
       - name: Run Newman Collection
         run: |
-          newman run "$NEW_COLLECTION_PATH" \
-            --environment "$NEW_ENVIRONMENT_PATH" \
+         newman run hng_boilerplate_java_web/qa_tests/regression/Spartacus_Java_Boilerplate_Copy.postman_collection.json \
             --reporters json \
             --reporter-json-export "result.json"
-
-        env:
-          NEW_COLLECTION_PATH: ${{ secrets.NEWMAN_COLLECTION_PATH }}
-          NEW_ENVIRONMENT_PATH: ${{ secrets.NEWMAN_ENVIRONMENT_PATH }}
 
       - name: Copy result.json to server
         uses: appleboy/scp-action@v0.1.7
