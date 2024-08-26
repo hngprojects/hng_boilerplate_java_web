@@ -8,10 +8,6 @@ on:
 jobs:
   run-newman-tests:
     if: github.event.repository.fork == false
-    environment:
-      name: "staging"
-      url: ${{ vars.URL }}
-    name: Test for staging
     runs-on: ubuntu-latest
 
     steps:
