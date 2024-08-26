@@ -22,8 +22,7 @@ jobs:
       - name: Install Newman
         run: npm install -g newman
 
-      - name: Run Postman Collection with HTML Reporter
-        # run: newman run postman-api-tests.json -r cli, json --reporter-json-export result.json
+      - name: Run Newman Tests here
         run: newman run qa_tests/regression/Spartacus_Java_Boilerplate_Copy.postman_collection.json -r json --reporter-json-export=result.json --suppress-exit-code
         continue-on-error: true
 
@@ -35,7 +34,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           # source: "newman-report.html"
           source: "result.json"
-          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/staging-result"
+          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/staging-result/"
 
       # - name: Set up Java
       #   uses: actions/setup-java@v3
