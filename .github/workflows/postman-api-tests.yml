@@ -22,19 +22,9 @@ jobs:
         run: npm install -g newman
 
       - name: Run Postman Collection with HTML Reporter
-        run: newman run postman-api-tests.json -r cli, json --reporter-json-export result.json
+        # run: newman run postman-api-tests.json -r cli, json --reporter-json-export result.json
+        run: newman run qa_tests/Spartacus_Java_Boilerplate_Copy.postman_collection.json -r json --reporter-json-export=result.json --suppress-exit-code
         continue-on-error: true
-
-      - name: Set up Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'adopt'
-          java-version: '17'
-
-      - name: Send parsed result to Hosted Application
-        run: |
-          export APP_URL=${{ secrets.APP_URL }}
-          java -jar sendPostmanApiTestResults.jar newman-report.html result.json
 
       - name: Copy newman-report.html to server
         uses: appleboy/scp-action@v0.1.7
@@ -42,6 +32,28 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          source: "newman-report.html"
-          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web"
+          # source: "newman-report.html"
+          source: "result.json"
+          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/staging-result"
+
+      # - name: Set up Java
+      #   uses: actions/setup-java@v3
+      #   with:
+      #     distribution: 'adopt'
+      #     java-version: '17'
+
+      # - name: Send parsed result to Hosted Application
+      #   run: |
+      #     export APP_URL=${{ secrets.APP_URL }}
+      #     java -jar sendPostmanApiTestResults.jar newman-report.html result.json
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd hng_boilerplate_java_web/staging-result
+            java -jar sendPostmanApiTestResults.jar
+
 
