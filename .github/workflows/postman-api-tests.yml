@@ -2,7 +2,7 @@ name: API Test and Status Update
 
 on:
   schedule:
-    - cron: "*/15 * * * *" 
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
@@ -21,22 +21,39 @@ jobs:
       - name: Install Newman
         run: npm install -g newman
 
-      - name: Run Newman Collection
-        run: |
-          newman run "$NEW_COLLECTION_PATH" \
-            --environment "$NEW_ENVIRONMENT_PATH" \
-            --reporters json \
-            --reporter-json-export "result.json"
+      - name: Run Postman Collection with HTML Reporter
+        # run: newman run postman-api-tests.json -r cli, json --reporter-json-export result.json
+        run: newman run qa_tests/Spartacus_Java_Boilerplate_Copy.postman_collection.json -r json --reporter-json-export=result.json --suppress-exit-code
+        continue-on-error: true
 
-        env:
-          NEW_COLLECTION_PATH: ${{ secrets.NEWMAN_COLLECTION_PATH }}
-          NEW_ENVIRONMENT_PATH: ${{ secrets.NEWMAN_ENVIRONMENT_PATH }}
-
-      - name: Copy result.json to server
+      - name: Copy newman-report.html to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
+          # source: "newman-report.html"
           source: "result.json"
-          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web"
+          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/staging-result"
+
+      # - name: Set up Java
+      #   uses: actions/setup-java@v3
+      #   with:
+      #     distribution: 'adopt'
+      #     java-version: '17'
+
+      # - name: Send parsed result to Hosted Application
+      #   run: |
+      #     export APP_URL=${{ secrets.APP_URL }}
+      #     java -jar sendPostmanApiTestResults.jar newman-report.html result.json
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd hng_boilerplate_java_web/staging-result
+            java -jar sendPostmanApiTestResults.jar
+
+

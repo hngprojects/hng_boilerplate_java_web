@@ -15,6 +15,7 @@ import java.util.List;
 
 
 public interface UserService {
+
     GetUserDto getUserWithDetails(String userId);
     ResponseEntity<ApiResponse<ResponseData>> registerUser(SignupDto signupDto);
     ResponseEntity<String> verifyOtp(String email, String token, HttpServletRequest request);
@@ -27,5 +28,10 @@ public interface UserService {
     void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request);
     void sendMagicLink(String email, HttpServletRequest request);
     List<MembersResponse> getAllUsers(int page, Authentication authentication);
+
+    Response<?> deleteUserByEmail(DeleteUserRequest request, Authentication authentication);
+
     Response<?> getUserById(String userId, Authentication authentication);
+
+
 }
