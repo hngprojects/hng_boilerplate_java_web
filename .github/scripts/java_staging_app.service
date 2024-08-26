@@ -8,5 +8,12 @@ Group=teamjava
 WorkingDirectory=/home/teamjava/hng_boilerplate_java_web
 ExecStart=/usr/bin/java -jar /home/teamjava/hng_boilerplate_java_web/target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar --spring.profiles.active=staging
 
+# System-level Controls     
+CPUQuota=50%
+TasksMax=512
+MemoryLimit=1024M
+LimitNPROC=512
+LimitNOFILE=2048
+
 [Install]
 WantedBy=multi-user.target
