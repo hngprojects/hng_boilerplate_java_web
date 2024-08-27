@@ -8,9 +8,6 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,6 +49,5 @@ public class SwaggerConfig{
                 .security(Collections.singletonList(
                         new SecurityRequirement().addList("bearerAuth")
                 ));
-
     }
 }
