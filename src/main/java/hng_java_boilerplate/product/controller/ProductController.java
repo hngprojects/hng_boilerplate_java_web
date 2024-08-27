@@ -9,6 +9,7 @@ import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.product.product_mapper.ProductMapper;
 import hng_java_boilerplate.product.service.ProductService;
 import hng_java_boilerplate.user.entity.User;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -31,6 +32,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/products/search")
+    @Operation(summary = "search for product by the name and other filters")
     public ResponseEntity<ProductSearchDTO> searchProducts(
             @NotEmpty(message = "name cannot be empty")
             @NotBlank(message = "name cannot be blank")
@@ -75,6 +77,7 @@ public class ProductController {
 
     @PostMapping("/organisation/{org_id}/products")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "create a product by the product id")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO,
                                                     @PathVariable("org_id") String orgId, Authentication authentication){
 
@@ -89,6 +92,7 @@ public class ProductController {
 
     @DeleteMapping("/products/{product_id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete a product by the product id")
     public ResponseEntity<?> deleteProduct(@PathVariable("product_id") String productId,
                                            Authentication authentication){
         User user = (User) authentication.getPrincipal();
@@ -104,6 +108,7 @@ public class ProductController {
 
     @PutMapping("/products")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Edit a product")
     public ResponseEntity<ProductDTO> editProduct(@RequestBody ProductDTO productDTO, Authentication authentication){
         User user = (User) authentication.getPrincipal();
         Product product = user.getOrganisations().stream()
