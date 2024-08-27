@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,6 +17,8 @@ public class ProductDTO {
     private String name;
     private String description;
     private String category;
-    private double price;
+    private Double price;
     private String image_url;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
 }
