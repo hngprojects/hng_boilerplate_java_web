@@ -15,16 +15,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install Newman
         run: npm install -g newman
 
-      - name: Run Postman Collection with HTML Reporter
-        # run: newman run postman-api-tests.json -r cli, json --reporter-json-export result.json
-        run: newman run qa_tests/Spartacus_Java_Boilerplate_Copy.postman_collection.json -r json --reporter-json-export=result.json --suppress-exit-code
+      - name: Run Newman Tests here
+        run: newman run qa_tests/regression/Spartacus_Java_Boilerplate_Copy.postman_collection.json -r json --reporter-json-export=result.json --suppress-exit-code
         continue-on-error: true
 
       - name: Copy newman-report.html to server
@@ -35,7 +34,8 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           # source: "newman-report.html"
           source: "result.json"
-          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/staging-result"
+          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/"
+          # target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/staging-result/"
 
       # - name: Set up Java
       #   uses: actions/setup-java@v3
@@ -47,14 +47,14 @@ jobs:
       #   run: |
       #     export APP_URL=${{ secrets.APP_URL }}
       #     java -jar sendPostmanApiTestResults.jar newman-report.html result.json
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd hng_boilerplate_java_web/staging-result
-            java -jar sendPostmanApiTestResults.jar
+      # - name: Deploy to Server
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     password: ${{ secrets.PASSWORD }}
+      #     script: |
+      #       cd hng_boilerplate_java_web/staging-result
+      #       java -jar sendPostmanApiTestResults.jar
 
 
