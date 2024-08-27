@@ -64,10 +64,10 @@ jobs:
           git checkout staging && \
           git pull && \
           sudo cp .github/scripts/java_staging_app.service /etc/systemd/system && \
-          sudo systemctl daemon-reload && \
           mvn flyway:repair && \
           mvn clean install -Dmaven.test.skip=true && \
-          sudo systemctl start java_staging_app.service && \
+          sudo systemctl daemon-reload && \
+          sudo systemctl restart java_staging_app.service && \
           exit"
         env:
           SSH_HOST: ${{ secrets.HOST }}
