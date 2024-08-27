@@ -145,6 +145,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setUserRole(Role.ROLE_USER);
+        createDefaultOrganisation(user);
         return userRepository.save(user);
     }
 
