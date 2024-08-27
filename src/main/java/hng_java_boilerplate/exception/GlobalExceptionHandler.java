@@ -4,7 +4,6 @@ import com.google.gson.JsonSyntaxException;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
-import hng_java_boilerplate.jobs.dto.ApiResponse;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,6 +78,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponseDto handleAuthenticationException(AuthenticationException ex) {
         return setResponse("Unauthorized. Please log in.", HttpStatus.UNAUTHORIZED.getReasonPhrase(), HttpStatus.UNAUTHORIZED.value());
     }
