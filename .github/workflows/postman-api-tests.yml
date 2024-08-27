@@ -34,7 +34,8 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           # source: "newman-report.html"
           source: "result.json"
-          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/staging-result/"
+          target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/"
+          # target: "/home/${{ secrets.USERNAME }}/hng_boilerplate_java_web/staging-result/"
 
       # - name: Set up Java
       #   uses: actions/setup-java@v3
@@ -46,14 +47,14 @@ jobs:
       #   run: |
       #     export APP_URL=${{ secrets.APP_URL }}
       #     java -jar sendPostmanApiTestResults.jar newman-report.html result.json
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd hng_boilerplate_java_web/staging-result
-            java -jar sendPostmanApiTestResults.jar
+      # - name: Deploy to Server
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     password: ${{ secrets.PASSWORD }}
+      #     script: |
+      #       cd hng_boilerplate_java_web/staging-result
+      #       java -jar sendPostmanApiTestResults.jar
 
 
