@@ -1,6 +1,7 @@
 package hng_java_boilerplate.organisation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hng_java_boilerplate.product.entity.Product;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.util.UUIDGenarator;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,10 +51,24 @@ public class Organisation {
     @JsonIgnore
     private List<User> users;
 
+    @OneToMany(mappedBy = "organisation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Product> products;
+
     @PrePersist
     public void prePersist() {
         if (this.id == null) {
             this.id = UUID.randomUUID().toString();
         }
+    }
+
+    public void addProduct(Product product, User user){
+        if(products == null){
+            products = new ArrayList<>();
+        }
+        product.setOrganisation(this);
+        product.setUser(user);
+        products.add(product);
+
     }
 }
