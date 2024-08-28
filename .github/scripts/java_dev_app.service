@@ -9,11 +9,11 @@ WorkingDirectory=/home/teamjava/hng_boilerplate_java_web
 ExecStart=/usr/bin/java -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ActiveProcessorCount=2 -Xmx512m -Xms256m -jar /home/teamjava/hng_boilerplate_java_web/target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
 
 # System-level Controls     
-CPUQuota=25%         # Limits the CPU usage to 25% of one CPU core
-TasksMax=256         # Limits the number of tasks the service can create
-MemoryLimit=512M     # Limits the total memory usage to 512 MB
-LimitNPROC=256       # Limits the number of processes
-LimitNOFILE=1024     # Limits the number of open files
+CPUQuota=15%
+TasksMax=256      
+MemoryLimit=256M     
+LimitNPROC=256       
+LimitNOFILE=512     
 
 [Install]
 WantedBy=multi-user.target
