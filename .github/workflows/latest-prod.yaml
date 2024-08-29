@@ -31,7 +31,16 @@ jobs:
           echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-prod.properties
 
       - name: Run the Maven verify phase
-        run: mvn clean install -Dmaven.test.skip=true
+        run: mvn clean install -Dmaven.test.skip=true -Dspring.profiles.active=prod
+
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "target/"
+          target: /home/teamjava/hng_boilerplate_java_web
 
       - name: Add SSH Key to Known Hosts
         run: |
@@ -49,10 +58,10 @@ jobs:
           git checkout main && \
           git pull origin main && \
           sudo cp .github/scripts/java_prod_app.service /etc/systemd/system && \
-          mvn flyway:repair && \
-          mvn clean install -Dmaven.test.skip=true && \
+          mvn flyway:repair -Dspring.profiles.active=prod && \
+          # mvn clean install -Dmaven.test.skip=true -Dspring.profiles.active=prod && \
           sudo systemctl daemon-reload && \
-          sudo systemctl start java_prod_app.service && \
+          sudo systemctl restart java_prod_app.service && \
           exit"
         env:
           SSH_HOST: ${{ secrets.HOST }}
