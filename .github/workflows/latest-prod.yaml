@@ -1,0 +1,60 @@
+name: Production Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    if: github.event.repository.fork == false
+    runs-on: ubuntu-latest
+    environment:
+      name: "production"
+      url: ${{ vars.URL }}
+    name: Build for production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java with maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Create application-prod.properties
+        run: |
+          echo "spring.profiles.active=prod" > src/main/resources/application.properties
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-prod.properties
+
+      - name: Run the Maven verify phase
+        run: mvn clean install -Dmaven.test.skip=true
+
+      - name: Add SSH Key to Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+        env:
+          SSH_HOST: ${{ secrets.HOST }}
+
+      - name: SSH into Server and Execute Command
+        run: |
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USERNAME@$SSH_HOST "\
+          cd ~/hng_boilerplate_java_web && \
+          git fetch origin main && \
+          git stash && \
+          git checkout main && \
+          git pull origin main && \
+          sudo cp .github/scripts/java_prod_app.service /etc/systemd/system && \
+          mvn flyway:repair && \
+          mvn clean install -Dmaven.test.skip=true && \
+          sudo systemctl daemon-reload && \
+          sudo systemctl start java_prod_app.service && \
+          exit"
+        env:
+          SSH_HOST: ${{ secrets.HOST }}
+          SSH_USERNAME: ${{ secrets.USERNAME }}
+          SSH_PASSWORD: ${{ secrets.PASSWORD }}
