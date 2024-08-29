@@ -36,6 +36,7 @@ jobs:
       - name: copy service file
         run: |
           cp .github/scripts/java_staging_app.service target/
+          cat "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > target/classes/application-staging.properties
           # cp ~/flyway.conf target/
           # cp .env target/
 
@@ -64,8 +65,8 @@ jobs:
           git checkout staging && \
           git pull && \
           sudo cp .github/scripts/java_staging_app.service /etc/systemd/system && \
-          mvn flyway:repair && \
-          mvn clean install -Dmaven.test.skip=true && \
+          mvn flyway:repair -Dspring.profiles.active=staging && \
+          mvn clean install -Dmaven.test.skip=true -Dspring.profiles.active=staging && \
           sudo systemctl daemon-reload && \
           sudo systemctl restart java_staging_app.service && \
           exit"
