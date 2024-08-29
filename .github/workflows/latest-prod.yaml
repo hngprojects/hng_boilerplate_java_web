@@ -33,6 +33,15 @@ jobs:
       - name: Run the Maven verify phase
         run: mvn clean install -Dmaven.test.skip=true -Dspring.profiles.active=prod
 
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "target/"
+          target: /home/teamjava/hng_boilerplate_java_web
+
       - name: Add SSH Key to Known Hosts
         run: |
           mkdir -p ~/.ssh
