@@ -87,6 +87,6 @@ jobs:
       #   env:
       #     SSH_HOST: ${{ secrets.HOST }}
       #     SSH_USERNAME: ${{ secrets.USERNAME }}
-          SSH_PASSWORD: ${{ secrets.PASSWORD }}
+          # SSH_PASSWORD: ${{ secrets.PASSWORD }}
 
 
