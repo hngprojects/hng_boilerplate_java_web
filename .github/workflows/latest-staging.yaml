@@ -66,7 +66,6 @@ jobs:
           git pull && \
           sudo cp .github/scripts/java_staging_app.service /etc/systemd/system && \
           mvn flyway:repair -Dspring.profiles.active=staging && \
-          # mvn clean install -Dmaven.test.skip=true -Dspring.profiles.active=staging && \
           sudo systemctl daemon-reload && \
           sudo systemctl restart java_staging_app.service && \
           exit"
