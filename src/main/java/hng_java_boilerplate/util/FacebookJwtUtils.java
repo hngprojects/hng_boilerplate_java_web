@@ -3,16 +3,14 @@ package hng_java_boilerplate.util;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.Version;
+import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
-import hng_java_boilerplate.user.dto.request.OAuthDto;
-import hng_java_boilerplate.user.dto.response.ApiResponse;
-import hng_java_boilerplate.user.dto.response.OAuthResponse;
-import hng_java_boilerplate.user.dto.response.ResponseData;
-import hng_java_boilerplate.user.dto.response.UserResponse;
+import hng_java_boilerplate.user.dto.request.FacebookDto;
+import hng_java_boilerplate.user.dto.request.GoogleOAuthDto;
+import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
-import hng_java_boilerplate.user.exception.FacebookOAuthException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +48,8 @@ public class FacebookJwtUtils {
         try {
             user = facebookClient.fetchObject("me", com.restfb.types.User.class,
                     com.restfb.Parameter.with("fields", "id,email,first_name,last_name,picture"));
-        } catch (FacebookOAuthException e) {
-            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            throw new BadRequestException("Bad Request");
         }
 
         if (user != null) {
@@ -74,14 +72,10 @@ public class FacebookJwtUtils {
         return null;
     };
 
-    public Function<OAuthResponse, ResponseData> saveOauthUser = userDto -> {
+    public Function<OAuthResponse, OAuthUserResponse> saveOauthUser = userDto -> {
         if (userRepository.existsByEmail(userDto.getEmail())){
             UserDetails userDetails = userService.loadUserByUsername(userDto.getEmail());
-
-            String token = utils.createJwt.apply(userDetails);
-
-            UserResponse userResponse = userService.getUserResponse((User)userDetails);
-            return new ResponseData(token, userResponse);
+            return getAuthUserResponse(userDto ,(User)userDetails);
         }
         else{
             User user = new User();
@@ -96,21 +90,40 @@ public class FacebookJwtUtils {
             user.setProfile(profile);
             User savedUser = userRepository.save(user);
 
-            UserResponse userResponse = getAuthResponse(userDto, savedUser);
-            return new ResponseData(utils.createJwt.apply(userService.loadUserByUsername(user.getUsername())), userResponse);
+            return getAuthUserResponse(userDto, savedUser);
         }
     };
 
-    public UserResponse getAuthResponse(OAuthResponse authDto, User user){
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId(user.getId());
-        userResponse.setFirst_name(authDto.getFirst_name());
-        userResponse.setLast_name(authDto.getLast_name());
-        userResponse.setEmail(user.getEmail());
-        userResponse.setRole(user.getUserRole().name());
-        userResponse.setImr_url(authDto.getImg_url());
-        userResponse.setCreated_at(user.getCreatedAt());
-        return userResponse;
+    public OAuthUserResponse getAuthUserResponse(OAuthResponse authDto, User user){
+        UserDetails userDetails = userService.loadUserByUsername(user.getEmail());
+        String token = utils.createJwt.apply(userDetails);
+
+        OAuthUserResponse oAuthUserResponse = new OAuthUserResponse();
+        oAuthUserResponse.setId(user.getId());
+        oAuthUserResponse.setEmail(user.getEmail());
+        oAuthUserResponse.setFirst_name(authDto.getFirst_name());
+        oAuthUserResponse.setLast_name(authDto.getLast_name());
+        oAuthUserResponse.setFullname(authDto.getFirst_name() + " " + authDto.getLast_name());
+        oAuthUserResponse.setRole(user.getUserRole().name());
+        oAuthUserResponse.setAccess_token(token);
+        return oAuthUserResponse;
+    }
+
+    OAuthLastUserResponse oAuthLastUserResponse(UserOAuthDetails userOAuthDetails){
+        OAuthLastUserResponse oAuthLastUserResponse = new OAuthLastUserResponse();
+        oAuthLastUserResponse.setUser(userOAuthDetails);
+        return oAuthLastUserResponse;
+    }
+
+    UserOAuthDetails userOAuthDetailsResponse(OAuthUserResponse oAuthUserResponse){
+        UserOAuthDetails userOAuthDetails = new UserOAuthDetails();
+        userOAuthDetails.setId(oAuthUserResponse.getId());
+        userOAuthDetails.setEmail(oAuthUserResponse.getEmail());
+        userOAuthDetails.setFirst_name(oAuthUserResponse.getFirst_name());
+        userOAuthDetails.setLast_name(oAuthUserResponse.getLast_name());
+        userOAuthDetails.setFullname(oAuthUserResponse.getFullname());
+        userOAuthDetails.setRole(oAuthUserResponse.getRole());
+        return userOAuthDetails;
     }
 
     private Profile populateProfile(OAuthResponse user){
@@ -122,9 +135,11 @@ public class FacebookJwtUtils {
         return profileRepository.save(profile);
     }
 
-    public ApiResponse facebookOauthUserJWT(OAuthDto payload) {
-        OAuthResponse user =  getUserFromFacebookToken.apply(payload.getIdToken());
-        ResponseData data = saveOauthUser.apply(user);
-        return new ApiResponse(HttpStatus.OK.value(), "Login Successful!", data);
+    public OAuthBaseResponse facebookOauthUserJWT(FacebookDto facebookDto){
+        OAuthResponse user =  getUserFromFacebookToken.apply(facebookDto.getAccessToken());
+        OAuthUserResponse data = saveOauthUser.apply(user);
+        UserOAuthDetails userOAuthDetails = userOAuthDetailsResponse(data);
+        OAuthLastUserResponse lastData = oAuthLastUserResponse(userOAuthDetails);
+        return new OAuthBaseResponse(HttpStatus.OK.value(), "User Created Successful!", data.getAccess_token(), lastData);
     }
 }

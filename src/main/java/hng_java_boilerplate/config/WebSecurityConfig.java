@@ -77,22 +77,48 @@ public class WebSecurityConfig {
                                         "/docs",
                                         "/v3/api-docs/**",
                                         "/v3/api-docs",
-                                        "/api/v1/products/search",
+                                        "/api/v1/products/**",
                                         "/swagger-ui/index.html",
-                                        "/api/v1/videos/**",
                                         "/swagger-resources/**",
                                         "/webjars/**","/metrics",
                                         "/swagger-ui/**",
                                         "/api/v1/auth/**",
                                         "/api/v1/waitlist",
                                         "/api/v1/faqs",
-                                        "/api/v1/contacts",
+                                        "/api/v1/contact-us",
                                         "/api/v1/squeeze/",
-                                        "/api/v1/audio/**",
-                                        "/api/v1/comments/delete/{commentId}",
-                                        "/api/v1/payment/**"
+                                        "/api/v1/comments/**",
+                                        "/api/v1/resources/articles",
+                                        "/api/v1/resources/search",
+                                        "/api/v1/resources/searchResources",
+                                        "/api/v1/resources/create",
+                                        "/api/v1/resources/edit",
+                                        "/api/v1/resources/delete/{Id}",
+                                        "/api/v1/resources/{Id}",
+                                        "/api/v1/resources/unpublish/{id}",
+                                        "/api/v1/resources/publish/{id}",
+                                        "/api/v1/resources/published",
+                                        "/api/v1/resources/unpublished",
+                                        "/api/v1/regions",
+                                        "/api/v1/testimonials/**",
+                                        "api/v1/waitlist/**",
+                                        "/api/v1/jobs/**",
+                                        "/api/v1/notifications",
+                                        "/api/v1/categories",
+                                        "/api/v1/payment/plans",
+                                        "/api/v1/payment/webhook",
+                                        "/api/v1/notification-settings"
                                 ).permitAll()
-                                .requestMatchers("/api/v1/auth/logout", "/api/**").authenticated())
+                                .requestMatchers(
+
+                                        "/api/v1/auth/logout",
+                                        "/api/v1/organisations/**",
+                                        "/api/v1/payment/stripe/**",
+                                        "/api/v1/accounts/**",
+                                        "api/v1/auth/2fa/**",
+                                        "/api/v1/users/members",
+                                        "/api/v1/users/me/{id}",
+                                        "/api/v1/users/delete").authenticated())
                 .logout(logout -> logout
                         .deleteCookies("remove")
                         .invalidateHttpSession(true)

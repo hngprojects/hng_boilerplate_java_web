@@ -1,14 +1,13 @@
 package hng_java_boilerplate.user.login_unit_test;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.user.dto.request.LoginDto;
 import hng_java_boilerplate.user.dto.response.ApiResponse;
 import hng_java_boilerplate.user.dto.response.ResponseData;
 import hng_java_boilerplate.user.dto.response.UserResponse;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;
-import hng_java_boilerplate.user.exception.UserNotFoundException;
-import hng_java_boilerplate.user.exception.UsernameNotFoundException;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.UserServiceImpl;
 import hng_java_boilerplate.util.JwtUtils;
@@ -74,16 +73,16 @@ class UserLoginTest {
         when(passwordEncoder.matches(loginDto.getPassword(), mockUser.getPassword())).thenReturn(true);
         when(jwtUtils.createJwt.apply(any(UserDetails.class))).thenReturn("mockedToken");
 
-        ResponseEntity<ApiResponse> responseEntity = userService.loginUser(loginDto);
+        ResponseEntity<ApiResponse<ResponseData>> responseEntity = userService.loginUser(loginDto);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ApiResponse apiResponse = responseEntity.getBody();
+        ApiResponse<ResponseData> apiResponse = responseEntity.getBody();
         assertNotNull(apiResponse);
         assertEquals("Login Successful!", apiResponse.getMessage());
 
         ResponseData data = (ResponseData) apiResponse.getData();
         assertNotNull(data);
-        assertEquals("mockedToken", data.getToken());
+        assertEquals("mockedToken", apiResponse.getAccess_token());
 
         UserResponse userResponse = data.getUser();
         assertNotNull(userResponse);
@@ -100,7 +99,7 @@ class UserLoginTest {
         String password = "wrongPassword";
         User user = new User();
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode("correctPassword"));  // Mock encoded password
+        user.setPassword("correctPassword");
         user.setId("1");
 
         LoginDto loginDto = new LoginDto();
@@ -110,12 +109,7 @@ class UserLoginTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(password, user.getPassword())).thenReturn(false);
 
-        ResponseEntity<ApiResponse> responseEntity = userService.loginUser(loginDto);
-
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        ApiResponse apiResponse = responseEntity.getBody();
-        assertNotNull(apiResponse);
-        assertEquals("Invalid email or password", apiResponse.getMessage());
+        assertThrows(BadRequestException.class, () -> userService.loginUser(loginDto));
     }
 
     @Test
@@ -128,7 +122,7 @@ class UserLoginTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         assertThrows(
-                UsernameNotFoundException.class,
+                BadRequestException.class,
                 () -> userService.loadUserByUsername(email)
         );
     }

@@ -1,0 +1,19 @@
+[Unit]
+Description=Java Boilerplate Development
+After=network.target
+
+[Service]
+User=teamjava
+Group=teamjava
+WorkingDirectory=/home/teamjava/hng_boilerplate_java_web
+ExecStart=/usr/bin/java -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ActiveProcessorCount=2 -Xmx512m -Xms256m -jar /home/teamjava/hng_boilerplate_java_web/target/hng-java-boilerplate-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
+
+# System-level Controls     
+CPUQuota=15%
+TasksMax=256      
+MemoryLimit=256M     
+LimitNPROC=256       
+LimitNOFILE=512     
+
+[Install]
+WantedBy=multi-user.target

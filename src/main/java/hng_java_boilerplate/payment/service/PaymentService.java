@@ -12,12 +12,13 @@ import hng_java_boilerplate.payment.dtos.PaymentRequestBody;
 import hng_java_boilerplate.payment.dtos.SessionResponse;
 import hng_java_boilerplate.payment.entity.Payment;
 import hng_java_boilerplate.payment.enums.PaymentStatus;
-import hng_java_boilerplate.payment.exceptions.PaymentNotFoundException;
 import hng_java_boilerplate.payment.repository.PaymentRepository;
 import hng_java_boilerplate.payment.utils.CustomerUtils;
 import hng_java_boilerplate.payment.utils.FulfillCheckout;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.plans.service.PlanService;
+import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,13 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static com.stripe.param.checkout.SessionCreateParams.LineItem;
 import static com.stripe.param.checkout.SessionCreateParams.*;
+import static com.stripe.param.checkout.SessionCreateParams.LineItem.PriceData.Recurring.Interval;
 
 @Service
 @RequiredArgsConstructor
@@ -40,35 +45,36 @@ public class PaymentService {
     private final Logger logger = LoggerFactory.getLogger(PaymentService.class);
     private final PaymentRepository repository;
     private final PlanService planService;
+    private final UserService userService;
 
 
     @Value("${stripe.api.key}")
     private String API_KEY;
-
-    @Value("${client.url}")
-    private String clientBaseUrl;
 
     @Value("${stripe.secret.key}")
     private String API_SECRET;
 
     @Transactional
     public ResponseEntity<SessionResponse> createSession(PaymentRequestBody body) throws StripeException {
+        User user = userService.getLoggedInUser();
         Plan plan = planService.findOne(body.planId());
-        if (plan.getName().equals("free")) {
+        if (plan.getName().equals("Free")) {
             throw new BadRequestException("You can not subscribe to free plan");
         }
         Stripe.apiKey = API_KEY;
 
-
         Payment payment = new Payment();
         payment.setAmount(plan.getPrice());
         payment.setStatus(PaymentStatus.PENDING);
+        Set<User> users = payment.getUser();
+        users.add(user);
+        payment.setUser(users);
 
         Payment saved = repository.save(payment);
 
         Map<String, String> metadata = new HashMap<>() {{
             put("plan_id", plan.getId());
-            put("user_email", body.userEmail());
+            put("user_id", user.getId());
             put("payment_id", saved.getId());
         }};
 
@@ -80,17 +86,15 @@ public class PaymentService {
         product.setName(plan.getName() + " pricing plan");
         product.setId(plan.getId());
         product.setDefaultPriceObject(price);
-        getInterval(body.interval());
-        Mode mode = Mode.PAYMENT;
 
-        Customer customer = CustomerUtils.findOrCreateCustomer(body.userEmail(), body.userName());
+        Customer customer = CustomerUtils.findOrCreateCustomer(user.getEmail(), user.getName());
 
-
+        String clientBaseUrl = "https://anchor-java.teams.hng.tech";
         Builder params;
         params = builder()
-                .setMode(mode)
+                .setMode(Mode.SUBSCRIPTION)
                 .setCustomer(customer.getId())
-                .setSuccessUrl(clientBaseUrl + "/payment/success?session_id={CHECKOUT_SESSION_ID}")
+                .setSuccessUrl(clientBaseUrl + "/payment?session_id={CHECKOUT_SESSION_ID}")
                 .setCancelUrl(clientBaseUrl + "/pricing")
                 .putAllMetadata(metadata)
                 .addLineItem(LineItem.builder()
@@ -102,14 +106,17 @@ public class PaymentService {
                                                         .setName(product.getName())
                                                         .build()
                                         )
+                                        .setRecurring(LineItem.PriceData.Recurring.builder()
+                                                .setInterval(getInterval(body.interval()))
+                                                .build())
                                         .setCurrency(product.getDefaultPriceObject().getCurrency())
                                         .setUnitAmountDecimal(product.getDefaultPriceObject().getUnitAmountDecimal())
                                         .build()
                         )
                         .build()
                 );
-        params.setPaymentIntentData(
-                PaymentIntentData.builder()
+        params.setSubscriptionData(
+                SubscriptionData.builder()
                         .putAllMetadata(metadata)
                         .build()
         );
@@ -121,9 +128,10 @@ public class PaymentService {
         return ResponseEntity.ok(new SessionResponse("Payment initiated", 200, data));
     }
 
-    private Object getInterval(String interval) {
+    private Interval getInterval(String interval) {
         return switch (interval) {
-            case "monthly", "annually", "one-time" -> null;
+            case "monthly" -> Interval.MONTH;
+            case "yearly" -> Interval.YEAR;
             default -> throw new BadRequestException("Invalid interval");
         };
     }
@@ -138,29 +146,18 @@ public class PaymentService {
             logger.warn("Api version Error");
         } else {
             StripeObject stripeObject = dataObjectDeserializer.getObject().get();
-            Thread thread = new Thread(new FulfillCheckout(repository, stripeObject, event.getType()));
-            thread.start();
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.execute(new FulfillCheckout(userService, planService, repository, stripeObject, event.getType()));
+            executorService.shutdown();
+
         }
         return ResponseEntity.ok().body(null);
     }
 
     public ResponseEntity<?> returnStatus(String id) throws StripeException {
         Session session = Session.retrieve(id);
-        Map<String, String> metadata = session.getMetadata();
-        String paymentId = metadata.get("payment_id");
-        String planId = metadata.get("plan_id");
-        String userEmail = metadata.get("user_email");
-        Plan plan = planService.findOne(planId);
-        Optional<Payment> optionalPayment = repository.findById(paymentId);
-        if (optionalPayment.isEmpty()) {
-            throw new PaymentNotFoundException("Payment not found");
-        }
-        Payment payment = optionalPayment.get();
-
         return ResponseEntity.ok(new HashMap<>() {{
-            put("status", payment.getStatus());
-            put("plan_id", plan.getId());
-            put("user_email", userEmail);
+            put("status", session.getPaymentStatus());
         }});
     }
 
@@ -171,7 +168,7 @@ public class PaymentService {
 
         HashMap<String, Object> response = new HashMap<>() {{
             put("status_code", 200);
-            put("message", "Payment successfully cancelled");
+            put("message", "Payment cancelled");
         }};
 
         return ResponseEntity.ok().body(response);

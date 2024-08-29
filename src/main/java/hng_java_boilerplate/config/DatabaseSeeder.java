@@ -86,7 +86,28 @@ public class DatabaseSeeder implements CommandLineRunner {
         user2.setUpdatedAt(LocalDateTime.now());
         user2.setProfile(profile2);
 
-        userRepository.saveAll(Arrays.asList(user1, user2));
+        //Seed Super Admin
+        User admin1 = new User();
+        admin1.setId(UUID.randomUUID().toString());
+        admin1.setName("Super Admin1");
+        admin1.setEmail("admin1@super.hng");
+        admin1.setPassword(passwordEncoder.encode("Administrator@1"));
+        admin1.setUserRole(Role.ROLE_SUPER_ADMIN);
+        admin1.setIsEnabled(true);
+        admin1.setCreatedAt(LocalDateTime.now());
+        admin1.setUpdatedAt(LocalDateTime.now());
+
+        User admin2 = new User();
+        admin2.setId(UUID.randomUUID().toString());
+        admin2.setName("Super Admin2");
+        admin2.setEmail("admin2@super.hng");
+        admin2.setPassword(passwordEncoder.encode("Administrator@2"));
+        admin2.setUserRole(Role.ROLE_SUPER_ADMIN);
+        admin2.setIsEnabled(true);
+        admin2.setCreatedAt(LocalDateTime.now());
+        admin2.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.saveAll(Arrays.asList(user1, user2, admin1, admin2));
 
         // Seed organisations
         Organisation org1 = new Organisation();

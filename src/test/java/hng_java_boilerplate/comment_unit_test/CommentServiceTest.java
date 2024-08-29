@@ -3,7 +3,7 @@ package hng_java_boilerplate.comment_unit_test;
 import hng_java_boilerplate.comment.entity.Comment;
 import hng_java_boilerplate.comment.repository.CommentRepository;
 import hng_java_boilerplate.comment.service.CommentService;
-import hng_java_boilerplate.profile.exceptions.UnauthorizedException;
+import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -140,7 +140,7 @@ class CommentServiceTest {
 
         when(commentRepository.findByCommentIdAndDeletedFalse(commentId)).thenReturn(Optional.of(comment));
 
-        assertThrows(UnauthorizedException.class, () ->
+        assertThrows(UnAuthorizedException.class, () ->
                 commentService.softDeleteComment(commentId, userId));
     }
 }

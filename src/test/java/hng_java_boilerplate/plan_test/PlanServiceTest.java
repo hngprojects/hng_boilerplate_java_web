@@ -1,9 +1,9 @@
 package hng_java_boilerplate.plan_test;
 
+import hng_java_boilerplate.exception.ConflictException;
 import hng_java_boilerplate.plans.dtos.CreatePlanDto;
 import hng_java_boilerplate.plans.dtos.PlanResponse;
 import hng_java_boilerplate.plans.entity.Plan;
-import hng_java_boilerplate.plans.exceptions.DuplicatePlanException;
 import hng_java_boilerplate.plans.repository.PlanRepository;
 import hng_java_boilerplate.plans.serviceImpl.PlanServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,7 +81,7 @@ public class PlanServiceTest {
         }};
         CreatePlanDto planDto = new CreatePlanDto("plan name", "plan description", 19.99, 1, "day", features);
         when(this.planRepository.existsByName(any())).thenReturn(true);
-        DuplicatePlanException exception = assertThrows(DuplicatePlanException.class, () -> planService.create(planDto));
+        ConflictException exception = assertThrows(ConflictException.class, () -> planService.create(planDto));
         assertEquals("Plan already exists.", exception.getMessage());
     }
 

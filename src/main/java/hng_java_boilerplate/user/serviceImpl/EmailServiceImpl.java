@@ -22,18 +22,18 @@ import java.util.Random;
 @Slf4j
 public class EmailServiceImpl {
 
-    @Value("${app.host.baseurl:http://localhost:3000}")
+    @Value("${app.host.baseurl:https://anchor-java.teams.hng.tech}")
     private String baseUrl;
 
     private final JavaMailSender javaMailSender;
     private final EmailTemplateService emailTemplateService;
 
     public String applicationUrl(HttpServletRequest request){
-        return baseUrl + "/api/v1/auth" + request.getContextPath();
+        return baseUrl + request.getContextPath();
     }
 
     public void passwordResetTokenMail(User user, HttpServletRequest request, String token) {
-        String url = applicationUrl(request) + "/reset-password/" + token;
+        String url = applicationUrl(request) + "/" + token;
         Map<String, String> variables = new HashMap<>();
         variables.put("name", user.getName());
         variables.put("url", url);
@@ -54,7 +54,7 @@ public class EmailServiceImpl {
     }
 
     public void sendMagicLink(String email, HttpServletRequest request, String token) {
-        String url = applicationUrl(request) + "/magic-link/login?token=" + token;
+        String url = applicationUrl(request) + "?token=" + token;
         Map<String, String> variables = new HashMap<>();
         variables.put("url", url);
 
@@ -91,6 +91,25 @@ public class EmailServiceImpl {
             javaMailSender.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException("Email Not sent");
+        }
+    }
+
+    public void sendNewsletterNotification(User user) {
+        Map<String, String> variables = new HashMap<>();
+        variables.put("name", user.getName());
+
+        String emailBody = getTemplateContent("newsletter-template", variables);
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(user.getEmail());
+            helper.setSubject("Your Magic Link");
+            helper.setText(emailBody, true);
+
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -143,6 +162,14 @@ public class EmailServiceImpl {
                         "<div style=\"text-align: center;\"><img style=\"width: 100%; display: block;\" src=\"cid:welcomeVerify\" alt=\"Welcome Image\"></div><br><br>" +
                         "<h1 style=\"text-align: center; color: #F97316; font-size: 36px;\">Welcome ${name}!</h1><br>" +
                         "<h2 style=\"text-align: center; font-size: 18px;\">You're almost ready to get started. Use the 6-digit code below to verify your account.<br>This OTP expires in 60 minutes.</h2><br><br>" +
+                        "<div style=\"text-align: center; align-item: center; background-color: #ffffff; color: #F97316; text-decoration: none; padding: 15px 30px; border-radius: 8px; display: inline-block; font-size: 28px; font-weight: bold;\">" + "${token}" + "</div><br>" +
+                        "<h2>Best regards,<br>HNG</h2></div>";
+
+            case "newsletter-template":
+                return "<div style=\"width: 50%; margin: 0 auto; background-color: #ffffff; color: #000000; font-family: Arial, sans-serif;\">" +
+                        "<div style=\"text-align: center;\"><img style=\"width: 100%; display: block;\" src=\"cid:welcomeVerify\" alt=\"Welcome Image\"></div><br><br>" +
+                        "<h1 style=\"text-align: center; color: #F97316; font-size: 36px;\">Welcome ${name}!</h1><br>" +
+                        "<h2 style=\"text-align: center; font-size: 18px;\">Your newsletter subscription is successful.</h2><br><br>" +
                         "<div style=\"text-align: center; align-item: center; background-color: #ffffff; color: #F97316; text-decoration: none; padding: 15px 30px; border-radius: 8px; display: inline-block; font-size: 28px; font-weight: bold;\">" + "${token}" + "</div><br>" +
                         "<h2>Best regards,<br>HNG</h2></div>";
 

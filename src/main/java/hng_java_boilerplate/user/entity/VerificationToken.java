@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -14,7 +15,6 @@ public class VerificationToken {
     private static final int EXPIRATION_TIME = 60;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     private String token;
@@ -27,6 +27,7 @@ public class VerificationToken {
 
     public VerificationToken(User user, String token){
         super();
+        this.id = UUID.randomUUID().toString();
         this.token = token;
         this.user = user;
         this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);

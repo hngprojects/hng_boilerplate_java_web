@@ -1,0 +1,15 @@
+name: 'Create flyway.conf'
+description: 'Creates the flyway.conf file'
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        source .env
+        cat << EOF > ~/flyway.conf
+          flyway.url=jdbc:postgresql://localhost:5432/${DB_NAME}
+          flyway.user=${DB_USERNAME}
+          flyway.password=${DB_PASSWORD}
+          flyway.locations=classpath:db/migration
+          flyway.baselineOnMigrate=true
+          flyway.baselineVersion=1
+      shell: bash

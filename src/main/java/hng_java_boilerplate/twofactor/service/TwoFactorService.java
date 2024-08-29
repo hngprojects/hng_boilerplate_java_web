@@ -1,9 +1,9 @@
 package hng_java_boilerplate.twofactor.service;
 
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.twofactor.dtos.TotpRequest;
 import hng_java_boilerplate.twofactor.dtos.TwoFactorResponse;
-import hng_java_boilerplate.twofactor.exception.InvalidTotpException;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +39,12 @@ public class TwoFactorService {
         User user = userService.getLoggedInUser();
         String secretKey = user.getSecretKey();
         if (secretKey == null || !user.getTwoFactorEnabled() ) {
-            throw new InvalidTotpException("Invalid request");
+            throw new UnAuthorizedException("Invalid request") {
+            };
         }
         boolean valid = totpService.verifyTotp(totp.totp(), secretKey);
         if (!valid) {
-            throw new InvalidTotpException("Invalid Totp code");
+            throw new UnAuthorizedException("Invalid Totp code");
         }
         return ResponseEntity.ok(new TwoFactorResponse(200, "Totp code verified", null));
     }
