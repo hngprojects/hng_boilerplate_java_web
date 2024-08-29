@@ -27,7 +27,7 @@ jobs:
 
       - name: Create application-staging.properties
         run: |
-          echo "spring.profiles.active=staging" > src/main/resources/application.properties
+          echo "spring.profiles.active=staging" > src/main/resources/application-staging.properties
           echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-staging.properties
 
       - name: Run the Maven verify phase

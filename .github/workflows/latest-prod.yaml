@@ -27,7 +27,7 @@ jobs:
 
       - name: Create application-prod.properties
         run: |
-          echo "spring.profiles.active=prod" > src/main/resources/application.properties
+          echo "spring.profiles.active=prod" > src/main/resources/application-prod.properties
           echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > src/main/resources/application-prod.properties
 
       - name: Run the Maven verify phase
