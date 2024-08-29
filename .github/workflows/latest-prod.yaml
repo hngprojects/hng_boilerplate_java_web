@@ -1,4 +1,3 @@
-
 name: Production Deployment
 
 on:
@@ -10,11 +9,11 @@ on:
 jobs:
   build-and-push:
     if: github.event.repository.fork == false
+    runs-on: ubuntu-latest
     environment:
       name: "production"
       url: ${{ vars.URL }}
     name: Build for production
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,7 +47,7 @@ jobs:
           git fetch origin main && \
           git stash && \
           git checkout main && \
-          git pull && \
+          git pull origin main && \
           sudo cp .github/scripts/java_prod_app.service /etc/systemd/system && \
           mvn flyway:repair && \
           mvn clean install -Dmaven.test.skip=true && \
