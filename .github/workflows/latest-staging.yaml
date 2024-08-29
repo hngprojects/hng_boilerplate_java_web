@@ -35,8 +35,8 @@ jobs:
 
       - name: copy service file
         run: |
-          cp .github/scripts/java_staging_app.service target/
-          # cat "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > target/classes/application-staging.properties
+          # cp .github/scripts/java_staging_app.service target/
+          cat "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > target/classes/application-staging.properties
           # cp ~/flyway.conf target/
           # cp .env target/
 
@@ -46,7 +46,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          source: "target/*"
+          source: "target/"
           target: /home/teamjava/hng_boilerplate_java_web
 
       - name: Add SSH Key to Known Hosts
