@@ -33,7 +33,7 @@ public class EmailServiceImpl {
     }
 
     public void passwordResetTokenMail(User user, HttpServletRequest request, String token) {
-        String url = applicationUrl(request) + "/" + token;
+        String url = applicationUrl(request) + "/reset-password?token=" + token;
         Map<String, String> variables = new HashMap<>();
         variables.put("name", user.getName());
         variables.put("url", url);
@@ -54,7 +54,7 @@ public class EmailServiceImpl {
     }
 
     public void sendMagicLink(String email, HttpServletRequest request, String token) {
-        String url = applicationUrl(request) + "?token=" + token;
+        String url = applicationUrl(request) + "/magic-link/login?token=" + token;
         Map<String, String> variables = new HashMap<>();
         variables.put("url", url);
 
