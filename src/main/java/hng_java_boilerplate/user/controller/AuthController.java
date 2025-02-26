@@ -61,8 +61,8 @@ public class AuthController {
         return new ResponseEntity<>("Forgot password email sent successfully", HttpStatus.OK);
     }
 
-    @PostMapping("/reset-password/{token}")
-    public ResponseEntity<String> resetPassword(@PathVariable String token, @RequestBody ResetPasswordDto passwordDto) {
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestBody ResetPasswordDto passwordDto) {
         return userService.resetPassword(token, passwordDto);
     }
 
@@ -83,5 +83,10 @@ public class AuthController {
     public ResponseEntity<String> sendMagicLink(@RequestBody MagicLinkRequest magicLinkRequest, HttpServletRequest request) {
         userService.sendMagicLink(magicLinkRequest.getEmail(), request);
         return new ResponseEntity<>("Magic link sent successfully! Go to your email to login", HttpStatus.OK);
+    }
+
+    @PostMapping("/magic-link/login")
+    public  ResponseEntity<?> magicLinkLogin(@RequestParam("token") String token){
+        return userService.magicLinkLogin(token);
     }
 }
