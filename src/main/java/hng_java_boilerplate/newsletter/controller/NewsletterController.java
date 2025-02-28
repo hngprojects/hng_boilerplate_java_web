@@ -22,7 +22,7 @@ public class NewsletterController {
                 .body(newsletterService.subscribeToNewsletter(request));
     }
 
-    @GetMapping("/subscribers")
+    @GetMapping
     public ResponseEntity<?> getSubscribers(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
