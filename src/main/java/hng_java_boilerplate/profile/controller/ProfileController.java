@@ -10,16 +10,21 @@ import hng_java_boilerplate.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/profile")
 @Tag(name = "User Profile Management", description = "APIs for managing user profiles")
+@CrossOrigin("*")
+@Slf4j
 public class ProfileController {
 
     private final ProfileService profileService;
@@ -53,5 +58,11 @@ public class ProfileController {
     @GetMapping("/{userId}")
     public ResponseEntity<ProfileResponse> getUserProfile(@PathVariable String userId) {
         return ResponseEntity.ok(profileService.getUserProfile(userId));
+    }
+
+    @PostMapping("/upload-image")
+    public ResponseEntity<?> updateProfilePicture(@RequestParam("image") MultipartFile file) throws IOException {
+        log.info("New Profile Image received");
+       return profileService.uploadProfileImage(file);
     }
 }
