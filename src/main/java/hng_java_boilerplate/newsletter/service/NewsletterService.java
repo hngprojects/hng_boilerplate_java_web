@@ -5,6 +5,7 @@ import hng_java_boilerplate.newsletter.dto.SubscribeRequest;
 import hng_java_boilerplate.newsletter.dto.SubscribeResponse;
 import hng_java_boilerplate.newsletter.entity.Newsletter;
 import hng_java_boilerplate.newsletter.repository.NewsletterRepository;
+import hng_java_boilerplate.user.dto.response.Response;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +35,18 @@ public class NewsletterService {
        emailService.sendNewsletterNotification(user);
 
        return new SubscribeResponse(201, "subscription successful");
+    }
+
+    public List<Newsletter> findNewsletterByUserId(String userId){
+        return newsletterRepository.findNewsletterByUserId(userId);
+    }
+
+    public List<Newsletter> findNewsletterByCreatedAtAfter(LocalDateTime date){
+        return newsletterRepository.findNewsletterByCreatedAtAfter(date);
+    }
+
+    public Response<?> deleteNewsletterByUserId(String userId){
+        newsletterRepository.deleteNewsletterByUserId(userId);
+        return Response.builder().status_code("success").message("Newsletter deleted successfully.").build();
     }
 }

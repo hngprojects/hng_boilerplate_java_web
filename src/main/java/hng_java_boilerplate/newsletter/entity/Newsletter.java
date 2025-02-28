@@ -18,6 +18,10 @@ public class Newsletter {
     private String id;
     @Column(nullable = false)
     private String userId;
+    @Column(nullable = false)
+    private String title;
+    @Column(nullable = false)
+    private String content;
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
