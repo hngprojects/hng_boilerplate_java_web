@@ -1,6 +1,8 @@
 package hng_java_boilerplate.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hng_java_boilerplate.newsletter.entity.Newsletter;
+import hng_java_boilerplate.newsletter.entity.Subscriber;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.product.entity.Product;
@@ -122,4 +124,8 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.isEnabled;
     }
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Newsletter> newsletters;
+
 }

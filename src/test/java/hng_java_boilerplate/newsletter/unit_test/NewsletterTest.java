@@ -4,6 +4,7 @@ import hng_java_boilerplate.newsletter.entity.Newsletter;
 import hng_java_boilerplate.newsletter.repository.NewsletterRepository;
 import hng_java_boilerplate.newsletter.service.NewsletterService;
 import hng_java_boilerplate.user.dto.response.Response;
+import hng_java_boilerplate.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -31,8 +32,14 @@ public class NewsletterTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
+        User user = new User();
+        user.setId("U1");
+        user.setName("John Doe");
+        user.setEmail("johndoe@example.com");
+        user.setCreatedAt(LocalDateTime.now());
+
         newsletter1 = new Newsletter();
-        newsletter1.setUserId("U1");
+        newsletter1.setUser(user);
         newsletter1.setCreatedAt(LocalDateTime.now());
         newsletter1.setId("1");
         newsletter1.setTitle("Newsletter test");
@@ -40,7 +47,7 @@ public class NewsletterTest {
         newsletter1.setContent("this a test content for the newsletter");
 
         newsletter2 = new Newsletter();
-        newsletter2.setUserId("U1");
+        newsletter1.setUser(user);
         newsletter2.setCreatedAt(LocalDateTime.now());
         newsletter2.setId("2");
         newsletter2.setUpdatedAt(LocalDateTime.now());
@@ -53,13 +60,13 @@ public class NewsletterTest {
 
         List<Newsletter> newsletters = Arrays.asList(newsletter1,newsletter2);
 
-        when(newsletterRepository.findNewsletterByUserId("U1")).thenReturn(newsletters);
+        when(newsletterRepository.findByUser_Id("U1")).thenReturn(newsletters);
 
-        List<Newsletter> result = newsletterService.findNewsletterByUserId(newsletter1.getUserId());
+        List<Newsletter> result = newsletterService.findNewsletterByUserId(newsletter1.getUser().getId());
 
         assertNotNull(result);
-        assertEquals(newsletter1.getUserId(),result.get(0).getUserId());
-        verify(newsletterRepository, times(1)).findNewsletterByUserId(newsletter1.getUserId());
+        assertEquals(newsletter1.getUser().getId(),result.get(0).getUser().getId());
+        verify(newsletterRepository, times(1)).findByUser_Id(newsletter1.getUser().getId());
     }
 
     @Test
@@ -73,12 +80,12 @@ public class NewsletterTest {
 
     @Test
     void testDeleteByUserId(){
-        String userId = newsletter1.getUserId();
+        String userId = newsletter1.getUser().getId();
 
         Response<?> response = newsletterService.deleteNewsletterByUserId(userId);
 
         assertEquals("success", response.getStatus_code());
         assertEquals("Newsletter deleted successfully.", response.getMessage());
-        verify(newsletterRepository, times(1)).deleteNewsletterByUserId(userId);
+        verify(newsletterRepository, times(1)).deleteByUser_Id(userId);
     }
 }

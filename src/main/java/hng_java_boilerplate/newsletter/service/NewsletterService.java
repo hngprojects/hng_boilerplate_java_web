@@ -10,6 +10,7 @@ import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class NewsletterService {
                .orElseThrow(() -> new NotFoundException("user not found with email"));
 
        Newsletter newsletter = new Newsletter();
-       newsletter.setUserId(user.getId());
+       newsletter.setUser(user);
        newsletter.setCreatedAt(LocalDateTime.now());
        newsletter.setUpdatedAt(LocalDateTime.now());
        newsletterRepository.saveAndFlush(newsletter);
@@ -38,7 +39,7 @@ public class NewsletterService {
     }
 
     public List<Newsletter> findNewsletterByUserId(String userId){
-        return newsletterRepository.findNewsletterByUserId(userId);
+        return newsletterRepository.findByUser_Id(userId);
     }
 
     public List<Newsletter> findNewsletterByCreatedAtAfter(LocalDateTime date){
@@ -46,7 +47,7 @@ public class NewsletterService {
     }
 
     public Response<?> deleteNewsletterByUserId(String userId){
-        newsletterRepository.deleteNewsletterByUserId(userId);
+        newsletterRepository.deleteByUser_Id(userId);
         return Response.builder().status_code("success").message("Newsletter deleted successfully.").build();
     }
 }
