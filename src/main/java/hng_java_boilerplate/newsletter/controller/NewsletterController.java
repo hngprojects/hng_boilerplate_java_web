@@ -2,15 +2,13 @@ package hng_java_boilerplate.newsletter.controller;
 
 import hng_java_boilerplate.newsletter.dto.SubscribeRequest;
 import hng_java_boilerplate.newsletter.dto.SubscribeResponse;
+import hng_java_boilerplate.newsletter.dto.SubscribersResponse;
 import hng_java_boilerplate.newsletter.service.NewsletterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,5 +20,13 @@ public class NewsletterController {
     public ResponseEntity<SubscribeResponse> subscribe(@RequestBody @Valid SubscribeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(newsletterService.subscribeToNewsletter(request));
+    }
+
+    @GetMapping("/subscribers")
+    public ResponseEntity<?> getSubscribers(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+        SubscribersResponse response = newsletterService.getSubscribersResponse(page, size);
+        return ResponseEntity.ok(response);
     }
 }
