@@ -28,13 +28,17 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
+
+    private static final String[] WHITELIST = {
+            "/api/**"
+    };
     private final UserServiceImpl userService;
     private final JwtAuthenticationFilter authentication;
 
     public WebSecurityConfig(@Lazy UserServiceImpl userService, JwtAuthenticationFilter authentication) {
         this.userService = userService;
         this.authentication = authentication;
-    }
+    };
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -71,7 +75,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(httpRequests ->
-                        httpRequests
+                        httpRequests.requestMatchers((WHITELIST)).permitAll()
                                 .requestMatchers(
                                         "/",
                                         "/docs",

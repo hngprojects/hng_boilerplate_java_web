@@ -12,3 +12,5 @@ public interface ProfileService {
     Optional<?> updateUserProfile(String userId, UpdateUserProfileDto updateUserProfileDto);
     ProfileResponse getUserProfile(String userId);
 }
+
+
