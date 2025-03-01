@@ -64,8 +64,6 @@ public class CommentService {
     public Comment updateComment(String commentId, String userId, String newCommentText) {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
-
-
         
         // Ensure the user exists
         userRepository.findById(userId)
