@@ -1,8 +1,10 @@
 package hng_java_boilerplate.newsletter.service;
 
 import hng_java_boilerplate.exception.NotFoundException;
+import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.newsletter.dto.SubscribeRequest;
 import hng_java_boilerplate.newsletter.dto.SubscribeResponse;
+import hng_java_boilerplate.newsletter.dto.UnsubscribeResponse;
 import hng_java_boilerplate.newsletter.entity.Newsletter;
 import hng_java_boilerplate.newsletter.repository.NewsletterRepository;
 import hng_java_boilerplate.user.entity.User;
@@ -33,5 +35,26 @@ public class NewsletterService {
        emailService.sendNewsletterNotification(user);
 
        return new SubscribeResponse(201, "subscription successful");
+    }
+
+    // ✅ Unsubscribe from Newsletter (Soft Delete)
+    public UnsubscribeResponse unsubscribeFromNews(String subscriberId){
+        User user = userRepository.findById(subscriberId)
+                .orElseThrow(() -> new NotFoundException("User not found with email"));
+
+
+        if (!user.getId().equals(subscriberId)) {
+            throw new UnAuthorizedException("unauthorized user");
+        }
+
+
+        Newsletter subscriber = newsletterRepository.findById(subscriberId).
+                orElseThrow(() -> new NotFoundException("subscriber not found"));
+
+
+
+
+        newsletterRepository.delete(subscriber);
+        return null;
     }
 }
