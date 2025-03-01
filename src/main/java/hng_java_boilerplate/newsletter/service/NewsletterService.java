@@ -25,9 +25,6 @@ public class NewsletterService {
     private final UserRepository userRepository;
     private final EmailServiceImpl emailService;
 
-    private static final int DEFAULT_PAGE = 0;
-    private static final int DEFAULT_SIZE = 20;
-
     public SubscribeResponse subscribeToNewsletter(SubscribeRequest request) {
        User user =  userRepository.findByEmail(request.getEmail())
                .orElseThrow(() -> new NotFoundException("user not found with email"));
@@ -43,15 +40,12 @@ public class NewsletterService {
        return new SubscribeResponse(201, "subscription successful");
     }
 
-    public SubscribersResponse getSubscribersResponse(Integer page, Integer size) {
-        int effectivePage = (page == null || page < 0) ? DEFAULT_PAGE : page;
-        int effectiveSize = (size == null || size <= 0) ? DEFAULT_SIZE : size;
-
-        Pageable pageable = buildPageable(effectivePage, effectiveSize);
+    public SubscribersResponse getSubscribersResponse(int page, int size) {
+        Pageable pageable = buildPageable(page, size);
         Page<Newsletter> newsletterPage = newsletterRepository.findAll(pageable);
-        List<SubscribersDto> subscriberDtos = mapNewslettersToSubscribers(newsletterPage.getContent());
+        List<SubscribersDto> subscriberDto = mapNewslettersToSubscribers(newsletterPage.getContent());
 
-        return buildSubscribersResponse(newsletterPage, subscriberDtos);
+        return buildSubscribersResponse(newsletterPage, subscriberDto);
     }
 
     private Pageable buildPageable(int page, int size) {

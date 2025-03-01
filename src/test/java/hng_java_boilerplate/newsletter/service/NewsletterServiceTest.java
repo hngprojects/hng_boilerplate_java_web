@@ -68,7 +68,7 @@ class NewsletterServiceTest {
     @Test
     void getSubscribersResponse_shouldReturnCorrectResponse() {
         int page = 0;
-        int size = 20;
+        int size = 10;
 
         List<Newsletter> newsletters = List.of(newsletter1, newsletter2);
         Pageable pageable = PageRequest.of(page, size);
@@ -108,7 +108,7 @@ class NewsletterServiceTest {
     @Test
     void getSubscribersResponse_shouldThrowNotFoundException_whenUserNotFound() {
         int page = 0;
-        int size = 20;
+        int size = 10;
 
         List<Newsletter> newsletters = List.of(newsletter1);
         Pageable pageable = PageRequest.of(page, size);
@@ -121,27 +121,6 @@ class NewsletterServiceTest {
                 () -> newsletterService.getSubscribersResponse(page, size));
 
         assertEquals("User not found for subscription id: " + newsletter1.getId(), exception.getMessage());
-        verify(newsletterRepository, times(1)).findAll(any(Pageable.class));
-        verify(userRepository, times(1)).findById("user1");
-    }
-
-    @Test
-    void getSubscribersResponse_shouldUseDefaultValues_whenParametersAreInvalid() {
-        int defaultPage = 0;
-        int defaultSize = 20;
-
-        List<Newsletter> newsletters = List.of(newsletter1);
-        Pageable pageable = PageRequest.of(defaultPage, defaultSize);
-        Page<Newsletter> newsletterPage = new PageImpl<>(newsletters, pageable, newsletters.size());
-
-        when(newsletterRepository.findAll(any(Pageable.class))).thenReturn(newsletterPage);
-        when(userRepository.findById("user1")).thenReturn(Optional.of(user1));
-
-        SubscribersResponse response = newsletterService.getSubscribersResponse(null, null);
-
-        assertNotNull(response);
-        assertEquals(defaultPage, response.getPage());
-        assertEquals(defaultSize, response.getSize());
         verify(newsletterRepository, times(1)).findAll(any(Pageable.class));
         verify(userRepository, times(1)).findById("user1");
     }

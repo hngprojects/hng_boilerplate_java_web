@@ -23,9 +23,9 @@ public class NewsletterController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getSubscribers(
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size) {
+    public ResponseEntity<SubscribersResponse> getSubscribers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         SubscribersResponse response = newsletterService.getSubscribersResponse(page, size);
         return ResponseEntity.ok(response);
     }
