@@ -39,10 +39,6 @@ public class OrganisationController {
         AddUserResponse response = addUsersToOrganisationService.addUserToOrganisation(organisationId, orgRequest,
                 authenticatedUser);
 
-        if (response instanceof AddUserExceptionDto) {
-            return ResponseEntity.status(((AddUserExceptionDto) response).status_code()).body(response);
-        }
-
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,6 @@ public class AddUsersToOrganisationServiceTest {
     private AddUserRequestDTO orgRequest;
     private User user;
 
-    // Add test cases here
     @Test
     void testAddUserToOrganisation_OrganisationNotFound() {
         String organisationId = "b1e009c5-a197-42f9-b9a3-98fc357b5f08";
@@ -50,10 +48,9 @@ public class AddUsersToOrganisationServiceTest {
 
         when(organisationRepository.findById(organisationId)).thenReturn(Optional.empty());
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () ->
+        NotFoundException exception = assertThrows(NotFoundException.class, () ->
                 addUsersToOrganisationService.addUserToOrganisation(organisationId, orgRequest, authenticatedUser));
-        assertEquals(404, exception.getStatusCode().value());
-        assertEquals("Organisation with id " + organisationId + " does not exist", exception.getReason());
+        assertEquals("Organisation with id " + organisationId + " does not exist", exception.getMessage());
 
         verify(organisationRepository).findById(organisationId);
         verifyNoMoreInteractions(organisationRepository);
@@ -85,7 +82,6 @@ public class AddUsersToOrganisationServiceTest {
         verifyNoInteractions(userRepository);
     }
 
-    // Test 3: User already in organisation
     @Test
     void testAddUserToOrganisation_UserAlreadyInOrganisation() {
         String organisationId = "b1e009c5-a197-42f9-b9a3-98fc357b5f08";
@@ -115,7 +111,6 @@ public class AddUsersToOrganisationServiceTest {
         verifyNoInteractions(userRepository);
     }
 
-    // Test 4: User does not exist
     @Test
     void testAddUserToOrganisation_UserDoesNotExist() {
         String organisationId = "b1e009c5-a197-42f9-b9a3-98fc357b5f08";
@@ -144,7 +139,6 @@ public class AddUsersToOrganisationServiceTest {
         verifyNoMoreInteractions(userRepository);
     }
 
-    // Test 5: Successful addition of users to organisation
     @Test
     void testAddUserToOrganisation_Successful() {
         String organisationId = "b1e009c5-a197-42f9-b9a3-98fc357b5f08";

@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +32,7 @@ public class AddUsersToOrganisationService {
             Authentication authenticatedUser
     ) {
         Organisation organisation = organisationRepository.findById(organisationId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Organisation with id " + organisationId + " does not exist"));
+                orElseThrow(() -> new NotFoundException("Organisation with id " + organisationId + " does not exist"));
 
         User user = (User) authenticatedUser.getPrincipal();
 
