@@ -1,5 +1,8 @@
 package hng_java_boilerplate.profile.serviceImpl;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
@@ -12,6 +15,7 @@ import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,12 +38,20 @@ public class ProfileServiceImpl implements ProfileService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
 
-    private static final String UPLOAD_DIR = "profile_photos";
+    private final AmazonS3 amazonS3;
 
-    static {
-        File directory = new File(UPLOAD_DIR);
-        if (!directory.exists()) {
-            directory.mkdirs();
+    @Value("${aws.s3.bucket-name}")
+    private String bucketName;
+
+    public void uploadFileToS3(MultipartFile file, String keyName) {
+        try (InputStream inputStream = file.getInputStream()) {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
+            metadata.setContentType(file.getContentType());
+
+            amazonS3.putObject(new PutObjectRequest(bucketName, keyName, inputStream, metadata));
+        } catch (IOException e) {
+            throw new RuntimeException("Error uploading file to S3", e);
         }
     }
 
@@ -115,24 +128,24 @@ public class ProfileServiceImpl implements ProfileService {
         return new ProfileResponse(200, "user profile", profileDto);
     }
 
-        @Override
-        public ResponseEntity<ProfilePictureResponse> uploadProfileImage(MultipartFile file) {
-            if (file.isEmpty() || !isValidImage(file)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new ProfilePictureResponse(false, "Invalid file type or missing image. Only JPG or JPEG formats are allowed.", null));
-            }
-            try {
-                String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                Path filePath = Paths.get(UPLOAD_DIR + File.separator + filename);
-                Files.write(filePath, file.getBytes());
-
-                String fileUrl = "https://hng.com/profile/uploads/" + filename;
-                return ResponseEntity.ok(new ProfilePictureResponse(true, "Profile image uploaded successfully", fileUrl));
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(new ProfilePictureResponse(false, "An unexpected error occurred while processing your request. Please try again later.", null));
-            }
+    @Override
+    public ResponseEntity<ProfilePictureResponse> uploadProfileImage(MultipartFile file) {
+        if (file.isEmpty() || !isValidImage(file)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ProfilePictureResponse(false, "Invalid file type or missing image. Only JPG or JPEG formats are allowed.", null));
         }
+        try {
+            String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            uploadFileToS3(file, filename);
+
+            String fileUrl = amazonS3.getUrl(bucketName, filename).toString();
+            return ResponseEntity.ok(new ProfilePictureResponse(true, "Profile image uploaded successfully", fileUrl));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ProfilePictureResponse(false, "An error occurred while uploading your profile image. Please try again later.", null));
+        }
+    }
+
 
     private boolean isValidImage(MultipartFile file) {
         String contentType = file.getContentType();
