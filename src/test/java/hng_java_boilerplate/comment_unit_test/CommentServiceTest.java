@@ -5,6 +5,8 @@ import hng_java_boilerplate.comment.repository.CommentRepository;
 import hng_java_boilerplate.comment.service.CommentService;
 import hng_java_boilerplate.exception.UnAuthorizedException;
 import hng_java_boilerplate.user.entity.User;
+import hng_java_boilerplate.user.repository.UserRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,6 +28,9 @@ class CommentServiceTest {
 
     @InjectMocks
     private CommentService commentService;
+
+    @Mock
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -143,4 +148,33 @@ class CommentServiceTest {
         assertThrows(UnAuthorizedException.class, () ->
                 commentService.softDeleteComment(commentId, userId));
     }
+
+
+
+    
+
+    @Test
+    void updateComment_ShouldThrowUnauthorizedExceptionIfUserIsNotAuthorized() {
+        String commentId = "comment1";
+        String userId = "user1";
+        String differentUserId = "user2";
+        String newCommentText = "This is my updated comment.";
+
+        User user = new User();
+        user.setId(differentUserId);
+
+        Comment comment = new Comment();
+        comment.setCommentId(commentId);
+        comment.setUser(user);
+
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
+    
+        assertThrows(UnAuthorizedException.class, () ->
+                commentService.updateComment(commentId, userId, newCommentText));
+    
+        verify(commentRepository, times(1)).findById(commentId);
+        verify(userRepository, times(1)).findById(userId);
+    }
+
 }
