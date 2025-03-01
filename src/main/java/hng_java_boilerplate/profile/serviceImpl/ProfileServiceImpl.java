@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
     private final UserService userService;
     private final UserRepository userRepository;
@@ -35,10 +35,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     private static final String UPLOAD_DIR = "profile_photos";
 
-    public ProfileServiceImpl(UserService userService, UserRepository userRepository, ProfileRepository profileRepository) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.profileRepository = profileRepository;
+    static {
         File directory = new File(UPLOAD_DIR);
         if (!directory.exists()) {
             directory.mkdirs();
