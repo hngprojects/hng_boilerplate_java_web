@@ -67,11 +67,10 @@ public class NewsletterTest {
 
         when(newsletterRepository.findByUser_Id("U1",pageable)).thenReturn(page);
 
-        Page<Newsletter> result = newsletterService.findNewsletterByUserId(newsletter1.getUser().getId(),pageable.getPageNumber(),pageable.getPageSize());
+        Page<Newsletter> result = newsletterService.findNewsletterByUserId(newsletter1.getUser().getId(),pageable);
 
         assertNotNull(result);
         assertEquals(1,result.getTotalPages());
-        System.out.println(page);
         verify(newsletterRepository, times(1)).findByUser_Id(newsletter1.getUser().getId(),pageable);
     }
 
@@ -82,7 +81,7 @@ public class NewsletterTest {
         LocalDateTime date = LocalDateTime.parse("2025-02-28T11:44:32.180026100");
         when(newsletterRepository.findNewsletterByCreatedAtAfter(date,page.getPageable())).thenReturn(page);
 
-        Page<Newsletter> result = newsletterService.findNewsletterByCreatedAtAfter(date,0,1);
+        Page<Newsletter> result = newsletterService.findNewsletterByCreatedAtAfter(date,page.getPageable());
 
         assertNotNull(result);
         verify(newsletterRepository, times(1)).findNewsletterByCreatedAtAfter(date,page.getPageable());

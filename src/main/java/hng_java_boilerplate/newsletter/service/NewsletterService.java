@@ -11,13 +11,10 @@ import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,13 +38,11 @@ public class NewsletterService {
        return new SubscribeResponse(201, "subscription successful");
     }
 
-    public Page<Newsletter> findNewsletterByUserId(String userId, int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public Page<Newsletter> findNewsletterByUserId(String userId, Pageable pageable){
         return newsletterRepository.findByUser_Id(userId,pageable);
     }
 
-    public Page<Newsletter> findNewsletterByCreatedAtAfter(LocalDateTime date, int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public Page<Newsletter> findNewsletterByCreatedAtAfter(LocalDateTime date, Pageable pageable){
         return newsletterRepository.findNewsletterByCreatedAtAfter(date,pageable);
     }
 
