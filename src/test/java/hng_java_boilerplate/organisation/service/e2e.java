@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +48,8 @@ public class e2e {
         organisation.setName("Test Org");
         organisation.setDescription("Description");
         organisation.setEmail("testorg@example.com");
-        organisation = organisationRepository.save(organisation);
+
+        when(organisationRepository.findById(anyString())).thenReturn(java.util.Optional.of(organisation));
 
         mockMvc.perform(get("/api/v1/organisations/{organisationId}", organisation.getId())
                         .contentType(MediaType.APPLICATION_JSON))
@@ -61,6 +64,8 @@ public class e2e {
     public void getOrganisationById_shouldReturn404_whenOrganisationDoesNotExist() throws Exception {
         // Arrange
         String nonExistentOrganisationId = "nonexistent-id";
+
+        when(organisationRepository.findById(anyString())).thenReturn(java.util.Optional.empty());
 
         mockMvc.perform(get("/api/v1/organisations/{organisationId}", nonExistentOrganisationId)
                         .contentType(MediaType.APPLICATION_JSON))
