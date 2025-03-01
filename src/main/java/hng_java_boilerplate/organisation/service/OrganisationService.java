@@ -85,6 +85,5 @@ public class OrganisationService {
     public Organisation getOrganisationById(String organisationId) {
         return organisationRepository.findById(organisationId)
                 .orElseThrow(() -> new NotFoundException("Organization not found"));
-
     }
 }
