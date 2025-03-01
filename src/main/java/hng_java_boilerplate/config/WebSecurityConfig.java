@@ -30,7 +30,42 @@ import java.util.Arrays;
 public class WebSecurityConfig {
 
     private static final String[] WHITELIST = {
-            "/api/**"
+            "/api/**",
+            "/",
+            "/docs",
+            "/v3/api-docs/**",
+            "/v3/api-docs",
+            "/api/v1/products/**",
+            "/swagger-ui/index.html",
+            "/swagger-resources/**",
+            "/webjars/**","/metrics",
+            "/swagger-ui/**",
+            "/api/v1/auth/**",
+            "/api/v1/waitlist",
+            "/api/v1/faqs",
+            "/api/v1/contact-us",
+            "/api/v1/squeeze/",
+            "/api/v1/comments/**",
+            "/api/v1/resources/articles",
+            "/api/v1/resources/search",
+            "/api/v1/resources/searchResources",
+            "/api/v1/resources/create",
+            "/api/v1/resources/edit",
+            "/api/v1/resources/delete/{Id}",
+            "/api/v1/resources/{Id}",
+            "/api/v1/resources/unpublish/{id}",
+            "/api/v1/resources/publish/{id}",
+            "/api/v1/resources/published",
+            "/api/v1/resources/unpublished",
+            "/api/v1/regions",
+            "/api/v1/testimonials/**",
+            "api/v1/waitlist/**",
+            "/api/v1/jobs/**",
+            "/api/v1/notifications",
+            "/api/v1/categories",
+            "/api/v1/payment/plans",
+            "/api/v1/payment/webhook",
+            "/api/v1/notification-settings"
     };
     private final UserServiceImpl userService;
     private final JwtAuthenticationFilter authentication;
@@ -77,44 +112,6 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(httpRequests ->
                         httpRequests.requestMatchers((WHITELIST)).permitAll()
                                 .requestMatchers(
-                                        "/",
-                                        "/docs",
-                                        "/v3/api-docs/**",
-                                        "/v3/api-docs",
-                                        "/api/v1/products/**",
-                                        "/swagger-ui/index.html",
-                                        "/swagger-resources/**",
-                                        "/webjars/**","/metrics",
-                                        "/swagger-ui/**",
-                                        "/api/v1/auth/**",
-                                        "/api/v1/waitlist",
-                                        "/api/v1/faqs",
-                                        "/api/v1/contact-us",
-                                        "/api/v1/squeeze/",
-                                        "/api/v1/comments/**",
-                                        "/api/v1/resources/articles",
-                                        "/api/v1/resources/search",
-                                        "/api/v1/resources/searchResources",
-                                        "/api/v1/resources/create",
-                                        "/api/v1/resources/edit",
-                                        "/api/v1/resources/delete/{Id}",
-                                        "/api/v1/resources/{Id}",
-                                        "/api/v1/resources/unpublish/{id}",
-                                        "/api/v1/resources/publish/{id}",
-                                        "/api/v1/resources/published",
-                                        "/api/v1/resources/unpublished",
-                                        "/api/v1/regions",
-                                        "/api/v1/testimonials/**",
-                                        "api/v1/waitlist/**",
-                                        "/api/v1/jobs/**",
-                                        "/api/v1/notifications",
-                                        "/api/v1/categories",
-                                        "/api/v1/payment/plans",
-                                        "/api/v1/payment/webhook",
-                                        "/api/v1/notification-settings"
-                                ).permitAll()
-                                .requestMatchers(
-
                                         "/api/v1/auth/logout",
                                         "/api/v1/organisations/**",
                                         "/api/v1/payment/stripe/**",
