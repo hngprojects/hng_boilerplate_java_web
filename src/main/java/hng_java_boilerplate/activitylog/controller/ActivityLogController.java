@@ -5,6 +5,8 @@ import hng_java_boilerplate.activitylog.dto.ApiResponseDto;
 import hng_java_boilerplate.activitylog.dto.ErrorResponseDto;
 import hng_java_boilerplate.activitylog.model.ActivityLog;
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/organizations")
 @PreAuthorize("hasRole('ADMIN')")
+@Tag(name = "Activity Log", description = "Activity log controller")
 public class ActivityLogController {
     private final ActivityLogService activityLogService;
 
@@ -30,6 +33,7 @@ public class ActivityLogController {
     }
 
     @GetMapping("/{orgId}/users/{userId}/activity-logs")
+    @Operation(summary = "get activity logs")
     public ResponseEntity<?> getActivityLogs(
             @PathVariable("orgId") String orgId,
             @PathVariable("userId") String userId,

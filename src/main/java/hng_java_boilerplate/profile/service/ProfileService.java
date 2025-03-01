@@ -8,7 +8,7 @@ import hng_java_boilerplate.profile.dto.response.ProfileResponse;
 import java.util.Optional;
 
 public interface ProfileService {
-    public DeactivateUserResponse deactivateUser(DeactivateUserRequest request);
+    DeactivateUserResponse deactivateUser(DeactivateUserRequest request);
     Optional<?> updateUserProfile(String userId, UpdateUserProfileDto updateUserProfileDto);
     ProfileResponse getUserProfile(String userId);
 }
