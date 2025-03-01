@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -29,9 +28,6 @@ public class Newsletter {
 
     @Column(nullable = false)
     private String content;
-
-    @OneToMany(mappedBy = "newsletter",cascade = CascadeType.ALL)
-    private List<Subscriber> subscribers;
 
     @CreationTimestamp
     @Column(name = "created_at",nullable = false)

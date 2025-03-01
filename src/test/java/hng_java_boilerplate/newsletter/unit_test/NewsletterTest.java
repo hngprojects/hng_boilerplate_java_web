@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -57,25 +61,31 @@ public class NewsletterTest {
 
     @Test
     void testFindByUserId(){
-
         List<Newsletter> newsletters = Arrays.asList(newsletter1,newsletter2);
+        Page<Newsletter> page = new PageImpl<>(newsletters);
+        Pageable pageable = PageRequest.of(0,1);
 
-        when(newsletterRepository.findByUser_Id("U1")).thenReturn(newsletters);
+        when(newsletterRepository.findByUser_Id("U1",pageable)).thenReturn(page);
 
-        List<Newsletter> result = newsletterService.findNewsletterByUserId(newsletter1.getUser().getId());
+        Page<Newsletter> result = newsletterService.findNewsletterByUserId(newsletter1.getUser().getId(),pageable.getPageNumber(),pageable.getPageSize());
 
         assertNotNull(result);
-        assertEquals(newsletter1.getUser().getId(),result.get(0).getUser().getId());
-        verify(newsletterRepository, times(1)).findByUser_Id(newsletter1.getUser().getId());
+        assertEquals(1,result.getTotalPages());
+        System.out.println(page);
+        verify(newsletterRepository, times(1)).findByUser_Id(newsletter1.getUser().getId(),pageable);
     }
 
     @Test
     void testFindByCreatedAfter(){
+        List<Newsletter> newsletters = Arrays.asList(newsletter1,newsletter2);
+        Page<Newsletter> page = new PageImpl<>(newsletters,PageRequest.of(0,1),2);
         LocalDateTime date = LocalDateTime.parse("2025-02-28T11:44:32.180026100");
-        List<Newsletter> result = newsletterService.findNewsletterByCreatedAtAfter(date);
+        when(newsletterRepository.findNewsletterByCreatedAtAfter(date,page.getPageable())).thenReturn(page);
+
+        Page<Newsletter> result = newsletterService.findNewsletterByCreatedAtAfter(date,0,1);
 
         assertNotNull(result);
-        verify(newsletterRepository, times(1)).findNewsletterByCreatedAtAfter(date);
+        verify(newsletterRepository, times(1)).findNewsletterByCreatedAtAfter(date,page.getPageable());
     }
 
     @Test
