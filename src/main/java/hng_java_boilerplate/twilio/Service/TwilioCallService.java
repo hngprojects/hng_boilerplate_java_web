@@ -3,7 +3,7 @@ package hng_java_boilerplate.twilio.Service;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Call;
 import com.twilio.type.PhoneNumber;
-import hng_java_boilerplate.twilio.CallLogs.entity;
+import hng_java_boilerplate.twilio.CallLogs.Entity;
 import hng_java_boilerplate.twilio.Repository.TwilioCallRepo;
 import hng_java_boilerplate.twilio.RequestAndResponse.CallRequest;
 import hng_java_boilerplate.twilio.RequestAndResponse.CallResponse;
@@ -44,7 +44,7 @@ public class TwilioCallService {
         ).create();
 
 
-        entity entity = entity.builder()
+        Entity entity = Entity.builder()
                 .toNumber(callRequest.getToNumber())
                 .fromNumber(callRequest.getFromNumber())
                 .callSid(call.getSid())

@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
+@jakarta.persistence.Entity
 @Table(name = "call_logs")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class entity {
+public class Entity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
