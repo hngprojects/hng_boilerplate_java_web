@@ -4,6 +4,7 @@ import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.organisation.service.OrganisationService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/organisations")
-@Tag(name="Organisation")
+@Tag(name="Organisation", description = "Controller for Organisation")
 public class OrganisationController {
     private final OrganisationService organisationService;
 
     @PostMapping
+    @Operation(summary = "create organisation")
     public ResponseEntity<CreateOrganisationResponseDto> createOrganisation(
             @RequestBody @Valid CreateOrganisationRequestDto orgRequest,
             Authentication activeUser
