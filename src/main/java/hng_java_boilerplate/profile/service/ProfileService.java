@@ -17,3 +17,5 @@ public interface ProfileService {
     ProfileResponse getUserProfile(String userId);
     ResponseEntity<?> uploadProfileImage(MultipartFile file) throws IOException;
 }
+
+
