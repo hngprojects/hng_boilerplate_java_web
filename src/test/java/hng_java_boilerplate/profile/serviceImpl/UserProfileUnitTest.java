@@ -2,6 +2,7 @@ package hng_java_boilerplate.profile.serviceImpl;
 
 import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
+import hng_java_boilerplate.profile.dto.response.ProfilePictureResponse;
 import hng_java_boilerplate.profile.dto.response.ProfileUpdateResponseDto;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
@@ -15,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.Optional;
 
@@ -78,6 +81,35 @@ public class UserProfileUnitTest {
         assertThatThrownBy(() -> underTest.updateUserProfile(user.getId(), profile))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("User not found");
+    }
+
+    @Test
+    public void test_uploadProfileImage_returns_successful_response() {
+        MockMultipartFile file = new MockMultipartFile(
+                "file", "test.jpg", "image/jpeg", "dummy image content".getBytes()
+        );
+
+        ResponseEntity<ProfilePictureResponse> response = underTest.uploadProfileImage(file);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().isSuccess()).isTrue();
+        assertThat(response.getBody().getMessage()).isEqualTo("Profile image uploaded successfully");
+        assertThat(response.getBody().getImageUrl()).isNotBlank();
+    }
+
+    @Test
+    public void test_uploadProfileImage_returns_error_for_invalid_file() {
+        MockMultipartFile file = new MockMultipartFile(
+                "file", "test.txt", "text/plain", "invalid file content".getBytes()
+        );
+
+        ResponseEntity<ProfilePictureResponse> response = underTest.uploadProfileImage(file);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().isSuccess()).isFalse();
+        assertThat(response.getBody().getMessage()).isEqualTo("Invalid file type or missing image. Only JPG or JPEG formats are allowed.");
     }
 
 }
