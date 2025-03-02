@@ -124,7 +124,7 @@ public class User implements UserDetails {
         return this.isEnabled;
     }
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Newsletter> myNewsletters;
 
