@@ -66,18 +66,18 @@ public class NewsletterController {
     }
 
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<Page<Newsletter>> getNewslettersByUserId(@PathVariable String userId, @PageableDefault(sort = "user_id", direction = Sort.Direction.DESC)Pageable pageable) {
         return ResponseEntity.ok(newsletterService.findNewsletterByUserId(userId,pageable));
     }
 
-    @GetMapping("/{date}")
+    @GetMapping("/date/{date}")
     public ResponseEntity<Page<Newsletter>> getNewslettersAfterDate(@PathVariable LocalDateTime date, @PageableDefault(sort = "created_at",direction = Sort.Direction.DESC)Pageable pageable) {
         return ResponseEntity.ok(newsletterService.findNewsletterByCreatedAtAfter(date,pageable));
     }
 
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<?> deleteNewslettersById(@Valid @RequestBody DeleteRequest request) {
         String user_id = request.getUser_id();
         if(user_id.isEmpty()){
