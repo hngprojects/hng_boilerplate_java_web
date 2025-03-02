@@ -33,6 +33,18 @@ public class OrganisationController {
         );
     }
 
+    @GetMapping("/{org_id}/users")
+    public ResponseEntity<?> getOrganisationUsers(@PathVariable(name = "org_id") String orgId,
+                                              @RequestParam(name = "page", defaultValue = "0") int page,
+                                              @RequestParam(name = "size", defaultValue = "10") int pageSize) {
+        try {
+            return ResponseEntity.ok(organisationService.getOrganisationUsers(orgId, page, pageSize));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+}
+
     @PostMapping("/{organisationId}/users")
     public ResponseEntity<?> addUserToOrganisation(
             @PathVariable("organisationId") String organisationId,

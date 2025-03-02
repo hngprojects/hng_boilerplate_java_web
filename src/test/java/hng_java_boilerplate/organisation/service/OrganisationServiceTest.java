@@ -2,6 +2,7 @@ package hng_java_boilerplate.organisation.service;
 
 import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.organisation.dto.ApiResponseDTO;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.entity.Organisation;
@@ -10,6 +11,7 @@ import hng_java_boilerplate.organisation.exception.OrgGlobalExceptionHandler;
 import hng_java_boilerplate.organisation.exception.OrganisationNameAlreadyExistsException;
 import hng_java_boilerplate.organisation.exception.ValidationError;
 import hng_java_boilerplate.organisation.repository.OrganisationRepository;
+import hng_java_boilerplate.user.dto.request.GetUserDto;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,6 +58,8 @@ class OrganisationServiceTest {
     private User user;
     private Organisation organisation;
 
+    private Organisation organisation;
+
     @BeforeEach
     void setUp() {
         orgRequest = new CreateOrganisationRequestDto(
@@ -71,6 +78,11 @@ class OrganisationServiceTest {
         organisation = new Organisation();
         organisation.setId("org-123");
         organisation.setName("Test Organisation");
+
+        user = new User();
+        user.setId("user-123");
+        user.setName("John Doe");
+        user.setEmail("john.doe@example.com");
         organisation.setDescription("A test org");
     }
 
@@ -137,7 +149,58 @@ class OrganisationServiceTest {
     }
 
     @Test
-    void getOrganisationById_shouldReturnOrganisation_whenOrganisationExists() {
+    void getOrganisationUsers_shouldReturnNotFound_whenOrganisationDoesNotExist() {
+        when(organisationRepository.findById("org-123")).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () ->
+                organisationService.getOrganisationUsers("org-123", 0, 10)
+        );
+
+        assertEquals("404 NOT_FOUND \"Organisation not found\"", exception.getMessage());
+        verify(organisationRepository, times(1)).findById("org-123");
+    }
+
+    @Test
+    void getOrganisationUsers_shouldReturnNotFound_whenNoUsersFound() {
+        when(organisationRepository.findById("org-123")).thenReturn(Optional.of(organisation));
+        when(userRepository.findByOrganisations_Id("org-123", PageRequest.of(0, 10)))
+                .thenReturn(Page.empty());
+
+        ResponseEntity<ApiResponseDTO> response = organisationService.getOrganisationUsers("org-123", 0, 10);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(400, response.getBody().getStatusCode());
+        assertEquals("No users found for organisation with ID: org-123", response.getBody().getMessage());
+        assertNull(response.getBody().getData());
+    }
+
+    @Test
+    void getOrganisationUsers_shouldReturnUsers_whenUsersExist() {
+        when(organisationRepository.findById("org-123")).thenReturn(Optional.of(organisation));
+        List<User> users = List.of(user);
+        Page<User> userPage = new PageImpl<>(users);
+        when(userRepository.findByOrganisations_Id("org-123", PageRequest.of(0, 10)))
+                .thenReturn(userPage);
+
+        ResponseEntity<ApiResponseDTO> response = organisationService.getOrganisationUsers("org-123", 0, 10);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(200, response.getBody().getStatusCode());
+        assertEquals("Users retrieved successfully for organisation with ID: org-123", response.getBody().getMessage());
+        assertNotNull(response.getBody().getData());
+
+        List<GetUserDto> userDtos = (List<GetUserDto>) response.getBody().getData();
+        assertEquals(1, userDtos.size());
+        assertEquals("user-123", userDtos.get(0).getId());
+        assertEquals("John Doe", userDtos.get(0).getName());
+        assertEquals("john.doe@example.com", userDtos.get(0).getEmail());
+    }
+
+}
+
+void getOrganisationById_shouldReturnOrganisation_whenOrganisationExists() {
         String organisationId = "org-123";
         when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
 
