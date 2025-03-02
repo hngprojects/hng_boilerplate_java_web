@@ -140,7 +140,7 @@ public class ProfileServiceImpl implements ProfileService {
             String fileUrl = amazonS3.getUrl(bucketName, filename).toString();
             return ResponseEntity.ok(new ProfilePictureResponse(true, "Profile image uploaded successfully", fileUrl));
         } catch (Exception e) {
-            throw new ProfilePictureUploadException("An error occurred while uploading your profile image. Please try again later.");
+            throw new ProfilePictureUploadException("An error occurred while uploading your profile image: " +  e.getMessage());
         }
     }
 
