@@ -6,8 +6,12 @@ import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
 import hng_java_boilerplate.profile.dto.response.DeactivateUserResponse;
 import hng_java_boilerplate.profile.dto.response.ProfileResponse;
 import hng_java_boilerplate.profile.service.ProfileService;
+import hng_java_boilerplate.user.dto.response.OAuthBaseResponse;
 import hng_java_boilerplate.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -28,6 +32,7 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
+
     @Operation(summary = "Update User Profile", description = "Updates the profile information for the specified user ID.")
     @PatchMapping("/{user_id}")
     public ResponseEntity<?> updateUserProfile(
@@ -45,12 +50,21 @@ public class ProfileController {
         return new ResponseEntity<>(updatedUserProfile, HttpStatus.OK);
     }
 
+
     @PatchMapping("/deactivate")
+    @ApiResponse(responseCode = "200", description = "successfully deactivates a user",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = DeactivateUserResponse.class))
+    )
+    @Operation(summary = "deactivates a user")
     public ResponseEntity<DeactivateUserResponse> deactivateUser(@RequestBody @Valid DeactivateUserRequest request) {
         return ResponseEntity.ok(profileService.deactivateUser(request));
     }
 
     @GetMapping("/{userId}")
+    @Operation(summary = "Retrieve the profile of a user using the id of the user")
+    @ApiResponse(responseCode = "200", description = "successfully retrieve user profile",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProfileResponse.class))
+    )
     public ResponseEntity<ProfileResponse> getUserProfile(@PathVariable String userId) {
         return ResponseEntity.ok(profileService.getUserProfile(userId));
     }
