@@ -137,24 +137,28 @@ public class DatabaseSeeder implements CommandLineRunner {
         product1.setId(UUID.randomUUID().toString());
         product1.setName("Product One");
         product1.setDescription("Description for Product One");
+        product1.setOrganisation(org1);
         product1.setUser(user1);
 
         Product product2 = new Product();
         product2.setId(UUID.randomUUID().toString());
         product2.setName("Product Two");
         product2.setDescription("Description for Product Two");
+        product2.setOrganisation(org2);
         product2.setUser(user1);
 
         Product product3 = new Product();
         product3.setId(UUID.randomUUID().toString());
         product3.setName("Product Three");
         product3.setDescription("Description for Product Three");
+        product3.setOrganisation(org3);
         product3.setUser(user2);
 
         Product product4 = new Product();
         product4.setId(UUID.randomUUID().toString());
         product4.setName("Product Four");
         product4.setDescription("Description for Product Four");
+        product4.setOrganisation(org3);
         product4.setUser(user2);
 
         productRepository.saveAll(Arrays.asList(product1, product2, product3, product4));

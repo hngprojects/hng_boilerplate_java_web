@@ -1,6 +1,7 @@
 package hng_java_boilerplate.organisation.service;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.dto.DataDto;
@@ -79,5 +80,10 @@ public class OrganisationService {
                 )
                 .status_code(201)
                 .build();
+    }
+
+    public Organisation getOrganisationById(String organisationId) {
+        return organisationRepository.findById(organisationId)
+                .orElseThrow(() -> new NotFoundException("Organization not found"));
     }
 }
