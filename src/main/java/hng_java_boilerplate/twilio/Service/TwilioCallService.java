@@ -3,7 +3,7 @@ package hng_java_boilerplate.twilio.Service;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Call;
 import com.twilio.type.PhoneNumber;
-import hng_java_boilerplate.twilio.CallLogs.CallLogs;
+import hng_java_boilerplate.twilio.CallLogs.entity;
 import hng_java_boilerplate.twilio.Repository.TwilioCallRepo;
 import hng_java_boilerplate.twilio.RequestAndResponse.CallRequest;
 import hng_java_boilerplate.twilio.RequestAndResponse.CallResponse;
@@ -44,14 +44,14 @@ public class TwilioCallService {
         ).create();
 
 
-        CallLogs callLogs = CallLogs.builder()
+        entity entity = entity.builder()
                 .toNumber(callRequest.getToNumber())
                 .fromNumber(callRequest.getFromNumber())
                 .callSid(call.getSid())
                 .timestamp(LocalDateTime.now())
                 .build();
 
-        twilioCallRepo.save(callLogs);
+        twilioCallRepo.save(entity);
 
         return new CallResponse("Call Initiated Successfully", call.getSid());
     }

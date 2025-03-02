@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CallLogs {
+public class entity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
