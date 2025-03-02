@@ -145,7 +145,49 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setUserRole(Role.ROLE_USER);
+        createDefaultOrganisation(user);
         return userRepository.save(user);
+    }
+
+    @Override
+    public ResponseEntity<?> magicLinkLogin(String token) {
+        String result = verifyMagicLinkToken(token);
+        if (result.equals("invalid")) {
+            throw new UnAuthorizedException("Unknown request");
+        }
+        Optional<User> user = Optional.ofNullable(magicLinkTokenRepository.findByToken(token).getUser());
+        if (result.equals("expired")) {
+            String newToken = UUID.randomUUID().toString();
+            recreateMagicLinkTokenForUser(user.get(), newToken);
+            return new ResponseEntity<>("Your token has expired, check you email for a new token", HttpStatus.OK);
+        } else {
+            UserDetails userDetails = loadUserByUsername(user.get().getEmail());
+            String jwtToken = jwtUtils.createJwt.apply(userDetails);
+            UserResponse userResponse = getUserResponse((User) userDetails);
+            ResponseData data = new ResponseData(userResponse);
+            return new ResponseEntity<>(new ApiResponse<>(HttpStatus.OK.value(), "Login Successful!", jwtToken, data), HttpStatus.OK);
+        }
+    }
+
+    private void recreateMagicLinkTokenForUser(User user, String token) {
+        MagicLinkToken newlyCreatedMagicKinkToken = new MagicLinkToken(user, token);
+        MagicLinkToken magicLinkToken = magicLinkTokenRepository.findByUserId(user.getId());
+        magicLinkTokenRepository.delete(magicLinkToken);
+        magicLinkTokenRepository.save(newlyCreatedMagicKinkToken);
+    }
+
+    private String verifyMagicLinkToken(String token) {
+        MagicLinkToken magicLinkToken = magicLinkTokenRepository.findByToken(token);
+        if (magicLinkToken == null) {
+            return "invalid";
+        }
+        Calendar cal = Calendar.getInstance();
+        if (magicLinkToken.getExpirationTime().getTime()
+                - cal.getTime().getTime() <= 0) {
+            magicLinkTokenRepository.delete(magicLinkToken);
+            return "expired";
+        }
+        return "valid";
     }
 
     @Override

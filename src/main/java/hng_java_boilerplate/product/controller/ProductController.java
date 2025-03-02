@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-@Tag(name="Product")
+@Tag(name="Product", description = "Controller for Products")
 public class ProductController {
 
     private final ProductService productService;
@@ -71,6 +71,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{productId}")
+    @Operation(summary = "get a product by it's id")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable String productId) {
         return ResponseEntity.ok(productService.getProductById(productId));
     }

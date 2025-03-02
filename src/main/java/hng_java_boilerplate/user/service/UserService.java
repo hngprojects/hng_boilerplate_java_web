@@ -28,10 +28,7 @@ public interface UserService {
     void requestToken(EmailSenderDto emailSenderDto, HttpServletRequest request);
     void sendMagicLink(String email, HttpServletRequest request);
     List<MembersResponse> getAllUsers(int page, Authentication authentication);
-
     Response<?> deleteUserByEmail(DeleteUserRequest request, Authentication authentication);
-
     Response<?> getUserById(String userId, Authentication authentication);
-
-
+    ResponseEntity<?> magicLinkLogin(String token);
 }

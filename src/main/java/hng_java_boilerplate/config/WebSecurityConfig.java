@@ -109,11 +109,13 @@ public class WebSecurityConfig {
                                         "/api/v1/payment/webhook",
                                         "/api/v1/notification-settings",
                                         "/api/call"
+                                        "/api/v1/profile/upload-image"
                                 ).permitAll()
                                 .requestMatchers(
 
                                         "/api/v1/auth/logout",
                                         "/api/v1/organisations/**",
+                                        "/api/v1/newsletter-subscription/**",
                                         "/api/v1/payment/stripe/**",
                                         "/api/v1/accounts/**",
                                         "api/v1/auth/2fa/**",
