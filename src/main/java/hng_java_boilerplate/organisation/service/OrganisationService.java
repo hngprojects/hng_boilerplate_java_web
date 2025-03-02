@@ -2,6 +2,7 @@ package hng_java_boilerplate.organisation.service;
 
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
 import hng_java_boilerplate.organisation.dto.ApiResponseDTO;
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
 import hng_java_boilerplate.organisation.dto.DataDto;
@@ -119,5 +120,11 @@ public class OrganisationService {
                         .message("Users retrieved successfully for organisation with ID: " + orgId)
                         .data(userDtoList)
                         .build());
+    }
+}
+
+    public Organisation getOrganisationById(String organisationId) {
+        return organisationRepository.findById(organisationId)
+                .orElseThrow(() -> new NotFoundException("Organization not found"));
     }
 }

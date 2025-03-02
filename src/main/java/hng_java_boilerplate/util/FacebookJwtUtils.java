@@ -7,7 +7,6 @@ import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.profile.entity.Profile;
 import hng_java_boilerplate.profile.repository.ProfileRepository;
 import hng_java_boilerplate.user.dto.request.FacebookDto;
-import hng_java_boilerplate.user.dto.request.GoogleOAuthDto;
 import hng_java_boilerplate.user.dto.response.*;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.enums.Role;

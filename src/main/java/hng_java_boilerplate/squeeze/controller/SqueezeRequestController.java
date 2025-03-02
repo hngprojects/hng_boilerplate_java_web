@@ -2,9 +2,18 @@ package hng_java_boilerplate.squeeze.controller;
 
 import hng_java_boilerplate.email.EmailServices.EmailProducerService;
 
+import hng_java_boilerplate.exception.ErrorResponseDto;
+import hng_java_boilerplate.exception.ValidationError;
 import hng_java_boilerplate.squeeze.entity.SqueezeRequest;
 import hng_java_boilerplate.squeeze.service.SqueezeRequestService;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
+import hng_java_boilerplate.user.dto.request.GetUserDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +29,25 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/v1/squeeze")
 @Validated
 @RequiredArgsConstructor
-@Tag(name="Squeeze")
+@Tag(name="Squeeze", description = "Handles user request for squeeze page")
 public class SqueezeRequestController {
 
     private final SqueezeRequestService service;
     private final EmailProducerService emailProducerService;
 
     @PostMapping
+    @Operation(summary = "sign up to squeeze page")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "sign up for squeeze page",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseMessageDto.class))
+            ),
+            @ApiResponse(responseCode = "409", description = "User already subscribed with email",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            ),
+            @ApiResponse(responseCode = "422", description = "invalid or missing required request data",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationError.class))
+            ),
+    })
     public ResponseEntity<?> handleSqueezeRequest(@Valid @RequestBody SqueezeRequest request) {
         service.saveSqueezeRequest(request);
 
@@ -38,6 +59,19 @@ public class SqueezeRequestController {
         return ResponseEntity.ok().body(new ResponseMessageDto("You are all signed up!", HttpStatus.OK.value()));
     }
 
+
+    @Operation(summary = "update squeeze page request")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "update squeeze page success",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseMessageDto.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ResponseMessageDto.class))
+            ),
+            @ApiResponse(responseCode = "422", description = "invalid or missing required request data",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ValidationError.class))
+            ),
+    })
     @PutMapping
     public ResponseEntity<?> updateSqueezeRequest(@Valid @RequestBody SqueezeRequest request) {
         try {
@@ -52,6 +86,11 @@ public class SqueezeRequestController {
         }
     }
 
+
+    @Operation(summary = "get squeeze page requests")
+    @ApiResponse(responseCode = "200", description = "retrieve squeeze page requests success",
+            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SqueezeRequest.class)))
+    )
     @GetMapping
     public ResponseEntity<?> getAllSqueezeRequests() {
         List<SqueezeRequest> squeezeRequests = service.getAllSqueezeRequests();
