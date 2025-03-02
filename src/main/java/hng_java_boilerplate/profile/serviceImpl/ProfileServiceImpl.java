@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import hng_java_boilerplate.exception.BadRequestException;
 import hng_java_boilerplate.exception.NotFoundException;
+import hng_java_boilerplate.exception.ProfilePictureUploadException;
 import hng_java_boilerplate.profile.dto.request.DeactivateUserRequest;
 import hng_java_boilerplate.profile.dto.request.UpdateUserProfileDto;
 import hng_java_boilerplate.profile.dto.response.*;
@@ -131,18 +132,15 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ResponseEntity<ProfilePictureResponse> uploadProfileImage(MultipartFile file) {
         if (file.isEmpty() || !isValidImage(file)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ProfilePictureResponse(false, "Invalid file type or missing image. Only JPG or JPEG formats are allowed.", null));
+            throw new BadRequestException("Invalid file type or missing image. Only JPG or JPEG formats are allowed");
         }
         try {
             String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
             uploadFileToS3(file, filename);
-
             String fileUrl = amazonS3.getUrl(bucketName, filename).toString();
             return ResponseEntity.ok(new ProfilePictureResponse(true, "Profile image uploaded successfully", fileUrl));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ProfilePictureResponse(false, "An error occurred while uploading your profile image. Please try again later.", null));
+            throw new ProfilePictureUploadException("An error occurred while uploading your profile image. Please try again later.");
         }
     }
 
