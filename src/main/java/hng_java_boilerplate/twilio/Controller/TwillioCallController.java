@@ -24,18 +24,16 @@ public class TwillioCallController {
     private final TwilioCallService twilioCallService;
 
     @PostMapping("/call")
-    public ResponseEntity<?> makecall(@RequestBody CallRequest callRequest) {
-        try {
-            CallResponse response = twilioCallService.makeCall(callRequest);
-            return ResponseEntity.ok(response); // 200 OK
-        } catch (BadRequestException e) {
-            return ResponseEntity.badRequest().body(new hng_java_boilerplate.comment.dto.ErrorResponse("Invalid request","Bad request",400)); // 400 Bad Request
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body(new hng_java_boilerplate.comment.dto.ErrorResponse("Twilio service error","Service not found/available", 503)); // 503 Service Unavailable
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Internal server error", "server error",500)); // 500 Internal Server Error
+    public CallResponse makecall(@RequestBody CallRequest callRequest) {
+        if (callRequest == null || callRequest.getToNumber() == null || callRequest.getFromNumber() == null) {
+            throw new BadRequestException("Invalid request: Phone number is required");
         }
+
+        CallResponse response = twilioCallService.makeCall(callRequest);
+
+        if (response == null) {
+            throw new NotFoundException("Twilio service error: Service not found/available");
+        }
+        return response;
     }
 }

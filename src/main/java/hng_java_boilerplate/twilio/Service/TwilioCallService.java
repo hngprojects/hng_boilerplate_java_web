@@ -36,10 +36,11 @@ public class TwilioCallService {
     }
 
     public CallResponse makeCall (CallRequest callRequest){
+
         Call call = Call.creator(
                 new PhoneNumber(callRequest.getToNumber()),
                 new PhoneNumber(callRequest.getFromNumber()),
-                URI.create(callRequest.getMessageUrl())
+                URI.create("http://demo.twilio.com/docs/voice.xml")
         ).create();
 
 
