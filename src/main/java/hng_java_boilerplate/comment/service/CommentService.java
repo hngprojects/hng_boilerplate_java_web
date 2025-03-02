@@ -2,6 +2,7 @@ package hng_java_boilerplate.comment.service;
 
 import java.time.LocalDateTime;
 
+import hng_java_boilerplate.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,7 +49,7 @@ public class CommentService {
     
     public Comment softDeleteComment (String commentId, String userId){
         Comment comment = commentRepository.findByCommentIdAndDeletedFalse(commentId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+        .orElseThrow(() -> new NotFoundException("Comment not found"));
 
         if (!comment.getUser().getId().equals(userId)) {
             throw new UnAuthorizedException("Unauthorized user");
@@ -58,18 +59,11 @@ public class CommentService {
         return commentRepository.save(comment);
         }
 
-// The service that handles the logic for updating a comment
-// The method takes in the commentId, userId, and the new comment text
-// It returns the updated comment
     public Comment updateComment(String commentId, String userId, String newCommentText) {
         Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
-        
-        // Ensure the user exists
+            .orElseThrow(() -> new NotFoundException("Comment not found"));
         userRepository.findById(userId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-    
-        // Authorization check
+            .orElseThrow(() -> new NotFoundException("User not found"));
         if (!comment.getUser().getId().equals(userId)) {
             throw new UnAuthorizedException("Unable to update comment");
         } 
