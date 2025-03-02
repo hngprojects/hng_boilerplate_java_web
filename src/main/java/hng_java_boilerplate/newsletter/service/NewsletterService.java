@@ -7,11 +7,17 @@ import hng_java_boilerplate.newsletter.dto.SubscribersDto;
 import hng_java_boilerplate.newsletter.dto.SubscribersResponse;
 import hng_java_boilerplate.newsletter.entity.Newsletter;
 import hng_java_boilerplate.newsletter.repository.NewsletterRepository;
+import hng_java_boilerplate.user.dto.response.Response;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.domain.*;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,7 +36,7 @@ public class NewsletterService {
                .orElseThrow(() -> new NotFoundException("user not found with email"));
 
        Newsletter newsletter = new Newsletter();
-       newsletter.setUserId(user.getId());
+       newsletter.setUser(user);
        newsletter.setCreatedAt(LocalDateTime.now());
        newsletter.setUpdatedAt(LocalDateTime.now());
        newsletterRepository.saveAndFlush(newsletter);
@@ -39,6 +45,19 @@ public class NewsletterService {
 
        return new SubscribeResponse(201, "subscription successful");
     }
+
+
+    public Page<Newsletter> findNewsletterByUserId(String userId, Pageable pageable){
+        return newsletterRepository.findByUser_Id(userId,pageable);
+    }
+
+    public Page<Newsletter> findNewsletterByCreatedAtAfter(LocalDateTime date, Pageable pageable){
+        return newsletterRepository.findNewsletterByCreatedAtAfter(date,pageable);
+    }
+
+    public Response<?> deleteNewsletterByUserId(String userId){
+        newsletterRepository.deleteByUser_Id(userId);
+        return Response.builder().status_code("success").message("Newsletter deleted successfully.").build();
 
     public SubscribersResponse getSubscribersResponse(int page, int size) {
         Pageable pageable = buildPageable(page, size);
@@ -74,5 +93,6 @@ public class NewsletterService {
                 .totalElements(newsletterPage.getTotalElements())
                 .totalPages(newsletterPage.getTotalPages())
                 .build();
+
     }
 }
