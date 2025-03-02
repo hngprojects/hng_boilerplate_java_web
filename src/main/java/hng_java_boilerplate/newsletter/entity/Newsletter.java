@@ -19,11 +19,16 @@ public class Newsletter {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(nullable = false)
-    private String userId;
+    private String email;
+    @Column(name = "email")
+    private String title;
+    @Column(nullable = false)
+    private String content;
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
     @Column
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
 }

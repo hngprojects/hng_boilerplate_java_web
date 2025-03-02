@@ -1,6 +1,7 @@
 package hng_java_boilerplate.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hng_java_boilerplate.newsletter.entity.Newsletter;
 import hng_java_boilerplate.organisation.entity.Organisation;
 import hng_java_boilerplate.plans.entity.Plan;
 import hng_java_boilerplate.product.entity.Product;
@@ -122,4 +123,12 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.isEnabled;
     }
+
+    @ManyToMany
+    @JoinTable(
+            name = "subscribers",
+            joinColumns = @JoinColumn(name = "email"),
+            inverseJoinColumns = @JoinColumn(name = "newsletter_id")
+    )
+    private List<Newsletter> newsletters;
 }

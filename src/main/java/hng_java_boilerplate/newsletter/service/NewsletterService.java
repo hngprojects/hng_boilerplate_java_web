@@ -7,6 +7,7 @@ import hng_java_boilerplate.newsletter.dto.SubscribersDto;
 import hng_java_boilerplate.newsletter.dto.SubscribersResponse;
 import hng_java_boilerplate.newsletter.entity.Newsletter;
 import hng_java_boilerplate.newsletter.repository.NewsletterRepository;
+import hng_java_boilerplate.user.dto.response.Response;
 import hng_java_boilerplate.user.entity.User;
 import hng_java_boilerplate.user.repository.UserRepository;
 import hng_java_boilerplate.user.serviceImpl.EmailServiceImpl;
@@ -30,7 +31,7 @@ public class NewsletterService {
                .orElseThrow(() -> new NotFoundException("user not found with email"));
 
        Newsletter newsletter = new Newsletter();
-       newsletter.setUserId(user.getId());
+       newsletter.setEmail(user.getEmail());
        newsletter.setCreatedAt(LocalDateTime.now());
        newsletter.setUpdatedAt(LocalDateTime.now());
        newsletterRepository.saveAndFlush(newsletter);
@@ -54,15 +55,11 @@ public class NewsletterService {
 
     private List<SubscribersDto> mapNewslettersToSubscribers(List<Newsletter> newsletters) {
         return newsletters.stream()
-                .map(newsletter -> {
-                    User user = userRepository.findById(newsletter.getUserId())
-                            .orElseThrow(() -> new NotFoundException("User not found for subscription id: " + newsletter.getId()));
-                    return SubscribersDto.builder()
-                            .id(newsletter.getId())
-                            .email(user.getEmail())
-                            .subscribedAt(newsletter.getCreatedAt())
-                            .build();
-                })
+                .map(newsletter -> SubscribersDto.builder()
+                        .id(newsletter.getId())
+                        .email(newsletter.getEmail())
+                        .subscribedAt(newsletter.getCreatedAt())
+                        .build())
                 .collect(Collectors.toList());
     }
 
@@ -74,5 +71,18 @@ public class NewsletterService {
                 .totalElements(newsletterPage.getTotalElements())
                 .totalPages(newsletterPage.getTotalPages())
                 .build();
+    }
+
+    public Page<Newsletter> findNewsletterByEmail(String email, Pageable pageable){
+        return newsletterRepository.findByEmail(email,pageable);
+    }
+
+    public Page<Newsletter> findNewsletterByCreatedAtAfter(LocalDateTime date, Pageable pageable){
+        return newsletterRepository.findNewsletterByCreatedAtAfter(date,pageable);
+    }
+
+    public Response<?> deleteNewsletterByUserId(String email){
+        newsletterRepository.deleteByEmail(email);
+        return Response.builder().status_code("success").message("Newsletter deleted successfully.").build();
     }
 }
