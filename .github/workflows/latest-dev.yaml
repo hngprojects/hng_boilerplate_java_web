@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           source: "target/*"
-          target: /home/teamjava/hng_boilerplate_java_web
+          target: ~/teamjava/hng_boilerplate_java_web
 
       - name: Add SSH Key to Known Hosts
         run: |
