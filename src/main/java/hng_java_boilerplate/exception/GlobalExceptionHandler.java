@@ -4,6 +4,7 @@ import com.google.gson.JsonSyntaxException;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import dev.samstevens.totp.exceptions.QrGenerationException;
+import hng_java_boilerplate.profile.dto.response.ProfilePictureResponse;
 import hng_java_boilerplate.squeeze.dto.ResponseMessageDto;
 import hng_java_boilerplate.user.dto.response.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -125,5 +126,11 @@ public class GlobalExceptionHandler {
         errorResponseDTO.setMessage(message);
         errorResponseDTO.setStatus_code(statusCode);
         return errorResponseDTO;
+    }
+
+    @ExceptionHandler()
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponseDto handleProfilePictureUploadException(ProfilePictureUploadException ex) {
+        return setResponse("Image Not Uploaded",HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 }
