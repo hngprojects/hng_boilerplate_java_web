@@ -1,5 +1,6 @@
 package hng_java_boilerplate.organisation.service;
 
+import hng_java_boilerplate.exception.NotFoundException;
 import hng_java_boilerplate.activitylog.service.ActivityLogService;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationRequestDto;
 import hng_java_boilerplate.organisation.dto.CreateOrganisationResponseDto;
@@ -20,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,6 +51,7 @@ class OrganisationServiceTest {
 
     private CreateOrganisationRequestDto orgRequest;
     private User user;
+    private Organisation organisation;
 
     @BeforeEach
     void setUp() {
@@ -66,6 +67,11 @@ class OrganisationServiceTest {
         );
         user = new User();
         user.setId("user-123");
+
+        organisation = new Organisation();
+        organisation.setId("org-123");
+        organisation.setName("Test Organisation");
+        organisation.setDescription("A test org");
     }
 
     @Test
@@ -130,4 +136,30 @@ class OrganisationServiceTest {
         assertEquals("Name must not be empty", errors.get(0).message());
     }
 
+    @Test
+    void getOrganisationById_shouldReturnOrganisation_whenOrganisationExists() {
+        String organisationId = "org-123";
+        when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
+
+        Organisation result = organisationService.getOrganisationById(organisationId);
+
+        assertNotNull(result);
+        assertEquals(organisationId, result.getId());
+        assertEquals("Test Organisation", result.getName());
+        verify(organisationRepository, times(1)).findById(organisationId);
+    }
+
+    @Test
+    void getOrganisationById_shouldThrowNotFoundException_whenOrganisationDoesNotExist() {
+        String organisationId = "nonexistent-id";
+        when(organisationRepository.findById(organisationId)).thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
+                () -> organisationService.getOrganisationById(organisationId)
+        );
+
+        assertEquals("Organization not found", exception.getMessage());
+        verify(organisationRepository, times(1)).findById(organisationId);
+    }
 }
