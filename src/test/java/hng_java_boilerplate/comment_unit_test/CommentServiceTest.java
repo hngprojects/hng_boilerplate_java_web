@@ -169,7 +169,6 @@ class CommentServiceTest {
 
         when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
         when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
-    
         assertThrows(UnAuthorizedException.class, () ->
                 commentService.updateComment(commentId, userId, newCommentText));
     
