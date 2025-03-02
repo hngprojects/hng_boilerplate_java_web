@@ -35,7 +35,7 @@ public class CommentService {
 
     public Boolean isUserAuthorizedToDeleteComment(String commentId, String username){
         Comment comment = commentRepository.findById(commentId)
-        .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "comment not found"));
+        .orElseThrow(()-> new NotFoundException("comment not found"));
 
         return comment.getUser().getId().equals(username);
 
@@ -43,7 +43,7 @@ public class CommentService {
 
     public Boolean isUserAuthorizedToUpdateComment(String commentId, String username) {
         Comment comment = commentRepository.findById(commentId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "comment not found"));
+        .orElseThrow(() -> new NotFoundException("comment not found"));
         return null;
     }
     
@@ -66,9 +66,7 @@ public class CommentService {
             .orElseThrow(() -> new NotFoundException("User not found"));
         if (!comment.getUser().getId().equals(userId)) {
             throw new UnAuthorizedException("Unable to update comment");
-        } 
-    
-        // Update the comment text
+        }
         comment.setComment(newCommentText);
         return commentRepository.save(comment);
     }    
