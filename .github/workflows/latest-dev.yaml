@@ -33,6 +33,19 @@ jobs:
       - name: Run the Maven verify phase
         run: mvn clean install -Dmaven.test.skip=true
 
+      - name: Create application-dev.properties file
+        run: |
+          echo "${{ secrets.TEST_APP_PROPERTIES }}" | base64 --decode > application-dev.properties
+
+      - name: Copy application-dev.properties to Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "application-dev.properties"
+          target: "~/teamjava/hng_boilerplate_java_web/"
+
       - name: copy service file
         run: |
           cp .github/scripts/java_dev_app.service target/
