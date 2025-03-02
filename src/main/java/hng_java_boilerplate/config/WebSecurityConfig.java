@@ -108,6 +108,7 @@ public class WebSecurityConfig {
                                         "/api/v1/payment/plans",
                                         "/api/v1/payment/webhook",
                                         "/api/v1/notification-settings",
+                                        "/api/call"
                                         "/api/v1/profile/upload-image"
                                 ).permitAll()
                                 .requestMatchers(
