@@ -76,6 +76,18 @@ public class CommentController {
         }
 
     }
+    
+    @PutMapping("/edit/{commentId}")
+    @PreAuthorize("@CommentService.isUserAuthorizedToUpdateComment(#commentId, principal.username)")
+    public ResponseEntity<Comment> updateComment(@PathVariable String commentId, @RequestParam String userId,@RequestBody Map<String, String> requestBody) {
+        String newCommentText = requestBody.get("comment");
+        if (newCommentText == null || newCommentText.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Comment updatedComment = commentService.updateComment(commentId, userId, newCommentText);
+        return ResponseEntity.ok(updatedComment);
+    }
 
     @DeleteMapping("/delete/{commentId}")
     @PreAuthorize("@CommentService.isUserAuthorizedToDeleteComment(#commentId, principal.username)")
